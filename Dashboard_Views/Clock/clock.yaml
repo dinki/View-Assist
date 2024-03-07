@@ -1,0 +1,159 @@
+type: custom:button-card
+variables:
+  var_weather_entity: weather.home
+  use_24_hour_time: false
+entity: input_boolean.lr_tablet_mic
+show_state: false
+show_icon: false
+show_name: false
+triggers_update: all
+tap_action: none
+hold_action: none
+double_tap_action: none
+aspect_ratio: 2/1
+styles:
+  grid:
+    - grid-template-areas: |
+        "weather alarm"  
+        "time time"
+        "date date"
+        "assist assist"
+    - grid-template-rows: min-content min-content min-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - min-height: 100vh
+    - z-index: 1
+    - border-radius: 0px
+    - overflow: hidden
+    - color: white
+    - font-family: '"Roboto", sans-serif'
+    - font-weight: 300
+    - background: >-
+        center / cover no-repeat 
+        url("/local/alexaclone/tropical-green-foliage-leaf-dark-background-natural-rain-forest_512343-121.jpg")
+    - background-size: cover
+  custom_fields:
+    filter1:
+      - position: absolute
+      - min-height: 200%
+      - width: 200%
+      - backdrop-filter: brightness(75%)
+      - overflow: hidden
+      - z-index: 1
+    weather:
+      - justify-self: start
+      - z-index: 2
+      - font-size: 400%
+      - font-weight: bold
+      - width: max-content
+    alarm:
+      - justify-self: end
+      - z-index: 2
+      - font-size: 300%
+      - font-weight: bold
+      - width: max-content
+    time:
+      - justify-self: center
+      - z-index: 2
+      - font-size: 2000%
+      - font-weight: bold
+      - position: absolute
+    date:
+      - justify-self: center
+      - align-self: center
+      - z-index: 2
+      - font-size: 500%
+      - width: max-content
+      - position: absolute
+      - top: 75%
+    assist:
+      - justify-self: end
+      - height: 10px
+      - position: absolute
+      - width: 100%
+      - z-index: 2
+      - top: 95%
+state:
+  - value: 'on'
+    styles:
+      custom_fields:
+        assist:
+          - animation: pulse 2s infinite
+          - height: 10px
+extra_styles: |
+  @keyframes pulse {
+    0%, 100% {
+      background-color: #f56a3f;
+    }
+    50% {
+      background-color: #9e42b0;
+    }
+  }
+custom_fields:
+  filter1: .
+  assist: .
+  weather: |
+    [[[
+      var outdoor_temp = states[variables.var_weather_entity].attributes.temperature;
+      const weatherIconsDay  = {
+        "clear-night": "mdi:weather-night", 
+        "cloudy": "mdi:weather-cloudy",
+        "dust":"mdi:weather-dust",
+        "fog": "mdi:weather-fog",
+        "hail": "mdi:weather-hail",
+        "hazy": "mdi:weather-hazy", 
+        "hurricane": "mdi:weather-hurricane",
+        "lightning": "mdi:weather-lightning",
+        "lightning-rainy": "mdi:weather-lightning-rainy",
+        "partlycloudy": "mdi:weather-partly-cloudy",
+        "partly-lightning": "mdi:weather-partly-lightning", 
+        "partly-rainy": "mdi:weather-partly-rainy",
+        "partly-snowy": "mdi:weather-partly-snowy", 
+        "partly-snowy-rainy": "mdi:weather-partly-snowy-rainy", 
+        "pouring": "mdi:weather-pouring",
+        "rainy": "mdi:weather-rainy",
+        "snowy": "mdi:weather-snowy",
+        "snowy-heavy": "mdi:weather-snowy-heavy",
+        "snowy-rainy": "mdi:weather-snowy-rainy",
+        "sunny": "mdi:weather-sunny",
+        "tornado":"mdi:weather-tornado",
+        "windy":  "mdi:weather-windy",
+        "windy-variant": "mdi:weather-windy-variant",
+      };
+      const weatherIconsNight = {
+        ...weatherIconsDay,
+        clear: "mdi:weather-night",
+        sunny: "mdi:weather-night",
+        partlycloudy: "mdi:weather-night-partly-cloudy",
+      };
+      var condition = states[variables.var_weather_entity].state;
+      if (states['sun.sun'] === 'above_horizon') {
+        var weather_icon = weatherIconsDay[condition]; 
+      } else {
+        /* var weather_icon = weatherIconsNight[condition]; */
+        var weather_icon = weatherIconsDay[condition]; 
+      }
+      
+      if (typeof(weather_icon) === 'undefined') { 
+        var weather_icon = "mdi:help" 
+      }   
+      return `<ha-icon icon="${weather_icon}" style="width: 50px; height: 50px; color: white;"></ha-icon>
+      <font color="white"><span>${outdoor_temp}°</span></font>` 
+    ]]]
+  alarm: ''
+  time: |
+    [[[
+      if (variables.use_24_hour_time) {
+        var options = { hour: "2-digit", minute: "2-digit", hour12: false };
+      } else {
+        var options = { hour: "numeric", minute: "2-digit" };      
+      }
+        var time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","")
+        return `${time}`;
+    ]]]
+  date: |
+    [[[    
+      const options = { weekday: "short", month: "short", day: "numeric", };
+      var date = new Date().toLocaleDateString([], options);
+      return `${date}`
+    ]]]
