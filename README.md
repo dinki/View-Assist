@@ -11,3 +11,5 @@ View Assist provides visual feedback for the Home Assistant Assist voice assista
 *WARNING* I am not a programmer I am just someone who knows just enough to be dangerous.  I am 100% certain that better ways exist than the way I am doing things and I am hoping that the HA community will continue to help improve this project through code submissions and comments in the issues section. 
 
 The information in this repo is separated into different subdirectories with additional readmes in each.  This project is designed so that you can pick and choose the parts that you want for your needs.  The custom sentences can be modified for those who may only be interested in voice only.  The dashboard views may be interesting to others who are writing their own custom sentences.
+
+Please see the Wiki for detailed information https://github.com/dinki/View-Assist/wiki
