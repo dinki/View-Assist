@@ -30,7 +30,7 @@ styles:
     - font-weight: 300
     - background: >-
         center / cover no-repeat 
-        url("/local/alexaclone/tropical-green-foliage-leaf-dark-background-natural-rain-forest_512343-121.jpg")
+        url("/local/viewassist/tropical-green-foliage-leaf-dark-background-natural-rain-forest_512343-121.jpg")
     - background-size: cover
   custom_fields:
     filter1:
