@@ -1,0 +1,24 @@
+alias: ASSIST - Weather example
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - How's the weather
+    id: weather
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - weather
+        sequence:
+          - set_conversation_response: >-
+              Its {{ state_attr('weather.home', 'temperature') }} degrees and
+              {{states.weather.home.state}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/weather
+            target:
+              entity_id: sensor.tabletfullkiosk_browser_path

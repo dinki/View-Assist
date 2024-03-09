@@ -1,0 +1,49 @@
+alias: ASSIST - Broadcast
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - broadcast {name}
+    id: broadcast
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - broadcast
+        sequence:
+          - set_conversation_response: Broadcasting
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              title: Annoucement
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              message: "{{ trigger.slots.name }}"
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              font-size: 4vw
+          - service: media_player.play_media
+            data:
+              media_content_id: /local/viewassist/broadcast.mp3
+              media_content_type: MUSIC
+            target:
+              entity_id: media_player.tabletfullkiosk
+            enabled: true
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/info
+            target:
+              entity_id: sensor.tabletfullkiosk_browser_path
+          - service: tts.google_translate_say
+            data:
+              cache: false
+              entity_id: media_player.tabletfullkiosk
+              message: "{{ states.sensor.assistsat_viewlr.attributes.message }}"
+            enabled: true
+          - service: notify.alexa_media_living_room_echo_show
+            data:
+              message: "{{ states.sensor.assistsat_viewlr.attributes.message }}"
