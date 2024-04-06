@@ -1,0 +1,299 @@
+alias: ASSIST - Control Display OLD
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.tabletfullkiosk_browser_path
+    id: ModeControl_Tabletfullkiosk
+  - platform: state
+    entity_id:
+      - sensor.thinksmart_lr_browser_path
+    id: ModeControl_Thinksmart-LR
+  - platform: state
+    entity_id:
+      - sensor.tabletmaster_browser_path
+    id: ModeControl_TabletMaster
+    enabled: true
+  - platform: state
+    entity_id:
+      - sensor.assistsat_viewlr
+    id: ModeControl_Tabletfullkiosk
+    attribute: mode
+  - platform: state
+    entity_id:
+      - sensor.assistsat_viewlrthinksmart
+    id: ModeControl_Thinksmart-LR
+    attribute: mode
+  - platform: state
+    entity_id:
+      - sensor.assistsat_viewmaster
+    id: ModeControl_TabletMaster
+    attribute: mode
+    enabled: true
+  - platform: state
+    entity_id:
+      - switch.lr_and_mbr_lights
+    from: "on"
+    to: "off"
+    id: LightsOff
+  - platform: state
+    entity_id:
+      - switch.lr_and_mbr_lights
+    from: "off"
+    to: "on"
+    id: LightsOn
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - ModeControl_Tabletfullkiosk
+        sequence:
+          - delay:
+              seconds: "{{states.sensor.assistsat_viewlr.attributes.view_timeout}}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlr
+                state: normal
+                attribute: mode
+            then:
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/clock
+                target:
+                  device_id: "{{ device_id('sensor.tabletfullkiosk_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlr
+                state: music
+                attribute: mode
+            then:
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/music
+                target:
+                  device_id: "{{ device_id('sensor.tabletfullkiosk_browser_path') }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - ModeControl_Thinksmart-LR
+        sequence:
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlrthinksmart
+                state: normal
+                attribute: mode
+                enabled: true
+            then:
+              - delay:
+                  seconds: >-
+                    {{states.sensor.assistsat_viewlrthinksmart.attributes.view_timeout}}
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/clock
+                target:
+                  device_id: "{{ device_id('sensor.thinksmart_lr_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlrthinksmart
+                state: music
+                attribute: mode
+            then:
+              - delay:
+                  seconds: >-
+                    {{states.sensor.assistsat_viewlrthinksmart.attributes.view_timeout}}
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/music
+                target:
+                  device_id: "{{ device_id('sensor.thinksmart_lr_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlrthinksmart
+                state: cycle
+                attribute: mode
+            then:
+              - repeat:
+                  while:
+                    - condition: state
+                      entity_id: sensor.assistsat_viewlrthinksmart
+                      state: cycle
+                      attribute: mode
+                  sequence:
+                    - repeat:
+                        for_each: >-
+                          {{ state_attr ('sensor.assistsat_viewlrthinksmart',
+                          'cycle_view')}}
+                        sequence:
+                          - service: browser_mod.navigate
+                            data:
+                              path: /dashboard-viewassist/{{repeat.item}}
+                            target:
+                              device_id: >-
+                                {{
+                                device_id('sensor.thinksmart_lr_browser_path')
+                                }}
+                            enabled: false
+                          - delay:
+                              seconds: >-
+                                {{ state_attr
+                                ('sensor.assistsat_viewlrthinksmart',
+                                'view_timeout')}}
+                            enabled: false
+                          - if:
+                              - condition: state
+                                entity_id: sensor.assistsat_viewlrthinksmart
+                                state: cycle
+                                attribute: mode
+                            then:
+                              - service: browser_mod.navigate
+                                data:
+                                  path: /dashboard-viewassist/{{repeat.item}}
+                                target:
+                                  device_id: >-
+                                    {{
+                                    device_id('sensor.thinksmart_lr_browser_path')
+                                    }}
+                          - if:
+                              - condition: state
+                                entity_id: sensor.assistsat_viewlrthinksmart
+                                state: cycle
+                                attribute: mode
+                            then:
+                              - delay:
+                                  seconds: >-
+                                    {{ state_attr
+                                    ('sensor.assistsat_viewlrthinksmart',
+                                    'view_timeout')}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              device_id: "{{ device_id('sensor.thinksmart_lr_browser_path') }}"
+            enabled: false
+      - conditions:
+          - condition: trigger
+            id:
+              - ModeControl_TabletMaster
+        sequence:
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewmaster
+                state: normal
+                attribute: mode
+                enabled: true
+            then:
+              - delay:
+                  seconds: >-
+                    {{states.sensor.assistsat_viewmaster.attributes.view_timeout}}
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/clock
+                target:
+                  device_id: "{{ device_id('sensor.tabletmaster_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewmaster
+                state: music
+                attribute: mode
+            then:
+              - delay:
+                  seconds: >-
+                    {{states.sensor.assistsat_viewmaster.attributes.view_timeout}}
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/music
+                target:
+                  device_id: "{{ device_id('sensor.tabletmaster_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewmaster
+                state: cycle
+                attribute: mode
+            then:
+              - repeat:
+                  while:
+                    - condition: state
+                      entity_id: sensor.assistsat_viewmaster
+                      state: cycle
+                      attribute: mode
+                  sequence:
+                    - repeat:
+                        for_each: >-
+                          {{ state_attr ('sensor.assistsat_viewmaster',
+                          'cycle_view')}}
+                        sequence:
+                          - service: browser_mod.navigate
+                            data:
+                              path: /dashboard-viewassist/{{repeat.item}}
+                            target:
+                              device_id: >-
+                                {{ device_id('sensor.tabletmaster_browser_path')
+                                }}
+                            enabled: false
+                          - delay:
+                              seconds: >-
+                                {{ state_attr ('sensor.assistsat_viewmaster',
+                                'view_timeout')}}
+                            enabled: false
+                          - if:
+                              - condition: state
+                                entity_id: sensor.assistsat_viewmaster
+                                state: cycle
+                                attribute: mode
+                            then:
+                              - service: browser_mod.navigate
+                                data:
+                                  path: /dashboard-viewassist/{{repeat.item}}
+                                target:
+                                  device_id: >-
+                                    {{
+                                    device_id('sensor.tabletmaster_browser_path')
+                                    }}
+                          - if:
+                              - condition: state
+                                entity_id: sensor.assistsat_viewmaster
+                                state: cycle
+                                attribute: mode
+                            then:
+                              - delay:
+                                  seconds: >-
+                                    {{ state_attr
+                                    ('sensor.assistsat_viewmaster',
+                                    'view_timeout')}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              device_id: "{{ device_id('sensor.tabletmaster_browser_path') }}"
+            enabled: false
+      - conditions:
+          - condition: trigger
+            id:
+              - LightsOff
+        sequence:
+          - service: light.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: light.tabletfullkiosk_screen
+      - conditions:
+          - condition: trigger
+            id:
+              - LightsOn
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id:
+                - light.tabletfullkiosk_screen
+            data: {}
+mode: single

@@ -1,0 +1,79 @@
+alias: ASSIST - Control display ViewLR
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.tabletfullkiosk_browser_path
+    id: ModeControl_Tabletfullkiosk
+  - platform: state
+    entity_id:
+      - sensor.assistsat_viewlr
+    id: ModeControl_Tabletfullkiosk
+    attribute: mode
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - ModeControl_Tabletfullkiosk
+        sequence:
+          - delay:
+              seconds: "{{states.sensor.assistsat_viewlr.attributes.view_timeout}}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlr
+                state: normal
+                attribute: mode
+            then:
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/clock
+                target:
+                  device_id: "{{ device_id('sensor.tabletfullkiosk_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlr
+                state: music
+                attribute: mode
+            then:
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-viewassist/music
+                target:
+                  device_id: "{{ device_id('sensor.tabletfullkiosk_browser_path') }}"
+          - if:
+              - condition: state
+                entity_id: sensor.assistsat_viewlr
+                state: cycle
+                attribute: mode
+            then:
+              - repeat:
+                  while:
+                    - condition: state
+                      entity_id: sensor.assistsat_viewlr
+                      state: cycle
+                      attribute: mode
+                  sequence:
+                    - repeat:
+                        for_each: >-
+                          {{ state_attr ('sensor.assistsat_viewlr',
+                          'cycle_view')}}
+                        sequence:
+                          - delay:
+                              seconds: >-
+                                {{ state_attr ('sensor.assistsat_viewlr',
+                                'view_timeout')}}
+                            enabled: true
+                          - service: browser_mod.navigate
+                            data:
+                              path: /dashboard-viewassist/{{repeat.item}}
+                            target:
+                              device_id: >-
+                                {{
+                                device_id('sensor.tabletfullkiosk_browser_path')
+                                }}
+                            enabled: true
+mode: single

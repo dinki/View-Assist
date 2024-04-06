@@ -1,0 +1,46 @@
+alias: ASSIST - Target devices
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.assist_target_display_device
+    id: display
+    enabled: true
+  - platform: state
+    entity_id:
+      - sensor.assist_target_mediaplayer_device
+    id: mediaplayer
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - display
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: sensor.assist_target_display_device
+                state: unknown
+            enabled: true
+        sequence:
+          - service: input_text.set_value
+            target:
+              entity_id: input_text.assist_target_display_device
+            data:
+              value: "{{ states('sensor.assist_target_display_device')}}"
+          - service: input_text.set_value
+            target:
+              entity_id: input_text.assist_target_mediaplayer_device
+            data:
+              value: "{{ states('sensor.assist_target_mediaplayer_device')}}"
+          - service: input_text.set_value
+            target:
+              entity_id: input_text.assist_target_satellite_device
+            data:
+              value: >-
+                {{ expand('group.assist_satellites') |
+                selectattr('attributes.mic_device', 'eq',
+                states('sensor.assist_last_called'))
+                |map(attribute='entity_id')|list|first}}
+mode: single

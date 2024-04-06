@@ -1,0 +1,572 @@
+alias: ASSIST - Custom Sentences OLD
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - "[What] [what's] [is] [the] time [is it]"
+    id: time
+    enabled: false
+  - platform: conversation
+    command:
+      - What is the date
+      - what day is it
+      - what is today
+    id: date
+    enabled: false
+  - platform: conversation
+    command:
+      - What day of the week is it
+      - "[What('s)] [is] [the] day of the week [is it]"
+    id: dayofweek
+    enabled: false
+  - platform: conversation
+    command:
+      - How's the weather
+    id: weather
+    enabled: false
+  - platform: conversation
+    command:
+      - How('s) [the] traffic
+    id: traffic
+    enabled: false
+  - platform: conversation
+    command:
+      - who is {name}
+      - what is [the] [a] [an] {name}
+    id: who
+    enabled: false
+  - platform: conversation
+    command:
+      - show doorbell [camera]
+    id: doorbellcamera
+    enabled: false
+  - platform: conversation
+    command:
+      - show [the] front camera
+    id: frontcamera
+    enabled: false
+  - platform: conversation
+    command:
+      - show [the] back [yard] camera
+    id: backcamera
+    enabled: false
+  - platform: conversation
+    command:
+      - show [the] patio camera
+    id: patiocamera
+    enabled: false
+  - platform: conversation
+    command:
+      - show [the] clock
+    id: showclock
+    enabled: false
+  - platform: conversation
+    command:
+      - show  all [the] cameras
+    id: allcamera
+    enabled: false
+  - platform: conversation
+    command:
+      - set [a] timer for {time}
+    id: timer
+    enabled: false
+  - platform: conversation
+    command: show shopping list
+    id: shopping
+    enabled: false
+  - platform: conversation
+    command:
+      - set time out [to] {name}
+    id: timeout
+    enabled: false
+  - platform: conversation
+    command:
+      - Play big one oh two [point one]
+      - play big102
+      - play kybg
+      - Play Big 102
+      - Play Big 1021
+    id: big102
+    enabled: false
+  - platform: conversation
+    command:
+      - broadcast {name}
+    id: broadcast
+    enabled: false
+  - platform: conversation
+    command:
+      - Set timeout [to] {name} seconds
+    id: timeout
+    enabled: false
+  - platform: conversation
+    command: stop music
+    id: stopmusic
+    enabled: false
+  - platform: conversation
+    command: washer demo
+    id: washerdemo
+    enabled: false
+  - platform: conversation
+    command:
+      - doorbell demo
+    id: doorbelldemo
+    enabled: false
+  - platform: conversation
+    command:
+      - play {song}
+    id: song
+    enabled: false
+  - platform: conversation
+    command:
+      - mute
+    id: mute
+    enabled: false
+  - platform: conversation
+    command:
+      - unmute
+    id: unmute
+    enabled: false
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - time
+        sequence:
+          - set_conversation_response: Its {{ now().strftime("%-I:%M %p")}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - date
+        sequence:
+          - set_conversation_response: Today is {{ now().strftime("%A %B %-d")}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/clock
+            target:
+              entity_id: sensor.tabletfullkiosk_browser_path
+            enabled: false
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - dayofweek
+        sequence:
+          - set_conversation_response: Today is {{ now().strftime("%A")}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - weather
+        sequence:
+          - set_conversation_response: >-
+              Its {{ state_attr('weather.home', 'temperature') }} degrees and
+              {{states.weather.home.state}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/weather
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - traffic
+        sequence:
+          - set_conversation_response: Checking on traffic
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/traffic
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - doorbellcamera
+        sequence:
+          - set_conversation_response: Showing doorbell camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/doorbellcamera
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - frontcamera
+        sequence:
+          - set_conversation_response: Showing front camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/frontcamera
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - backcamera
+        sequence:
+          - set_conversation_response: Showing back camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/backcamera
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - patiocamera
+        sequence:
+          - set_conversation_response: Showing patio camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/patiocamera
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - showclock
+        sequence:
+          - set_conversation_response: Ok
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - allcamera
+        sequence:
+          - set_conversation_response: Showing all cameras
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/allcameras
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - timer
+        sequence:
+          - set_conversation_response: Timer set for "{{ trigger.slots.time }}"
+            enabled: true
+          - service: timer.set_duration
+            data:
+              duration: >-
+                {{ timedelta(**{trigger.slots.timeunits: trigger.slots.duration
+                | float}).total_seconds() }}
+            target:
+              entity_id: timer.assist_timer_1
+            enabled: false
+          - service: timer.start
+            metadata: {}
+            data:
+              duration: "{{ trigger.slots.name }}"
+            target:
+              entity_id: timer.assist_timer_1
+            enabled: false
+      - conditions:
+          - condition: trigger
+            id:
+              - time
+            enabled: true
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              assist_satellite_device: >-
+                {{ expand('group.assist_satellites') |
+                selectattr('attributes.mic_device', 'eq',
+                states('sensor.assist_last_called'))
+                |map(attribute='entity_id')|list|first}} 
+          - set_conversation_response: Starting Big one oh two point one
+          - service: mass.play_media
+            target:
+              entity_id: media_player.thinksmart_lr_2
+            data:
+              media_id: tunein://radio/s34824--aac
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              image: https://cdn-profiles.tunein.com/s34824/images/logod.png
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              mode: music
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-tablet/music
+            target:
+              device_id: "{{target_display_device}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - stopmusic
+        sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              mode: normal
+          - service: media_player.media_stop
+            target:
+              entity_id:
+                - media_player.amazon_fire
+            data: {}
+          - if:
+              - condition: state
+                entity_id: sensor.tabletfullkiosk_browser_path
+                state: /dashboard-tablet/music
+            then:
+              - service: browser_mod.navigate
+                metadata: {}
+                data:
+                  path: /dashboard-tablet/clock
+                target:
+                  entity_id: sensor.tabletfullkiosk_browser_path
+      - conditions:
+          - condition: trigger
+            id:
+              - washerdemo
+        sequence:
+          - service: input_boolean.turn_on
+            metadata: {}
+            data: {}
+            target:
+              entity_id:
+                - input_boolean.washer
+                - input_boolean.demo_washer
+      - conditions:
+          - condition: trigger
+            id:
+              - doorbelldemo
+        sequence:
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: http://192.168.0.25:8123/dashboard-tablet/doorbellcamera
+            target:
+              device_id: "{{ states('input_text.assist_display_entity')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - timeout
+        sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              view_timeout: "{{ trigger.slots.name }}"
+          - set_conversation_response: Setting timeout
+      - conditions:
+          - condition: trigger
+            id:
+              - song
+        sequence:
+          - service: mass.search
+            metadata: {}
+            data:
+              limit: 1
+              media_type:
+                - track
+              name: "{{ trigger.slots.song }}"
+            response_variable: song
+          - set_conversation_response: |
+              Here you go
+          - service: mass.play_media
+            metadata: {}
+            data:
+              media_id: "{{ song.tracks[0].uri }}"
+            target:
+              entity_id: media_player.thinksmart_lr_2
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              mode: music
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-tablet/music
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - mute
+        sequence:
+          - service: media_player.volume_set
+            data:
+              volume_level: 0
+            target:
+              entity_id:
+                - media_player.amazon_fire
+                - media_player.tabletfullkiosk
+      - conditions:
+          - condition: trigger
+            id:
+              - unmute
+        sequence:
+          - service: media_player.volume_set
+            data:
+              volume_level: 1
+            target:
+              entity_id:
+                - media_player.amazon_fire
+                - media_player.tabletfullkiosk
+      - conditions:
+          - condition: trigger
+            id:
+              - who
+        sequence:
+          - service: rest_command.wiki_how
+            response_variable: wiki_response
+            enabled: true
+            data:
+              name: "{{ trigger.slots.name  |regex_replace(find=' ', replace='_') }}"
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              title: Wikipedia Search
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              message: "{{ wiki_response['content']['extract'] }}"
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              image: "{{ wiki_response['content']['thumbnail']['source'] }}"
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              message_font_size: 2vw
+          - set_conversation_response: Here's what I found on wikipedia
+            enabled: true
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-tablet/infopic
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - broadcast
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Broadcasting
+          - service: python_script.set_state
+            data:
+              title: Annoucement
+              entity_id: "{{ target_satellite_device }}"
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              message: "{{ trigger.slots.name }}"
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              font-size: 4vw
+          - service: media_player.play_media
+            data:
+              media_content_id: /local/viewassist/broadcast.mp3
+              media_content_type: MUSIC
+            target:
+              entity_id: media_player.tabletfullkiosk
+            enabled: false
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-tablet/browsertype
+            target:
+              device_id: "{{ target_display_device }}"
+          - service: chime_tts.say
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+            data:
+              chime_path: www/viewassist/broadcast.mp3
+              tts_playback_speed: 100
+              volume_level: 1
+              message: "{{ state_attr(target_satellite_device, 'message') }}"
+              tts_platform: google_translate
+      - conditions:
+          - condition: trigger
+            id:
+              - shopping
+        sequence:
+          - service: anylist.get_items
+            response_variable: shopping_response
+            data:
+              list: Alexa Shopping List
+          - set_conversation_response: >-
+              Here's some of the items on your shopping list  {{
+              shopping_response['items'][-5:]  | join(',') }}
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              message: "{{ shopping_response['items'][-10:]  | join('<br />')}}"
+          - service: python_script.set_state
+            data:
+              entity_id: sensor.assistsat_viewlr
+              font-size: 4vw
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-tablet/info
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - big102
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Satellite device is {{target_satellite_device}}
+          - service: mass.play_media
+            target:
+              entity_id: media_player.thinksmart_lr_2
+            data:
+              media_id: tunein://radio/s34824--aac
+            enabled: false
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              image: https://cdn-profiles.tunein.com/s34824/images/logod.png
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-tablet/music
+            target:
+              device_id: "{{target_display_device}}"
+mode: single

@@ -1,0 +1,143 @@
+alias: ASSIST - Sentences questions
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - "[What] [what's] [is] [the] time [is it]"
+    id: time
+  - platform: conversation
+    command:
+      - What is the date
+      - what day is it
+      - what is today
+    id: date
+  - platform: conversation
+    command:
+      - What day of the week is it
+      - "[What('s)] [is] [the] day of the week [is it]"
+    id: dayofweek
+  - platform: conversation
+    command:
+      - How's the weather
+    id: weather
+  - platform: conversation
+    command:
+      - How('s) [the] traffic
+    id: traffic
+  - platform: conversation
+    command:
+      - who is {name}
+      - what is [the] [a] [an] {name}
+    id: who
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - time
+        sequence:
+          - set_conversation_response: Its {{ now().strftime("%-I:%M %p")}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - date
+        sequence:
+          - set_conversation_response: Today is {{ now().strftime("%A %B %-d")}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              entity_id: sensor.tabletfullkiosk_browser_path
+            enabled: false
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+            enabled: false
+      - conditions:
+          - condition: trigger
+            id:
+              - dayofweek
+        sequence:
+          - set_conversation_response: Today is {{ now().strftime("%A")}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - weather
+        sequence:
+          - set_conversation_response: >-
+              Its {{ state_attr('weather.home', 'temperature') }} degrees and
+              {{states.weather.home.state}}
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/weather
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - traffic
+        sequence:
+          - set_conversation_response: Checking on traffic
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/traffic
+            target:
+              device_id: "{{ states('input_text.assist_target_display_device')}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - who
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - service: rest_command.wiki_how
+            response_variable: wiki_response
+            enabled: true
+            data:
+              name: "{{ trigger.slots.name  |regex_replace(find=' ', replace='_') }}"
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              title: Wikipedia Search
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              message: "{{ wiki_response['content']['extract'] }}"
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              image: "{{ wiki_response['content']['thumbnail']['source'] }}"
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              message_font_size: 3vw
+          - set_conversation_response: Here's what I found on wikipedia
+            enabled: true
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-viewassist/infopic
+            target:
+              device_id: "{{target_display_device}}"
+mode: single

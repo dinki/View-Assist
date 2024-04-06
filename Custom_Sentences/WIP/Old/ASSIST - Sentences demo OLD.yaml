@@ -1,0 +1,37 @@
+alias: ASSIST - Sentences demo OLD
+description: ""
+trigger:
+  - platform: conversation
+    command: washer demo
+    id: washerdemo
+  - platform: conversation
+    command:
+      - doorbell demo
+    id: doorbelldemo
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - washerdemo
+        sequence:
+          - service: input_boolean.turn_on
+            metadata: {}
+            data: {}
+            target:
+              entity_id:
+                - input_boolean.washer
+                - input_boolean.demo_washer
+      - conditions:
+          - condition: trigger
+            id:
+              - doorbelldemo
+        sequence:
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: http://192.168.0.25:8123/dashboard-tablet/doorbellcamera
+            target:
+              device_id: "{{ states('input_text.assist_display_entity')}}"
+mode: single

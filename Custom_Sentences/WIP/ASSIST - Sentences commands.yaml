@@ -1,0 +1,340 @@
+alias: ASSIST - Sentences commands
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - show doorbell [camera]
+    id: doorbellcamera
+  - platform: conversation
+    command:
+      - show [the] front camera
+    id: frontcamera
+  - platform: conversation
+    command:
+      - show [the] back [yard] camera
+    id: backcamera
+  - platform: conversation
+    command:
+      - show [the] patio camera
+    id: patiocamera
+  - platform: conversation
+    command:
+      - show [the] clock
+    id: showclock
+  - platform: conversation
+    command:
+      - show  all [the] cameras
+    id: allcamera
+  - platform: conversation
+    command:
+      - set [a] timer for {time}
+    id: timer
+  - platform: conversation
+    command: show shopping list
+    id: shopping
+  - platform: conversation
+    command:
+      - set time out [to] {name}
+    id: timeout
+  - platform: conversation
+    command: Set mode to hold
+    id: hold
+  - platform: conversation
+    command:
+      - Set mode to normal
+    id: normal
+  - platform: conversation
+    command:
+      - remove {item} from shopping list
+      - delete {item} from shopping list
+    id: shoppingremove
+  - platform: conversation
+    command:
+      - add {item} to shopping list
+    id: shoppingadd
+  - platform: conversation
+    command:
+      - what's for dinner
+      - show recipes
+    id: recipe
+  - platform: conversation
+    command:
+      - Set mode to do not disturb
+    id: dnd
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - doorbellcamera
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Showing doorbell camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/doorbellcamera
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - frontcamera
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Showing front camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/frontcamera
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - backcamera
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Showing back camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/backcamera
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - patiocamera
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Showing patio camera
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/patiocamera
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - showclock
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Ok
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/clock
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - allcamera
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Showing all cameras
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/allcameras
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - timer
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Timer set for "{{ trigger.slots.time }}"
+            enabled: true
+          - service: timer.set_duration
+            data:
+              duration: >-
+                {{ timedelta(**{trigger.slots.timeunits: trigger.slots.duration
+                | float}).total_seconds() }}
+            target:
+              entity_id: timer.assist_timer_1
+            enabled: false
+          - service: timer.start
+            metadata: {}
+            data:
+              duration: "{{ trigger.slots.name }}"
+            target:
+              entity_id: timer.assist_timer_1
+            enabled: false
+      - conditions:
+          - condition: trigger
+            id:
+              - shopping
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - service: anylist.get_items
+            response_variable: shopping_response
+            data:
+              list: Alexa Shopping List
+          - set_conversation_response: >-
+              Here's some of the items on your shopping list  {{
+              shopping_response['items'][-5:]  | join(',') }}
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              message: "{{ shopping_response['items'][-10:]  | join('<br />')}}"
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              title: Shopping List
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              message_font_size: 4vw
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-viewassist/info
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - timeout
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - service: python_script.set_state
+            data:
+              entity_id: " {{ target_satellite_device }} "
+              view_timeout: "{{ trigger.slots.name }}"
+          - set_conversation_response: Setting timeout to {{ trigger.slots.name }} seconds
+      - conditions:
+          - condition: trigger
+            id:
+              - hold
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - service: python_script.set_state
+            data:
+              entity_id: " {{ target_satellite_device }} "
+              mode: hold
+          - set_conversation_response: Hold mode enabled
+      - conditions:
+          - condition: trigger
+            id:
+              - normal
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - service: python_script.set_state
+            data:
+              entity_id: " {{ target_satellite_device }} "
+              mode: normal
+          - set_conversation_response: Normal mode enabled
+      - conditions:
+          - condition: trigger
+            id:
+              - shoppingremove
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Removing {{ trigger.slots.item }} from shopping list
+          - service: todo.remove_item
+            target:
+              entity_id: todo.anylist_alexa_shopping_list
+            data:
+              item: "{{trigger.slots.item}}"
+            enabled: true
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-viewassist/info
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - shoppingadd
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: "Adding {{ trigger.slots.item }} to shopping list "
+          - service: todo.add_item
+            target:
+              entity_id: todo.anylist_alexa_shopping_list
+            data:
+              item: "{{trigger.slots.item}}"
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-viewassist/info
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - recipe
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - set_conversation_response: Yum!  These look tasty
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              title: Recipes
+          - service: browser_mod.navigate
+            data:
+              path: /dashboard-viewassist/mealie
+            target:
+              device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - dnd
+        sequence:
+          - variables:
+              target_display_device: "{{states('input_text.assist_target_display_device')}}"
+              target_satellite_device: "{{states('input_text.assist_target_satellite_device')}}"
+              target_mediaplayer_device: "{{states('input_text.assist_target_mediaplayer_device')}}"
+          - service: python_script.set_state
+            data:
+              entity_id: " {{ target_satellite_device }} "
+              do_not_disturb: true
+          - set_conversation_response: Do not disturb mode enabled
+mode: single
