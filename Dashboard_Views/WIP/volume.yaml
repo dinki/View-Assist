@@ -1,0 +1,61 @@
+type: custom:button-card
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content 4fr min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-color: '#00000'
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - width: 100%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+custom_fields:
+  title: Volume
+  message:
+    card:
+      type: custom:mushroom-media-player-card
+      show_volume_level: true
+      volume_controls:
+        - volume_set
+        - volume_mute
+      use_media_info: false
+      icon_type: none
+      fill_container: true
+      primary_info: name
+      layout: vertical
+      collapsible_controls: false
+      entity: '[[[ return variables.var_mediaplayer_device ]]]'
+      styles:
+        card:
+          - transform: scale(5)
+          - border-style: none
+      card_mod:
+        style: |
+          mushroom-shape-icon {
+            {% set vol_level = state_attr(config.entity, 'volume_level') | float %}
+            --card-mod-icon:
+            {% if state_attr(config.entity, 'is_volume_muted') == true %}
+              mdi:volume-mute
+            {% else %}
+              {% if vol_level > 0.66 %}
+                mdi:volume-high
+              {% elif vol_level < 0.33 %}
+                mdi:volume-low
+              {% else %}
+                mdi:volume-medium
+              {% endif %}
+            {% endif %};
+          }

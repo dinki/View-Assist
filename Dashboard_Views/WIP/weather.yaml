@@ -1,0 +1,53 @@
+type: custom:button-card
+variables:
+  var_weather_entity: weather.home
+  var_forecast_entity: sensor.daily_forecast
+  use_24_hour_time: false
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "temperature detail"
+        "assist assist"
+    - grid-template-rows: min-content 1fr min-content
+    - grid-template-columns: 45% 1fr
+    - row-gap: .5rem
+  card:
+    - background-color: '#059bf1'
+    - background-size: cover
+    - overflow: hidden
+    - color: black
+  custom_fields:
+    temperature:
+      - align-self: center
+      - justify-self: end
+      - border-right: 2px solid black
+      - width: max-content
+      - font-size: 1000%
+      - padding-right: 5%
+    detail:
+      - align-self: center
+      - justify-self: start
+      - width: min-content
+      - font-size: 300%
+      - padding-left: 5%
+      - text-align: start
+custom_fields:
+  title: '[[[ return variables.var_date_long ]]]'
+  temperature: '[[[ return variables.var_temperature ]]]'
+  detail: |
+    [[[
+      var apparent_temperature = states["sensor.home_realfeel_temperature"].state;
+      var precipitation = states[variables.var_forecast_entity].attributes.forecast[0].precipitation_probability
+      const directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]
+      var wind_bearing = states["sensor.weatherstation_wind_dir"].state;
+      var wind_speed = Math.round(states["sensor.weatherstation_wind_speed_mph"].state * 10)/10;
+      var wind_speed_unit = states[variables.var_weather_entity].attributes.wind_speed_unit;
+      var wind_bearing_compass = directions[parseInt( wind_bearing / 22.5)]
+      return `Real Feel: <b style="font-weight:400;">${apparent_temperature}°</b><br />
+      Precipitation: <b style="font-weight:400;">${precipitation}%</b><br />
+      Wind: <b style="font-weight:400;">${wind_bearing_compass} ${wind_speed} ${wind_speed_unit}</b>`
+    ]]]

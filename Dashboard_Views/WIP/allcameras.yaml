@@ -1,0 +1,55 @@
+type: custom:button-card
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content 4fr min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-color: '#00000'
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - width: 100%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+custom_fields:
+  title: All Cameras
+  message:
+    card:
+      type: vertical-stack
+      min-width: 100%
+      cards:
+        - type: horizontal-stack
+          cards:
+            - show_state: false
+              show_name: false
+              camera_view: live
+              type: picture-entity
+              entity: camera.doorbell_restream
+            - show_state: false
+              show_name: false
+              camera_view: live
+              type: picture-entity
+              entity: camera.front_restream
+        - type: horizontal-stack
+          cards:
+            - show_state: false
+              show_name: false
+              camera_view: live
+              type: picture-entity
+              entity: camera.patio_restream
+            - show_state: false
+              show_name: false
+              camera_view: live
+              type: picture-entity
+              entity: camera.back_restream

@@ -1,0 +1,67 @@
+type: custom:button-card
+variables:
+  var_weather_entity: weather.home
+  use_24_hour_time: false
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "time time"
+        "date date"
+        "assist assist"
+    - grid-template-rows: min-content min-content min-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background: >-
+        center / cover no-repeat 
+        url("/local/viewassist/leaf-darker-background.jpg")
+    - background-size: cover
+  custom_fields:
+    time:
+      - justify-self: center
+      - z-index: 2
+      - font-size: 2000%
+      - font-weight: bold
+      - position: absolute
+      - color: white
+    date:
+      - justify-self: center
+      - align-self: center
+      - z-index: 2
+      - font-size: 500%
+      - width: max-content
+      - position: absolute
+      - top: 75%
+custom_fields:
+  title:
+    card:
+      type: custom:button-card
+      icon: '[[[ return variables.var_weather_icon ]]]'
+      name: '[[[ return variables.var_temperature ]]]'
+      styles:
+        card:
+          - background-color: transparent
+          - border-width: 0px
+          - width: 50%
+          - margin-left: 5%
+          - margin-top: '-5%'
+        grid:
+          - grid-template-areas: '"i n"'
+          - grid-template-rows: min-content min-content
+        name:
+          - font-size: 400%
+          - color: white
+        icon:
+          - width: 80%
+          - color: white
+        tap_action:
+          action: call-service
+          service: browser_mod.navigate
+          service_data:
+            path: /dashboard-viewassist/weather
+            device_id: Thinksmart-LR
+  time: '[[[ return variables.var_current_time ]]]'
+  date: '[[[ return variables.var_date_short ]]]'

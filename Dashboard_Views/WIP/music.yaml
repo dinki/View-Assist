@@ -1,0 +1,68 @@
+type: custom:button-card
+template:
+  - variable_template
+  - body_template
+variables:
+  var_media_player_entity: >-
+    [[[ return variables.var_mediaplayer_device ??
+    "media_player.thinksmart_lr"]]]
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "image message"
+        "assist assist"       
+    - grid-template-rows: min-content 4fr min-content
+    - grid-template-columns: 1fr 2fr
+  card:
+    - background-color: '#aaa15e'
+    - background-size: cover
+    - color: black
+  custom_fields:
+    image:
+      - align-self: center
+      - justify-self: end
+    message:
+      - font-size: '[[[ return variables.var_font_size ]]]'
+      - position: relative
+      - padding: 10px
+      - border-radius: 10px
+      - width: 95%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: 2%
+custom_fields:
+  title: '[[[ return variables.var_mediaplayer_device ]]]'
+  image:
+    card:
+      type: picture
+      card_mod:
+        style: |
+          ha-card {
+            height: 300px;
+            width: 300px;
+            border-radius: 0px;
+          }
+      image: |
+        [[[ 
+          var art =
+          states[variables.var_media_player_entity  + "_2"].attributes.entity_picture_local;
+          if (art == null){
+            art = states[variables.var_media_player_entity + "_2"].attributes.image;
+            }        
+          return `${art}` 
+        ]]]
+  message: |
+    [[[ 
+      var add = "_2"
+      var ma_mediaplayer = [variables.var_media_player_entity] + "_2";
+      var media_title = states[variables.var_media_player_entity + add].attributes.media_title;
+      if (media_title == "undefined"){media_title = ""}
+      var media_artist = states[variables.var_media_player_entity + add].attributes.media_artist
+      if (media_artist == null){media_artist = ""}
+      var media_album_name = states[variables.var_media_player_entity + add].attributes.media_album_name;
+      if (media_album_name == null){media_album_name = ""}        
+      return `${ma_mediaplayer}<b style="font-weight:400;">${media_title}</b><br />${media_artist}<br />${media_album_name}`
+    ]]]

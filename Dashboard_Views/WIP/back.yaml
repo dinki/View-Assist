@@ -1,0 +1,38 @@
+type: custom:button-card
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content max-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-color: '#00000'
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - width: 100%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+custom_fields:
+  title: Back
+  message:
+    card:
+      type: picture-entity
+      entity: camera.back_restream
+      camera_view: live
+      show_state: false
+      show_name: false
+      styles:
+        card:
+          - border-width: 0px
+          - border-radius: 0px
+          - border-style: none
