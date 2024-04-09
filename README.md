@@ -18,6 +18,7 @@ UDPATE:  I've been made aware of a really cool device and I've been working on g
 
 
 -----------------
-<a href="https://www.buymeacoffee.com/dinki" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-Want to support this project? 
+Want to support this project?  Click the button below.  Thank you!
+
+<a href="https://www.buymeacoffee.com/dinki" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="width: 10% !important;width: 217px !important;" width="20%"></a>
