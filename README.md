@@ -14,7 +14,7 @@ The information in this repo is separated into different subdirectories with add
 
 Please see the Wiki for detailed information https://github.com/dinki/View-Assist/wiki
 
-UDPATE:  I've been made aware of a really cool device and I've been working on getting it to work with View Assist.  The Lenovo Thinksmart device is a nice Android tablet with a nice sounding speaker at an unbelievably low price (~$40 USD). https://amzn.to/3POGKW3
+UDPATE:  I've been made aware of a really cool device and I've been working on getting it to work with View Assist.  The Lenovo Thinksmart device is a nice Android tablet with a nice sounding speaker at an unbelievably low price (~$40 USD). [https://amzn.to/3POGKW3](https://amzn.to/4bRBnhk)
 
 
 -----------------
