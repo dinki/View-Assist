@@ -10,7 +10,7 @@
 #  * view_timeout: Amount of time (seconds) before switching views as controlled by mode (Default 20 seconds)
 # All other lines should be copied as is without change
 #
-# Multiple sensors can be created by copy pasting the definition from the "- sensor" line until the end of
+# Multiple sensors can be created by copy pasting the definition from the "- name" line until the end of
 # The "do not disturb line" to the end of the template block and modifying with the next sensor details
 # You must create a timer helper device per device
 # You must create a sesnor helper group (eg group.viewassist_satellites) and include all View Assist satellites in the group
