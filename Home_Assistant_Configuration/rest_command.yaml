@@ -1,2 +1,0 @@
-  wiki_how:
-    url: "https://en.wikipedia.org/api/rest_v1/page/summary/{{ name }}?redirect=true"
