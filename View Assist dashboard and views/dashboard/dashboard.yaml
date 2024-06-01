@@ -1,9 +1,14 @@
 button_card_templates:
   variable_template:
     variables:
+      assist_group: group.assist_satellites
       var_weather_entity: weather.home
-      var_assist_group: group.assist_satellites
       use_24_hour_time: false
+      default_satellite: |-
+        [[[
+          return hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.type === "view_audio")
+        ]]]      
       var_current_time: |
         [[[
           if (variables.use_24_hour_time) {
@@ -25,13 +30,13 @@ button_card_templates:
         ]]]
       var_assistsat_entity: |-
         [[[
-          return hass.states[variables.var_assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr"
+          return hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
         ]]]
       var_assisting: |-
         [[[
-          var assistbid = hass.states[variables.var_assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr";
+          var assistbid = hass.states[variables.assist_group].attributes.entity_id
+           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
           var micdevice = hass.states[assistbid].attributes.mic_device;
           var micstate = hass.states[micdevice].state;
           var assisting = micstate.includes("start");
@@ -39,16 +44,16 @@ button_card_templates:
         ]]]
       var_mic_device: |-
         [[[
-          var assistbid = hass.states[variables.var_assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr";
+          var assistbid = hass.states[variables.assist_group].attributes.entity_id
+           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
           var micdevice = hass.states[assistbid].attributes.mic_device;
           var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
           return `${micdevice}`
         ]]]
       var_mic_mute: |-
         [[[
-          var assistbid = hass.states[variables.var_assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr";
+          var assistbid = hass.states[variables.assist_group].attributes.entity_id
+           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
           var micdevice = hass.states[assistbid].attributes.mic_device;
           var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
           var micstate = hass.states[micdevice].state;
@@ -56,23 +61,23 @@ button_card_templates:
         ]]]
       var_mic_switch: |-
         [[[
-          var assistbid = hass.states[variables.var_assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr";
+          var assistbid = hass.states[variables.assist_group].attributes.entity_id
+           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
           var micdevice = hass.states[assistbid].attributes.mic_device;
           var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
           return `${micswitch}`
         ]]]        
       var_mediaplayer_device: |-
         [[[
-          var assistbid = hass.states[variables.var_assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr";
+          var assistbid = hass.states[variables.assist_group].attributes.entity_id
+           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
           var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
           return `${mediadevice}`
         ]]]        
       var_mediaplayer_mute: |-
         [[[
-          var assistbid = hass.states[variables.var_assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? "sensor.assistsat_viewlr";
+          var assistbid = hass.states[variables.assist_group].attributes.entity_id
+           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
           var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
           var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
           return `${mediaplayerstate}`
@@ -222,7 +227,7 @@ button_card_templates:
           styles:
             grid:
               - grid-template-areas: |
-                  "mediaplayer mic hold dnd washer"
+                  "mediaplayer mic hold dnd"
               - grid-template-rows: min-content
               - grid-template-columns: 1fr 1fr 1fr 1fr
             card:
@@ -329,3 +334,4 @@ button_card_templates:
                   service_data:
                     do_not_disturb: false
                     entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+
