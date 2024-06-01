@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      assist_group: group.assist_satellites
+      assist_group: group.viewassist_satellites
       var_weather_entity: weather.home
       use_24_hour_time: false
       default_satellite: |-
