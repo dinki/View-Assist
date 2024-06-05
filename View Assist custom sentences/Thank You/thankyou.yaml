@@ -1,0 +1,19 @@
+alias: VIEW ASSIST - Thank you
+description: ""
+trigger:
+  - platform: conversation
+    command: (Thank you|Thanks)
+condition: []
+action:
+  - set_conversation_response: |-
+      {{ [
+        "Glad I could help",
+        "My pleasure",
+        "Happy to assist",
+        "It was nothing",
+        "Anytime",
+        "You're too kind",
+        "Don't mention it",
+        "It's the least I could do"
+      ] | random }}
+mode: single
