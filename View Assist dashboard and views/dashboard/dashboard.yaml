@@ -2,7 +2,7 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
-      var_weather_entity: weather.home
+      var_weather_entity: weather.forecast_home
       use_24_hour_time: false
       default_satellite: |-
         [[[
@@ -334,3 +334,5 @@ button_card_templates:
                   service_data:
                     do_not_disturb: false
                     entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+views:
+  - title: Home
