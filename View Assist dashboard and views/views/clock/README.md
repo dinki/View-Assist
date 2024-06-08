@@ -1,6 +1,6 @@
 Details for Clock View
 
-This card can be added by copy pasting.  One configuration will need to be made for the background image to be visible:
+This card can be added by copy pasting.  One variable in the configuration will need to be made for the background image to be visible:
 
 ```
 variables:
