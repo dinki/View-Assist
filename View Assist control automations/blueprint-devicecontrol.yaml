@@ -6,19 +6,31 @@ blueprint:
     satellite:
       name: Satellite
       description: The View Assist device entity to control
+      selector:
+        entity:
+          filter:
+            - domain: sensor      
       default: "sensor.viewassist-living_room"
     timer:
       name: Timer
       description: The associated timer device entity for the satellite
+      selector:
+        entity:
+          filter:
+            - domain: timer      
       default: "timer.viewassist-living_room"
+    display:
+      name: Display Device
+      description: The browsermod display device used by View Assist
+      selector:
+        entity:
+          filter:
+            - domain: sensor       
+      default: "sensor.browsermod-livingroom_browser_path"
     dashboard:
       name: Dashboard
       description: The base dashboard for View Assist
       default: "/dashboard-viewassist/"
-    display:
-      name: Display Device
-      description: The browsermod display device used by View Assist
-      default: "sensor.browsermod-livingroom_browser_path"
     home:
       name: Default Home screen
       description: The screen to return to after timeout
