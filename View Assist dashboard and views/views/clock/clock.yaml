@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
   background: /local/viewassist/pinkbluesky.jpg
+  clockcardversion: "1.0.0"
 template:
   - variable_template
   - body_template
