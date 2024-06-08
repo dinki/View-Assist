@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Control display template
-  description: This is used as a base for setting up display control on a View Assist Satellite
+  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.0.0)
   domain: automation
   input:
     satellite:
@@ -18,7 +18,11 @@ blueprint:
     display:
       name: Display Device
       description: The browsermod display device used by View Assist
-      default: "sensor.browsermod-livingroom_browser_path"    
+      default: "sensor.browsermod-livingroom_browser_path"
+    home:
+      name: Default Home screen
+      description: The screen to return to after timeout
+      default: "/dashboard-viewassist/clock"              
 trigger:
   - platform: state
     entity_id:
@@ -44,6 +48,7 @@ variables:
   satellite: !input satellite
   dashboard: !input dashboard
   display: !input display
+  home: !input home
 action:
   - choose:
       - conditions:
@@ -71,7 +76,7 @@ action:
             then:
               - service: browser_mod.navigate
                 data:
-                  path: "{{dashboard}}/clock"
+                  path: "{{home}}"
                 target:
                   device_id: "{{device_id(display)}}"
           - if:
