@@ -1,4 +1,6 @@
 type: custom:button-card
+variables:
+  background: /local/viewassist/pinkbluesky.jpg
 template:
   - variable_template
   - body_template
@@ -12,9 +14,7 @@ styles:
     - grid-template-rows: min-content min-content min-content min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background: >-
-        center / cover no-repeat 
-        url("/local/viewassist/leaf-darker-background.jpg")
+    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
   custom_fields:
     time:
