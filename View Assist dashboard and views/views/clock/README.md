@@ -1,4 +1,4 @@
-Details for Clock View
+# Details for Clock View
 
 This card can be added by copy pasting.  One variable in the configuration will need to be made for the background image to be visible:
 
@@ -8,7 +8,7 @@ variables:
 ```
 The background image will need to be uploaded to the web directory located within the config directory of the Home Assistant server.  That path is then added to the configuration file.
 
-Some example, free backgrounds are provided in the samplebackground directory.  These have all been downloaded using the free license from unsplash.com .  I encourage you to browse this site or any others and find an image that fits your needs and style.
+Some example, free backgrounds are provided in the 'Sample_Backgrounds' directory.  These have all been downloaded using the free license from unsplash.com .  I encourage you to browse this site or any others and find an image that fits your needs and style.
 
 
 Sample background image credits:
