@@ -4,6 +4,6 @@ This card can be added by copy pasting.  One variable in the configuration will 
 
 ```
 variables:
-  background: /local/viewassist/beachcliff.jpg
+  var_forecast_entity: weather.home
 ```
 
