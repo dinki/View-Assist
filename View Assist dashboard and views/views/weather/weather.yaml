@@ -1,0 +1,94 @@
+type: custom:button-card
+variables:
+  var_forecast_entity: weather.home
+  weathercardversion: "1.0.0"
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content max-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-color: '#059bf1'
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - height: 100vdh
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: '-10%'
+custom_fields:
+  message:
+    card:
+      type: weather-forecast
+      entity: '[[[ return variables.var_forecast_entity ]]]'
+      forecast_type: daily
+      card_mod:
+        style:
+          .: |
+            ha-card { background: #059bf9}
+            ha-card.type-weather-forecast {
+              justify-content: start !important;
+            }
+            ha-card.type-weather-forecast>div.content {
+              div {
+                padding-top: 0px;
+              }
+            }
+            ha-card.type-weather-forecast>div.content {
+              display: flex;​
+            }
+          ha-card.type-weather-forecast>div.content: |
+            svg {
+              width: 15vw !important;
+              height: 15vh !important;
+              flex: unset !important;
+            }
+          ha-card.type-weather-forecast>div.forecast: |
+            div {
+              padding-top: 2vh;
+              font-size: 6vh;
+              justify-content: space-evenly !important;
+            }
+          ha-card.type-weather-forecast>div.content>div.info:
+            .: |
+              div.name-state {
+                display: flex;
+                flex-direction: column;
+              }
+            div.name-state:
+              .: |
+                div.state {
+                  font-size: 10vh !important;
+                }
+                div.name {
+                  display: none;
+                  max-height: 0px !important;
+                }
+            div.temp-attribute: |
+              .temp {
+                font-size: 8vh !important;
+                padding-bottom: 0px;
+              }
+              .attribute {
+                font-size: 5vh !important;
+                color:  #e1e1e1 !important;
+              }  
+              .temp span {
+                font-size: 7vh !important;
+                margin-left: -1vh;
+              }
+              .templow {
+                padding-top: 0px;
+                color: #e1e1e1 !important;
+                text-align: right;
+              }
