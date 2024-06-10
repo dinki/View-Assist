@@ -1,7 +1,7 @@
 type: custom:button-card
 variables:
-  var_forecast_entity: weather.forecast_home
-  weathercardversion: 1.0.0
+  var_forecast_entity: weather.home
+  weathercardversion: 1.0.1
 template:
   - variable_template
   - body_template
@@ -27,6 +27,7 @@ styles:
       - align-self: center
       - padding: '-10%'
 custom_fields:
+  title: ''
   message:
     card:
       type: weather-forecast
@@ -57,7 +58,6 @@ custom_fields:
             div {
               padding-top: 2vh;
               font-size: 6vh;
-                color: #e1e1e1 !important;                              
               justify-content: space-evenly !important;
             }
           ha-card.type-weather-forecast>div.content>div.info:
@@ -70,7 +70,6 @@ custom_fields:
               .: |
                 div.state {
                   font-size: 10vh !important;
-                color: #e1e1e1 !important;                                  
                 }
                 div.name {
                   display: none;
@@ -79,7 +78,6 @@ custom_fields:
             div.temp-attribute: |
               .temp {
                 font-size: 8vh !important;
-                color: #e1e1e1 !important;                                
                 padding-bottom: 0px;
               }
               .attribute {
@@ -88,7 +86,6 @@ custom_fields:
               }  
               .temp span {
                 font-size: 7vh !important;
-                color: #e1e1e1 !important;                
                 margin-left: -1vh;
               }
               .templow {
