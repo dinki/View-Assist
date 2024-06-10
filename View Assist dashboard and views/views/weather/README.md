@@ -14,4 +14,13 @@ variables:
   var_forecast_entity: weather.home
 ```
 
+# Change log
+
+June 10 2024
+v1.0.1
+Fix possible bad title
+
+June 9 2024
+v1.0.0
+Initial release
 
