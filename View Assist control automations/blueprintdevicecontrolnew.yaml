@@ -35,11 +35,19 @@ blueprint:
       name: Default Home screen
       description: The screen to return to after timeout
       default: "/dashboard-viewassist/clock"
-    mic:
+    micunmute:
       name: Unmute Mic
       description: Unmute microphone on HA start/restart.  Helpful for Stream Assist devices
       selector:
-        boolean:      
+        boolean:
+      default: true
+    micdevice:
+      name: Mic device
+      description: The microphone entity to unmute microphone on HA start/restart.
+      selector:
+        switch:
+      default: true      
+
 trigger:
   - platform: state
     entity_id:
@@ -61,11 +69,17 @@ trigger:
     id: Cycle
     attribute: mode
     to: cycle
+  - platform: homeassistant
+    event: start
+    id: startup
 variables:
   satellite: !input satellite
   dashboard: !input dashboard
   display: !input display
   home: !input home
+  micunmute: !input micunmute
+  micdevice: !input micdevice
+
 action:
   - choose:
       - conditions:
@@ -146,4 +160,12 @@ action:
                               event_type: timer.finished
                               event_data:
                                 entity_id: !input timer
+      - conditions:
+          - condition: trigger
+            id:
+              - startup
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: !input micdevice                              
 mode: parallel
