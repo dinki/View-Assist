@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Control display template New
-  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.1.0)
+  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.0.0)
   domain: automation
   input:
     satellite:
@@ -10,15 +10,7 @@ blueprint:
         entity:
           filter:
             - domain: sensor      
-      default: "sensor.viewassist-living_room"
-    timer:
-      name: Timer
-      description: The associated timer device entity for the satellite
-      selector:
-        entity:
-          filter:
-            - domain: timer      
-      default: "timer.viewassist-living_room"
+      default: "sensor.viewassist_living_room"
     display:
       name: Display Device
       description: The browsermod display device used by View Assist
@@ -26,7 +18,15 @@ blueprint:
         entity:
           filter:
             - domain: sensor       
-      default: "sensor.browsermod-livingroom_browser_path"
+      default: "sensor.browsermod_livingroom_browser_path"
+    timer:
+      name: Timer
+      description: The associated timer device entity for the satellite
+      selector:
+        entity:
+          filter:
+            - domain: timer      
+      default: "timer.viewassist_living_room"
     dashboard:
       name: Dashboard
       description: The base dashboard for View Assist
