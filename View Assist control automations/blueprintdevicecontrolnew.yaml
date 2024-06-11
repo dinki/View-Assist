@@ -44,8 +44,7 @@ blueprint:
     micdevice:
       name: Mic device
       description: The microphone entity to unmute microphone on HA start/restart.
-      selector:
-        switch:
+      default: "sensor.viewassist_living_room_mic"
       default: true      
 
 trigger:
