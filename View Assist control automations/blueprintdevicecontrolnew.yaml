@@ -163,7 +163,11 @@ action:
             id:
               - startup
         sequence:
-          - service: switch.turn_on
-            target:
-              entity_id: !input micdevice                              
+          - if:
+              - condition: template
+                value_template: "{{ micunmute is true }}"
+            then:        
+              - service: switch.turn_on
+                target:
+                  entity_id: !input micdevice                              
 mode: parallel
