@@ -1,5 +1,5 @@
 blueprint:
-  name: View Assist - Control display template
+  name: View Assist - Control display template New
   description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.0.0)
   domain: automation
   input:
@@ -38,6 +38,8 @@ blueprint:
     mic:
       name: Unmute Mic
       description: Unmute microphone on HA start/restart.  Helpful for Stream Assist devices
+      selector:
+        boolean:      
 trigger:
   - platform: state
     entity_id:
