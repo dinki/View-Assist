@@ -1,32 +1,29 @@
 blueprint:
   name: View Assist - Control display template New
-  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.0.0)
+  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.1.1)
   domain: automation
   input:
     satellite:
       name: Satellite
-      description: The View Assist device entity to control
+      description: The View Assist device entity to control (example sensor.viewassist_living_room)
       selector:
         entity:
           filter:
             - domain: sensor      
-      default: "sensor.viewassist_living_room"
     display:
       name: Display Device
-      description: The browsermod display device used by View Assist
+      description: The browsermod display device used by View Assist (example sensor.browsermod_livingroom_browser_path)
       selector:
         entity:
           filter:
             - domain: sensor       
-      default: "sensor.browsermod_livingroom_browser_path"
     timer:
       name: Timer
-      description: The associated timer device entity for the satellite
+      description: The associated timer device entity for the satellite (example timer.viewassist_living_room)
       selector:
         entity:
           filter:
             - domain: timer      
-      default: "timer.viewassist_living_room"
     dashboard:
       name: Dashboard
       description: The base dashboard for View Assist
@@ -43,9 +40,13 @@ blueprint:
       default: true
     micdevice:
       name: Mic device
-      description: The microphone entity to unmute on HA start/restart.
-      default: "sensor.viewassist_living_room_mic"  
-
+      description: The microphone entity to unmute on HA start/restart. (example switch.viewassist_living_room_mic)
+      selector:
+        entity:
+          filter:
+            - domain:
+                - switch
+          multiple: false      
 trigger:
   - platform: state
     entity_id:
