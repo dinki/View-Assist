@@ -7,6 +7,7 @@
 #  * mediaplayer_device: Used to assign the media player used for View Assist audio playback
 #  * timer_device: Used to assign the timer helper device used for screen time outs
 #  * display_device: Used to determine the correct Browser Mod instance to use for display
+#  * browser_id: Used to assign the browser being used by Browsermod.  This will match the name you give the device in your Browsermod configuration
 #  * view_timeout: Amount of time (seconds) before switching views as controlled by mode (Default 20 seconds)
 # All other lines should be copied as is without change
 #
@@ -26,6 +27,7 @@ template:
         mic_device: "sensor.streamassist-livingroom_stt"
         mediaplayer_device: "media_player.browsermod-livingroom"
         display_device: "sensor.browsermod-livingroom_browser_path"
+        browser_id: "ViewAssist-livingroom"
         timer_device: "timer.viewassist-livingroom"
         view_timeout: "20"
         mode: "normal"
