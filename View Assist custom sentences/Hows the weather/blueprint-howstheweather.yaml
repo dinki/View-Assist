@@ -56,7 +56,7 @@ action:
     enabled: true
   - if:
       - condition: template
-        value_template: "{% if target_satellite_device_type != "audio_only" %}true{% else %}false{% endif %}"
+        value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
     then:
       - service: browser_mod.navigate
         data:
