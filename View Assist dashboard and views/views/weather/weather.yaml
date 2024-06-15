@@ -1,7 +1,8 @@
 type: custom:button-card
 variables:
   var_forecast_entity: weather.home
-  weathercardversion: 1.0.1
+  var_forecast_type: daily
+  weathercardversion: 1.0.2
 template:
   - variable_template
   - body_template
@@ -32,7 +33,7 @@ custom_fields:
     card:
       type: weather-forecast
       entity: '[[[ return variables.var_forecast_entity ]]]'
-      forecast_type: daily
+      forecast_type: '[[[ return variables.var_forecast_type ]]]'
       card_mod:
         style:
           .: |
