@@ -1,0 +1,16 @@
+{
+    // Core Setup
+    "launchOnBoot": true,
+
+    // Browser Mod Compatability
+    "websiteIntegration": true,
+    "autoplayAudio": true,
+
+    // Screen On/Off
+    "motionDetection": true,
+    "timeToScreenOffV2": "1800",
+    "inUseWhileAudioPlaying": true,
+    
+    // Device Stability
+    "preventSleepWhileScreenOff": true
+}
