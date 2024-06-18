@@ -12,5 +12,9 @@
     "inUseWhileAudioPlaying": true,
     
     // Device Stability
-    "preventSleepWhileScreenOff": true
+    "preventSleepWhileScreenOff": true,
+
+    // Launch RTP Mic on Start
+    "appToRunOnStart": "com.rtpmic"
+
 }
