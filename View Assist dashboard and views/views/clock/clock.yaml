@@ -24,7 +24,7 @@ styles:
       - font-size: 2000%
       - font-weight: bold
       - position: absolute
-      - color: white
+      - color: '[[[ return variables.font_color ]]]'
     date:
       - justify-self: center
       - align-self: center
@@ -32,6 +32,7 @@ styles:
       - font-size: 500%
       - width: max-content
       - position: absolute
+      - color: '[[[ return variables.font_color ]]]'
       - top: 75%
     night:
       - position: absolute
@@ -64,10 +65,10 @@ custom_fields:
           - grid-template-rows: min-content min-content
         name:
           - font-size: 400%
-          - color: white
+          - color: '[[[ return variables.font_color ]]]'
         icon:
           - width: 80%
-          - color: white
+          - color: '[[[ return variables.font_color ]]]'
   time: '[[[ return variables.var_current_time ]]]'
   date: '[[[ return variables.var_date_short ]]]'
   night: .

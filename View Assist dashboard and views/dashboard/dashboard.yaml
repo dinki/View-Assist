@@ -3,6 +3,7 @@ button_card_templates:
     variables:
       assist_group: group.viewassist_satellites
       var_weather_entity: weather.forecast_home
+      font_color: white
       use_24_hour_time: false
       default_satellite: |-
         [[[
@@ -178,7 +179,7 @@ button_card_templates:
         - background-size: cover
         - border-radius: 0px
         - overflow: hidden
-        - color: white
+        - color: "[[[ return variables.font_color ]]]"
         - font-family: '"Roboto", sans-serif'
         - font-weight: 300
       custom_fields:
@@ -270,7 +271,7 @@ button_card_templates:
                     - background-color: transparent
                     - padding: 0
                   icon:
-                    - color: white
+                    - color: "[[[ return variables.font_color ]]]"
                 tap_action:
                   action: call-service
                   service: media_player.volume_mute
@@ -288,7 +289,7 @@ button_card_templates:
                     - background-color: transparent
                     - padding: 0
                   icon:
-                    - color: white
+                    - color: "[[[ return variables.font_color ]]]"
                 tap_action:
                   action: call-service
                   service: homeassistant.turn_on
@@ -305,7 +306,7 @@ button_card_templates:
                     - background-color: transparent
                     - padding: 0
                   icon:
-                    - color: white
+                    - color: "[[[ return variables.font_color ]]]"
                 tap_action:
                   action: call-service
                   service: python_script.set_state
@@ -323,7 +324,7 @@ button_card_templates:
                     - background-color: transparent
                     - padding: 0
                   icon:
-                    - color: white
+                    - color: "[[[ return variables.font_color ]]]"
                 tap_action:
                   action: call-service
                   service: python_script.set_state
