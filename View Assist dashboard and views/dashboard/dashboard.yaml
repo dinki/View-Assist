@@ -179,7 +179,6 @@ button_card_templates:
         - background-size: cover
         - border-radius: 0px
         - overflow: hidden
-        - color: "[[[ return variables.font_color ]]]"
         - font-family: '"Roboto", sans-serif'
         - font-weight: 300
       custom_fields:
@@ -187,18 +186,14 @@ button_card_templates:
           - justify-self: start
           - align-self: start
           - z-index: 2
-          - font-size: 200%
-          - font-weight: 400
+          - font-size: 250%
           - padding: 15px 0  0  15px
           - width: max-content
         status:
           - padding: 15px 15px  0  0
           - align-self: start
           - z-index: 2
-          - font-size: 200%
-          - font-weight: 400
           - margin: 0px
-          
         assist:
           - justify-self: end
           - height: 10px

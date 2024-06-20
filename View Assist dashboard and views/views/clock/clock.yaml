@@ -13,7 +13,6 @@ styles:
         "date date"
         "assist assist"
     - grid-template-rows: min-content min-content min-content min-content
-    - grid-template-columns: 1fr 1fr
   card:
     - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
