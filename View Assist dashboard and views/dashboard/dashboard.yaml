@@ -204,7 +204,7 @@ button_card_templates:
           - position: absolute
           - width: 100%
           - z-index: 2
-          - top: 95%
+          - bottom: 0
           - animation: >-
               [[[ if (variables.var_assisting == "true") return "pulse 2s
               infinite"; else return "" ]]]
