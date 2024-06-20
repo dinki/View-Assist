@@ -20,7 +20,7 @@ styles:
     time:
       - justify-self: center
       - z-index: 2
-      - font-size: 2000%
+      - font-size: 1000%;
       - font-weight: bold
       - position: absolute
       - color: '[[[ return variables.font_color ]]]'
@@ -28,11 +28,11 @@ styles:
       - justify-self: center
       - align-self: center
       - z-index: 2
-      - font-size: 500%
+      - font-size: 250%
       - width: max-content
       - position: absolute
       - color: '[[[ return variables.font_color ]]]'
-      - top: 75%
+      - top: 65%
     night:
       - position: absolute
       - min-height: 200%
