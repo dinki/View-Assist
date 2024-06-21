@@ -5,6 +5,7 @@ button_card_templates:
       var_weather_entity: weather.forecast_home
       font_color: white
       use_24_hour_time: false
+      assist_position: 5%
       default_satellite: |-
         [[[
           return hass.states[variables.assist_group].attributes.entity_id
@@ -140,13 +141,6 @@ button_card_templates:
           }   
           return `${weather_icon}` 
         ]]]
-      var_assist_pos: |-
-        [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-            .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var assist_position = hass.states[assistbid].attributes.assist_position ?? "5%";
-          return assist_position
-        ]]]
 
   body_template:
     show_state: false
@@ -208,7 +202,7 @@ button_card_templates:
           - position: absolute
           - width: 100%
           - z-index: 2
-          - bottom: "[[[ return variables.var_assist_pos ]]]"
+          - bottom: "[[[ return variables.assist_position ]]]"
           - animation: >-
               [[[ if (variables.var_assisting == "true") return "pulse 2s
               infinite"; else return "" ]]]
