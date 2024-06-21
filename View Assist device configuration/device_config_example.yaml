@@ -40,3 +40,5 @@ template:
         cycle_view: ""
         do_not_disturb: false
         
+        # Optional Style Settings
+        assist_position: 5%  # Position of the assist indicator bar from the bottom of the screen. Answer with CSS distance such as 5% or 0px. Defaults to 5%. 
