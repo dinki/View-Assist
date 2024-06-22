@@ -1,4 +1,7 @@
 type: custom:button-card
+variables:
+  background: /local/viewassist/announcebird.png
+  infocardversion: 1.0.0
 template:
   - variable_template
   - body_template
@@ -11,7 +14,7 @@ styles:
     - grid-template-rows: min-content 4fr min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background: center / cover no-repeat  url("/local/viewassist/announcebird.png")
+    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
   custom_fields:
     message:
