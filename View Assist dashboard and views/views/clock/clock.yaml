@@ -47,10 +47,8 @@ custom_fields:
   title:
     card:
       type: custom:button-card
-      name: |
-        [[[ return `
-        <ha-icon icon="${variables.var_weather_icon}" style="height: 1.25em; width: 1.25em; display: inline-flex;"></ha-icon> ${variables.var_weather_temperature}
-        ` ]]]
+      icon: '[[[ return variables.var_weather_icon ]]]'
+      name: '[[[ return variables.var_weather_temperature ]]]'
       tap_action:
         action: navigate
         navigation_path: /dashboard-viewassist/weather
@@ -59,9 +57,19 @@ custom_fields:
           - background-color: transparent
           - padding: 0px
           - border-width: 0px
+        grid:
+          - grid-template-areas: '"i n"'
+          - grid-template-rows: min-content min-content
         name:
-          - font-size: 250%
+          - font-size: 15vmin
+          - line-height: 1
           - color: '[[[ return variables.font_color ]]]'
+        icon:
+          - width: 10vmin
+          - color: '[[[ return variables.font_color ]]]'
+          - height: 60%
+          - margin: 0 1vmin 40% 0
+  time: '[[[ return variables.var_current_time ]]]'
   time: '[[[ return variables.var_current_time ]]]'
   date: '[[[ return variables.var_date_short ]]]'
   night: .
