@@ -271,6 +271,7 @@ button_card_templates:
                     - border-width: 0px
                   icon:
                     - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: media_player.volume_mute
@@ -290,6 +291,7 @@ button_card_templates:
                     - border-width: 0px
                   icon:
                     - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: homeassistant.turn_on
@@ -308,6 +310,7 @@ button_card_templates:
                     - border-width: 0px
                   icon:
                     - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: python_script.set_state
@@ -327,6 +330,7 @@ button_card_templates:
                     - border-width: 0px
                   icon:
                     - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: python_script.set_state
