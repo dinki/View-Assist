@@ -58,6 +58,7 @@ custom_fields:
         card:
           - background-color: transparent
           - padding: 0px
+          - border-width: 0px
         name:
           - font-size: 250%
           - color: '[[[ return variables.font_color ]]]'
