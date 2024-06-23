@@ -9,30 +9,25 @@ styles:
   grid:
     - grid-template-areas: |
         "title status"  
+        ". ."
         "time time"
         "date date"
         "assist assist"
-    - grid-template-rows: min-content min-content min-content min-content
+    - grid-template-rows: min-content 1fr min-content 2fr 10px
   card:
     - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
   custom_fields:
     time:
-      - justify-self: center
       - z-index: 2
       - font-size: 34vw
       - font-weight: bold
-      - position: absolute
       - color: '[[[ return variables.font_color ]]]'
     date:
-      - justify-self: center
-      - align-self: center
       - z-index: 2
       - font-size: 9vw
-      - width: max-content
-      - position: absolute
+      - height: 100%
       - color: '[[[ return variables.font_color ]]]'
-      - top: 65%
     night:
       - position: absolute
       - min-height: 200%
