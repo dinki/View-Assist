@@ -173,7 +173,7 @@ button_card_templates:
         - grid-template-rows: min-content 1fr min-content
         - grid-template-columns: 2fr 3fr
         - row-gap: .5rem
-        - min-height: 100vh
+        - height: 100vh
       card:
         - min-height: 100vh
         - padding: 0
