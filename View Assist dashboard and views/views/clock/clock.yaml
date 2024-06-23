@@ -13,7 +13,7 @@ styles:
         "time time"
         "date date"
         "assist assist"
-    - grid-template-rows: min-content 1fr min-content 2fr 10px
+    - grid-template-rows: '[[[ return "min-content 1fr min-content 2fr " + variables.assist_height ]]]'
   card:
     - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
