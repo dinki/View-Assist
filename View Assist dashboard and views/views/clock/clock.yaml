@@ -22,11 +22,13 @@ styles:
       - z-index: 2
       - font-size: 34vw
       - font-weight: bold
+      - line-height: 0.9
       - color: '[[[ return variables.font_color ]]]'
     date:
       - z-index: 2
       - font-size: 9vw
       - height: 100%
+      - line-height: 1
       - color: '[[[ return variables.font_color ]]]'
     night:
       - position: absolute
