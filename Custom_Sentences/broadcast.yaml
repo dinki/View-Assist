@@ -16,6 +16,9 @@ action:
       target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+      view_path: /dashboard-viewassist/info
+      group_entity: group.viewassist_satellites
+      chime_path: www/viewassist/broadcast.mp3
     enabled: true
   - set_conversation_response: ""
   - repeat:
@@ -36,21 +39,21 @@ action:
                 - service: browser_mod.navigate
                   metadata: {}
                   data:
-                    path: /dashboard-viewassist/info
+                    path: "{{ view_path }}"
                   target:
                     device_id: "{{ device_id(state_attr(repeat.item, 'display_device')) }}"
-      for_each: "{{ state_attr('group.viewassist_satellites', 'entity_id')| list }}"
+      for_each: "{{ state_attr(group_entity, 'entity_id')| list }}"
   - service: chime_tts.say
     target:
       entity_id: >-
         {%- set ns = namespace(targets=[]) -%} {%- for satellite in
-        expand('group.viewassist_satellites') -%}
+        expand(group_entity) -%}
           {%- if state_attr(satellite.entity_id,"do_not_disturb") == "False" -%}
             {%- set ns.targets = ns.targets + [state_attr(satellite.entity_id,"mediaplayer_device")] -%}
           {%- endif -%}
         {%- endfor -%} {{ns.targets}}
     data:
-      chime_path: www/viewassist/broadcast.mp3
+      chime_path: "{{ chime_path }}"
       tts_playback_speed: 100
       volume_level: 1
       message: "{{ trigger.slots.name }}"
