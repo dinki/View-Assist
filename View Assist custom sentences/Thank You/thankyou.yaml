@@ -1,5 +1,5 @@
 alias: VIEW ASSIST - Thank you
-description: ""
+description: "Say thank you or thanks and get a kind reply"
 trigger:
   - platform: conversation
     command: (Thank you|Thanks)
