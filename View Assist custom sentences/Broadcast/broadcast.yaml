@@ -32,7 +32,7 @@ action:
               then:
                 - service: python_script.set_state
                   data:
-                    title: Annoucement
+                    title: Announcement
                     entity_id: "{{ repeat.item }}"
                     message_font_size: 4vw
                     message: "{{trigger.slots.name | capitalize}}"
