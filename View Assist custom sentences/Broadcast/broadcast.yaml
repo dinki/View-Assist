@@ -55,7 +55,6 @@ action:
     data:
       chime_path: "{{ chime_path }}"
       tts_playback_speed: 100
-      volume_level: 1
       message: "{{ trigger.slots.name }}"
       tts_platform: google_translate
     enabled: true
