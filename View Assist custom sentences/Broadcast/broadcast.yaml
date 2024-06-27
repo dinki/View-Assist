@@ -3,7 +3,7 @@ description: "Say broadcast and the message and VA will send to all devices not 
 trigger:
   - platform: conversation
     command:
-      - broadcast {name}
+      - (announce | broadcast | tell everyone) {message}
 condition: []
 action:
   - variables:
@@ -35,7 +35,7 @@ action:
                     title: Announcement
                     entity_id: "{{ repeat.item }}"
                     message_font_size: 4vw
-                    message: "{{trigger.slots.name | capitalize}}"
+                    message: "{{trigger.slots.message | capitalize}}"
                 - service: browser_mod.navigate
                   metadata: {}
                   data:
@@ -55,7 +55,7 @@ action:
     data:
       chime_path: "{{ chime_path }}"
       tts_playback_speed: 100
-      message: "{{ trigger.slots.name }}"
+      message: "{{ trigger.slots.message }}"
       tts_platform: google_translate
     enabled: true
 mode: single
