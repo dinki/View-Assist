@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.4.0",
-    "@docusaurus/types": "3.4.0"
+    "@docusaurus/types": "3.4.0",
+    "gh-pages": "^6.1.1"
   },
   "browserslist": {
     "production": [
