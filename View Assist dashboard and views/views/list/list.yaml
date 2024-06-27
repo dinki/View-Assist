@@ -1,0 +1,53 @@
+type: custom:button-card
+variables:
+  var_list: >-
+    [[[ return
+    hass.states[variables.var_assistsat_entity].attributes.data["list"] ??
+    "todo.anylist_alexa_shopping_list"]]]
+  background: /local/viewassist/announcebird.png
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content 4fr min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
+    - background-size: cover
+custom_fields:
+  message:
+    card:
+      type: todo-list
+      entity: '[[[ return variables.var_list ]]]'
+      card_mod:
+        style:
+          .: |
+            ha-card {
+              background-color: transparent;
+              box-shadow: none;
+              border: none;
+              position: absolute;
+              top: 15vh;
+            }
+            ha-check-list-item {
+              color: white;
+              font-size: 3vw;
+              line-height: 1.6;
+            }
+            ha-card.type-todo-list div.header {
+              display: none;
+            }
+            ha-card.type-todo-list .addRow {
+              display: none;
+            }
+            ha-card.type-todo-list div.divider {
+              display: none;
+            }
+            ha-check-list-item.editRow.completed {
+              display: none;
+            }
