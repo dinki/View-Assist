@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
         run:
-            working-directory: wiki
+            working-directory: 'wiki'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,9 +21,9 @@ jobs:
           path: "wiki"
       - uses: actions/setup-node@v4
         with:
-          path: "wiki"
           node-version: 18
           cache: npm
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -34,7 +34,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: wiki/build
+          path: 'wiki/build'
 
   deploy:
     name: Deploy to GitHub Pages
