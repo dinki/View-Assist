@@ -21,7 +21,7 @@ blueprint:
       description: The View Assist dashboard view to use for displaying text only information (example /dashboard-viewassist/info)
       default: "/dashboard-viewassist/info" 
     chime_path:
-      message: Chime path
+      name: Chime path
       description: The path to a sound file to use as the attention device before the message is spoken
       default: "www/viewassist/broadcast.mp3"      
 alias: View Assist - Broadcast
