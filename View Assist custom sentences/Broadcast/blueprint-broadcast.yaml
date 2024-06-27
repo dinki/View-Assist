@@ -7,7 +7,7 @@ blueprint:
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
-      default: "broadcast {message}"
+      default: "(announce | broadcast | tell everyone) {message}"
     group_entity: 
       name: Group Entity
       description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
