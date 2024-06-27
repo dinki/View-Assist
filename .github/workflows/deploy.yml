@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          path: "wiki"
       - uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -31,7 +32,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: wiki/build
 
   deploy:
     name: Deploy to GitHub Pages
