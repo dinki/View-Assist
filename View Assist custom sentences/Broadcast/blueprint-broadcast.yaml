@@ -7,7 +7,7 @@ blueprint:
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
-      default: "broadcast {name}"
+      default: "broadcast {message}"
     group_entity: 
       name: Group Entity
       description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
@@ -21,7 +21,7 @@ blueprint:
       description: The View Assist dashboard view to use for displaying text only information (example /dashboard-viewassist/info)
       default: "/dashboard-viewassist/info" 
     chime_path:
-      name: Chime path
+      message: Chime path
       description: The path to a sound file to use as the attention device before the message is spoken
       default: "www/viewassist/broadcast.mp3"      
 alias: View Assist - Broadcast
@@ -61,7 +61,7 @@ action:
                     title: Announcement
                     entity_id: "{{ repeat.item }}"
                     message_font_size: 4vw
-                    message: "{{trigger.slots.name | capitalize}}"
+                    message: "{{trigger.slots.message | capitalize}}"
                 - service: browser_mod.navigate
                   metadata: {}
                   data:
@@ -82,7 +82,7 @@ action:
       chime_path: "{{ chime_path }}"
       tts_playback_speed: 100
       volume_level: 1
-      message: "{{ trigger.slots.name }}"
+      message: "{{ trigger.slots.message }}"
       tts_platform: google_translate
     enabled: true
 mode: single
