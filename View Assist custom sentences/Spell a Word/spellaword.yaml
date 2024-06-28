@@ -1,5 +1,5 @@
 # View Assist - Spell a Word (v 1.0.0)
-# Special thanks to Scratt for his work on this blueprint
+# Written by - Dinki
 alias: View Assist - Spell a Word
 description: "Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable"
 variables:
