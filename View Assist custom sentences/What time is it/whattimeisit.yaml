@@ -1,0 +1,83 @@
+# View Assist - What time is it (v 1.0.0)
+# Written by - Dinki
+alias: View Assist  - What time is it
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - "[What] [whats] [is] [the] time [is it]"
+    id: time
+  - platform: conversation
+    command:
+      - "(What is the date | what day is it | what is today)"
+    id: date
+    enabled: true
+  - platform: conversation
+    command:
+      - "([What('s)] [is] [the] day of the week [is it] | What day of the week is it)"
+    id: dayofweek
+variables:
+  view: /dashboard-viewassist/clock
+  target_satellite_device: |-
+    {% for sat in expand('group.viewassist_satellites') %}
+      {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - time
+        sequence:
+          - set_conversation_response: Its {{ now().strftime('%-I:%M %p')}}
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{% else
+                  %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{ target_display_device }}"          
+      - conditions:
+          - condition: trigger
+            id:
+              - dayofweek
+        sequence:
+          - set_conversation_response: Today is {{ now().strftime('%A')}}
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{% else
+                  %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{ target_display_device }}" 
+      - conditions:
+          - condition: trigger
+            id:
+              - date
+        sequence:
+          - set_conversation_response: Today is {{ now().strftime('%A %B %-d')}}
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{% else
+                  %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{ target_display_device }}" 
+            enabled: true
+    enabled: true
