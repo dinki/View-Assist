@@ -30,7 +30,7 @@ trigger:
     id: time
   - platform: conversation
     command:
-      - !input command_prompt_data
+      - !input command_prompt_date
     id: date
     enabled: true
   - platform: conversation
