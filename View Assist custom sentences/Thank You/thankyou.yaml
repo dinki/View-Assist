@@ -1,8 +1,12 @@
+# View Assist - Thank you (v 1.0.0)
+# Written by - Dinki
 alias: VIEW ASSIST - Thank you
-description: "Say thank you or thanks and get a kind reply"
+description: ""
 trigger:
   - platform: conversation
-    command: (Thank you|Thanks)
+    command:
+      - (Thank you|Thanks) [so much]
+      - (You are great|You're Great)
 condition: []
 action:
   - set_conversation_response: |-
