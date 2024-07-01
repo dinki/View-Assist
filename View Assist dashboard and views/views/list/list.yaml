@@ -1,22 +1,14 @@
 type: custom:button-card
 variables:
-  listcardversion: "1.0.0"
-  background: /local/viewassist/announcebird.png
   var_list: >-
-    [[[ return
-    hass.states[variables.var_assistsat_entity].attributes.data["list"] ??
-    "todo.anylist_alexa_shopping_list"]]]
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.data["list"]} catch {
+    return  "todo.shopping_list"}]]]
+  background: /local/viewassist/announcebird.png
 template:
   - variable_template
   - body_template
 styles:
-  grid:
-    - grid-template-areas: |
-        "title status"  
-        "message message"
-        "assist assist"        
-    - grid-template-rows: min-content 4fr min-content
-    - grid-template-columns: 1fr 1fr
   card:
     - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
