@@ -33,6 +33,9 @@ blueprint:
           filter:
             - domain: group
       default: "group.viewassist_satellites"                  
+    list_entity: 
+      name: List Entity
+      description: The todo list entity to use as the list for adding/removing/viewing (example group.viewassist_satellites)            
     view:
       name: Dashboard List view
       description: The View Assist dashboard view designed to show lists (example /dashboard-viewassist/list)
@@ -61,7 +64,7 @@ trigger:
 action:
   - variables:
       group_entity: !input group_entity
-      list_entity: !input list
+      list_entity: !input list_entity
       view: !input view      
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
