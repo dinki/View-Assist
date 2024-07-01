@@ -32,10 +32,7 @@ blueprint:
         entity:
           filter:
             - domain: group
-      default: "group.viewassist_satellites"                  
-    list_entity: 
-      name: List Entity
-      description: The todo list entity to use as the list for adding/removing/viewing (example group.viewassist_satellites)            
+      default: "group.viewassist_satellites"                       
     view:
       name: Dashboard List view
       description: The View Assist dashboard view designed to show lists (example /dashboard-viewassist/list)
