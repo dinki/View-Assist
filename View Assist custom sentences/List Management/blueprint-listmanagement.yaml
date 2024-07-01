@@ -72,7 +72,7 @@ action:
             then:
               - set_conversation_response: >
                   {{ trigger.slots.item }} is already in your {{
-                  state_attr(list_entity,'source_name') }}
+                  state_attr(list_entity,'friendly_name') }}
                 enabled: true
             else:
               - service: todo.add_item
@@ -82,7 +82,7 @@ action:
                   entity_id: "{{ list_entity }}"
               - set_conversation_response: >
                   {{ trigger.slots.item }} added to your {{
-                  state_attr(list_entity,'source_name') }}
+                  state_attr(list_entity,'friendly_name') }}
                 enabled: true
           - if:
               - condition: template
@@ -118,12 +118,12 @@ action:
                   entity_id: "{{ list_entity }}"
               - set_conversation_response: >
                   {{ trigger.slots.item }} removed from {{
-                  state_attr(list_entity,'source_name') }}
+                  state_attr(list_entity,'friendly_name') }}
                 enabled: true
             else:
               - set_conversation_response: >
                   {{ trigger.slots.item }} is not in {{
-                  state_attr(list_entity,'source_name') }}
+                  state_attr(list_entity,'friendly_name') }}
           - if:
               - condition: template
                 value_template: >-
@@ -139,12 +139,12 @@ action:
       - sequence:
           - set_conversation_response: |
               {% if int(states(list_entity)) == 0 %}
-                There are no unchecked items on your  {{ state_attr(list_entity,'source_name') }}
+                There are no unchecked items on your  {{ state_attr(list_entity,'friendly_name') }}
               {% elif int(states(list_entity)) == 1 %}
-                There is 1 unchecked item on your {{ state_attr(list_entity,'source_name') }} 
+                There is 1 unchecked item on your {{ state_attr(list_entity,'friendly_name') }} 
                 It is {{ state_attr(list_entity,'unchecked_items') }}
               {% else %}
-                There are {{ states(list_entity) }} items on your {{ state_attr(list_entity,'source_name') }}
+                There are {{ states(list_entity) }} items on your {{ state_attr(list_entity,'friendly_name') }}
                 They are {{ state_attr(list_entity,'unchecked_items') }}
               {% endif %}
             enabled: true
@@ -162,7 +162,7 @@ action:
       - service: python_script.set_state
         data:
           entity_id: "{{ target_satellite_device }}"
-          title: "{{ state_attr(list_entity,'source_name') }}"
+          title: "{{ state_attr(list_entity,'friendly_name') }}"
           message_font_size: 4vw
           list: "{{ list_entity }}"
         enabled: true
