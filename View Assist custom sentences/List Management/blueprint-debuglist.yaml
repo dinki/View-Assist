@@ -73,24 +73,7 @@ action:
       - sequence:
           - set_conversation_response: "Broken"
             enabled: true
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if target_satellite_device_type != 'audio_only' %}true{%
-                  else %}false{% endif %}
-            then:
-              - service: browser_mod.navigate
-                data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{ target_display_device }}"
-      - service: python_script.set_state
-        data:
-          entity_id: "{{ target_satellite_device }}"
-          title: "{{ state_attr(list_entity,'source_name') }}"
-          message_font_size: 4vw
-          list: "{{ list_entity }}"
-        enabled: true
+
 variables:
   group_entity: !input group_entity
   list_entity: !input list_entity
