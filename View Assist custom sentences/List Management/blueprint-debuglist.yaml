@@ -30,8 +30,18 @@ description: ""
 trigger:
   - platform: conversation
     command:
-      - !input command_add1
+      - add {item} to [my | the][grocery|shopping] list
     id: add_item
+  - platform: conversation
+    command:
+      - remove {item} from [my | the][grocery|shopping] list
+      - take {item} off [my | the] [grocery|shopping] list
+    id: remove_item
+  - platform: conversation
+    command:
+      - (what's | what is) on [my| the] [grocery|shopping] list
+      - show [me] [my| the] [grocery|shopping] list
+    id: list_list
 action:
   - choose:
       - conditions:
@@ -66,12 +76,63 @@ action:
             then:
               - service: browser_mod.navigate
                 data:
-                  path: "{{ view }}"
+                  path: "{{ dashboard }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id: remove_item
+        sequence:
+          - if:
+              - condition: template
+                value_template: >
+                  {% if state_attr(list_entity,'unchecked_items')|list |
+                  select('search', trigger.slots.item, ignorecase=true) | list |
+                  first | default  %}
+
+                  true
+
+                  {%- endif -%}
+            then:
+              - service: todo.remove_item
+                data:
+                  item: >-
+                    {{state_attr(list_entity,'unchecked_items')|list |
+                    select('search', trigger.slots.item, ignorecase=true) | list
+                    | first | default }}
+                target:
+                  entity_id: "{{ list_entity }}"
+              - set_conversation_response: >
+                  {{ trigger.slots.item }} removed from {{
+                  state_attr(list_entity,'source_name') }}
+                enabled: true
+            else:
+              - set_conversation_response: >
+                  {{ trigger.slots.item }} is not in {{
+                  state_attr(list_entity,'source_name') }}
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{%
+                  else %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ dashboard }}"
                 target:
                   device_id: "{{ target_display_device }}"
     default:
       - sequence:
-          - set_conversation_response: "Broken"
+          - set_conversation_response: |
+              {% if int(states(list_entity)) == 0 %}
+                There are no unchecked items on your  {{ state_attr(list_entity,'source_name') }}
+              {% elif int(states(list_entity)) == 1 %}
+                There is 1 unchecked item on your {{ state_attr(list_entity,'source_name') }} 
+                It is {{ state_attr(list_entity,'unchecked_items') }}
+              {% else %}
+                There are {{ states(list_entity) }} items on your {{ state_attr(list_entity,'source_name') }}
+                They are {{ state_attr(list_entity,'unchecked_items') }}
+              {% endif %}
             enabled: true
           - if:
               - condition: template
@@ -81,20 +142,19 @@ action:
             then:
               - service: browser_mod.navigate
                 data:
-                  path: "{{ view }}"
+                  path: "{{ dashboard }}"
                 target:
                   device_id: "{{ target_display_device }}"
       - service: python_script.set_state
         data:
           entity_id: "{{ target_satellite_device }}"
-          title: "{{ state_attr(list_entity,'friendly_name') }}"
+          title: "{{ state_attr(list_entity,'source_name') }}"
           message_font_size: 4vw
           list: "{{ list_entity }}"
         enabled: true
 variables:
-  group_entity: !input group_entity
-  list_entity: !input list_entity
-  view: !input view      
+  list_entity: todo.anylist_alexa_shopping_list
+  dashboard: /dashboard-viewassist/list
   target_satellite_device: |-
     {% for sat in expand('group.viewassist_satellites') %}
       {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
