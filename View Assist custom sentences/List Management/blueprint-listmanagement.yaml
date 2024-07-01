@@ -1,0 +1,183 @@
+# View Assist - View Assist List Management (v 1.0.0)
+# Special thanks to Elwing for her work on this automation and view
+blueprint:
+  name: View Assist - List Management
+  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist listmanagement v 1.0.0)
+  domain: automation
+  input:
+    command_add1:
+      name: Command Text Add 1
+      description: The first phrase you want to use to trigger adding to the list
+      default: "add {item} to [my | the][grocery|shopping] list"
+    command_remove1:
+      name: Command Text Remove 1
+      description: The first phrase you want to use to trigger removing from the list
+      default: "remove {item} from [my | the][grocery|shopping] list"
+    command_remove2:
+      name: Command Text Remove 2
+      description: The second phrase you want to use to trigger removing from the list (can not be blank)
+      default: "take {item} off [my | the] [grocery|shopping] list"
+    command_show1:
+      name: Command Text Show 1
+      description: The first phrase you want to use to trigger showing the list
+      default: "(what's | what is) on [my| the] [grocery|shopping] list"
+    command_show2:
+      name: Command Text Show 2
+      description: The second phrase you want to use to trigger showing the list (can not be blank)
+      default: "show [me] [my| the] [grocery|shopping] list"            
+    group_entity: 
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites"                  
+    view:
+      name: Dashboard List view
+      description: The View Assist dashboard view designed to show lists (example /dashboard-viewassist/list)
+      default: "/dashboard-viewassist/list" 
+    list_entity:
+      name: Todo List 
+      description: The Home Assistant todo list to use (example todo.shopping_list)
+      default: "todo.shopping_list"       
+alias: View Assist - List Management
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - !input command_add1
+    id: add_item
+  - platform: conversation
+    command:
+      - !input command_remove1
+      - !input command_remove2
+    id: remove_item
+  - platform: conversation
+    command:
+      - !input command_show1
+      - !input command_show2
+    id: list_list
+action:
+  - variables:
+      group_entity: !input group_entity
+      list_entity: !input list
+      view: !input view      
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: add_item
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ trigger.slots.item | lower in
+                  state_attr(list_entity,'unchecked_items')|map('lower')|list}} 
+            then:
+              - set_conversation_response: >
+                  {{ trigger.slots.item }} is already in your {{
+                  state_attr(list_entity,'source_name') }}
+                enabled: true
+            else:
+              - service: todo.add_item
+                data:
+                  item: "{{trigger.slots.item | title}}"
+                target:
+                  entity_id: "{{ list_entity }}"
+              - set_conversation_response: >
+                  {{ trigger.slots.item }} added to your {{
+                  state_attr(list_entity,'source_name') }}
+                enabled: true
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{%
+                  else %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+      - conditions:
+          - condition: trigger
+            id: remove_item
+        sequence:
+          - if:
+              - condition: template
+                value_template: >
+                  {% if state_attr(list_entity,'unchecked_items')|list |
+                  select('search', trigger.slots.item, ignorecase=true) | list |
+                  first | default  %}
+                  true
+                  {%- endif -%}
+            then:
+              - service: todo.remove_item
+                data:
+                  item: >-
+                    {{state_attr(list_entity,'unchecked_items')|list |
+                    select('search', trigger.slots.item, ignorecase=true) | list
+                    | first | default }}
+                target:
+                  entity_id: "{{ list_entity }}"
+              - set_conversation_response: >
+                  {{ trigger.slots.item }} removed from {{
+                  state_attr(list_entity,'source_name') }}
+                enabled: true
+            else:
+              - set_conversation_response: >
+                  {{ trigger.slots.item }} is not in {{
+                  state_attr(list_entity,'source_name') }}
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{%
+                  else %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+    default:
+      - sequence:
+          - set_conversation_response: |
+              {% if int(states(list_entity)) == 0 %}
+                There are no unchecked items on your  {{ state_attr(list_entity,'source_name') }}
+              {% elif int(states(list_entity)) == 1 %}
+                There is 1 unchecked item on your {{ state_attr(list_entity,'source_name') }} 
+                It is {{ state_attr(list_entity,'unchecked_items') }}
+              {% else %}
+                There are {{ states(list_entity) }} items on your {{ state_attr(list_entity,'source_name') }}
+                They are {{ state_attr(list_entity,'unchecked_items') }}
+              {% endif %}
+            enabled: true
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only' %}true{%
+                  else %}false{% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          title: "{{ state_attr(list_entity,'source_name') }}"
+          message_font_size: 4vw
+          list: "{{ list_entity }}"
+        enabled: true
+mode: single
