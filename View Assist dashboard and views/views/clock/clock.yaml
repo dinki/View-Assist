@@ -9,30 +9,27 @@ styles:
   grid:
     - grid-template-areas: |
         "title status"  
+        ". ."
         "time time"
         "date date"
         "assist assist"
-    - grid-template-rows: min-content min-content min-content min-content
-    - grid-template-columns: 1fr 1fr
+    - grid-template-rows: '[[[ return "min-content 1fr min-content 2fr " + variables.assist_height ]]]'
   card:
     - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
     - background-size: cover
   custom_fields:
     time:
-      - justify-self: center
       - z-index: 2
-      - font-size: 2000%
+      - font-size: 34vw
       - font-weight: bold
-      - position: absolute
-      - color: white
+      - line-height: 0.9
+      - color: '[[[ return variables.font_color ]]]'
     date:
-      - justify-self: center
-      - align-self: center
       - z-index: 2
-      - font-size: 500%
-      - width: max-content
-      - position: absolute
-      - top: 75%
+      - font-size: 9vw
+      - height: 100%
+      - line-height: 1
+      - color: '[[[ return variables.font_color ]]]'
     night:
       - position: absolute
       - min-height: 200%
@@ -55,19 +52,21 @@ custom_fields:
       styles:
         card:
           - background-color: transparent
+          - padding: 0px
           - border-width: 0px
-          - width: 50%
-          - margin-left: 5%
-          - margin-top: '-5%'
         grid:
           - grid-template-areas: '"i n"'
           - grid-template-rows: min-content min-content
         name:
-          - font-size: 400%
-          - color: white
+          - font-size: 15vmin
+          - line-height: 1
+          - color: '[[[ return variables.font_color ]]]'
         icon:
-          - width: 80%
-          - color: white
+          - width: 10vmin
+          - color: '[[[ return variables.font_color ]]]'
+          - height: 60%
+          - margin: 0 1vmin 40% 0
+  time: '[[[ return variables.var_current_time ]]]'
   time: '[[[ return variables.var_current_time ]]]'
   date: '[[[ return variables.var_date_short ]]]'
   night: .

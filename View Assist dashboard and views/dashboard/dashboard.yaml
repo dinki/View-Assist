@@ -3,7 +3,10 @@ button_card_templates:
     variables:
       assist_group: group.viewassist_satellites
       var_weather_entity: weather.forecast_home
+      font_color: white
       use_24_hour_time: false
+      assist_position: 5%
+      assist_height: 10px
       default_satellite: |-
         [[[
           return hass.states[variables.assist_group].attributes.entity_id
@@ -139,6 +142,7 @@ button_card_templates:
           }   
           return `${weather_icon}` 
         ]]]
+
   body_template:
     show_state: false
     show_icon: false
@@ -161,23 +165,23 @@ button_card_templates:
       service: switch.toggle
       service_data:
         entity_id: '[[[ return variables.var_mic_switch ]]]'
-    aspect_ratio: 2/1
     styles:
       grid:
         - grid-template-areas: |
             "title status"  
             "message message"
             "assist assist"        
-        - grid-template-rows: min-content 4fr min-content
-        - grid-template-columns: 1fr 1fr
+        - grid-template-rows: min-content 1fr min-content
+        - grid-template-columns: 2fr 3fr
         - row-gap: .5rem
+        - height: 100vh
       card:
         - min-height: 100vh
+        - padding: 0
         - background-color: '#059bf1'
         - background-size: cover
         - border-radius: 0px
         - overflow: hidden
-        - color: white
         - font-family: '"Roboto", sans-serif'
         - font-weight: 300
       custom_fields:
@@ -185,30 +189,24 @@ button_card_templates:
           - justify-self: start
           - align-self: start
           - z-index: 2
-          - font-size: 200%
-          - font-weight: 400
+          - font-size: 250%
+          - padding: 15px 0  0  15px
           - width: max-content
-          - margin-left: 2%
-          - margin-top: '-5%'
         status:
-          - justify-self: end
+          - padding: 15px 15px  0  0
           - align-self: start
           - z-index: 2
-          - font-size: 200%
-          - font-weight: 400
-          - width: max-content
-          - margin-top: '-10%'
+          - margin: 0px
         assist:
           - justify-self: end
-          - height: 10px
+          - height: "[[[ return variables.assist_height ]]]"
           - position: absolute
           - width: 100%
           - z-index: 2
-          - top: 95%
+          - bottom: "[[[ return variables.assist_position ]]]"
           - animation: >-
               [[[ if (variables.var_assisting == "true") return "pulse 2s
               infinite"; else return "" ]]]
-          - height: 10px
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
@@ -232,6 +230,8 @@ button_card_templates:
               - grid-template-columns: 1fr 1fr 1fr 1fr
             card:
               - background-color: transparent
+              - margin: 0px
+              - padding: 0px
               - border-width: 0px
             custom_fields:
               mediaplayer:
@@ -268,10 +268,11 @@ button_card_templates:
                 styles:
                   card:
                     - background-color: transparent
+                    - padding: 0
                     - border-width: 0px
                   icon:
-                    - color: white
-                    - height: 90%
+                    - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: media_player.volume_mute
@@ -287,10 +288,11 @@ button_card_templates:
                 styles:
                   card:
                     - background-color: transparent
+                    - padding: 0
                     - border-width: 0px
                   icon:
-                    - color: white
-                    - height: 90%
+                    - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: homeassistant.turn_on
@@ -305,10 +307,11 @@ button_card_templates:
                 styles:
                   card:
                     - background-color: transparent
+                    - padding: 0
                     - border-width: 0px
                   icon:
-                    - color: white
-                    - height: 90%
+                    - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: python_script.set_state
@@ -324,10 +327,11 @@ button_card_templates:
                 styles:
                   card:
                     - background-color: transparent
+                    - padding: 0
                     - border-width: 0px
                   icon:
-                    - color: white
-                    - height: 90%
+                    - color: "[[[ return variables.font_color ]]]"
+                    - width: 8vmin
                 tap_action:
                   action: call-service
                   service: python_script.set_state
