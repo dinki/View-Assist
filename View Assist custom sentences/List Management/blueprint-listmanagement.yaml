@@ -1,8 +1,8 @@
-# View Assist - View Assist List Management (v 1.0.0)
+# View Assist - View Assist List Management (v 1.1.0)
 # Special thanks to Elwing for her work on this automation and view
 blueprint:
   name: View Assist - List Management
-  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist listmanagement v 1.0.0)
+  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist listmanagement v 1.1.0)
   domain: automation
   input:
     command_add1:
@@ -64,11 +64,15 @@ action:
           - condition: trigger
             id: add_item
         sequence:
+          - service: todo.get_items 
+            data: 
+              entity_id: "{{ list_entity }}"
+              status: needs_action
+            response_variable: list_items        
           - if:
               - condition: template
                 value_template: >-
-                  {{ trigger.slots.item | lower in
-                  state_attr(list_entity,'unchecked_items')|map('lower')|list}} 
+                  {{ trigger.slots.item | lower in (list_items[list_entity]["items"] | map(attribute='summary') | map('lower')| list)}} 
             then:
               - set_conversation_response: >
                   {{ trigger.slots.item }} is already in your {{
@@ -99,21 +103,22 @@ action:
           - condition: trigger
             id: remove_item
         sequence:
+          - service: todo.get_items 
+            data: 
+              entity_id: "{{ list_entity }}"
+              status: needs_action
+            response_variable: list_items        
           - if:
               - condition: template
                 value_template: >
-                  {% if state_attr(list_entity,'unchecked_items')|list |
-                  select('search', trigger.slots.item, ignorecase=true) | list |
-                  first | default  %}
-                  true
-                  {%- endif -%}
+                  {{ trigger.slots.item | lower in (list_items[list_entity]["items"] | map(attribute='summary') | map('lower')| list) }}
             then:
               - service: todo.remove_item
                 data:
                   item: >-
-                    {{state_attr(list_entity,'unchecked_items')|list |
+                    {{list_items[list_entity]["items"] | map(attribute='summary') | list |
                     select('search', trigger.slots.item, ignorecase=true) | list
-                    | first | default }}
+                    | first | default }}                  
                 target:
                   entity_id: "{{ list_entity }}"
               - set_conversation_response: >
@@ -137,17 +142,23 @@ action:
                   device_id: "{{ target_display_device }}"
     default:
       - sequence:
+          - service: todo.get_items 
+            data: 
+              entity_id: "{{ list_entity }}"
+              status: needs_action
+            response_variable: list_items   
           - set_conversation_response: |
               {% if int(states(list_entity)) == 0 %}
                 There are no unchecked items on your  {{ state_attr(list_entity,'friendly_name') }}
               {% elif int(states(list_entity)) == 1 %}
                 There is 1 unchecked item on your {{ state_attr(list_entity,'friendly_name') }} 
-                It is {{ state_attr(list_entity,'unchecked_items') }}
+                It is {{ list_items[list_entity]["items"][0].summary }}
               {% else %}
                 There are {{ states(list_entity) }} items on your {{ state_attr(list_entity,'friendly_name') }}
-                They are {{ state_attr(list_entity,'unchecked_items') }}
+                They are 
+                  {{ list_items[list_entity]["items"] | map(attribute='summary') | list | join('\n') }}
               {% endif %}
-            enabled: true
+            enabled: true               
           - if:
               - condition: template
                 value_template: >-
