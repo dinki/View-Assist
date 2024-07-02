@@ -129,6 +129,7 @@ action:
               - set_conversation_response: >
                   {{ trigger.slots.item }} is not in {{
                   state_attr(list_entity,'friendly_name') }}
+                enabled: true
           - if:
               - condition: template
                 value_template: >-
@@ -156,7 +157,7 @@ action:
               {% else %}
                 There are {{ states(list_entity) }} items on your {{ state_attr(list_entity,'friendly_name') }}
                 They are 
-                  {{ list_items[list_entity]["items"] | map(attribute='summary') | list | join('\n') }}
+                  {{ list_items[list_entity]["items"] | map(attribute='summary') | list | join(', ') }}
               {% endif %}
             enabled: true               
           - if:
