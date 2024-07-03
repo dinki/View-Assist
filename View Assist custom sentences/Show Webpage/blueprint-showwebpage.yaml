@@ -23,11 +23,7 @@ blueprint:
     view:
       name: Dashboard List view
       description: The View Assist dashboard view designed to show lists (example /dashboard-viewassist/list)
-      default: "/dashboard-viewassist/webpage" 
-    list_entity:
-      name: Todo List 
-      description: The Home Assistant todo list to use (example todo.shopping_list)
-      default: "todo.shopping_list"       
+      default: "/dashboard-viewassist/webpage"      
     url:
       name: Webpage
       description:  The website url to display (example https://www.home-assistant.io/)
