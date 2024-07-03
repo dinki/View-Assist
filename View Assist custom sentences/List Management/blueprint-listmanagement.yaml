@@ -176,7 +176,8 @@ action:
           entity_id: "{{ target_satellite_device }}"
           title: "{{ state_attr(list_entity,'friendly_name') }}"
           message_font_size: 4vw
-          list: "{{ list_entity }}"
+          data:
+            list: "{{ list_entity }}"          
         enabled: true
 variables:
   group_entity: !input group_entity
