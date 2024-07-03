@@ -1,0 +1,85 @@
+# View Assist - Show Webpage (v 1.0.0)
+blueprint:
+  name: View Assist - Show Webpage
+  description: Ask View Assist to show a website as defined by the blueprint (View Assist showwebpage v 1.0.0)
+  domain: automation
+  input:
+    command:
+      name: Command Text
+      description: The command to use to trigger the automation
+      default: "Show Home Assistant"
+    response:
+      name: Response Text
+      description: The response to give when launching website
+      default: "Here comes Home Assistant"                
+    group_entity: 
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites"                  
+    view:
+      name: Dashboard List view
+      description: The View Assist dashboard view designed to show lists (example /dashboard-viewassist/list)
+      default: "/dashboard-viewassist/webpage" 
+    list_entity:
+      name: Todo List 
+      description: The Home Assistant todo list to use (example todo.shopping_list)
+      default: "todo.shopping_list"       
+    url:
+      name: Webpage
+      description:  The website url to display (example https://www.home-assistant.io/)
+      default: "https://www.home-assistant.io/"
+    hold_mode:
+      name: Hold Mode
+      description: Set on to keep the page from automatically switching after timeout
+      default: true
+      selector:
+        boolean:      
+alias: View Assist - Show website
+description: ""
+trigger:
+  - platform: conversation
+    command: !input command
+condition: []
+action:
+  - variables:
+      url: !input url
+      hold_mode: !input hold_mode
+      view: !input view
+      response: !input response
+      group_entity: !input group_entity
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+  - service: python_script.set_state
+    data:
+      entity_id: "{{ target_satellite_device }}"
+      title: ""
+      data:
+        url: "{{ url }}"
+    enabled: true
+  - if:
+      - condition: template
+        value_template: "{% if hold_mode %}true{%endif%}"
+    then:
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          mode: hold
+        enabled: true
+  - service: browser_mod.navigate
+    data:
+      path: "{{ view }}"
+    target:
+      device_id: "{{ target_display_device }}"
+  - set_conversation_response: "{{ response }}"
+mode: single
