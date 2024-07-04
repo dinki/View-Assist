@@ -1,0 +1,29 @@
+type: custom:button-card
+variables:
+  var_url: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.data["url"]} catch {
+    return "https://www.home-assistant.io/"}]]]
+  webpageversion: "1.0.0"
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background-color: '#00000'
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - width: 100%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+custom_fields:
+  message:
+    card:
+      type: iframe
+      url: '[[[ return variables.var_url ]]]'
+      aspect_ratio: 50%
