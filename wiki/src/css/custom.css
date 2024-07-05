@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /**
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
@@ -6,7 +10,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
+  --ifm-color-primary: rgb(3, 169, 244);
   --ifm-color-primary-dark: #29784c;
   --ifm-color-primary-darker: #277148;
   --ifm-color-primary-darkest: #205d3b;
@@ -27,4 +31,28 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+body {
+  font-family: 'Instrument Sans';
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: Figtree;}
+
+.badge {
+  padding: .3rem;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.badgeGreen {
+  background: green;
+}
+
+#buyMeACoffee {
+  margin-left: 5px;
+  height: 45px;
+  vertical-align: middle;
 }
