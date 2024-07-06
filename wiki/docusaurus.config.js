@@ -130,21 +130,13 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tablet Setup',
-                to: '/docs/tablet-setup',
+                label: 'Tablet Satellite Setup',
+                to: '/docs/tablet-satellite',
               },
               {
-                label: 'Tablet Setup',
-                to: '/docs/tablet-setup',
-              },
-              {
-                label: 'Tablet Setup',
-                to: '/docs/tablet-setup',
-              },
-              {
-                label: 'Tablet Setup',
-                to: '/docs/tablet-setup',
-              },
+                label: 'View Assist Setup',
+                to: '/docs/view-assist',
+              }
             ],
           },
           {
