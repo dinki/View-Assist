@@ -8,3 +8,5 @@ Allows user to add and remove items from a shopping list.  User can also request
 
 Detailed install video:
 https://youtu.be/h6WmQ7LiO_0
+
+Special thanks to Elwing for her work on this automation and view
