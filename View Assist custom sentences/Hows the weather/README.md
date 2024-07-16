@@ -8,4 +8,4 @@ https://youtu.be/DvKvlPslk6M
 
 This custom sentence is triggered by saying "How's the weather".  It will respond with the current temperature and weather condition as an audio response.  The forecast view will appear on the screens of all View Assist satellites with displays.
 
-Special thanks to Scratt for his work on this automation
+Special thanks to Scratt for his work on this blueprint
