@@ -30,8 +30,6 @@ blueprint:
       description: The path to a sound file to use as the attention device before
         the message is spoken
       default: www/viewassist/broadcast.mp3
-  source_url: https://raw.githubusercontent.com/dinki/View-Assist/main/View Assist
-    custom sentences/Broadcast/blueprint-broadcast.yaml
 alias: View Assist - Broadcast
 description: Say broadcast and the message and VA will send to all devices not in
   do not disturb mode (v1.0.0)
