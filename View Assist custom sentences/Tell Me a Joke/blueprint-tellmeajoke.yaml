@@ -1,0 +1,43 @@
+# View Assist - Tell Me a Joke(v 1.0.0)
+blueprint:
+  name: View Assist - Tell Me a Joke
+  description: Ask Assist to tell you a joke and get ready to laugh or groan (View Assist tellmeajoke v 1.0.0)
+  domain: automation
+  input:
+    command:
+      name: Command 
+      description: The phrase you want to use to trigger the joke request
+      default: "tell me a joke"
+    group_entity: 
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites" 
+alias: View Assist - Tell me a joke
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - !input command
+condition: []
+action:
+  - variables:
+      group_entity: !input group_entity
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+  - service: pyscript.get_dadjoke
+    data: {}
+    response_variable: joke_response
+  - set_conversation_response: "{{ joke_response['joke']  }}"
+    enabled: true
+mode: single
