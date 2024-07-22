@@ -6,8 +6,8 @@ blueprint:
   domain: automation
   input:
     command:
-      name: The command to use to search Wikipedia
-      description: The first phrase you want to use to trigger adding to the list
+      name: Command
+      description: The phrase you want to use to trigger searching Wikipedia
       default: "(Tell me about [the] {searchterm}| search [for] {searchterm})"
     dashboard_infopic:
       name: Dashboard Infopic
