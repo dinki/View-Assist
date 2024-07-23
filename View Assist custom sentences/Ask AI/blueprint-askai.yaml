@@ -67,7 +67,7 @@ action:
         /\> {{ (ai_answer.response.speech.plain.speech | from_json)['answer'] }}
   - if:
       - condition: template
-        value_template: "{{ ('view' in state_attr(repeat.item, 'type')) }}"
+        value_template: "{{ target_satellite_device_type != 'audio_only' }}"
     then:
       - service: browser_mod.navigate
         data:
