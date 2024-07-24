@@ -10,6 +10,8 @@ blueprint:
     agent:
       name: Conversation Agent
       description: The Conversation Agent you created to connect to AI (example conversation.chatgpt)
+      selector:
+        conversation_agent:
       default: ""      
     view:
       name: View
