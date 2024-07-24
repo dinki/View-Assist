@@ -7,3 +7,5 @@ Requirements:
   * [Info View](https://github.com/dinki/View-Assist/wiki/View-Assist-Custom-Views-Gallery#info)
 
 I am using gpt-3.5-turbo which is considerably cheaper than the default gpt-4 model
+
+Usage is 'Ok nabu ask AI [your question]' .
