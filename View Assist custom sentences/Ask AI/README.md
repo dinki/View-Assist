@@ -5,3 +5,5 @@ An on demand call to OpenAI for answering questions about life, love and happine
 Requirements:
   * Must have a paid OpenAI account.  Don't worry.  The price to use is very low (pennies a month).  See [this video](https://www.youtube.com/watch?v=4D6bIDcVOWc) for more information for pricing and set up
   * [Info View](https://github.com/dinki/View-Assist/wiki/View-Assist-Custom-Views-Gallery#info)
+
+I am using gpt-3.5-turbo which is considerably cheaper than the default gpt-4 model
