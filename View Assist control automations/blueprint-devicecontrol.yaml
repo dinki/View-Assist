@@ -191,8 +191,7 @@ action:
           - if:
               - condition: template
                 value_template: >-
-                  {{ state_attr(satellite,
-                  'data').last_said != "Sorry, I couldn't understand that"}}
+                  {{ state_attr(intent, 'intent_output')['response']['speech']['plain']['speech'] != "Sorry, I couldn't understand that"}}
             then:
               - service: python_script.set_state
                 data:
