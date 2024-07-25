@@ -29,7 +29,7 @@ action:
               - repeat
         sequence:
           - set_conversation_response: >-
-              I said {{ state_attr(target_satellite_device, 'last_said')| replace("I said", "")}}
+              I said {{ state_attr(target_satellite_device, 'last_said')| replace("I said ", "")}}
 variables:
   group_entity: !input group_entity
   target_satellite_device: |-
