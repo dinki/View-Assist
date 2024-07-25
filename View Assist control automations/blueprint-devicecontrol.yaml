@@ -1,5 +1,5 @@
 blueprint:
-  name: View Assist - Control display template
+  name: View Assist - Control display template testing
   description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.1.1)
   domain: automation
   input:
@@ -23,7 +23,14 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain: timer      
+            - domain: timer
+    intent:
+      name: Intent
+      description: The above View Assist device entity intent sensor (example sensor.viewassist_living_room_intent)
+      selector:
+        entity:
+          filter:
+            - domain: sensor            
     dashboard:
       name: Dashboard
       description: The base dashboard for View Assist
@@ -71,6 +78,10 @@ trigger:
   - platform: homeassistant
     event: start
     id: startup
+  - platform: state
+    entity_id:
+      - !input intent
+    id: intent    
 variables:
   satellite: !input satellite
   dashboard: !input dashboard
@@ -78,6 +89,7 @@ variables:
   home: !input home
   micunmute: !input micunmute
   micdevice: !input micdevice
+  intent: !input intent
 
 action:
   - choose:
@@ -171,4 +183,22 @@ action:
               - service: switch.turn_on
                 target:
                   entity_id: !input micdevice                              
+      - conditions:
+          - condition: trigger
+            id:
+              - intent
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ state_attr(satellite,
+                  'data').last_said != "Sorry, I couldn't understand that"}}
+            then:
+              - service: python_script.set_state
+                data:
+                  entity_id: "{{ satellite }}"
+                  last_said: >-
+                    {{ state_attr(intent,
+                    'intent_output')['response']['speech']['plain']['speech']}}
+                enabled: true                               
 mode: parallel
