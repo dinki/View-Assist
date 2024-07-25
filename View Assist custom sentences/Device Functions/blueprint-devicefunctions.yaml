@@ -6,7 +6,7 @@ blueprint:
     repeat_command:
       name: Repeat command
       description: The phrase you want to use to trigger repeating last spoken response
-      default: "((please)what did you say(please) | (please) say that again (please)| (please) repeat that (please))"
+      default: "(what did you say  | [please] say that again [please] | [please] repeat that [please])"
     group_entity: 
       name: Group Entity
       description: The group entity that holds the list of ViewAssist devices
