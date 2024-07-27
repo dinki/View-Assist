@@ -101,7 +101,7 @@ action:
       {{state_attr('sensor.team_tracker','team_name')}}
       {{state_attr('sensor.team_tracker','team_score')}},
       {{state_attr('sensor.team_tracker','opponent_name')}}
-      {{state_attr('sensor.team_tracker','opponent_score')}}" {% endif %}
+      {{state_attr('sensor.team_tracker','opponent_score')}} {% endif %}
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
