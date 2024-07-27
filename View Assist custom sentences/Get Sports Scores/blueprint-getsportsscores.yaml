@@ -34,7 +34,7 @@ trigger:
 condition: []
 action:
   - variables:
-      group_entity: !input group_entities
+      group_entity: !input group_entity
       dashboard: !input view
       team_tracker: !input team_tracker
       target_satellite_device: |-
