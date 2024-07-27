@@ -110,7 +110,7 @@ action:
         data:
           entity_id: "{{ target_satellite_device }}"
           title: ""
-          data:
+          view_data:
             team_tracker: "{{ team_tracker }}"
             
       - service: browser_mod.navigate
