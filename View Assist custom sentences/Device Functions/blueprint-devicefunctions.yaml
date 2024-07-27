@@ -15,7 +15,7 @@ blueprint:
       name: Do Not Disturb Command 
       description: The command to use to trigger turning off DND mode
       default: "(set do not disturb [to] off | turn off do not disturb mode)"      
-    modes:
+    mode:
       name: Modes
       description: The available modes (do not include do not disturb)
       default: "['normal', 'night', 'hold', 'cycle']"         
