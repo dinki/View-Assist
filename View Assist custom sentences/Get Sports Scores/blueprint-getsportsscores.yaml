@@ -91,7 +91,7 @@ action:
       {{state_attr('sensor.team_tracker','opponent_name')}} today and {% if
       is_state_attr('sensor.team_tracker','team_winner', false) %}lost{% else
       %}won{% endif %} {{state_attr('sensor.team_tracker','team_score')}} -
-      {{state_attr('sensor.team_tracker','opponent_score')}} " {% elif
+      {{state_attr('sensor.team_tracker','opponent_score')}}  {% elif
       is_state('sensor.team_tracker', 'PRE') %} "The
       {{state_attr('sensor.team_tracker','team_name')}} play the
       {{state_attr('sensor.team_tracker','opponent_name')}} today
