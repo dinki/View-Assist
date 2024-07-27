@@ -65,7 +65,7 @@ action:
           - if:
               - condition: template
                 value_template: >-
-                  {{ trigger.slots.modes in modes | trigger.slots.modes in ['do not disturb'] }}
+                  {{ trigger.slots.modes in modes or trigger.slots.modes in ['do not disturb'] }}
             then:
               - set_conversation_response: Setting mode to {{ trigger.slots.modes }}
                 enabled: true
@@ -78,7 +78,7 @@ action:
                       - if:
                           - condition: template
                             value_template: >-
-                              {% if target_satellite_device_type != 'audio_only'
+                              {% if target_satellite_device_type == 'audio_only'
                               %}true{% else %}false{% endif %}
                         then:
                           - set_conversation_response: >-
