@@ -35,7 +35,7 @@ condition: []
 action:
   - variables:
       group_entity: !input group_entity
-      dashboard: !input view
+      view: !input view
       team_tracker: !input team_tracker
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
