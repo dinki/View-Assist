@@ -102,13 +102,17 @@ action:
       {{state_attr('sensor.team_tracker','team_score')}},
       {{state_attr('sensor.team_tracker','opponent_name')}}
       {{state_attr('sensor.team_tracker','opponent_score')}}" {% endif %}
-  - service: python_script.set_state
-    data:
-      entity_id: "{{ target_satellite_device }}"
-      title: ""
-  - service: browser_mod.navigate
-    data:
-      path: "{{ view }}"
-    target:
-      device_id: "{{ target_display_device }}"
+  - if:
+      - condition: template
+        value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+    then:      
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          title: ""
+      - service: browser_mod.navigate
+        data:
+          path: "{{ view }}"
+        target:
+          device_id: "{{ target_display_device }}"
 mode: single
