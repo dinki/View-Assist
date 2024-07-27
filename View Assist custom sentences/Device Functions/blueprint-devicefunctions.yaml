@@ -29,8 +29,7 @@ blueprint:
       default: "group.viewassist_satellites" 
 trigger:
   - platform: conversation
-    command:
-      - !input repeat_command
+    command: !input repeat_command
     id: repeat
   - platform: conversation
     command: !input mode_command
