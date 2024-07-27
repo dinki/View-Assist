@@ -1,6 +1,6 @@
 import requests
 @service(supports_response="optional")
-def viewassist-get_dadjoke(return_response=True):
+def viewassist_get_dadjoke(return_response=True):
     """yaml
     name: Get Dad joke
     description: Gets a random dad joke from api
