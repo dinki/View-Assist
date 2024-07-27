@@ -1,0 +1,114 @@
+# Special thanks to Mr. Picc010 for his contribution to this blueprint
+blueprint:
+  name: View Assist - Get Sports Scores
+  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.0.0)
+  domain: automation
+  input:
+    command:
+      name: Command
+      description: The phrase you want to use to trigger getting the score for a team
+      default: "how did the {team} do"
+    team_tracker:
+      name: Team Tracker Sensor
+      description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
+      default: "sensor.team_tracker"
+      selector:
+        entity:
+          filter:
+            - domain: sensor       
+    group_entity: 
+      name: Group Entity
+      description: The group entity that holds the list of ViewAssist devices
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites" 
+    view:
+      name: Dashboard Weather view
+      description: The View Assist dashboard view to use for sports scores (example /dashboard-viewassist/sports)
+      default: "/dashboard-viewassist/sports"       
+trigger:
+  - platform: conversation
+    command: !input command
+condition: []
+action:
+  - variables:
+      group_entity: !input group_entities
+      dashboard: !input view
+      team_tracker: !input team_tracker
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+      mlb_teams:
+        d backs: ari
+        braves: atl
+        orioles: bal
+        red sox: bos
+        cubs: chc
+        white sox: chw
+        reds: cin
+        guardians: cle
+        rockies: col
+        tigers: det
+        astros: hou
+        royals: kc
+        angels: laa
+        dodgers: lad
+        marlins: mia
+        brewers: mil
+        twins: min
+        mets: nym
+        yankees: nyy
+        athletics: oak
+        phillies: phi
+        pirates: pit
+        padres: sd
+        giants: sf
+        mariners: sea
+        cardinals: stl
+        rays: tb
+        rangers: tex
+        blue jays: tor
+        nationals: wsh
+      query_team: "{{ mlb_teams[(trigger.slots.team)|lower] }}"
+  - service: teamtracker.call_api
+    target:
+      entity_id: "{{ team_tracker }}"
+    data:
+      sport_path: baseball
+      team_id: "{{ query_team |lower}}"
+      league_path: mlb
+  - set_conversation_response: >-
+      {% if is_state('sensor.team_tracker', 'POST')%} "The
+      {{state_attr('sensor.team_tracker','team_name')}} Played the
+      {{state_attr('sensor.team_tracker','opponent_name')}} today and {% if
+      is_state_attr('sensor.team_tracker','team_winner', false) %}lost{% else
+      %}won{% endif %} {{state_attr('sensor.team_tracker','team_score')}} -
+      {{state_attr('sensor.team_tracker','opponent_score')}} " {% elif
+      is_state('sensor.team_tracker', 'PRE') %} "The
+      {{state_attr('sensor.team_tracker','team_name')}} play the
+      {{state_attr('sensor.team_tracker','opponent_name')}} today
+      {{state_attr('sensor.team_tracker','kickoff_in')}}" {% else %} "The
+      {{state_attr('sensor.team_tracker','team_name')}} are currently playing
+      the {{state_attr('sensor.team_tracker','opponent_name')}}. The score is
+      {{state_attr('sensor.team_tracker','team_name')}}
+      {{state_attr('sensor.team_tracker','team_score')}},
+      {{state_attr('sensor.team_tracker','opponent_name')}}
+      {{state_attr('sensor.team_tracker','opponent_score')}}" {% endif %}
+  - service: python_script.set_state
+    data:
+      entity_id: "{{ target_satellite_device }}"
+      title: ""
+  - service: browser_mod.navigate
+    data:
+      path: "{{ view }}"
+    target:
+      device_id: "{{ target_display_device }}"
+mode: single
