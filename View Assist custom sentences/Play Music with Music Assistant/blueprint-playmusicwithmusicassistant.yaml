@@ -1,0 +1,151 @@
+blueprint:
+  name: View Assist - Play Music with Music Assistant
+  description: Use various methods to play individual songs, add to queue, and play artist from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.0)
+  domain: automation
+  input:
+    group_entity:
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example
+        group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - group
+          multiple: false
+      default: group.viewassist_satellites
+    view_path:
+      name: Dashboard Info view
+      description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
+      default: /dashboard-viewassist/music
+alias: View Assist - Play Music with Music Assistant
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - play the artist {artist}
+      - play some {artist}
+    id: playartist
+  - platform: conversation
+    command:
+      - start [the] {playlist} playlist
+    id: playlist
+  - platform: conversation
+    command:
+      - play {song} by {artist}
+    id: playsong
+  - platform: conversation
+    command:
+      - queue {song} by {artist}
+      - cue {song} by {artist}
+    id: cuesong
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - playartist
+        sequence:
+          - service: mass.search
+            data:
+              limit: 1
+              media_type:
+                - artist
+              name: "{{ trigger.slots.artist  }}"
+            response_variable: found_artist
+          - service: mass.play_media
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+            data:
+              media_type: artist
+              enqueue: replace
+              media_id: "{{ found_artist.artists.0.name }}"
+          - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - playlist
+        sequence:
+          - service: mass.play_media
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+            data:
+              media_type: playlist
+              enqueue: replace
+              media_id: "{{ trigger.slots.playlist }}"
+          - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - playsong
+        sequence:
+          - service: mass.search
+            data:
+              limit: 1
+              media_type:
+                - track
+              name: "{{ trigger.slots.song  }}"
+              artist: "{{ trigger.slots.artist  }}"
+            response_variable: found_song
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/music
+            target:
+              device_id: "{{ target_display_device }}"
+          - service: mass.play_media
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+            data:
+              media_type: track
+              enqueue: play
+              media_id: "{{ found_song.tracks.0.name }}"
+          - service: mass.play_media
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+            data:
+              media_type: track
+              enqueue: add
+              media_id: "{{ found_song.tracks.0.name }}"
+              radio_mode: true
+          - set_conversation_response: ""
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - cuesong
+        sequence:
+          - service: mass.search
+            data:
+              limit: 1
+              media_type:
+                - track
+              name: "{{ trigger.slots.song  }}"
+              artist: "{{ trigger.slots.artist  }}"
+            response_variable: found_song
+          - service: mass.play_media
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+            data:
+              media_type: track
+              enqueue: next
+              media_id: "{{ found_song.tracks.0.name }}"
+              artist: "{{ trigger.slots.artist  }}"
+          - set_conversation_response: ""
+variables:
+  dashboard: !input view_path
+  group_entity: !input group_entity
+  target_satellite_device: |-
+    {% for sat in expand(group_entity) %}
+      {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}_2"
+  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
