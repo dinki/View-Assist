@@ -1,0 +1,50 @@
+type: custom:button-card
+variables:
+  musiccardversion: 1.0.0
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content 4fr min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-color: black;
+  custom_fields:
+    message:
+      - font-size: '[[[ return variables.var_font_size ]]]'
+      - position: relative
+      - padding: 10px
+      - border-radius: 10px
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: 2%
+      - top: '-10vh'
+custom_fields:
+  title: ''
+  message:
+    card:
+      type: custom:mod-card
+      card:
+        type: media-control
+        entity: media_player.viewassist_livingroom_2
+      style: |
+        ha-card {
+          width: 95vw !important;
+          height: 90vh !important;
+
+          margin: 0 !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+          --paper-card-background-color: transparent !important;
+        }
+
+        ha-card.type-media-control div.player div.top-info {
+          display: none;
+        }
