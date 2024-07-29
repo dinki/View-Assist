@@ -1,3 +1,9 @@
+<a href="https://www.youtube.com/watch?v=2xSvFU5Xlss"><img src="https://img.youtube.com/vi/2xSvFU5Xlss/mqdefault.jpg" width="60%"></a>
+
+Detailed install video:
+
+https://www.youtube.com/watch?v=2xSvFU5Xlss
+
 An on demand call to OpenAI for answering questions about life, love and happiness.  Seriously though, this allows the user to use LLM to get answers to questions and greatly simplifies the need for coding a lot of these things by hand.  Be warned, though.  LLMs are known to provide bogus answers sometimes so use with caution.
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView+Assist+custom+sentences%2FAsk+AI%2Fblueprint-askai.yaml)
