@@ -46,7 +46,7 @@ action:
       target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
-      mlb_teams:
+      pro_teams:
         d backs: ari
         braves: atl
         orioles: bal
@@ -77,7 +77,40 @@ action:
         rangers: tex
         blue jays: tor
         nationals: wsh
-      query_team: "{{ mlb_teams[(trigger.slots.team)|lower] }}"
+        cardinals: ari
+        falcons: atl
+        ravens: bal
+        bills: buf
+        panthers: car
+        bears: chi
+        bengals: cin
+        browns: cle
+        cowboys: dal
+        broncos: den
+        lions: det
+        packers: gb
+        texans: hou
+        colts: ind
+        jaguars: jax
+        chiefs: kc
+        raiders: lv
+        chargers: lac
+        rams: lar
+        dolphins: mia
+        vikings: min
+        patriots: ne
+        saints: no
+        giants: nyg
+        jets: nyj
+        eagles: phi
+        steelers: pit
+        49ers: sf
+        seahawks: sea
+        buccaneers: tb
+        titans: ten
+        commanders: was
+        
+      query_team: "{{ pro_teams[(trigger.slots.team)|lower] }}"
   - service: teamtracker.call_api
     target:
       entity_id: "{{ team_tracker }}"
