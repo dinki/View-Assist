@@ -77,7 +77,7 @@ action:
         rangers: tex
         blue jays: tor
         nationals: wsh
-        cardinals: ari
+      nfl_teams:
         falcons: atl
         ravens: bal
         bills: buf
@@ -99,8 +99,7 @@ action:
         dolphins: mia
         vikings: min
         patriots: ne
-        saints: no
-        giants: nyg
+        saints: "no"
         jets: nyj
         eagles: phi
         steelers: pit
@@ -109,16 +108,40 @@ action:
         buccaneers: tb
         titans: ten
         commanders: was
-        
-      query_team: "{{ pro_teams[(trigger.slots.team)|lower] }}"
-  - service: teamtracker.call_api
-    target:
-      entity_id: "{{ team_tracker }}"
-    data:
-      sport_path: baseball
-      team_id: "{{ query_team |lower}}"
-      league_path: mlb
-  - set_conversation_response: >-
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
+    then:
+      - variables:
+          query_team: "{{ mlb_teams[(trigger.slots.team)|lower] }}"
+          sport_path: baseball
+          league_path: mlb
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+        enabled: true
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in nfl_teams }}"
+    then:
+      - variables:
+          query_team: "{{ mlb_teams[(trigger.slots.team)|lower] }}"
+          sport_path: football
+          league_path: nfl
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+        enabled: true
+    enabled: true
+  - set_conversation_response: |-
       {% if is_state('sensor.team_tracker', 'POST')%} 
         The {{state_attr('sensor.team_tracker','team_name')}} Played the {{state_attr('sensor.team_tracker','opponent_name')}} today and 
           {% if is_state_attr('sensor.team_tracker','team_winner', false) %}
@@ -129,14 +152,16 @@ action:
         {{state_attr('sensor.team_tracker','team_score')}} - {{state_attr('sensor.team_tracker','opponent_score')}}  
       {% elif is_state('sensor.team_tracker', 'PRE') %} 
         The {{state_attr('sensor.team_tracker','team_name')}} play the {{state_attr('sensor.team_tracker','opponent_name')}} today {{state_attr('sensor.team_tracker','kickoff_in')}} 
-      {% else %} 
+      {% elif is_state('sensor.team_tracker', 'IN') %} 
         The {{state_attr('sensor.team_tracker','team_name')}} are currently playing the {{state_attr('sensor.team_tracker','opponent_name')}}. 
         The score is {{state_attr('sensor.team_tracker','team_name')}} {{state_attr('sensor.team_tracker','team_score')}}, {{state_attr('sensor.team_tracker','opponent_name')}}  {{state_attr('sensor.team_tracker','opponent_score')}} 
+      {% else %} 
+        Sorry.  I could not find any recent games for that team
       {% endif %}
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
-    then:      
+    then:
       - service: python_script.set_state
         data:
           entity_id: "{{ target_satellite_device }}"
