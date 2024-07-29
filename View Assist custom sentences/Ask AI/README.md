@@ -12,6 +12,8 @@ Requirements:
   * Must have a paid OpenAI account.  Don't worry.  The price to use is very low (pennies a month).  See [this video](https://www.youtube.com/watch?v=4D6bIDcVOWc) for more information for pricing and set up
   * [Info View](https://github.com/dinki/View-Assist/wiki/View-Assist-Custom-Views-Gallery#info)
 
-I am using gpt-3.5-turbo which is considerably cheaper than the default gpt-4 model
+I am using gpt-3.5-turbo which is considerably cheaper than the default gpt-4 model.
+*UPDATE* Discord user vash2695 wrote "In case it hasn't been mentioned already, you should set that integration to use "gpt-4o-mini". It's substantially smarter than 3.5 while also being cheaper!"
+
 
 Usage is 'Ok nabu ask AI [your question]' .
