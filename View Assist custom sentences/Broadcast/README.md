@@ -17,3 +17,7 @@ tts:
   - platform: google_translate
     service_name: google_say
 ```
+
+## To do
+
+* Add playback of the message on the sending device in addition to the receiving ones
