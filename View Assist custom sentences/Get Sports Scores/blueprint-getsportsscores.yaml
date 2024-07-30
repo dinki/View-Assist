@@ -129,7 +129,7 @@ action:
         value_template: "{{ (trigger.slots.team)|lower in nfl_teams }}"
     then:
       - variables:
-          query_team: "{{ mlb_teams[(trigger.slots.team)|lower] }}"
+          query_team: "{{ nfl_teams[(trigger.slots.team)|lower] }}"
           sport_path: football
           league_path: nfl
       - service: teamtracker.call_api
