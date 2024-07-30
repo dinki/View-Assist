@@ -12,4 +12,6 @@ An Android device is used for the display, voice input, and audio output. The de
 1. Know the IP Address of your tablet
 
     :::info
-    While beyond the scope of this guide, we highly recommend you setup your tablet with a fixed IP address as several parts of the configuration 
+    While beyond the scope of this guide, we highly recommend you setup your tablet with a fixed IP address as several parts of the configuration require you knowing the IP address of your tablet. If the IP address were to change, it would break portions of
+    your configuration going forward.
+    :::
