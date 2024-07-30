@@ -1,5 +1,6 @@
 ---
 title: View Assist Installation
+sidebar_position: 3
 ---
 
 The View Assist system is made up of several different components. These include:
