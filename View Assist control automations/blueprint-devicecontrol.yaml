@@ -33,8 +33,8 @@ blueprint:
             - domain: sensor            
     dashboard:
       name: Dashboard
-      description: The base dashboard for View Assist
-      default: "/dashboard-viewassist/"
+      description: The base dashboard for View Assist (do not include trailing slash)
+      default: "/dashboard-viewassist"
     home:
       name: Default Home screen
       description: The screen to return to after timeout
