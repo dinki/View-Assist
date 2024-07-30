@@ -7,7 +7,7 @@ Several Home Assistant custom integrations (or custom_components as they are oft
 
 **Required**
 - **[Browser Mod](custom-integrations/browsermod)** - allows switching views and routing playback audio to your tablet
-- **[Stream Assist](custom-integrations/streamAssist)** - listens to audio coming from tablet to process wake word and pass to Assist Pipeline
+- **[Stream Assist](custom-integrations/streamassist)** - listens to audio coming from tablet to process wake word and pass to Assist Pipeline
 
 **Optional**
 - **[Chime TTS](custom-integrations/chimetts)** - allows prepending/appending a chime or sound to TTS (text-to-speech) messages
