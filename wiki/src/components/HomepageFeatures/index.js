@@ -4,32 +4,32 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Bring Your Own Device',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+         Android tablet, Wyoming satellite, ESPHome, PC, phone, or any other device, 
+         integrate them all with Home Assistant's voice assistant quickly with View Assist.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Build Your Own Dashboard',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Customizable and capable of integrating with existing dashboards, View Assist 
+        lets you pick and use only the pieces you need.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Extend Your Own Voice',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Use ready-made custom sentences, blueprints and views to enhance your voice powered
+        Home Assistant experience.
       </>
     ),
   },

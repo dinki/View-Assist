@@ -103,9 +103,9 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'View Assistant',
+        title: 'View Assist',
         logo: {
-          alt: 'View Assistant Logo',
+          alt: 'View Assist Logo',
           src: 'img/view-assist.svg',
         },
         items: [

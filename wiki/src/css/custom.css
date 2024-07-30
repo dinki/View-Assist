@@ -56,3 +56,11 @@ h1, h2, h3, h4, h5, h6 { font-family: Figtree;}
   height: 45px;
   vertical-align: middle;
 }
+
+.viewAssistLogo {
+  max-width: 20vw;
+}
+
+[data-theme='dark'] nav img {
+  filter: invert(100%) sepia(0%) saturate(7421%) hue-rotate(97deg) brightness(104%) contrast(100%);
+}
