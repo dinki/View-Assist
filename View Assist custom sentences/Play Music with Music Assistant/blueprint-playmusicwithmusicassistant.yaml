@@ -67,8 +67,12 @@ action:
               entity_id: "{{ target_satellite_device }}"
               mode: music
               title: ""
-
-
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/music
+            target:
+              device_id: "{{ target_display_device }}"
       - conditions:
           - condition: trigger
             id:
