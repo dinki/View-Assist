@@ -62,6 +62,13 @@ action:
               enqueue: replace
               media_id: "{{ found_artist.artists.0.name }}"
           - set_conversation_response: ""
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+
+
       - conditions:
           - condition: trigger
             id:
@@ -75,6 +82,17 @@ action:
               enqueue: replace
               media_id: "{{ trigger.slots.playlist }}"
           - set_conversation_response: ""
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/music
+            target:
+              device_id: "{{ target_display_device }}"
       - conditions:
           - condition: trigger
             id:
@@ -88,12 +106,6 @@ action:
               name: "{{ trigger.slots.song  }}"
               artist: "{{ trigger.slots.artist  }}"
             response_variable: found_song
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: /dashboard-viewassist/music
-            target:
-              device_id: "{{ target_display_device }}"
           - service: mass.play_media
             target:
               entity_id: "{{ target_mediaplayer_device }}"
@@ -101,6 +113,17 @@ action:
               media_type: track
               enqueue: play
               media_id: "{{ found_song.tracks.0.name }}"
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/music
+            target:
+              device_id: "{{ target_display_device }}"
           - service: mass.play_media
             target:
               entity_id: "{{ target_mediaplayer_device }}"
@@ -115,6 +138,12 @@ action:
               entity_id: "{{ target_satellite_device }}"
               mode: music
               title: ""
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/music
+            target:
+              device_id: "{{ target_display_device }}"              
       - conditions:
           - condition: trigger
             id:
@@ -137,6 +166,17 @@ action:
               media_id: "{{ found_song.tracks.0.name }}"
               artist: "{{ trigger.slots.artist  }}"
           - set_conversation_response: ""
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: /dashboard-viewassist/music
+            target:
+              device_id: "{{ target_display_device }}"
 variables:
   dashboard: !input view_path
   group_entity: !input group_entity
