@@ -17,7 +17,7 @@ blueprint:
     view_path:
       name: Dashboard Info view
       description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
-      default: /dashboard-viewassist/music
+      default: "{{ view_path }}"
 alias: View Assist - Play Music with Music Assistant
 description: ""
 trigger:
@@ -70,7 +70,7 @@ action:
           - service: browser_mod.navigate
             metadata: {}
             data:
-              path: /dashboard-viewassist/music
+              path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"
       - conditions:
@@ -94,7 +94,7 @@ action:
           - service: browser_mod.navigate
             metadata: {}
             data:
-              path: /dashboard-viewassist/music
+              path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"
       - conditions:
@@ -125,7 +125,7 @@ action:
           - service: browser_mod.navigate
             metadata: {}
             data:
-              path: /dashboard-viewassist/music
+              path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"
           - set_conversation_response: ""
@@ -137,7 +137,7 @@ action:
           - service: browser_mod.navigate
             metadata: {}
             data:
-              path: /dashboard-viewassist/music
+              path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"              
       - conditions:
@@ -170,11 +170,11 @@ action:
           - service: browser_mod.navigate
             metadata: {}
             data:
-              path: /dashboard-viewassist/music
+              path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"
 variables:
-  dashboard: !input view_path
+  view_path: !input view_path
   group_entity: !input group_entity
   target_satellite_device: |-
     {% for sat in expand(group_entity) %}
