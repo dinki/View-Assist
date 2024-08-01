@@ -128,14 +128,6 @@ action:
               path: /dashboard-viewassist/music
             target:
               device_id: "{{ target_display_device }}"
-          - service: mass.play_media
-            target:
-              entity_id: "{{ target_mediaplayer_device }}"
-            data:
-              media_type: track
-              enqueue: add
-              media_id: "{{ found_song.tracks.0.name }}"
-              radio_mode: true
           - set_conversation_response: ""
           - service: python_script.set_state
             data:
