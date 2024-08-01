@@ -30,7 +30,6 @@ trigger:
   - platform: conversation
     command: !input command
     id: playtunein
-
 condition: []
 action:
   - choose:
