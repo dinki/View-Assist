@@ -7,8 +7,8 @@ blueprint:
       name: Command
       description: The phrase you want to start your station (example Big 102)
     station:
-      name: Station
-      description: The TuneIn radio station to play.  This must be an exact match (example Big 102.1 KYBG)      
+      name: Station ID
+      description: The TuneIn radio station to play.  This must be an exact match (example BIG 102.1 KYBG)      
     group_entity:
       name: Group Entity
       description: The group that holds the list of View Assist satellites(example
