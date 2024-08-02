@@ -4,10 +4,6 @@ blueprint:
   description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.0.0)
   domain: automation
   input:
-    command:
-      name: Command
-      description: The phrase you want to use to trigger getting the score for a team
-      default: "how (are | did) the {team} (do | doing) |  (what is | what's) the score of the {team} game"
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
@@ -30,7 +26,10 @@ blueprint:
       default: "/dashboard-viewassist/sports"       
 trigger:
   - platform: conversation
-    command: !input command
+    command:
+      - how did the {team} do
+      - (what is | what's) the score of the {team} game
+      - how are the {team} do    
 condition: []
 action:
   - variables:
