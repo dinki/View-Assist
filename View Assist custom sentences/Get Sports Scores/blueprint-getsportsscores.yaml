@@ -7,7 +7,7 @@ blueprint:
     command:
       name: Command
       description: The phrase you want to use to trigger getting the score for a team
-      default: "how did the {team} do"
+      default: "how (are | did) the {team} (do | doing) |  (what is | what's) the score of the {team} game"
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
@@ -25,7 +25,7 @@ blueprint:
             - domain: group
       default: "group.viewassist_satellites" 
     view:
-      name: Dashboard Weather view
+      name: Dashboard Sports view
       description: The View Assist dashboard view to use for sports scores (example /dashboard-viewassist/sports)
       default: "/dashboard-viewassist/sports"       
 trigger:
