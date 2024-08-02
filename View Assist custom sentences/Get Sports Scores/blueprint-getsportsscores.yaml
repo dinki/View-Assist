@@ -29,7 +29,7 @@ trigger:
     command:
       - how did the {team} do
       - (what is | what's) the score of the {team} game
-      - how are the {team} do    
+      - how are the {team} doing
 condition: []
 action:
   - variables:
