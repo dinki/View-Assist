@@ -7,7 +7,7 @@ blueprint:
     command:
       name: Command
       description: The phrase you want to use to trigger getting the score for a team
-      default: "how did the {team} do | how are the {team} doing) |  (what is | what's) the score of the {team} game"
+      default: "how did the {team} do | how are the {team} doing"
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
