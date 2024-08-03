@@ -6,5 +6,6 @@ This blueprint will contain device specific functions.  Current functions includ
 
 * Repeat the last spoken text to speech from that device
 * Set the different modes for the satellite device
+* Change views by voice
 
 Requires View Assist Control automation v1.2.0 or greater
