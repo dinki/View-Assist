@@ -43,6 +43,10 @@ blueprint:
       name: Default Music View screen
       description: The view to return to when in music mode
       default: "/dashboard-viewassist/music"
+    intent_view:
+      name: Intent View screen
+      description: The view to display for default HA actions for displaying those entities
+      default: "/dashboard-viewassist/intent"
     micunmute:
       name: Unmute Mic
       description: Unmute microphone on HA start/restart.  Helpful for Stream Assist devices
@@ -204,5 +208,33 @@ action:
                   last_said: >-
                     {{ state_attr(intent,
                     'intent_output')['response']['speech']['plain']['speech']}}
-                enabled: true                               
+                enabled: true 
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ satellite }}"
+              data:
+                intent_entities: >-
+                  {% set list =
+                  state_attr({{ satellite }}_intent,'intent_output')['response']['data']['success']
+                  | map(attribute='id') | list %}  {% set prefix = ('light',
+                  'switch', 'cover', 'boolean') %}  {% set data =
+                  namespace(filtered_list=[]) %}  {% for item in list %}
+                      {%- if item.startswith(prefix) %} 
+                          {% set data.filtered_list = data.filtered_list + [item] %}
+                      {% endif -%}
+                  {% endfor %}  {% set list = data.filtered_list %}  {{ list }}
+            enabled: true
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if 'id' in
+                  state_attr({{ satellite }}_intent,
+                  'intent_output')['response']['data']['success'][0] %} true {%
+                  else %} false {% endif %}
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ intent_view }}"
+                target:
+                  device_id: "{{device_id(display)}}"
 mode: parallel
