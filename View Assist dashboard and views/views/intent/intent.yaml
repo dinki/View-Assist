@@ -4,7 +4,7 @@ template:
   - body_template
 styles:
   card:
-    - background-color: '#00000'
+    - background-color: '#000000'
     - border-width: 0px
     - border-radius: 0px
   custom_fields:
