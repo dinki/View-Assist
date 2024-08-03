@@ -95,9 +95,11 @@ variables:
   dashboard: !input dashboard
   display: !input display
   home: !input home
+  music: !input music
   micunmute: !input micunmute
   micdevice: !input micdevice
   intent: !input intent
+  intent_view: !input intent_view
 
 action:
   - choose:
@@ -215,7 +217,7 @@ action:
               data:
                 intent_entities: >-
                   {% set list =
-                  state_attr({{ satellite }}_intent,'intent_output')['response']['data']['success']
+                  state_attr(intent,'intent_output')['response']['data']['success']
                   | map(attribute='id') | list %}  {% set prefix = ('light',
                   'switch', 'cover', 'boolean') %}  {% set data =
                   namespace(filtered_list=[]) %}  {% for item in list %}
@@ -228,7 +230,7 @@ action:
               - condition: template
                 value_template: >-
                   {% if 'id' in
-                  state_attr({{ satellite }}_intent,
+                  state_attr(intent,
                   'intent_output')['response']['data']['success'][0] %} true {%
                   else %} false {% endif %}
             then:
