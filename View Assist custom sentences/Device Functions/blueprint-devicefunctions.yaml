@@ -9,8 +9,12 @@ blueprint:
       default: "(what did you say  | [please] say that again [please] | [please] repeat that [please])"
     mode_command:
       name: Mode Command
-      description: The command to use to trigger the automation
+      description: The command to use to trigger the mode change automation
       default: "(set mode [to] {mode} | turn on {mode} mode)"
+    view_command:
+      name: View Command
+      description: The command to use to trigger the view change automation
+      default: "(set view [to] {view} | change [to] {view} view)"
     dnd_command:
       name: Do Not Disturb Command 
       description: The command to use to trigger turning off DND mode
@@ -18,7 +22,11 @@ blueprint:
     modes:
       name: Modes
       description: The available modes (do not include do not disturb)
-      default: "['normal', 'night', 'hold', 'cycle']"         
+      default: "['normal', 'night', 'hold', 'cycle']"
+    views:
+      name: Views
+      description: The available views as named on your dashboard
+      default: "['clock', 'weather', 'info', 'infopic']"  
     group_entity: 
       name: Group Entity
       description: The group entity that holds the list of ViewAssist devices
@@ -36,7 +44,10 @@ trigger:
     id: mode 
   - platform: conversation
     command: !input dnd_command
-    id: dndoff    
+    id: dndoff
+  - platform: conversation
+    command: !input view_command
+    id: view
 condition: []
 action:
   - choose:
@@ -99,8 +110,33 @@ action:
                           do_not_disturb: true
             else:
               - set_conversation_response: "Sorry.  {{ trigger.slots.mode }} is not a valid mode. "
+      - conditions:
+          - condition: trigger
+            id:
+              - view
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only'
+                  %}true{% else %}false{% endif %}
+            then:
+              - set_conversation_response: Switching view to {{ trigger.slots.view }} view
+                enabled: true
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"
+            else:        
+              - set_conversation_response: >-
+                  Sorry.  This device does not have a display
+            else:
+              - set_conversation_response: "Sorry.  {{ trigger.slots.view }} is not a valid view. "
+              
 variables:
   modes: !input modes
+  views: !input views
   group_entity: !input group_entity
   target_satellite_device: |-
     {% for sat in expand(group_entity) %}
