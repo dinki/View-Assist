@@ -39,6 +39,10 @@ blueprint:
       name: Default Home screen
       description: The screen to return to after timeout
       default: "/dashboard-viewassist/clock"
+    music:
+      name: Default Music View screen
+      description: The view to return to when in music mode
+      default: "/dashboard-viewassist/music"
     micunmute:
       name: Unmute Mic
       description: Unmute microphone on HA start/restart.  Helpful for Stream Assist devices
@@ -130,7 +134,7 @@ action:
             then:
               - service: browser_mod.navigate
                 data:
-                  path: "{{dashboard}}/music"
+                  path: "{{ music }}"
                 target:
                   device_id: "{{device_id(display)}}"
       - conditions:
