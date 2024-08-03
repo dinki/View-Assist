@@ -125,7 +125,7 @@ action:
                 enabled: true
               - service: browser_mod.navigate
                 data:
-                  path: "{{ view }}"
+                  path: "{{ trigger.slots.view }}"
                 target:
                   device_id: "{{target_display_device}}"
             else:        
