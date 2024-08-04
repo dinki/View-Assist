@@ -1,7 +1,6 @@
 type: custom:button-card
 variables:
   background: /local/viewassist/pinkbluesky.jpg
-  clockcardversion: "1.0.0"
 template:
   - variable_template
   - body_template
@@ -21,7 +20,7 @@ styles:
     time:
       - justify-self: center
       - z-index: 2
-      - font-size: 2000%
+      - font-size: 55vh
       - font-weight: bold
       - position: absolute
       - color: white
@@ -29,15 +28,15 @@ styles:
       - justify-self: center
       - align-self: center
       - z-index: 2
-      - font-size: 500%
+      - font-size: 15vh
       - width: max-content
       - position: absolute
-      - top: 75%
+      - top: 70%
     night:
       - position: absolute
       - min-height: 200%
       - width: 200%
-      - backdrop-filter: brightness(10%)
+      - backdrop-filter: brightness(5%)
       - overflow: hidden
       - display: >-
           [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode
@@ -63,10 +62,10 @@ custom_fields:
           - grid-template-areas: '"i n"'
           - grid-template-rows: min-content min-content
         name:
-          - font-size: 400%
+          - font-size: 15vh
           - color: white
         icon:
-          - width: 80%
+          - width: 25vw
           - color: white
   time: '[[[ return variables.var_current_time ]]]'
   date: '[[[ return variables.var_date_short ]]]'
