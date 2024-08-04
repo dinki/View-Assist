@@ -213,6 +213,7 @@ action:
                 enabled: true 
           - service: python_script.set_state
             data:
+              title: ""
               entity_id: "{{ satellite }}"
               data:
                 intent_entities: >-
