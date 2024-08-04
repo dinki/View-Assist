@@ -248,8 +248,8 @@ action:
         data:
           sport_path: "{{ sport_path }}"
           team_id: "{{ query_team |lower}}"
-        enabled: true
           league_path: "{{ league_path }}"
+        enabled: true
 # nba_teams
   - if:
       - condition: template
