@@ -107,6 +107,80 @@ action:
         buccaneers: tb
         titans: ten
         commanders: was
+      nba_teams:
+        hawks: atl
+        celtics: bos
+        nets: bkn
+        hornets: cha
+        bulls: chi
+        cavaliers: cle
+        mavericks: dal
+        nuggets: den
+        pistons: det
+        warriors: gs
+        rockets: hou
+        pacers: ind
+        clippers: lac
+        lakers: lal
+        grizzlies: mem
+        heat: mia
+        bucks: mil
+        timberwolves: min
+        pelicans: "no"
+        knicks: ny
+        thunder: okc
+        magic: orl
+        76ers: phi
+        suns: phx
+        trail blazers: por
+        kings: sac
+        spurs: sa
+        raptors: tor
+        jazz: uta
+        wizards: was
+      wnba_teams:
+        dream: atl
+        sky: chi
+        sun: conn
+        wings: dal
+        fever: ind
+        aces: lv
+        sparks: la
+        lynx: min
+        liberty: ny
+        mystics: was
+        mercury: phx
+        storm: sea
+      mls_teams:
+        atlanta united: atl
+        austin fc: atx
+        charlotte fc: clt
+        fire: chi
+        fc cincinnati: cin
+        rapids: col
+        crew: cbus
+        dc united: dc
+        fc dallas: dal
+        dynamo: hou
+        sporting: kc
+        galaxy: lag
+        los angeles fc: lafc
+        inter: mia
+        minnesota united: min
+        cf montreal: mtl
+        sc: nsh
+        revolution: ner
+        new york city fc: nyc
+        red bulls: nyrb
+        city: orl
+        union: phi
+        timbers: por
+        real: rsl
+        earthquakes: sj
+        sounders: sea
+        city: stl
+        toronto fc: tor
+        whitecaps: van
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
