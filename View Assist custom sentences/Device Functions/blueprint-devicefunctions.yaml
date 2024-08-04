@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Device Functions
-  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.2.0)
+  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.2.1)
   domain: automation
   input:
     repeat_command:
@@ -18,7 +18,27 @@ blueprint:
     dnd_command:
       name: Do Not Disturb Command 
       description: The command to use to trigger turning off DND mode
-      default: "(set do not disturb [to] off | turn off do not disturb mode)"      
+      default: "(set do not disturb [to] off | turn off do not disturb mode)"
+    set_volume:
+      name: Set Volume Command 
+      description: The command to use to set volume levels level directly
+      default: "[set | turn] [the] volume to {level}"
+    adjust_volume:
+      name: Adjust Volume Command 
+      description: The command to use to set volume levels by step
+      default: "turn {up_down} [the] volume"      
+    mute_volume:
+      name: Mute Volume Command 
+      description: The command to use to mute audio
+      default: "mute [the] [volume]"    
+    unmute_volume:
+      name: Unmute Volume Command 
+      description: The command to use to unmute audio
+      default: "unmute [the] [volume]"
+    stop_music:
+      name: Stop Music Command 
+      description: The command to use to stop music playback
+      default: "stop [the] music"        
     modes:
       name: Modes
       description: The available modes (do not include do not disturb)
@@ -48,6 +68,21 @@ trigger:
   - platform: conversation
     command: !input view_command
     id: view
+  - platform: conversation
+    command: !input set_volume
+    id: set_volume
+  - platform: conversation
+    command: !input adjust_volume
+    id: adjust_volume
+  - platform: conversation
+    command: !input mute_volume
+    id: mute_volume
+  - platform: conversation
+    command: !input unmute_volume
+    id: unmute_volume
+  - platform: conversation
+    command: !input stop_music
+    id: stop_music
 condition: []
 action:
   - choose:
@@ -133,6 +168,76 @@ action:
                   Sorry.  This device does not have a display
             else:
               - set_conversation_response: "Sorry.  {{ trigger.slots.view }} is not a valid view. "
+      - conditions:
+          - condition: trigger
+            id:
+              - set_volume
+        sequence:
+          - service: media_player.volume_set
+            data:
+              volume_level: |-
+                {% if trigger.id == "set_volume" %} 
+                  {% if trigger.slots.level.endswith('%') %}
+                    {{ (trigger.slots.level |replace('%',' ') | int)/100 }}
+                  {% else %}
+                    {{ (trigger.slots.level | int)/10 }}
+                  {% endif %}
+                {% endif %}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: The volume was set to {{ trigger.slots.level }}
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - adjust_volume
+        sequence:
+          - service: >
+              {% if trigger.slots.up_down == "down" %} media_player.volume_down
+              {% endif %} 
+
+              {% if trigger.slots.up_down == "up" %} media_player.volume_up {%
+              endif %}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: The volume has been turned {{ trigger.slots.up_down }}
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - mute_volume
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: true
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - unmute_volume
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: false
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: "Sound has been restored"
+      - conditions:
+          - condition: trigger
+            id:
+              - stop_music
+        sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: normal
+          - service: media_player.media_stop
+            target:
+              entity_id:
+                - "{{ target_mediaplayer_device }}"
+            data: {}
+          - set_conversation_response: Music stopped
               
 variables:
   modes: !input modes

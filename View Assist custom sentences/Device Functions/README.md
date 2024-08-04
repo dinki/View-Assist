@@ -7,5 +7,20 @@ This blueprint will contain device specific functions.  Current functions includ
 * Repeat the last spoken text to speech from that device
 * Set the different modes for the satellite device
 * Change views by voice
+* Adjust volume by level
+* Adjust volume by step
+* Mute/Unmute volume
+* Stop music playback and return to normal mode
+* 
 
 Requires View Assist Control automation v1.2.0 or greater
+
+## Change log
+
+v 1.0.0 Initial release
+
+v 1.1.0 Add mode functionality
+
+v 1.2.0 Add view functionality
+
+v 1.2.1 Add volume control and stop music (Thanks @jimmyjamesbob)
