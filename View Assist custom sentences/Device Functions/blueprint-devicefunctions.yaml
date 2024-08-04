@@ -18,7 +18,27 @@ blueprint:
     dnd_command:
       name: Do Not Disturb Command 
       description: The command to use to trigger turning off DND mode
-      default: "(set do not disturb [to] off | turn off do not disturb mode)"      
+      default: "(set do not disturb [to] off | turn off do not disturb mode)"
+    set_volume:
+      name: Set Volume Command 
+      description: The command to use to set volume levels level directly
+      default: "[set | turn] [the] volume to {level}"
+    adjust_volume:
+      name: Adjust Volume Command 
+      description: The command to use to set volume levels by step
+      default: "turn {up_down} [the] volume"      
+    mute_volume:
+      name: Mute Volume Command 
+      description: The command to use to mute audio
+      default: "mute [the] [volume]"    
+    unmute_volume:
+      name: Unmute Volume Command 
+      description: The command to use to unmute audio
+      default: "unmute [the] [volume]"
+    stop_music:
+      name: Stop Music Command 
+      description: The command to use to stop music playback
+      default: "stop [the] music"        
     modes:
       name: Modes
       description: The available modes (do not include do not disturb)
@@ -49,23 +69,18 @@ trigger:
     command: !input view_command
     id: view
   - platform: conversation
-    command:
-      - "[set | turn] [the] volume to {level}"
-    id: set_volume
+    command: !input set_volume
   - platform: conversation
-    command:
-      - turn {up_down} [the] volume
+    command: !input adjust_volume
     id: adjust_volume
   - platform: conversation
-    command: mute
+    command: !input mute_volume
     id: mute_volume
   - platform: conversation
-    command:
-      - unmute
+    command: !input unmute_volume
     id: unmute_volume
   - platform: conversation
-    command:
-      - stop music
+    command: !input stop_music
     id: stop_music
 condition: []
 action:
@@ -152,8 +167,6 @@ action:
                   Sorry.  This device does not have a display
             else:
               - set_conversation_response: "Sorry.  {{ trigger.slots.view }} is not a valid view. "
-#########
-
       - conditions:
           - condition: trigger
             id:
@@ -186,7 +199,7 @@ action:
               endif %}
             target:
               entity_id: "{{ target_mediaplayer_device }}"
-          - set_conversation_response: The volume was been turned {{ trigger.slots.up_down }}
+          - set_conversation_response: The volume has been turned {{ trigger.slots.up_down }}
             enabled: true
       - conditions:
           - condition: trigger
@@ -208,6 +221,7 @@ action:
               is_volume_muted: false
             target:
               entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: "Sound has been restored"
       - conditions:
           - condition: trigger
             id:
