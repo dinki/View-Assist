@@ -69,18 +69,18 @@ action:
         phillies: phi
         pirates: pit
         padres: sd
-        giants: sf
+        san francisco giants: sf
         mariners: sea
-        cardinals: stl
+        saint louis cardinals: stl
         rays: tb
-        rangers: tex
+        texas rangers: tex
         blue jays: tor
         nationals: wsh
       nfl_teams:
         falcons: atl
         ravens: bal
         bills: buf
-        panthers: car
+        carolina panthers: car
         bears: chi
         bengals: cin
         browns: cle
@@ -99,7 +99,7 @@ action:
         vikings: min
         patriots: ne
         saints: "no"
-        jets: nyj
+        new york jets: nyj
         eagles: phi
         steelers: pit
         49ers: sf
@@ -107,6 +107,8 @@ action:
         buccaneers: tb
         titans: ten
         commanders: was
+        new york giants: nyg
+        arizona cardinals: arz
       nba_teams:
         hawks: atl
         celtics: bos
@@ -133,7 +135,7 @@ action:
         76ers: phi
         suns: phx
         trail blazers: por
-        kings: sac
+        sacramento kings: sac
         spurs: sa
         raptors: tor
         jazz: uta
@@ -181,6 +183,40 @@ action:
         city: stl
         toronto fc: tor
         whitecaps: van
+      nhl_teams:
+        bruins: bos
+        sabres: buf
+        flames: cal
+        hurricanes: car
+        blackhawks: chi
+        avalanche: col
+        blue jackets: cbj
+        stars: dal
+        red wings: det
+        oilers: edm
+        florida panthers: fla
+        los angeles kings: la
+        wild: min
+        canadiens: mtl
+        predators: nsh
+        devils: njd
+        islanders: nyi
+        new york rangers: nyr
+        senators: ott
+        flyers: phi
+        penguins: pit
+        sharks: sj
+        lightning: tb
+        maple leafs: tor
+        canucks: van
+        capitals: was
+        winnipeg jets: wpg
+        kraken: sea
+        blues: stl
+        golden knights: vgk
+        ducks: ana
+        clo: chi
+
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
