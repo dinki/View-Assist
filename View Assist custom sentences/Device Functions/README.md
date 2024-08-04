@@ -11,7 +11,6 @@ This blueprint will contain device specific functions.  Current functions includ
 * Adjust volume by step
 * Mute/Unmute volume
 * Stop music playback and return to normal mode
-* 
 
 Requires View Assist Control automation v1.2.0 or greater
 
