@@ -9,3 +9,10 @@ This blueprint will contain device specific functions.  Current functions includ
 * Change views by voice
 
 Requires View Assist Control automation v1.2.0 or greater
+
+## Change log
+
+v 1.0.0 Initial release
+v 1.1.0 Add mode functionality
+v 1.2.0 Add view functionality
+v 1.2.1 Add volume control and stop music (Thanks @jimmyjamesbob)
