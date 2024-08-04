@@ -1,0 +1,28 @@
+type: custom:button-card
+variables:
+  sportsversion: 1.0.0
+  teamtracker_device: sensor.team_tracker
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background-color: '#1c1c1c'
+    - background-size: cover
+  custom_fields:
+    message:
+      - font-size: '[[[ return variables.var_font_size ]]]'
+      - position: relative
+      - padding: 10px
+      - border-radius: 10px
+      - width: 95%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: 2%
+custom_fields:
+  message:
+    card:
+      type: custom:teamtracker-card
+      entity: '[[[ return variables.teamtracker_device ]]]'
