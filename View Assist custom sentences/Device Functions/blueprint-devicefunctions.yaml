@@ -48,6 +48,25 @@ trigger:
   - platform: conversation
     command: !input view_command
     id: view
+  - platform: conversation
+    command:
+      - "[set | turn] [the] volume to {level}"
+    id: set_volume
+  - platform: conversation
+    command:
+      - turn {up_down} [the] volume
+    id: adjust_volume
+  - platform: conversation
+    command: mute
+    id: mute_volume
+  - platform: conversation
+    command:
+      - unmute
+    id: unmute_volume
+  - platform: conversation
+    command:
+      - stop music
+    id: stop_music
 condition: []
 action:
   - choose:
@@ -133,6 +152,77 @@ action:
                   Sorry.  This device does not have a display
             else:
               - set_conversation_response: "Sorry.  {{ trigger.slots.view }} is not a valid view. "
+#########
+
+      - conditions:
+          - condition: trigger
+            id:
+              - set_volume
+        sequence:
+          - service: media_player.volume_set
+            data:
+              volume_level: |-
+                {% if trigger.id == "set_volume" %} 
+                  {% if trigger.slots.level.endswith('%') %}
+                    {{ (trigger.slots.level |replace('%',' ') | int)/100 }}
+                  {% else %}
+                    {{ (trigger.slots.level | int)/10 }}
+                  {% endif %}
+                {% endif %}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: The volume was set to {{ trigger.slots.level }}
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - adjust_volume
+        sequence:
+          - service: >
+              {% if trigger.slots.up_down == "down" %} media_player.volume_down
+              {% endif %} 
+
+              {% if trigger.slots.up_down == "up" %} media_player.volume_up {%
+              endif %}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: The volume was been turned {{ trigger.slots.up_down }}
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - mute_volume
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: true
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - unmute_volume
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: false
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - stop_music
+        sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: normal
+          - service: media_player.media_stop
+            target:
+              entity_id:
+                - "{{ target_mediaplayer_device }}"
+            data: {}
+          - set_conversation_response: Music stopped
               
 variables:
   modes: !input modes
