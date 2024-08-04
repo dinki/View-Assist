@@ -70,6 +70,7 @@ trigger:
     id: view
   - platform: conversation
     command: !input set_volume
+    id: set_volume
   - platform: conversation
     command: !input adjust_volume
     id: adjust_volume
