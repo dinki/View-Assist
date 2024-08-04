@@ -216,7 +216,7 @@ action:
         golden knights: vgk
         ducks: ana
         clo: chi
-
+# mlb_teams
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
@@ -233,6 +233,7 @@ action:
           team_id: "{{ query_team |lower}}"
           league_path: "{{ league_path }}"
         enabled: true
+# nfl_teams
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in nfl_teams }}"
@@ -241,6 +242,74 @@ action:
           query_team: "{{ nfl_teams[(trigger.slots.team)|lower] }}"
           sport_path: football
           league_path: nfl
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+        enabled: true
+          league_path: "{{ league_path }}"
+# nba_teams
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in nba_teams }}"
+    then:
+      - variables:
+          query_team: "{{ nba_teams[(trigger.slots.team)|lower] }}"
+          sport_path: basketball
+          league_path: nba
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+        enabled: true
+# wnba_teams
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in wnba_teams }}"
+    then:
+      - variables:
+          query_team: "{{ wnba_teams[(trigger.slots.team)|lower] }}"
+          sport_path: basketball
+          league_path: wnba
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+        enabled: true
+# mls_teams
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in mls_teams }}"
+    then:
+      - variables:
+          query_team: "{{ mls_teams[(trigger.slots.team)|lower] }}"
+          sport_path: soccer
+          league_path: mls
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+        enabled: true
+# nhl_teams
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in nhl_teams }}"
+    then:
+      - variables:
+          query_team: "{{ nhl_teams[(trigger.slots.team)|lower] }}"
+          sport_path: hockey
+          league_path: nhl
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
