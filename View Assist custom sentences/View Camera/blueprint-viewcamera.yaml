@@ -16,7 +16,7 @@ blueprint:
     cameras:
       name: Camera Dictionary Text
       description: The dictionary of camera names and their associated Home Assistant camera entities
-      default: {'front':'camera.front_camera','doorbell':'camera.mydoorbellcamera'}
+      default: "{'front':'camera.front_camera','doorbell':'camera.mydoorbellcamera'}"
     group_entity:
       name: Group Entity
       description:
