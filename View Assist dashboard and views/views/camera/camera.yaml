@@ -1,0 +1,32 @@
+type: custom:button-card
+variables:
+  cameracardversion: 1.0.0
+  var_camera: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.camera} catch {
+    return  "camera.doorbell_restream"}]]]
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
+    - background-size: cover
+custom_fields:
+  title: >-
+    [[[ try {return hass.states[variables.var_camera].attributes.friendly_name}
+    catch {return
+    hass.states["camera.doorbell_restream"].attributes.friendly_name}]]]
+  message:
+    card:
+      type: custom:frigate-card
+      menu:
+        style: none
+      cameras:
+        - camera_entity: >-
+            [[[ try {return hass.states[variables.var_camera].attributes.camera}
+            catch { return  "camera.doorbell_restream"}]]]
+          live_provider: ha
+      dimensions:
+        max_height: 100vh
+        max_wdith: 100vw
