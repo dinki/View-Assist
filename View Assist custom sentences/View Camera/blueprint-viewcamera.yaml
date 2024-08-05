@@ -79,7 +79,7 @@ action:
       - service: python_script.set_state
         data:
           entity_id: "{{ target_satellite_device }}"
-          camera: {{ camera }}
+          camera: "{{ camera }}"
         enabled: true
   
   - service: browser_mod.navigate
