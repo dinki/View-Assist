@@ -51,7 +51,8 @@ action:
       view: !input view
       response: !input response
       group_entity: !input group_entity
-      cameras: !input cameras
+      input_cameras: !input cameras
+      cameras: "{{ input_cameras | from_json}}"
       target_satellite_device:
         "{% for sat in expand(group_entity) %}\n  {% if (device_id(sat.attributes.mic_device)
         == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id)
@@ -71,6 +72,16 @@ action:
           entity_id: "{{ target_satellite_device }}"
           mode: hold
         enabled: true
+  - if:
+      - condition: template
+        value_template: "{% if camera in cameras %}true{%endif%}"
+    then:        
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          camera: {{ camera }}
+        enabled: true
+  
   - service: browser_mod.navigate
     data:
       path: "{{ view }}"
