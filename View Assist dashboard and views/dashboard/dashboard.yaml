@@ -208,7 +208,6 @@ button_card_templates:
           - animation: >-
               [[[ if (variables.var_assisting == "true") return "pulse 2s
               infinite"; else return "" ]]]
-          - height: 10px
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
