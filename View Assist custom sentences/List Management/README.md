@@ -1,3 +1,5 @@
+# List Management
+
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView+Assist+custom+sentences%2FList+Management%2Fblueprint-listmanagement.yaml)
 
 
@@ -10,3 +12,10 @@ Detailed install video:
 https://youtu.be/h6WmQ7LiO_0
 
 Special thanks to Elwing for her work on this automation and view
+
+## Change Log
+1.0.0 Initial release
+
+1.1.0 Added function
+
+1.1.1 Move list view variable out of dictionary
