@@ -3,7 +3,7 @@ type: custom:button-card
 variables:
   var_list: >-
     [[[ try {return
-    hass.states[variables.var_assistsat_entity].attributes.data["list"]} catch {
+    hass.states[variables.var_assistsat_entity].attributes.list} catch {
     return  "todo.shopping_list"}]]]
   background: /local/viewassist/announcebird.png
 template:
