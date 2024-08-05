@@ -143,6 +143,13 @@ action:
                   device_id: "{{ target_display_device }}"
     default:
       - sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              title: "{{ state_attr(list_entity,'friendly_name') }}"
+              message_font_size: 4vw
+              list: "{{ list_entity }}"          
+            enabled: true      
           - service: todo.get_items 
             data: 
               entity_id: "{{ list_entity }}"
@@ -171,13 +178,7 @@ action:
                   path: "{{ view }}"
                 target:
                   device_id: "{{ target_display_device }}"
-      - service: python_script.set_state
-        data:
-          entity_id: "{{ target_satellite_device }}"
-          title: "{{ state_attr(list_entity,'friendly_name') }}"
-          message_font_size: 4vw
-          list: "{{ list_entity }}"          
-        enabled: true
+
 variables:
   group_entity: !input group_entity
   list_entity: !input list_entity
