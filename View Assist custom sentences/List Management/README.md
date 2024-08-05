@@ -13,6 +13,10 @@ https://youtu.be/h6WmQ7LiO_0
 
 Special thanks to Elwing for her work on this automation and view
 
+## Troubleshooting
+
+The error "specify an entity within the todo domain" may initially be seen when adding an item.  If so, ask the automation to display the list and the error should no longer occur.
+
 ## Change Log
 1.0.0 Initial release
 
