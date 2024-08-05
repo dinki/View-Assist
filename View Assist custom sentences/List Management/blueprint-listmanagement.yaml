@@ -1,8 +1,8 @@
-# View Assist - View Assist List Management (v 1.1.0)
+# View Assist - View Assist List Management (v 1.1.1)
 # Special thanks to Elwing for her work on this automation and view
 blueprint:
   name: View Assist - List Management
-  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist listmanagement v 1.1.0)
+  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist listmanagement v 1.1.1)
   domain: automation
   input:
     command_add1:
@@ -176,8 +176,7 @@ action:
           entity_id: "{{ target_satellite_device }}"
           title: "{{ state_attr(list_entity,'friendly_name') }}"
           message_font_size: 4vw
-          data:
-            list: "{{ list_entity }}"          
+          list: "{{ list_entity }}"          
         enabled: true
 variables:
   group_entity: !input group_entity
