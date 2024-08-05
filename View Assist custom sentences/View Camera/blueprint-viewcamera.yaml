@@ -13,6 +13,10 @@ blueprint:
       name: Response Text
       description: The response to give when launching website
       default: Showing camera feed
+    cameras:
+      name: Camera Dictionary Text
+      description: The dictionary of camera names and their associated Home Assistant camera entities
+      default: {'front':'camera.front_camera','doorbell':'camera.mydoorbellcamera'}
     group_entity:
       name: Group Entity
       description:
