@@ -10,3 +10,10 @@ Detailed install video:
 https://youtu.be/h6WmQ7LiO_0
 
 Special thanks to Elwing for her work on this automation and view
+
+## Change Log
+1.0.0 Initial release
+
+1.1.0 Added function
+
+1.1.1 Move list view variable out of dictionary
