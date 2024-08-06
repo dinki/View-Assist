@@ -12,7 +12,7 @@ blueprint:
     response:
       name: Response Text
       description: The response to give when launching website
-      default: Showing camera feed
+      default: Showing {{trigger.slots.camera}} camera
     cameras:
       name: Camera Dictionary Text
       description: The dictionary of camera names and their associated Home Assistant camera entities
