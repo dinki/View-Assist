@@ -17,3 +17,5 @@ I am using gpt-3.5-turbo which is considerably cheaper than the default gpt-4 mo
 
 
 Usage is 'Ok nabu ask AI [your question]' .
+
+Additionally, user Andrew Steel is reporting that this blueprint will also work with local Ollama AI using [hass-ollama-conversation](https://github.com/ej52/hass-ollama-conversation#options)
