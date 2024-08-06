@@ -74,7 +74,7 @@ action:
         enabled: true
   - if:
       - condition: template
-        value_template: "{% if camera in cameras %}true{%endif%}"
+        value_template: "{% if trigger.slots.camera in cameras %}true{%endif%}"
     then:        
       - service: python_script.set_state
         data:
