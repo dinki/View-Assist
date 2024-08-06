@@ -81,7 +81,6 @@ action:
           entity_id: "{{ target_satellite_device }}"
           camera: "{{ camera }}"
         enabled: true
-  
   - service: browser_mod.navigate
     data:
       path: "{{ view }}"
