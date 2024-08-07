@@ -320,20 +320,20 @@ action:
         enabled: true
     enabled: true
   - set_conversation_response: |-
-      {% if is_state('sensor.team_tracker', 'POST')%} 
-        The {{state_attr('sensor.team_tracker','team_name')}} Played the {{state_attr('sensor.team_tracker','opponent_name')}} and 
-          {% if is_state_attr('sensor.team_tracker','team_winner', false) %}
+      {% if is_state(team_tracker, 'POST')%} 
+        The {{state_attr(team_tracker,'team_name')}} Played the {{state_attr(team_tracker,'opponent_name')}} and 
+          {% if is_state_attr(team_tracker,'team_winner', false) %}
             lost
           {% else %}
             won
           {% endif %} 
-        {{state_attr('sensor.team_tracker','team_score')}} - {{state_attr('sensor.team_tracker','opponent_score')}}  
-      {% elif is_state('sensor.team_tracker', 'PRE') %} 
-        The {{state_attr('sensor.team_tracker','team_name')}} play the {{state_attr('sensor.team_tracker','opponent_name')}} {{state_attr('sensor.team_tracker','kickoff_in')}} 
-      {% elif is_state('sensor.team_tracker', 'IN') %} 
-        The {{state_attr('sensor.team_tracker','team_name')}} are currently playing the {{state_attr('sensor.team_tracker','opponent_name')}}. 
-        The score is {{state_attr('sensor.team_tracker','team_name')}} {{state_attr('sensor.team_tracker','team_score')}}, {{state_attr('sensor.team_tracker','opponent_name')}}  {{state_attr('sensor.team_tracker','opponent_score')}} 
-      {% elif is_state('sensor.team_tracker', 'NOT_FOUND') %} 
+        {{state_attr(team_tracker,'team_score')}} - {{state_attr(team_tracker,'opponent_score')}}  
+      {% elif is_state(team_tracker, 'PRE') %} 
+        The {{state_attr(team_tracker,'team_name')}} play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}} 
+      {% elif is_state(team_tracker, 'IN') %} 
+        The {{state_attr(team_tracker,'team_name')}} are currently playing the {{state_attr(team_tracker,'opponent_name')}}. 
+        The score is {{state_attr(team_tracker,'team_name')}} {{state_attr(team_tracker,'team_score')}}, {{state_attr(team_tracker,'opponent_name')}}  {{state_attr(team_tracker,'opponent_score')}} 
+      {% elif is_state(team_tracker, 'NOT_FOUND') %} 
         The {{ trigger.slots.team }} have no games on today's schedule
       {% else %} 
         Sorry.  I could not find any recent or upcoming games for the {{ trigger.slots.team }}
