@@ -4,7 +4,7 @@ variables:
   var_teamtracker_device: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.team_tracker} catch {
-    return  "sensor.team_trackerdd"}]]]
+    return  "sensor.team_tracker"}]]]
 template:
   - variable_template
   - body_template
