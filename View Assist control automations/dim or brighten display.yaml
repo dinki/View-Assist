@@ -1,0 +1,41 @@
+alias: View Assist - Dim or brighten screen depending on night or normal
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.viewassist
+    attribute: mode
+    to: normal
+  - platform: state
+    entity_id:
+      - sensor.viewassist
+    attribute: mode
+    to: night
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: sensor.viewassist
+            attribute: mode
+            state: night
+        sequence:
+          - service: mqtt.publish
+            metadata: {}
+            data:
+              qos: "0"
+              topic: wallpanel/mywallpanel/command
+              payload: "{'brightness': 1}"
+      - conditions:
+          - condition: state
+            entity_id: sensor.viewassist
+            attribute: mode
+            state: normal
+        sequence:
+          - service: mqtt.publish
+            metadata: {}
+            data:
+              qos: "0"
+              topic: wallpanel/mywallpanel/command
+              payload: "{'brightness': 255}"
+mode: single
