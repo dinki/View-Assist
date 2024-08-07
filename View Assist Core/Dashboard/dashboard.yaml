@@ -2,7 +2,7 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
-      var_weather_entity: weather.forecast_home
+      var_weather_entity: weather.forecast_home #Change this to your weather entity!
       use_24_hour_time: false
       default_satellite: |-
         [[[
