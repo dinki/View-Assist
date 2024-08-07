@@ -1,7 +1,10 @@
 type: custom:button-card
 variables:
   sportsversion: 1.0.0
-  teamtracker_device: sensor.team_tracker
+  var_teamtracker_device: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.team_tracker} catch {
+    return  "sensor.team_trackerdd"}]]]
 template:
   - variable_template
   - body_template
@@ -22,7 +25,8 @@ styles:
       - align-self: center
       - padding: 2%
 custom_fields:
+  title: '[[[ return states[variables.var_assistsat_entity].state ]]]'
   message:
     card:
       type: custom:teamtracker-card
-      entity: '[[[ return variables.teamtracker_device ]]]'
+      entity: '[[[ return variables.var_teamtracker_device ]]]'
