@@ -38,7 +38,7 @@ trigger:
       - !input command_prompt_dayofweek
     id: dayofweek
 variables:
-  view: /dashboard-viewassist/clock
+  view: !input view
   target_satellite_device: |-
     {% for sat in expand('group.viewassist_satellites') %}
       {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
