@@ -1,0 +1,90 @@
+# View Assist - View Assist View Camera (v 1.0.0)
+# Special thanks to Flab for their work on writing this blueprint
+blueprint:
+  name: View Assist - View Camera
+  description: Ask View Assist to show your camera streams
+  domain: automation
+  input:
+    command:
+      name: Command Text
+      description: The command to use to trigger the automation
+      default: Show {camera} camera
+    response:
+      name: Response Text
+      description: The response to give when launching website
+      default: Showing {{trigger.slots.camera}} camera
+    cameras:
+      name: Camera Dictionary Text
+      description: The dictionary of camera names and their associated Home Assistant camera entities
+      default: '{"front":"camera.front_camera","doorbell":"camera.mydoorbellcamera"}'
+    group_entity:
+      name: Group Entity
+      description:
+        The group that holds the list of View Assist satellites(example
+        group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain:
+                - group
+          multiple: false
+      default: group.viewassist_satellites
+    view:
+      name: Dashboard Camera view
+      description:
+        The View Assist dashboard view designed to show cameras (example
+        /dashboard-viewassist/camera)
+      default: /dashboard-viewassist/camera
+    hold_mode:
+      name: Hold Mode
+      description: Set on to keep the page from automatically switching after timeout
+      default: true
+      selector:
+        boolean: {}
+trigger:
+  - platform: conversation
+    command: !input command
+condition: []
+action:
+  - variables:
+      hold_mode: !input hold_mode
+      view: !input view
+      response: !input response
+      group_entity: !input group_entity
+      input_cameras: !input cameras
+      cameras: "{{ input_cameras | from_json}}"
+      target_satellite_device:
+        "{% for sat in expand(group_entity) %}\n  {% if (device_id(sat.attributes.mic_device)
+        == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id)
+        %}    {{ sat.entity_id }}  {% endif %}{% endfor %}"
+      target_display_device:
+        "{{ device_id(state_attr(target_satellite_device, 'display_device'))}}"
+      target_mediaplayer_device:
+        "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type:
+        "{{ state_attr(target_satellite_device, 'type')}}"
+  - if:
+      - condition: template
+        value_template: "{% if hold_mode %}true{%endif%}"
+    then:
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          mode: hold
+        enabled: true
+  - if:
+      - condition: template
+        value_template: "{% if trigger.slots.camera in cameras %}true{%endif%}"
+    then:        
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          camera: "{{ cameras[trigger.slots.camera] }}"
+        enabled: true
+  - service: browser_mod.navigate
+    data:
+      path: "{{ view }}"
+    target:
+      device_id: "{{ target_display_device }}"
+  - set_conversation_response: "{{ response }}"
+mode: single
