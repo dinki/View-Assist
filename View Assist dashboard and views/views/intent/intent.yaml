@@ -21,7 +21,10 @@ custom_fields:
   message:
     card:
       type: glance
-      columns: 2
+      columns: >-
+        [[[ if
+        (hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"].length
+        < 7 ) return "2"; else return "3"; ]]]
       show_icon: true
       show_name: true
       show_state: false
@@ -41,7 +44,6 @@ custom_fields:
             padding: 1%
           }
           div.entity.action.undefined {
-            width: 75vh;
             height: 21vh;
             background-color: rgba(50,50,50,.5);
             border-radius: 70px;
