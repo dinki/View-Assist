@@ -44,7 +44,7 @@ custom_fields:
             padding: 1%
           }
           div.entity.action.undefined {
-            width: 50vh;          
+            width: 75vh;          
             height: 21vh;
             background-color: rgba(50,50,50,.5);
             border-radius: 70px;
