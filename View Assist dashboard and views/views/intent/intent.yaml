@@ -11,15 +11,43 @@ styles:
     message:
       - position: relative
       - width: 100%
-      - text-align: start
-      - text-wrap: wrap
+      - height: 100%
+      - text-align: center
       - justify-content: center
       - align-self: center
+      - font-size: 220%
 custom_fields:
+  title: ''
   message:
     card:
-      type: custom:button-card
-      entity: >-
-        [[[ try {return
-        hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"][0]}
-        catch { return ""}]]]
+      type: glance
+      columns: >-
+        [[[ if
+        (hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"].length
+        < 7 ) return "2"; else return "3"; ]]]
+      show_icon: true
+      show_name: true
+      show_state: false
+      entities: >-
+        [[[ return
+        hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"]
+        ]]]
+      align: center
+      card_mod:
+        style: |
+          ha-card {
+            --mdc-icon-size: 10vh;
+            display: grid;
+            font-weight: bold;
+            background-color: rgba(0,0,0,.5);
+            justify-items: center !important;
+            padding: 1%
+          }
+          div.entity.action.undefined {
+            width: 75vh;
+            height: 21vh;
+            background-color: rgba(50,50,50,.5);
+            border-radius: 70px;
+            padding-bottom: 2%;
+            padding-top: 2%;
+          }
