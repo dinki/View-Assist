@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Control display template
-  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.2.0)
+  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.2.1)
   domain: automation
   input:
     satellite:
