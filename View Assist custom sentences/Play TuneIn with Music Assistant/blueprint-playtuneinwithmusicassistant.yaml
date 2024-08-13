@@ -40,7 +40,7 @@ action:
         sequence:
           - service: mass.play_media
             target:
-              entity_id: "{{ target_musicplayer_device }}_2"
+              entity_id: "{{ target_musicplayer_device }}"
             data:
               media_id: "{{ station }}"
           - set_conversation_response: ""
