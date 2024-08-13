@@ -40,7 +40,7 @@ action:
         sequence:
           - service: mass.play_media
             target:
-              entity_id: "{{ target_mediaplayer_device }}_2"
+              entity_id: "{{ target_musicplayer_device }}_2"
             data:
               media_id: "{{ station }}"
           - set_conversation_response: ""
@@ -66,5 +66,6 @@ variables:
       {% endif %}
     {% endfor %}
   target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}_2"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
