@@ -16,5 +16,7 @@ Additional functionality has been added since the video was posted.
 
 # Change Log
 v 1.0.0 Initial release
+
 v 1.2.0 Add intent view for built in Home Assistant sentences
+
 v 1.2.1 Provide additional visual feedback for devices changed using HA built in sentences (thanks @JimmyJamesBob!)
