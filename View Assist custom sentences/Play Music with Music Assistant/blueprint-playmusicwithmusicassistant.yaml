@@ -56,7 +56,7 @@ action:
             response_variable: found_artist
           - service: mass.play_media
             target:
-              entity_id: "{{ target_mediaplayer_device }}"
+              entity_id: "{{ target_musicplayer_device }}"
             data:
               media_type: artist
               enqueue: replace
@@ -80,7 +80,7 @@ action:
         sequence:
           - service: mass.play_media
             target:
-              entity_id: "{{ target_mediaplayer_device }}"
+              entity_id: "{{ target_musicplayer_device }}"
             data:
               media_type: playlist
               enqueue: replace
@@ -112,7 +112,7 @@ action:
             response_variable: found_song
           - service: mass.play_media
             target:
-              entity_id: "{{ target_mediaplayer_device }}"
+              entity_id: "{{ target_musicplayer_device }}"
             data:
               media_type: track
               enqueue: play
@@ -155,7 +155,7 @@ action:
             response_variable: found_song
           - service: mass.play_media
             target:
-              entity_id: "{{ target_mediaplayer_device }}"
+              entity_id: "{{ target_musicplayer_device }}"
             data:
               media_type: track
               enqueue: next
@@ -183,5 +183,7 @@ variables:
       {% endif %}
     {% endfor %}
   target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}_2"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
+
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
