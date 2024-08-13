@@ -23,5 +23,5 @@ custom_fields:
         max_cols: 3
       cards: >-
         [[[ try {return
-        hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"]}
+        hass.states[variables.var_assistsat_entity].attributes.intent_entities}
         catch { return ""}]]]
