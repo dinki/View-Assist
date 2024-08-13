@@ -128,18 +128,7 @@ action:
               path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"
-          - set_conversation_response: ""
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ target_satellite_device }}"
-              mode: music
-              title: ""
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: "{{ view_path }}"
-            target:
-              device_id: "{{ target_display_device }}"              
+          - set_conversation_response: ""            
       - conditions:
           - condition: trigger
             id:
