@@ -185,5 +185,4 @@ variables:
   target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
   target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
   target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
-
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
