@@ -226,9 +226,10 @@ action:
                           {% set data.filtered_list = data.filtered_list + [item] %}
                       {% endif -%}
                   {% endfor %}  {% set list = data.filtered_list %} [ {% for e
-                  in list %}  {{ {'entity': e, 'tap_action':{'action':'toggle'},
+                  in list %}  {{ {'type': 'custom:button-card','entity': e,
+                  'tap_action':{'action':'toggle'},
                   'double_tap_action':{'action':'more-info'}} }} , {% endfor %}
-                  ]
+                  ]  
             enabled: true
           - if:
               - condition: template
