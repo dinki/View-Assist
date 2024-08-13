@@ -14,6 +14,10 @@ This blueprint will contain device specific functions.  Current functions includ
 
 Requires View Assist Control automation v1.2.0 or greater
 
+## To do
+
+* Add voice command to set view timeout
+
 ## Change log
 
 v 1.0.0 Initial release
