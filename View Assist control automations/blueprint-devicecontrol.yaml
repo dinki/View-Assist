@@ -215,21 +215,20 @@ action:
             data:
               title: ""
               entity_id: "{{ satellite }}"
-              data:
-                intent_entities: >-
-                  {% set list =
-                  state_attr(intent,'intent_output')['response']['data']['success']
-                  | map(attribute='id') | list %}  {% set prefix = ('light',
-                  'switch', 'cover', 'boolean') %}  {% set data =
-                  namespace(filtered_list=[]) %}  {% for item in list %}
-                      {%- if item.startswith(prefix) %} 
-                          {% set data.filtered_list = data.filtered_list + [item] %}
-                      {% endif -%}
-                  {% endfor %}  {% set list = data.filtered_list %} [ {% for e
-                  in list %}  {{ {'type': 'custom:button-card','entity': e,
-                  'tap_action':{'action':'toggle'},
-                  'double_tap_action':{'action':'more-info'}} }} , {% endfor %}
-                  ]
+              intent_entities: >-
+                {% set list =
+                state_attr(intent,'intent_output')['response']['data']['success']
+                | map(attribute='id') | list %}  {% set prefix = ('light',
+                'switch', 'cover', 'boolean') %}  {% set data =
+                namespace(filtered_list=[]) %}  {% for item in list %}
+                    {%- if item.startswith(prefix) %} 
+                        {% set data.filtered_list = data.filtered_list + [item] %}
+                    {% endif -%}
+                {% endfor %}  {% set list = data.filtered_list %} [ {% for e
+                in list %}  {{ {'type': 'custom:button-card','entity': e,
+                'tap_action':{'action':'toggle'},
+                'double_tap_action':{'action':'more-info'}} }} , {% endfor %}
+                ]
             enabled: true
           - if:
               - condition: template
