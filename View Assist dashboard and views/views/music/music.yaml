@@ -1,6 +1,13 @@
 type: custom:button-card
 variables:
   musiccardversion: 1.0.0
+  var_musicplayer_device: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var musicdevice = hass.states[assistbid].attributes.musicplayer_device;
+      return `${musicdevice}`
+    ]]]   
 template:
   - variable_template
   - body_template
@@ -27,7 +34,7 @@ custom_fields:
       card:
         type: media-control
         name: ' '
-        entity: '[[[ return variables.var_mediaplayer_device + ''_2'' ]]]'
+        entity: '[[[ return variables.var_musicplayer_device ]]]'
       style: |
         ha-card {
           width: 95vw !important;
