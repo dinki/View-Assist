@@ -6,4 +6,5 @@ Requirements:
   * Music Assistant server installed and integrated with Home Assistant
   * Music view (see views 'music)  will update path when available
 This blueprint assumes you will be playing music to your View ASsist satellite configured media player and that it has a corresponding Music Assistant device (eg VA media player device _2)
+  * The recently added musicplayer_device must be added to your View Assistant device configuration as explained in the [Satellite Custom Device Configuration](https://github.com/dinki/View-Assist/wiki/View-Assist-device-configuration#satellite-custom-device-configuration) portion of the wiki.  This should be a Music Assistant player device.  Typically these will be named the same as your mediaplayer_device but with a _2 on the end
  
