@@ -4,7 +4,8 @@
 
 Requirements:
   * Music Assistant server installed and integrated with Home Assistant
-  * TuneIn Radio music provider installed and configured in Music Assistant
+  * Create a free account on Tune In and add some stations to your favorites on the Tune In website
+  * Install TuneIn Radio music provider in Music Assistant, configure, and allow time to sync
   * View: [Music view](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/music/music.yaml)  See this [video](https://www.youtube.com/watch?v=QmWDNtikHaU) for installation procedure
   * The TuneIn station ID as seen in Music Assistant (see instructions for finding below)
   * The recently added musicplayer_device must be added to your View Assistant device configuration as explained in the [Satellite Custom Device Configuration](https://github.com/dinki/View-Assist/wiki/View-Assist-device-configuration#satellite-custom-device-configuration) portion of the wiki.  This should be a Music Assistant player device.  Typically these will be named the same as your mediaplayer_device but with a _2 on the end
