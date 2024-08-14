@@ -21,8 +21,8 @@ blueprint:
             - domain: group
       default: "group.viewassist_satellites"                  
     view:
-      name: Dashboard List view
-      description: The View Assist dashboard view designed to show lists (example /dashboard-viewassist/list)
+      name: Dashboard Webpage view
+      description: The View Assist dashboard view designed to show the webpage.
       default: "/dashboard-viewassist/webpage"      
     url:
       name: Webpage
