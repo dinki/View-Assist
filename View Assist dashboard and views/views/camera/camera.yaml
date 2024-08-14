@@ -26,7 +26,7 @@ custom_fields:
             [[[ try {return
             hass.states[variables.var_assistsat_entity].attributes.camera}
             catch {return ""}]]]
-          live_provider: auto
+          live_provider: ha
       dimensions:
         max_height: 100vh
         max_wdith: 100vw
