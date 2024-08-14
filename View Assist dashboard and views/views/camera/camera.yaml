@@ -1,10 +1,10 @@
 type: custom:button-card
 variables:
-  cameracardversion: 1.0.0
+  cameracardversion: 1.0.1
   var_camera: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.camera} catch {
-    return  "camera.doorbell_restream"}]]]
+    return  ""}]]]
 template:
   - variable_template
   - body_template
@@ -15,8 +15,7 @@ styles:
 custom_fields:
   title: >-
     [[[ try {return hass.states[variables.var_camera].attributes.friendly_name}
-    catch {return
-    hass.states["camera.doorbell_restream"].attributes.friendly_name}]]]
+    catch {return ""}]]]
   message:
     card:
       type: custom:frigate-card
@@ -25,7 +24,7 @@ custom_fields:
       cameras:
         - camera_entity: >-
             [[[ try {return hass.states[variables.var_camera].attributes.camera}
-            catch { return  "camera.doorbell_restream"}]]]
+            catch { return  ""}]]]
           live_provider: ha
       dimensions:
         max_height: 100vh
