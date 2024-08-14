@@ -22,7 +22,7 @@ blueprint:
       default: "group.viewassist_satellites"                  
     view:
       name: Dashboard Webpage view
-      description: The View Assist dashboard view designed to show the webpage.
+      description: The View Assist dashboard view designed to show the webpage (example /dashboard-viewassist/list)
       default: "/dashboard-viewassist/webpage"      
     url:
       name: Webpage
