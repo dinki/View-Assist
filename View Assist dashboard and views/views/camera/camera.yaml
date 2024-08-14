@@ -25,7 +25,7 @@ custom_fields:
         - camera_entity: >-
             [[[ try {return hass.states[variables.var_camera].attributes.camera}
             catch { return  ""}]]]
-          live_provider: ha
+          live_provider: auto
       dimensions:
         max_height: 100vh
         max_wdith: 100vw
