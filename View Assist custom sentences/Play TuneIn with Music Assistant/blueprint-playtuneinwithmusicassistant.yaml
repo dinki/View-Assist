@@ -1,0 +1,71 @@
+blueprint:
+  name: View Assist - Play TuneIn with Music Assistant
+  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.0)
+  domain: automation
+  input:
+    command:
+      name: Command
+      description: The phrase you want to start your station (example Big 102)
+    station:
+      name: Station ID
+      description: The TuneIn radio station to play.  This must be an exact match (example BIG 102.1 KYBG)      
+    group_entity:
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example
+        group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - group
+          multiple: false
+      default: group.viewassist_satellites
+    view_path:
+      name: Dashboard Info view
+      description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
+      default: /dashboard-viewassist/music
+alias: View Assist - Play Music with Music Assistant
+description: ""
+trigger:
+  - platform: conversation
+    command: !input command
+    id: playtunein
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - playtunein
+        sequence:
+          - service: mass.play_media
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
+            data:
+              media_id: "{{ station }}"
+          - set_conversation_response: ""
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: "{{ view_path }}"
+            target:
+              device_id: "{{ target_display_device }}"
+variables:
+  view_path: !input view_path
+  group_entity: !input group_entity
+  station: !input station
+  target_satellite_device: |-
+    {% for sat in expand(group_entity) %}
+      {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
+  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"

@@ -11,15 +11,17 @@ styles:
     message:
       - position: relative
       - width: 100%
-      - text-align: start
-      - text-wrap: wrap
-      - justify-content: center
-      - align-self: center
+      - align-self: middle
+      - justify-self: center
 custom_fields:
+  title: ''
   message:
     card:
-      type: custom:button-card
-      entity: >-
+      type: custom:layout-card
+      layout_type: custom:masonry-layout
+      layout:
+        max_cols: 3
+      cards: >-
         [[[ try {return
-        hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"][0]}
+        hass.states[variables.var_assistsat_entity].attributes.intent_entities}
         catch { return ""}]]]

@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Device Functions
-  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.2.1)
+  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.2.2)
   domain: automation
   input:
     repeat_command:
@@ -228,16 +228,20 @@ action:
             id:
               - stop_music
         sequence:
-          - service: python_script.set_state
-            data:
+          - data:
               entity_id: "{{ target_satellite_device }}"
               mode: normal
-          - service: media_player.media_stop
-            target:
+            action: python_script.set_state
+          - target:
               entity_id:
-                - "{{ target_mediaplayer_device }}"
+                - "{{ target_musicplayer_device }}"
             data: {}
-          - set_conversation_response: Music stopped
+            action: media_player.media_stop
+          - action: timer.finish
+            target:
+              entity_id: "{{ target_timer_device }}"
+            data: {}           
+          - set_conversation_response: Music stopped          
               
 variables:
   modes: !input modes
@@ -251,4 +255,6 @@ variables:
     {% endfor %}
   target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
   target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
+  target_timer_device: "{{ state_attr(target_satellite_device, 'timer') }}"    
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"              

@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Control display template
-  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.2.0)
+  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.2.1)
   domain: automation
   input:
     satellite:
@@ -213,19 +213,21 @@ action:
                 enabled: true 
           - service: python_script.set_state
             data:
-              title: ""
               entity_id: "{{ satellite }}"
-              data:
-                intent_entities: >-
-                  {% set list =
-                  state_attr(intent,'intent_output')['response']['data']['success']
-                  | map(attribute='id') | list %}  {% set prefix = ('light',
-                  'switch', 'cover', 'boolean') %}  {% set data =
-                  namespace(filtered_list=[]) %}  {% for item in list %}
-                      {%- if item.startswith(prefix) %} 
-                          {% set data.filtered_list = data.filtered_list + [item] %}
-                      {% endif -%}
-                  {% endfor %}  {% set list = data.filtered_list %}  {{ list }}
+              intent_entities: >-
+                {% set list =
+                state_attr(intent,'intent_output')['response']['data']['success']
+                | map(attribute='id') | list %}  {% set prefix = ('light',
+                'switch', 'cover', 'boolean') %}  {% set data =
+                namespace(filtered_list=[]) %}  {% for item in list %}
+                    {%- if item.startswith(prefix) %} 
+                        {% set data.filtered_list = data.filtered_list + [item] %}
+                    {% endif -%}
+                {% endfor %}  {% set list = data.filtered_list %} [ {% for e
+                in list %}  {{ {'type': 'custom:button-card','entity': e,
+                'tap_action':{'action':'toggle'},
+                'double_tap_action':{'action':'more-info'}} }} , {% endfor %}
+                ]
             enabled: true
           - if:
               - condition: template
