@@ -8,7 +8,7 @@ blueprint:
     command:
       name: Command Text
       description: The command to use to trigger the automation
-      default: Show {camera} camera
+      default: Show [the] {camera} camera
     response:
       name: Response Text
       description: The response to give when launching website
