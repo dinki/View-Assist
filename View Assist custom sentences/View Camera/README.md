@@ -20,3 +20,13 @@ Here the user could say 'show front camera' or 'show driveway camera' and camera
 
 Requirements:
 * [camera view](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/camera/camera.yaml)
+
+## To do
+
+* Only set hold mode if device called is valid and device is video capable
+* Set default message for not found cameras
+* Add multicamera view when Frigate card dev changes released to main
+
+## Change Log
+
+v 1.0.0 Initial release
