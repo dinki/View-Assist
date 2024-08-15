@@ -25,7 +25,7 @@ blueprint:
       name: Language
       description: The language you want to use for currency
       default: de
-    rapiapikey:
+    rapidapikey:
       name: Rapid Api Key
       description: Your Rapid Api Key
       default: YOURAPIKEY
