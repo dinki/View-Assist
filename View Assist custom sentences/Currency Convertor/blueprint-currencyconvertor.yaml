@@ -77,12 +77,14 @@ action:
               - exchange
             sequence:
               - action: pyscript.currency_convertor
-                data:
-                  rapidapikey: rapidapikey
-                  currencyfrom: base_currency
-                  currencyto:  trigger.slots.tocurrency
-                  amount: 1
-                  language: lang
+                data: |
+                  {{
+                    {"rapidapikey": rapidapikey,
+                    "currencyfrom": base_currency,
+                    "currencyto":  trigger.slots.tocurrency,
+                    "amount": 1,
+                    "language": lang}
+                  }}
                 response_variable: conversion_response
                 enabled: true
           - condition: trigger
