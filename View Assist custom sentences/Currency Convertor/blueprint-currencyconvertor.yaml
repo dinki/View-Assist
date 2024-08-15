@@ -1,0 +1,123 @@
+# Currency Convertor
+blueprint:
+  name: View Assist - Currency Convertor
+  description: Convert currency from one type to another (View Assist Currency Convertor v 1.0.0)
+  domain: automation
+  input:
+  input:
+    exchange_command:
+      name: Exchange Command
+      description: The phrase you want to use to trigger the exchange rate command.
+      default: "What is the exchange rate for {currency}"
+    base_currency:
+      name: Base Currency
+      description: The base currency you would like to use for your rates.
+      default: USD
+    convert_command:
+      name: Convert Command
+      description: The phrase you want to use to trigger the convert an amount to another currency
+      default: "How much is {fromcurrency} in {tocurrency}"
+    convert_command2:
+      name: Command Text
+      description: The phrase you want to use to trigger the automation
+      default: "convert {fromcurrency} to {tocurrency}"  
+    language:
+      name: Language
+      description: The language you want to use for currency
+      default: de
+    group_entity:
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example
+        group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - group
+          multiple: false
+      default: group.viewassist_satellites
+    view_path:
+      name: Dashboard Info view
+      description: The View Assist dashboard view to use for displaying information (example /dashboard-viewassist/info)
+      default: /dashboard-viewassist/info
+trigger:
+  - platform: conversation
+    command:
+      - !input exchange_command
+    id: exchange
+  - platform: conversation
+    command:
+      - !input convert_command
+      - !input convert_command2
+    id: convert
+condition: []
+action:
+  - variables:
+      rapidapikey: !secret rapidapikey
+      group_entity: !input group_entity
+      view: !input view_path
+      base_currency: !input base_currency
+      language: !input language
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - exchange
+            sequence:
+              - action: pyscript.currency_convertor
+                data:
+                  rapidapikey: rapidapikey,
+                  currencyfrom: base_currency,
+                  currencyto:  trigger.slots.tocurrency,
+                  amount: 1,
+                  language: language
+                response_variable: conversion_response
+                enabled: true
+          - condition: trigger
+            id:
+              - convert
+            sequence:
+              - action: pyscript.currency_convertor
+                data: |
+                  {{
+                    {"rapidapikey": rapidapikey,
+                    "currencyfrom": trigger.slots.fromcurrency | reject('in', '0123456789') | join | trim ,
+                    "currencyto":  trigger.slots.tocurrency,
+                    "amount": trigger.slots.fromcurrency | select('in', '0123456789') | join,
+                    "language": language }
+                  }}
+                response_variable: conversion_response
+                enabled: true
+  - set_conversation_response: >-
+      {{ trigger.slots.fromcurrency | replace(".", " ") }} converts to {{
+      conversion_response['data']['value'] | round(2) }} {{
+      trigger.slots.tocurrency | replace(".", " ") }}
+  - if:
+      - condition: template
+        value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+    then:
+      - data:
+          entity_id: "{{ target_satellite_device }}"
+          title: Currency Convertor
+          message_font_size: 4vw
+          message: >-
+            {{ trigger.slots.fromcurrency | replace(".", " ") | title }}
+            converts to {{ conversion_response['data']['value'] | round(2) }} {{
+            trigger.slots.tocurrency | replace(".", " ") | title }}
+        action: python_script.set_state
+      - data:
+          path: "{{ view }}"
+        target:
+          device_id: "{{target_display_device}}"
+        action: browser_mod.navigate
+mode: single
