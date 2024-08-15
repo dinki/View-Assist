@@ -87,7 +87,7 @@ action:
               }}
             response_variable: conversion_response
             enabled: true
-      -conditions:
+      - conditions:
           - condition: trigger
             id:
               - convert
