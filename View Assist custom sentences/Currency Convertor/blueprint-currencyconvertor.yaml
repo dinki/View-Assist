@@ -23,7 +23,7 @@ blueprint:
     language:
       name: Language
       description: The language you want to use for currency
-      default: de
+      default: en
     rapid_apikey:
       name: Rapid Api Key
       description: Your Rapid Api Key
@@ -78,10 +78,10 @@ action:
             sequence:
               - action: pyscript.currency_convertor
                 data:
-                  rapidapikey: rapidapikey,
-                  currencyfrom: base_currency,
-                  currencyto:  trigger.slots.tocurrency,
-                  amount: 1,
+                  rapidapikey: rapidapikey
+                  currencyfrom: base_currency
+                  currencyto:  trigger.slots.tocurrency
+                  amount: 1
                   language: lang
                 response_variable: conversion_response
                 enabled: true
