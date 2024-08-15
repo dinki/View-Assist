@@ -4,7 +4,6 @@ blueprint:
   description: Convert currency from one type to another (View Assist Currency Convertor v 1.0.0)
   domain: automation
   input:
-  input:
     exchange_command:
       name: Exchange Command
       description: The phrase you want to use to trigger the exchange rate command.
@@ -25,7 +24,7 @@ blueprint:
       name: Language
       description: The language you want to use for currency
       default: de
-    rapidapikey:
+    rapid_apikey:
       name: Rapid Api Key
       description: Your Rapid Api Key
       default: YOURAPIKEY
@@ -57,11 +56,11 @@ trigger:
 condition: []
 action:
   - variables:
-      rapidapikey: !input rapidapikey
       group_entity: !input group_entity
+      rapidapikey: !input rapid_apikey
       view: !input view_path
       base_currency: !input base_currency
-      language: !input language
+      lang: !input language
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
           {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
@@ -83,7 +82,7 @@ action:
                   currencyfrom: base_currency,
                   currencyto:  trigger.slots.tocurrency,
                   amount: 1,
-                  language: language
+                  language: lang
                 response_variable: conversion_response
                 enabled: true
           - condition: trigger
@@ -97,7 +96,7 @@ action:
                     "currencyfrom": trigger.slots.fromcurrency | reject('in', '0123456789') | join | trim ,
                     "currencyto":  trigger.slots.tocurrency,
                     "amount": trigger.slots.fromcurrency | select('in', '0123456789') | join,
-                    "language": language }
+                    "language": lang }
                   }}
                 response_variable: conversion_response
                 enabled: true
