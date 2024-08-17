@@ -1,4 +1,3 @@
-9fbbd12f64msh317eed541a6f5c5p145fbbjsn4165c3425618
 import requests,re
 
 # https://hacs-pyscript.readthedocs.io/en/stable/reference.html#pyscript-executor
@@ -86,13 +85,3 @@ def currency_convertor(currencyfrom=None, currencyto=None, amount=None, rapidapi
     else:
         response_variable = {"error": r.status_code, "data": r.json()}
     return response_variable
-
-currency_convertor(rapidapikey="9fbbd12f64msh317eed541a6f5c5p145fbbjsn4165c3425618", currencyfrom="u.s. dollars", currencyto="euros", amount="1", language="en", return_response=True)
-
-currency_convertor(rapidapikey="9fbbd12f64msh317eed541a6f5c5p145fbbjsn4165c3425618", currencyfrom="euros", currencyto="u.s. dollars", language="en", amount="100", return_response=True)
-
-currency_convertor(rapidapikey="9fbbd12f64msh317eed541a6f5c5p145fbbjsn4165c3425618", currencyfrom="euros", currencyto="u.s. dollars", language="de", amount="100", return_response=True)
-
-currency_convertor(rapidapikey="9fbbd12f64msh317eed541a6f5c5p145fbbjsn4165c3425665", currencyfrom="euros", currencyto="u.s. dollars", language="en", amount="100", return_response=True)
-
-
