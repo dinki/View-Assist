@@ -28,8 +28,9 @@ trigger:
   - platform: conversation
     command:
       - how did the {team} do
-      - (what is | what's) the score of the {team} game
+      - (what is | what's) the score of the {team} (game | match)
       - how are the {team} doing
+      - how is the {team} (game | match) going
 condition: []
 action:
   - variables:
