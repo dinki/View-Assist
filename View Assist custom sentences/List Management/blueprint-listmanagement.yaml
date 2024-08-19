@@ -94,6 +94,13 @@ action:
                   {% if target_satellite_device_type != 'audio_only' %}true{%
                   else %}false{% endif %}
             then:
+              - service: python_script.set_state
+                data:
+                  entity_id: "{{ target_satellite_device }}"
+                  title: "{{ state_attr(list_entity,'friendly_name') }}"
+                  message_font_size: 4vw
+                  list: "{{ list_entity }}"          
+                enabled: true                
               - service: browser_mod.navigate
                 data:
                   path: "{{ view }}"
@@ -136,6 +143,13 @@ action:
                   {% if target_satellite_device_type != 'audio_only' %}true{%
                   else %}false{% endif %}
             then:
+              - service: python_script.set_state
+                data:
+                  entity_id: "{{ target_satellite_device }}"
+                  title: "{{ state_attr(list_entity,'friendly_name') }}"
+                  message_font_size: 4vw
+                  list: "{{ list_entity }}"          
+                enabled: true                
               - service: browser_mod.navigate
                 data:
                   path: "{{ view }}"
