@@ -1,5 +1,6 @@
 import requests,re
 
+# Based on
 # https://hacs-pyscript.readthedocs.io/en/stable/reference.html#pyscript-executor
 # https://pyyaml.org/wiki/PyYAMLDocumentation
 
@@ -10,13 +11,24 @@ except ImportError:
     from yaml import Loader
 
 @pyscript_executor
-def read_file(currencyfrom=None, currencyto=None, filename=None):
+def currencyToCode(currencyfrom=None, currencyto=None, filename=None):
     try:
         with open(filename, 'r') as fd:
             currencies = load(fd, Loader=Loader)['currencies']
             codefrom = [value for key, value in currencies.items() if currencyfrom.lower() in key.lower()]
             codeto = [value for key, value in currencies.items() if currencyto.lower() in key.lower()]
         return codefrom, codeto, None
+    except Exception as exc:
+        return None, None, exc
+
+@pyscript_executor
+def replaceTextWithNumerals(currencyfrom=None, numerals_fp=None):
+    try:
+        with open(filename,'r') as fd:
+            numerals = load(fd, Loader=Loader)['numerals']
+            numeral = (value for key, value in numerals.items() if currencyfrom.lower() in key.lower())
+
+        return currencyfrom, None
     except Exception as exc:
         return None, None, exc
 
@@ -33,7 +45,7 @@ def currency_convertor(currencyfrom=None, currencyto=None, amount=None, rapidapi
             selector:
                 text:
         currencyto:
-            description: What currency to convert from
+            description: What currency to convert to
             example: euro
             required: true
             selector:
@@ -58,12 +70,21 @@ def currency_convertor(currencyfrom=None, currencyto=None, amount=None, rapidapi
                 text:
     """ 
 
-    filepath = "/config/pyscript/currencies." + language + ".yaml"
-    codefrom, codeto, exception = read_file(currencyfrom, currencyto, filepath)
+    # if amount is None then fromcurrency contains amount and currency name
+    if not amount:
+        amount, currencyfrom = currencyfrom.split(' ', 1)
+        if amount.isdigit():
+            amount = int(amount)
+        else:
+            numerals_fp ="/config/pyscript/" + language + "/numerals.yaml"
+            amount, currencyfrom = replaceTextWithNumerals(currencyfrom, numerals_fp).split(' ', 1)
+
+    currency_fp = "/config/pyscript/"+ language +"/currencies.yaml"
+    codefrom, codeto, exception = currencyToCode(currencyfrom, currencyto, currency_fp)
 
     if exception:
         errno, strerror = exception.args
-        response_variable = {"error": errno, "message": strerror, "data": { "filepath": filepath }}
+        response_variable = {"error": errno, "message": strerror, "data": { "filepath": currency_fp }}
         return response_variable
 
     if not codefrom or not codeto:
