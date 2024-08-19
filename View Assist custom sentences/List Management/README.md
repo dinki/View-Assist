@@ -13,17 +13,11 @@ https://youtu.be/h6WmQ7LiO_0
 
 Special thanks to Elwing for her work on this automation and view
 
-## Troubleshooting
-
-The error "specify an entity within the todo domain" may initially be seen when adding an item.  If so, ask the automation to display the list and the error should no longer occur.
-
-## To do
-
-Fix the problem described above.  This is being caused because the list variable is not being set in the VA device config for add/remove.  It is only being set for view.  As a temporary fix, you can ask to view your showing list and then it will work for view/add/remove.
-
 ## Change Log
 1.0.0 Initial release
 
 1.1.0 Added function
 
 1.1.1 Move list view variable out of dictionary
+
+1.1.2 Add entity to VA config for all calls to ensure no errors show when not set
