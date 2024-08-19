@@ -10,19 +10,19 @@ blueprint:
     mode_command:
       name: Mode Command
       description: The command to use to trigger the mode change automation
-      default: "(set mode [to] {mode} | turn on {mode} mode)"
+      default: "(set mode [to] {mode} | turn on {mode} mode | set [to] {mode} mode)"
     view_command:
       name: View Command
       description: The command to use to trigger the view change automation
-      default: "(set view [to] {view} | change [to] {view} view)"
+      default: "(set view [to] {view} | change [to] {view} view | set [to] {view} view)"
     dnd_command:
       name: Do Not Disturb Command 
       description: The command to use to trigger turning off DND mode
-      default: "(set do not disturb [to] off | turn off do not disturb mode)"
+      default: "(set do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])"
     set_volume:
       name: Set Volume Command 
       description: The command to use to set volume levels level directly
-      default: "[set | turn] [the] volume to {level}"
+      default: "[set | turn] [the] volume [to] {level}"
     adjust_volume:
       name: Adjust Volume Command 
       description: The command to use to set volume levels by step
