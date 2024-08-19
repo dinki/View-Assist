@@ -203,6 +203,11 @@ action:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
     then:
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          title: ""
+          climate: "{{ thermostat }}"     
       - data:
           path: "{{ view }}"
         target:
