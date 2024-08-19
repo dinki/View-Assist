@@ -2,21 +2,19 @@ blueprint:
   name: View Assist - Thermostat Control
   description: Control thermostat temperature  (View Assist thermostatcontrol v 1.0.0)
   domain: automation
-  increasetemperature:
-    command:
-      name: Command
+  input:
+    increasetemperature:
+      name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
       default: "(increase thermostat | raise thermostat | increase temperature | raise temperature) {amount} (degree | degrees | °)"
     decreasetemperature:
-      command:
-        name: Command
-        description: The phrase used to decrease the current thermostat temperature set point
-        default: "(decrease thermostat | lower thermostat | decrease temperature | lower temperature) {amount} (degree| degrees | °)"
-    setemperature:
-      command:
-        name: Command
-        description: The phrase used to set the current thermostat temperature set point
-        default: "(set thermostat | change thermostat | set temperature | change temperature) [to] {amount} [degree | degrees | °]"            
+      name: Decrease Temperature
+      description: The phrase used to decrease the current thermostat temperature set point
+      default: "(decrease thermostat | lower thermostat | decrease temperature | lower temperature) {amount} (degree| degrees | °)"
+    settemperature:
+      name: Set Temperature
+      description: The phrase used to set the current thermostat temperature set point
+      default: "(set thermostat | change thermostat | set temperature | change temperature) [to] {amount} [degree | degrees | °]"            
     thermostat:
       name: Thermostat device
       description: The thermostat device to control (example climate.livingroomtstat)
