@@ -65,9 +65,11 @@ action:
             enabled: true
         sequence:
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: cool
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'cool' %}
+                true
+                {% endif %}              
             then:
               - data:
                   temperature: >-
@@ -77,9 +79,11 @@ action:
                 action: climate.set_temperature
             enabled: true
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: heat
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'heat' %}
+                true
+                {% endif %}              
             then:
               - data:
                   temperature: >-
@@ -89,9 +93,11 @@ action:
                 action: climate.set_temperature
             enabled: true
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: heat_cool
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'heat_cool' %}
+                true
+                {% endif %}              
             then:
               - data:
                   target_temp_high: >-
@@ -110,9 +116,11 @@ action:
             enabled: true
         sequence:
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: cool
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'cool' %}
+                true
+                {% endif %}              
             then:
               - data:
                   temperature: >-
@@ -122,9 +130,11 @@ action:
                 action: climate.set_temperature
             enabled: true
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: heat
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'heat' %}
+                true
+                {% endif %}              
             then:
               - data:
                   temperature: >-
@@ -134,9 +144,12 @@ action:
                 action: climate.set_temperature
             enabled: true
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: heat_cool
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'heat_cool' %}
+                true
+                {% endif %}              
+
             then:
               - data:
                   target_temp_high: >-
@@ -155,9 +168,11 @@ action:
             enabled: true
         sequence:
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: cool
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'cool' %}
+                true
+                {% endif %}              
             then:
               - data:
                   temperature: "{{ amount }}"
@@ -166,9 +181,11 @@ action:
                 action: climate.set_temperature
             enabled: true
           - if:
-              - condition: state
-                entity_id: "{{ thermostat }}"
-                state: heat
+            - condition: template
+              value_template: >-
+                {% if states(thermostat) == 'cool' %}
+                heat
+                {% endif %}              
             then:
               - data:
                   temperature: "{{ amount }}"
