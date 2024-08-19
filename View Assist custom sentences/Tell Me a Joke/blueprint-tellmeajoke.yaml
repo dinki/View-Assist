@@ -7,7 +7,7 @@ blueprint:
     command:
       name: Command 
       description: The phrase you want to use to trigger the joke request
-      default: "tell me a joke"
+      default: "tell [me | us] a joke"
     group_entity: 
       name: Group Entity
       description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
