@@ -45,7 +45,7 @@ condition: []
 action:
   - variables:
       amount: "{{ trigger.slots.amount }}"
-      thermostat: !input thermostat
+      thermostat: climate.trane_model_tzemt400ab32maa_mode
       group_entity: !input group_entity
       view: !input view
       target_satellite_device: |-
