@@ -1,0 +1,47 @@
+type: custom:button-card
+variables:
+  thermostatversion: 1.0.0
+  climate_device: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.climate} catch {
+    return ""}]]]
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background-color: '#1c1c1c'
+    - background-size: cover
+  custom_fields:
+    message:
+      - font-size: '[[[ return variables.var_font_size ]]]'
+      - position: relative
+      - padding: 10px
+      - border-radius: 10px
+      - width: 95%
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: 2%
+custom_fields:
+  title: ''
+  message:
+    card:
+      type: thermostat
+      entity: '[[[ return variables.climate_device ]]]'
+      name: ' '
+      card_mod:
+        style:
+          .: |
+            .content {
+              transform: scale(1.8);
+            }
+          ha-icon-button:
+            $:
+              mwc-icon-button:
+                $:
+                  button: |
+                    mwc-ripple {
+                      display: none;
+                    }
