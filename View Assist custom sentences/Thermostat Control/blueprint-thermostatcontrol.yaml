@@ -18,6 +18,10 @@ blueprint:
     thermostat:
       name: Thermostat device
       description: The thermostat device to control (example climate.livingroomtstat)
+      selector:
+        entity:
+          filter:
+            - domain: climate      
       default: ""      
     view:
       name: View
