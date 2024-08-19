@@ -4,11 +4,30 @@ blueprint:
   description: Convert currency from one type to another (View Assist Currency Convertor v 1.0.0)
   domain: automation
   input:
-  input:
-    command_prompt:
+    exchange_command:
+      name: Exchange Command
+      description: The phrase you want to use to trigger the exchange rate command.
+      default: "What is the exchange rate for {currency}"
+    base_currency:
+      name: Base Currency
+      description: The base currency you would like to use for your rates.
+      default: USD
+    convert_command:
+      name: Convert Command
+      description: The phrase you want to use to trigger the convert an amount to another currency
+      default: "How much is {fromcurrency} in {tocurrency}"
+    convert_command2:
       name: Command Text
       description: The phrase you want to use to trigger the automation
       default: "convert {fromcurrency} to {tocurrency}"  
+    language:
+      name: Language
+      description: The language you want to use for currency
+      default: en
+    rapid_apikey:
+      name: Rapid Api Key
+      description: Your Rapid Api Key
+      default: YOURAPIKEY
     group_entity:
       name: Group Entity
       description: The group that holds the list of View Assist satellites(example
@@ -27,12 +46,21 @@ blueprint:
 trigger:
   - platform: conversation
     command:
-      - !input command_prompt
+      - !input exchange_command
+    id: exchange
+  - platform: conversation
+    command:
+      - !input convert_command
+      - !input convert_command2
+    id: convert
 condition: []
 action:
   - variables:
-      group_entity: group.viewassist_satellites
-      view: /dashboard-viewassist/info
+      group_entity: !input group_entity
+      rapidapikey: !input rapid_apikey
+      view: !input view_path
+      base_currency: !input base_currency
+      lang: !input language
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
           {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
@@ -42,15 +70,39 @@ action:
       target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
-  - action: pyscript.currency_convertor
-    data: |
-      {{
-        {"currencyfrom": trigger.slots.fromcurrency | reject('in', '0123456789') | join | trim ,
-        "currencyto":  trigger.slots.tocurrency,
-        "amount": trigger.slots.fromcurrency | select('in', '0123456789') | join }
-      }}
-    response_variable: conversion_response
-    enabled: true
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - exchange
+        sequence:
+          - action: pyscript.currency_convertor
+            data: |
+              {{
+                {"rapidapikey": rapidapikey,
+                "currencyfrom": base_currency,
+                "currencyto":  trigger.slots.tocurrency,
+                "amount": 1,
+                "language": lang}
+              }}
+            response_variable: conversion_response
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - convert
+        sequence:
+          - action: pyscript.currency_convertor
+            data: |
+              {{
+                {"rapidapikey": rapidapikey,
+                "currencyfrom": trigger.slots.fromcurrency | reject('in', '0123456789') | join | trim ,
+                "currencyto":  trigger.slots.tocurrency,
+                "amount": trigger.slots.fromcurrency | select('in', '0123456789') | join,
+                "language": lang }
+              }}
+            response_variable: conversion_response
+            enabled: true
   - set_conversation_response: >-
       {{ trigger.slots.fromcurrency | replace(".", " ") }} converts to {{
       conversion_response['data']['value'] | round(2) }} {{
