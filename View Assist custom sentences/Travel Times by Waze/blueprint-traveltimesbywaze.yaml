@@ -30,7 +30,7 @@ blueprint:
             - eu
             - il
             - au    
-      default: "1600 Pennsylvania Avenue NW, Washington, DC 20500"      
+      default: us      
     group_entity: 
       name: Group Entity
       description: The group entity that holds the list of ViewAssist devices
