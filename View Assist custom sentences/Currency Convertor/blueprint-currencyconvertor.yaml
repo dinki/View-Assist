@@ -77,14 +77,12 @@ action:
               - exchange
         sequence:
           - action: pyscript.currency_convertor
-            data: |
-              {{
-                {"rapidapikey": rapidapikey,
-                "currencyfrom": base_currency,
-                "currencyto":  trigger.slots.tocurrency,
-                "amount": 1,
-                "language": lang}
-              }}
+            data:
+              rapidapikey: "{{ rapidapikey }}"
+              language: "{{ lang }}"
+              amount: "1"
+              currencyfrom: "{{ base_currency }}"
+              currencyto: "{{ trigger.slots.tocurrency }}"
             response_variable: conversion_response
             enabled: true
       - conditions:
@@ -93,14 +91,12 @@ action:
               - convert
         sequence:
           - action: pyscript.currency_convertor
-            data: |
-              {{
-                {"rapidapikey": rapidapikey,
-                "currencyfrom": trigger.slots.fromcurrency | reject('in', '0123456789') | join | trim ,
-                "currencyto":  trigger.slots.tocurrency,
-                "amount": trigger.slots.fromcurrency | select('in', '0123456789') | join,
-                "language": lang }
-              }}
+            data:
+                rapidapikey: "{{ rapidapikey }}"
+                currencyfrom: "{{ trigger.slots.fromcurrency | reject('in', '0123456789') | join | trim }}"
+                currencyto:  "{{ trigger.slots.tocurrency }}"
+                amount: "{{ trigger.slots.fromcurrency | select('in', '0123456789') | join }}"
+                language: "{{ lang }}"
             response_variable: conversion_response
             enabled: true
   - set_conversation_response: >-

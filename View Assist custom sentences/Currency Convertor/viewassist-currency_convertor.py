@@ -58,7 +58,7 @@ def currency_convertor(currencyfrom=None, currencyto=None, amount=None, rapidapi
                 text:
     """ 
 
-    filepath = "/config/pyscript/currencies." + language + ".yaml"
+    filepath = "/config/pyscript/currencyconvertor-currencies." + language + ".yaml"
     codefrom, codeto, exception = read_file(currencyfrom, currencyto, filepath)
 
     if exception:
