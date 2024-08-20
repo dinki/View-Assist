@@ -15,6 +15,10 @@ blueprint:
       name: Set Temperature
       description: The phrase used to set the current thermostat temperature set point
       default: "(set thermostat | change thermostat | set temperature | change temperature) [to] {amount} [degree | degrees | °]"            
+    showthermostat:
+      name: Show Thermostat
+      description: The phrase used to show thermostat
+      default: "show thermostat"            
     thermostat:
       name: Thermostat device
       description: The thermostat device to control (example climate.livingroomtstat)
@@ -45,6 +49,9 @@ trigger:
   - platform: conversation
     command: !input settemperature
     id: settemperature
+  - platform: conversation
+    command: !input showthermostat
+    id: showthermostat    
 condition: []
 action:
   - variables:
@@ -224,6 +231,24 @@ action:
                   path: "{{ view }}"
                 target:
                   device_id: "{{target_display_device}}"
-                action: browser_mod.navigate          
+                action: browser_mod.navigate
+      - conditions:
+          - condition: trigger
+            id:
+              - showthermostat
+            enabled: true
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+            then:
+              - set_conversation_response: Showing thermostat
+              - data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"
+                action: browser_mod.navigate
+            else:
+              - set_conversation_response: Sorry.  This device cannot display the thermostat                
     default: []
 mode: single
