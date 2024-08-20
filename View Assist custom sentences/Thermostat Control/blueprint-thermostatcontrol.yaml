@@ -113,6 +113,15 @@ action:
                 action: climate.set_temperature
             enabled: true
           - set_conversation_response: Thermostat temperature raised {{ amount }} degree
+          - if:
+              - condition: template
+                value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+            then:
+              - data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"
+                action: browser_mod.navigate          
       - conditions:
           - condition: trigger
             id:
@@ -165,6 +174,15 @@ action:
                 action: climate.set_temperature
             enabled: true
           - set_conversation_response: Thermostat temperature lowered {{ amount }} degree
+          - if:
+              - condition: template
+                value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+            then:
+              - data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"
+                action: browser_mod.navigate          
       - conditions:
           - condition: trigger
             id:
@@ -198,19 +216,14 @@ action:
                 action: climate.set_temperature
             enabled: true
           - set_conversation_response: Thermostat temperature set to {{ amount }} degrees
+          - if:
+              - condition: template
+                value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+            then:
+              - data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"
+                action: browser_mod.navigate          
     default: []
-  - if:
-      - condition: template
-        value_template: "{{ target_satellite_device_type != 'audio_only' }}"
-    then:
-      - service: python_script.set_state
-        data:
-          entity_id: "{{ target_satellite_device }}"
-          title: ""
-          climate: "{{ thermostat }}"     
-      - data:
-          path: "{{ view }}"
-        target:
-          device_id: "{{target_display_device}}"
-        action: browser_mod.navigate
 mode: single
