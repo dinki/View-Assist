@@ -26,6 +26,7 @@ template:
         type: view_audio
         mic_device: "sensor.streamassist-livingroom_stt"
         mediaplayer_device: "media_player.browsermod-livingroom"
+        musicplayer_device: "media_player.browsermod-livingroom_2"
         display_device: "sensor.browsermod-livingroom_browser_path"
         browser_id: "ViewAssist-livingroom"
         timer_device: "timer.viewassist-livingroom"
