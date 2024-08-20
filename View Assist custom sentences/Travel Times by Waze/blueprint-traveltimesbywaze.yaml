@@ -18,7 +18,13 @@ blueprint:
     home:
       name: Home
       description: The default starting point address
-      default: "1600 Pennsylvania Avenue NW, Washington, DC 20500"      
+      default: "1600 Pennsylvania Avenue NW, Washington, DC 20500"
+    places:
+      name: Places
+      description: A list of your favorite places with their addresses
+      default: >-
+        "places:
+          home: 123 Main Street, Beverly Hills, CA 90210"
     region:
       name: Region
       description: Your Waze region
