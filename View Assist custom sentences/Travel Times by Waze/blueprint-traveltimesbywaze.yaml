@@ -107,7 +107,7 @@ action:
               entity_id: "{{ target_satellite_device }}"
               title: Driving Times by Waze
               message_font_size: 4vw
-              message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{hours }} hours and {{ minutes }} minutes{% else %}{{ time }}minutes{% endif %} to drive to {{ trigger.slots.destination | title }}"
+              message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive to {{ trigger.slots.destination | title }}"
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
