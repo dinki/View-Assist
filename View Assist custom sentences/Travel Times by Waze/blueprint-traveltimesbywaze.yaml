@@ -71,7 +71,16 @@ action:
       destination: >-
         {% if trigger.slots.destination |lower in places
         %}{{places[trigger.slots.destination]}}{% else
-        %}{{trigger.slots.destination}}{%endif%}             
+        %}{{trigger.slots.destination}}{%endif%}
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"        
   - choose:
       - conditions:
           - condition: trigger
