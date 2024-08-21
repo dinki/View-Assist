@@ -6,11 +6,11 @@ blueprint:
     increasetemperature:
       name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
-      default: "(increase thermostat | raise thermostat | increase temperature | raise temperature) {amount} (degree | degrees | °)"
+      default: "(increase thermostat | raise thermostat | increase temperature | raise temperature) [by] {amount} (degree | degrees | °)"
     decreasetemperature:
       name: Decrease Temperature
       description: The phrase used to decrease the current thermostat temperature set point
-      default: "(decrease thermostat | lower thermostat | decrease temperature | lower temperature) {amount} (degree| degrees | °)"
+      default: "(decrease thermostat | lower thermostat | decrease temperature | lower temperature) [by] {amount} (degree| degrees | °)"
     settemperature:
       name: Set Temperature
       description: The phrase used to set the current thermostat temperature set point
@@ -56,7 +56,7 @@ condition: []
 action:
   - variables:
       amount: "{{ trigger.slots.amount }}"
-      thermostat: climate.trane_model_tzemt400ab32maa_mode
+      thermostat: !input thermostat
       group_entity: !input group_entity
       view: !input view
       target_satellite_device: |-
