@@ -57,8 +57,22 @@ action:
   - variables:
       home: !input home
       region: !input region
+      input_places: !input places
+      places: "{{ input_places | from_json}}"
       origin: "{{ trigger.slots.origin }}"
       destination: "{{ trigger.slots.destination }}"
+  - if:
+      - condition: template
+        value_template: "{% if origin in places %}true{%endif%}"
+    then:        
+      - variables:
+          origin: "{{ places[origin] }}"
+  - if:
+      - condition: template
+        value_template: "{% if destination in places %}true{%endif%}"
+    then:        
+      - variables:
+          destination: "{{ places[destination] }}"          
   - choose:
       - conditions:
           - condition: trigger
