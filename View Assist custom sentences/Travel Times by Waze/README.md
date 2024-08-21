@@ -1,5 +1,9 @@
 # Travel Times by Waze
 
+<a href="https://www.youtube.com/watch?v=W3wbLjF1n_o"><img src="https://img.youtube.com/vi/W3wbLjF1n_o/mqdefault.jpg" width="60%"></a>
+
+Detailed install video:
+https://www.youtube.com/watch?v=W3wbLjF1n_o
 
 User uses phrases like 'How long does it take to drive from Houston Texas to El Paso Texas' to get current driving time.  User can also set a home address to use as the base for questions like 'How long will it take to go to 123 Main Street, Miami Florida'.  Thehome address set in the blueprint will eliminate the need to give the starting point address.
 
