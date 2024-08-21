@@ -42,18 +42,18 @@ custom_fields:
           progress: true
         card_mod:
           style:
-            mmp-powerstrip $: |
-              ha-icon-button {
-                color: white !important;
-              }
+            mmp-powerstrip $: ""
             .: |
               ha-card {
                  --mmp-icon-color: white !important;
                  --mmp-text-color: white !important;
                  --mmp-unit: 1 !important;
-                 --mdc-icon-size: 100px  !important;
-                font-size: 50px !important;
+                 --mdc-icon-size: 15vh  !important;
+                font-size: 6vh !important;
                 font-weight: bold;
                 aspect-ratio: 1.60 / 1;
                 width: 100% !important;
                    }
+              ha-icon-button {
+                color: white !important;
+              }     
