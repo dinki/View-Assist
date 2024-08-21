@@ -9,5 +9,5 @@ Or import using [raw link](https://raw.githubusercontent.com/dinki/View-Assist/m
 
 ## Dependencies
 * Install [Waze Travel Time integration](https://www.home-assistant.io/integrations/waze_travel_time/) Note: limited to users in US, North America, European Union, Israel, and Australia
-* Set up one Waze Travel Time sesnor.  This sensor can be disabled after set up.  This is required to make the action available for the automation.  The actual sensor is not used
+* Set up one Waze Travel Time sesnor.  
 
