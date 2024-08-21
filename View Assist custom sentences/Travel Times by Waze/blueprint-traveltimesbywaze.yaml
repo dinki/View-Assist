@@ -34,7 +34,11 @@ blueprint:
             - eu
             - il
             - au    
-      default: us      
+      default: us 
+    view:
+      name: View
+      description: The View Assist dashboard view to use for text information display
+      default: "/dashboard-viewassist/info"      
     group_entity: 
       name: Group Entity
       description: The group entity that holds the list of ViewAssist devices
@@ -55,6 +59,7 @@ trigger:
 condition: []
 action:
   - variables:
+      view: !input view
       home: !input home
       region: !input region
       input_places: !input places
