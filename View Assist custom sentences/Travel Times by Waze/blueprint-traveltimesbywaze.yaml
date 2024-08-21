@@ -63,6 +63,7 @@ action:
       home: !input home
       region: !input region
       input_places: !input places
+      group_entity: !input group_entity
       places: "{{ input_places | from_json}}"
       origin: >-
         {% if trigger.slots.origin |lower in places
