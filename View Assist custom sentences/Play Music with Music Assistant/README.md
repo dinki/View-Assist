@@ -10,4 +10,5 @@ Requirements:
 ## Changelog
 
 v 1.0.0 Initial release
+
 v 1.0.1 Move change view to beginning of sequences and change default view values to the correct one
