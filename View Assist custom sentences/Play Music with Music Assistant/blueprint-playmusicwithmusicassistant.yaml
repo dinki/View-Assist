@@ -17,7 +17,7 @@ blueprint:
     view_path:
       name: Dashboard Info view
       description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
-      default: "{{ view_path }}"
+      default: "/dashboard-viewassist/music"
 alias: View Assist - Play Music with Music Assistant
 description: ""
 trigger:
