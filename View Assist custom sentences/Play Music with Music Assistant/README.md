@@ -7,3 +7,7 @@ Requirements:
   * View: [Music view](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/music/music.yaml)  See this [video](https://www.youtube.com/watch?v=QmWDNtikHaU) for installation procedure
   * The recently added musicplayer_device must be added to your View Assistant device configuration as explained in the [Satellite Custom Device Configuration](https://github.com/dinki/View-Assist/wiki/View-Assist-device-configuration#satellite-custom-device-configuration) portion of the wiki.  This should be a Music Assistant player device.  Typically these will be named the same as your mediaplayer_device but with a _2 on the end
  
+## Changelog
+
+v 1.0.0 Initial release
+v 1.0.1 Move change view to beginning of sequences and change default view values to the correct one
