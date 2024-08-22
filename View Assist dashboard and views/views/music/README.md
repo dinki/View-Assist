@@ -1,6 +1,6 @@
 # Music View
 
-The music view is used for streaming music and radio.   Two views exist.  You can choose whichever you prefer
+The music view is used for streaming music and radio.   Two views exist.  You can choose whichever you prefer.  We welcome any additional submissions for this and other views!
 
 # View Assist Music View
 
