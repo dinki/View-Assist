@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
-  description: Use various methods to play individual songs, add to queue, and play artist from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.0)
+  description: Use various methods to play individual songs, add to queue, and play artist from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.1)
   domain: automation
   input:
     group_entity:
@@ -17,7 +17,7 @@ blueprint:
     view_path:
       name: Dashboard Info view
       description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
-      default: "{{ view_path }}"
+      default: "/dashboard-viewassist/music"
 alias: View Assist - Play Music with Music Assistant
 description: ""
 trigger:
@@ -47,6 +47,17 @@ action:
             id:
               - playartist
         sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - service: browser_mod.navigate
+            metadata: {}
+            data:
+              path: "{{ view_path }}"
+            target:
+              device_id: "{{ target_display_device }}"        
           - service: mass.search
             data:
               limit: 1
@@ -62,6 +73,11 @@ action:
               enqueue: replace
               media_id: "{{ found_artist.artists.0.name }}"
           - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - playlist
+        sequence:
           - service: python_script.set_state
             data:
               entity_id: "{{ target_satellite_device }}"
@@ -72,12 +88,7 @@ action:
             data:
               path: "{{ view_path }}"
             target:
-              device_id: "{{ target_display_device }}"
-      - conditions:
-          - condition: trigger
-            id:
-              - playlist
-        sequence:
+              device_id: "{{ target_display_device }}"        
           - service: mass.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
@@ -86,6 +97,11 @@ action:
               enqueue: replace
               media_id: "{{ trigger.slots.playlist }}"
           - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - playsong
+        sequence:
           - service: python_script.set_state
             data:
               entity_id: "{{ target_satellite_device }}"
@@ -96,12 +112,7 @@ action:
             data:
               path: "{{ view_path }}"
             target:
-              device_id: "{{ target_display_device }}"
-      - conditions:
-          - condition: trigger
-            id:
-              - playsong
-        sequence:
+              device_id: "{{ target_display_device }}"        
           - service: mass.search
             data:
               limit: 1
@@ -117,6 +128,12 @@ action:
               media_type: track
               enqueue: play
               media_id: "{{ found_song.tracks.0.name }}"
+          - set_conversation_response: ""            
+      - conditions:
+          - condition: trigger
+            id:
+              - cuesong
+        sequence:
           - service: python_script.set_state
             data:
               entity_id: "{{ target_satellite_device }}"
@@ -127,13 +144,7 @@ action:
             data:
               path: "{{ view_path }}"
             target:
-              device_id: "{{ target_display_device }}"
-          - set_conversation_response: ""            
-      - conditions:
-          - condition: trigger
-            id:
-              - cuesong
-        sequence:
+              device_id: "{{ target_display_device }}"        
           - service: mass.search
             data:
               limit: 1
@@ -151,17 +162,6 @@ action:
               media_id: "{{ found_song.tracks.0.name }}"
               artist: "{{ trigger.slots.artist  }}"
           - set_conversation_response: ""
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ target_satellite_device }}"
-              mode: music
-              title: ""
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: "{{ view_path }}"
-            target:
-              device_id: "{{ target_display_device }}"
 variables:
   view_path: !input view_path
   group_entity: !input group_entity
