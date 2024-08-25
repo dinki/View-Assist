@@ -17,6 +17,7 @@ Requires View Assist Control automation v1.2.0 or greater
 ## To do
 
 * Add voice command to set view timeout
+* Add pause, rewind/fast forward XX seconds/minutes, next/previous/restart track
 
 ## Change log
 
