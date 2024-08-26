@@ -16,7 +16,7 @@ variables:
 trigger:
   - platform: conversation
     command:
-      - "[please] [how do you| can you] spell {word}"
+      - "([please] [how do you | can you] spell {word} | how is {word} spelled)"
 condition: []
 action:
   - set_conversation_response: >-
