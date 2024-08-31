@@ -351,7 +351,7 @@ action:
           sport_path: "{{ sport_path }}"
           team_id: "{{ query_team |lower}}"
           league_path: "{{ league_path }}"
-          conference_path: "{{ conference_path }}"
+          conference_path: "{{ conference_id }}"
         enabled: true    
   - set_conversation_response: |-
       {% if is_state(team_tracker, 'POST')%} 
