@@ -361,9 +361,9 @@ action:
   - set_conversation_response: |-
       {% if is_state(team_tracker, 'POST')%}
         {% if is_singular is not defined %}
-          {{state_attr(team_tracker,'team_name')}} played {{state_attr(team_tracker,'opponent_name')}} and
-        {% else %}
           The {{state_attr(team_tracker,'team_name')}} played the {{state_attr(team_tracker,'opponent_name')}} and
+        {% else %}
+          {{state_attr(team_tracker,'team_name')}} played {{state_attr(team_tracker,'opponent_name')}} and
         {% endif %}  
           {% if is_state_attr(team_tracker,'team_winner', false) %}
             lost
@@ -372,9 +372,17 @@ action:
           {% endif %} 
         {{state_attr(team_tracker,'team_score')}} - {{state_attr(team_tracker,'opponent_score')}}  
       {% elif is_state(team_tracker, 'PRE') %} 
-        The {{state_attr(team_tracker,'team_name')}} play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}} 
+        {% if is_singular is not defined %}
+          The {{state_attr(team_tracker,'team_name')}} play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}
+        {% else %}
+          {{state_attr(team_tracker,'team_name')}} plays {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}
+        {% endif %}
       {% elif is_state(team_tracker, 'IN') %} 
-        The {{state_attr(team_tracker,'team_name')}} are currently playing the {{state_attr(team_tracker,'opponent_name')}}. 
+        {% if is_singular is not defined %}
+          The {{state_attr(team_tracker,'team_name')}} are currently playing the {{state_attr(team_tracker,'opponent_name')}}. 
+        {% else %}
+          {{state_attr(team_tracker,'team_name')}} is currently playing {{state_attr(team_tracker,'opponent_name')}}. 
+        {% endif %}
         The score is {{state_attr(team_tracker,'team_name')}} {{state_attr(team_tracker,'team_score')}}, {{state_attr(team_tracker,'opponent_name')}}  {{state_attr(team_tracker,'opponent_score')}} 
       {% elif is_state(team_tracker, 'NOT_FOUND') %} 
         The {{ trigger.slots.team }} have no games on today's schedule
