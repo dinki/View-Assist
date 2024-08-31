@@ -16,7 +16,7 @@ button_card_templates:
           } else {
             var options = { hour: "numeric", minute: "2-digit" };      
           }
-            return new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","");
+            return new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
         ]]]
       var_date_short: |
         [[[    
