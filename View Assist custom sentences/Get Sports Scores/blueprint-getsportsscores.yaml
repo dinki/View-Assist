@@ -11,7 +11,14 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain: sensor       
+            - domain: sensor 
+    college_teams:
+      name: College Teams
+      description: College Teams can be added but it is complicated.  You will need to know a few specifics for defining.  See Team Tracker docs here.
+      default: "sensor.team_tracker"
+      selector:
+        object:
+      default: "mydictionary:"               
     group_entity: 
       name: Group Entity
       description: The group entity that holds the list of ViewAssist devices
