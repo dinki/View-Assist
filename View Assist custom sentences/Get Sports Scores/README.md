@@ -21,3 +21,9 @@ Requirements:
 
 
 Thanks to vasqued2 for the great work on Team Tracker and Mr. Picc010 for his help with the voice response logic
+
+## Changelog
+
+v 1.1.0 Add US college sports
+
+v 1.0.0 Initial release
