@@ -344,6 +344,7 @@ action:
           sport_path: "{{ college_teams[(trigger.slots.team)|lower]['sport_path'] }}"
           league_path: "{{ college_teams[(trigger.slots.team)|lower]['league_path'] }}"
           conference_id: "{{ college_teams[(trigger.slots.team)|lower]['conference_id'] }}"
+          is_singular: true
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -358,8 +359,12 @@ action:
           }}
         enabled: true    
   - set_conversation_response: |-
-      {% if is_state(team_tracker, 'POST')%} 
-        The {{state_attr(team_tracker,'team_name')}} Played the {{state_attr(team_tracker,'opponent_name')}} and 
+      {% if is_state(team_tracker, 'POST')%}
+        {% if is_singular is not defined %}
+          {{state_attr(team_tracker,'team_name')}} played {{state_attr(team_tracker,'opponent_name')}} and
+        {% else %}
+          The {{state_attr(team_tracker,'team_name')}} played the {{state_attr(team_tracker,'opponent_name')}} and
+        {% endif %}  
           {% if is_state_attr(team_tracker,'team_winner', false) %}
             lost
           {% else %}
