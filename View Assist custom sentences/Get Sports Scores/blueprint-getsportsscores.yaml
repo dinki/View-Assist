@@ -40,10 +40,10 @@ blueprint:
 trigger:
   - platform: conversation
     command:
-      - how did [the] {team} do
+      - how did the {team} do
       - (what is | what's) the score of the {team} (game | match)
-      - how (is | are) [the] {team} doing
-      - how (is | are) [the] {team} (game | match) [going]
+      - how (is | are) the {team} doing
+      - how (is | are) the {team} (game | match) [going]
 condition: []
 action:
   - variables:
