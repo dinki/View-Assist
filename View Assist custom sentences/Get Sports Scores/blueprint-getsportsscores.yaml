@@ -247,6 +247,7 @@ action:
           sport_path: "{{ sport_path }}"
           team_id: "{{ query_team |lower}}"
           league_path: "{{ league_path }}"
+          is_singular: false
         enabled: true
 # nfl_teams
   - if:
@@ -264,6 +265,7 @@ action:
           sport_path: "{{ sport_path }}"
           team_id: "{{ query_team |lower}}"
           league_path: "{{ league_path }}"
+          is_singular: false
         enabled: true
 # nba_teams
   - if:
@@ -274,6 +276,7 @@ action:
           query_team: "{{ nba_teams[(trigger.slots.team)|lower] }}"
           sport_path: basketball
           league_path: nba
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -291,6 +294,7 @@ action:
           query_team: "{{ wnba_teams[(trigger.slots.team)|lower] }}"
           sport_path: basketball
           league_path: wnba
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -308,6 +312,7 @@ action:
           query_team: "{{ mls_teams[(trigger.slots.team)|lower] }}"
           sport_path: soccer
           league_path: mls
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -325,6 +330,7 @@ action:
           query_team: "{{ nhl_teams[(trigger.slots.team)|lower] }}"
           sport_path: hockey
           league_path: nhl
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -360,7 +366,7 @@ action:
         enabled: true    
   - set_conversation_response: |-
       {% if is_state(team_tracker, 'POST')%}
-        {% if is_singular is not defined %}
+        {% if is_singular is false %}
           The {{state_attr(team_tracker,'team_name')}} played the {{state_attr(team_tracker,'opponent_name')}} and
         {% else %}
           {{state_attr(team_tracker,'team_name')}} played {{state_attr(team_tracker,'opponent_name')}} and
@@ -372,13 +378,13 @@ action:
           {% endif %} 
         {{state_attr(team_tracker,'team_score')}} - {{state_attr(team_tracker,'opponent_score')}}  
       {% elif is_state(team_tracker, 'PRE') %} 
-        {% if is_singular is not defined %}
+        {% if is_singular is false %}
           The {{state_attr(team_tracker,'team_name')}} play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}
         {% else %}
           {{state_attr(team_tracker,'team_name')}} plays {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}
         {% endif %}
       {% elif is_state(team_tracker, 'IN') %} 
-        {% if is_singular is not defined %}
+        {% if is_singular is false %}
           The {{state_attr(team_tracker,'team_name')}} are currently playing the {{state_attr(team_tracker,'opponent_name')}}. 
         {% else %}
           {{state_attr(team_tracker,'team_name')}} is currently playing {{state_attr(team_tracker,'opponent_name')}}. 
