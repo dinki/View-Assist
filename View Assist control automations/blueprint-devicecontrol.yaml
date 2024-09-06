@@ -61,7 +61,16 @@ blueprint:
           filter:
             - domain:
                 - switch
-          multiple: false      
+          multiple: false
+    musicplayer_device:
+      name: musicplayer_device
+      description: The media_player used for music playback.
+      selector:
+        entity:
+          filter:
+            - domain:
+                - media_player
+          multiple: false
 trigger:
   - platform: state
     entity_id:
@@ -90,6 +99,12 @@ trigger:
     entity_id:
       - !input intent
     id: intent    
+  - platform: state
+    entity_id:
+      - !input musicplayer_device
+    from: null
+    to: playing
+    id: music start
 variables:
   satellite: !input satellite
   dashboard: !input dashboard
@@ -242,4 +257,22 @@ action:
                   path: "{{ intent_view }}"
                 target:
                   device_id: "{{device_id(display)}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - music_start
+          - condition: state
+            entity_id: !input satellite
+            attribute: mode
+            state: normal
+        sequence:
+          - service: browser_mod.navigate
+            data:
+              path: "{{ music }}"
+            target:
+              device_id: "{{device_id(display)}}"
+          - action: python_script.set_state
+            data:
+              entity_id: !input satellite
+              mode: music
 mode: parallel
