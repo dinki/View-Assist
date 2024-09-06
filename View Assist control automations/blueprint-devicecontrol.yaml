@@ -104,7 +104,7 @@ trigger:
       - !input musicplayer_device
     from: null
     to: playing
-    id: music start
+    id: music_start
 variables:
   satellite: !input satellite
   dashboard: !input dashboard
