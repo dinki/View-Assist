@@ -102,7 +102,6 @@ trigger:
   - platform: state
     entity_id:
       - !input musicplayer_device
-    from: null
     to: playing
     id: music_start
 variables:
