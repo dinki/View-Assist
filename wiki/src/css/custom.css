@@ -59,6 +59,16 @@ h1, h2, h3, h4, h5, h6 { font-family: Figtree;}
 
 .viewAssistLogo {
   max-width: 20vw;
+  filter: invert(1);
+}
+
+[data-theme='dark'] .viewAssistLogo {
+  max-width: 20vw;
+  filter: invert(0);
+}
+
+.viewAssistLogo rect {
+  fill: #FFFFFF;
 }
 
 [data-theme='dark'] nav img {

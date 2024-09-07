@@ -12,6 +12,7 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
+        <img src='img/logo-trimmed.svg' alt='View Assist Logo' className="viewAssistLogo" />
         <Heading as="h1" className="hero__title">
           {siteConfig.title}
         </Heading>
