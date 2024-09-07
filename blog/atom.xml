@@ -18,9 +18,6 @@
             <name>dinki</name>
             <uri>https://github.com/dinki/View-Assist</uri>
         </author>
-        <category label="Facebook" term="Facebook"/>
-        <category label="Hello" term="Hello"/>
-        <category label="Docusaurus" term="Docusaurus"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[MDX Blog Post]]></title>

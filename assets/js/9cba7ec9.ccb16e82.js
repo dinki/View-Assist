@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[7924],{712:s=>{s.exports=JSON.parse('{"tags":[{"label":"Docusaurus","permalink":"/View-Assist/blog/tags/docusaurus","description":"Docusaurus tag description","count":1}]}')}}]);
