@@ -8,3 +8,7 @@ Things are pretty crazy with work and life events but these should settle down n
 If you haven't checked out the Youtube channel please take a look and, not to sound cliché, like, subscribe, and comment as this will help draw a larger audience and perhaps some other contributors.  
 
 https://www.youtube.com/channel/UCm1i3EkmUwsQnrbq_Sr37jw
+
+---
+
+All videos and wiki pages are now available for creating the Assist satellite devices using Stream Assist for wake word detection.  At present, someone should be able to go through the wiki and/or Youtube videos and install the components necessary to create a device that will listen for wake word and then action and respond.  Next steps are underway for tying these devices into the View Assist system.  The first video for this was uploaded today with a few more to follow before the complete View Assist configuration series is complete.  We have some good folks beta testing VA on the Discord channel and it is fantastic to see them get their VA system running and the excitement that follows.  More good stuff coming soon.
