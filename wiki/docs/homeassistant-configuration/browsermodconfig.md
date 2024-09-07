@@ -1,5 +1,5 @@
 ---
-title: Browser Mod
+title: Browser Mod Config
 sidebar_position: 1
 ---
 
