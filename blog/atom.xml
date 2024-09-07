@@ -9,8 +9,8 @@
     <icon>https://dinki.github.io/View-Assist/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[April Update]]></title>
-        <id>https://dinki.github.io/View-Assist/blog/2024/04/18/April Update</id>
-        <link href="https://dinki.github.io/View-Assist/blog/2024/04/18/April Update"/>
+        <id>https://dinki.github.io/View-Assist/blog/april-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/april-update"/>
         <updated>2024-04-18T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Decided that it may be wise to include some status updates as if you look at the file upload dates it appears that the project is not active.  Nothing could be farther from the truth.  As it stands now, some major enhancements have been implemented.  Some of these include:]]></summary>
         <content type="html"><![CDATA[<p>Decided that it may be wise to include some status updates as if you look at the file upload dates it appears that the project is not active.  Nothing could be farther from the truth.  As it stands now, some major enhancements have been implemented.  Some of these include:</p>
@@ -21,6 +21,10 @@
 <li>Additional custom sentences for media playback, volume control, weather forecast, shopping list, setting alarms and reminders, and others</li>
 </ul>
 <p>The delay in posting is due to the need to tighten things up and reduce the amount of effort required for users to implement and to better handle errors.  I have made a lot of progress on this front and hope that I will be able to release the enhanced version soon</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
     </entry>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
