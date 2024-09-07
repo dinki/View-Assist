@@ -1,6 +1,6 @@
 ---
-slug: july-update
-title: July Update
+slug: july2024-update
+title: July 2024 Update
 authors: [dinki]
 ---
 
