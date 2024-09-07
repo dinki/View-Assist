@@ -6,7 +6,7 @@
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://dinki.github.io/View-Assist/blog"/>
     <subtitle>View Assist Blog</subtitle>
-    <icon>https://dinki.github.io/View-Assist/img/favicon.ico</icon>
+    <icon>https://dinki.github.io/View-Assist/img/favicon.png</icon>
     <entry>
         <title type="html"><![CDATA[September 2024 Update]]></title>
         <id>https://dinki.github.io/View-Assist/blog/september2024-update</id>
