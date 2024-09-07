@@ -6,7 +6,8 @@ sidebar_position: 1
 
 View Assist provides visual feedback for the Home Assistant Assist voice assistant using a collection of different automations, custom sentences, scripts, and extensions with the view being displayed on any Android device.  Multiple devices can join the View Assist satellite network and interact.  This is not limited to Android devices as ESPHome satellites are also supported.  The project is still a work in progress but is fully functional.  
 
-<a href="https://www.youtube.com/watch?v=t0jG4LZzKqs"><img src="https://img.youtube.com/vi/t0jG4LZzKqs/mqdefault.jpg" width="60%"></a>
+
+[![](https://img.youtube.com/vi/t0jG4LZzKqs/mqdefault.jpg)](https://www.youtube.com/watch?v=t0jG4LZzKqs)
 
 ^^^ Click for demo video on Youtube ^^^
 
