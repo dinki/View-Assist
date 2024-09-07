@@ -10,15 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Navigate to wiki directory
-        run: cd wiki
-
+        uses: actions/checkout@v3  # Updated to v3
+      
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3  # Updated to v3
         with:
-          node-version: '16' # Adjust this based on your Docusaurus version
+          node-version: '18'  # You can set it to '18' or '20' depending on compatibility with Docusaurus
       
       - name: Install dependencies
         run: |
