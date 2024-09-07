@@ -1,0 +1,37 @@
+name: Deploy Docusaurus to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Change this if your default branch is different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Navigate to wiki directory
+        run: cd wiki
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # Adjust this based on your Docusaurus version
+      
+      - name: Install dependencies
+        run: |
+          cd wiki
+          npm install
+      
+      - name: Build Docusaurus site
+        run: |
+          cd wiki
+          npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./wiki/build
