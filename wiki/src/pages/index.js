@@ -33,8 +33,8 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title={`View Assist`}
+      description="View Assist - Adding visual feedback and extended functionality to Home Assistant voice">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
