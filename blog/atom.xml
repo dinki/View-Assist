@@ -2,11 +2,63 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://dinki.github.io/View-Assist/blog</id>
     <title>View Assist Blog</title>
-    <updated>2024-04-18T00:00:00.000Z</updated>
+    <updated>2024-08-12T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://dinki.github.io/View-Assist/blog"/>
     <subtitle>View Assist Blog</subtitle>
     <icon>https://dinki.github.io/View-Assist/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[August Update]]></title>
+        <id>https://dinki.github.io/View-Assist/blog/august-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/august-update"/>
+        <updated>2024-08-12T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[It's been a while since the last update but this is not due to lack of activity.  Things are really coming together and the wish list items have been getting checked off regularly.  We are making great strides and several users including myself have been able to put these devices into daily use in replacement of their commercial voice assistants.  Things are not perfect but they are definitely getting better daily with the help of a bunch of different folks making contributions and offering guidance.  It is greatly appreciated and I am excited to see where we will be in the coming months.]]></summary>
+        <content type="html"><![CDATA[<p>It's been a while since the last update but this is not due to lack of activity.  Things are really coming together and the wish list items have been getting checked off regularly.  We are making great strides and several users including myself have been able to put these devices into daily use in replacement of their commercial voice assistants.  Things are not perfect but they are definitely getting better daily with the help of a bunch of different folks making contributions and offering guidance.  It is greatly appreciated and I am excited to see where we will be in the coming months.</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[July Update]]></title>
+        <id>https://dinki.github.io/View-Assist/blog/july-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/july-update"/>
+        <updated>2024-07-02T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Our rollout for core functionality has been completed and I am happy to report that the number of users using View Assist is growing every day.  Our Discord server continues to offer great support on both the hardware side (TSV in particular), troubleshooting, and development. We are currently working on additional functionality through additional views and custom sentence blueprints.  Stay tuned for more!]]></summary>
+        <content type="html"><![CDATA[<p>Our rollout for core functionality has been completed and I am happy to report that the number of users using View Assist is growing every day.  Our Discord server continues to offer great support on both the hardware side (TSV in particular), troubleshooting, and development. We are currently working on additional functionality through additional views and custom sentence blueprints.  Stay tuned for more!</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[June Update]]></title>
+        <id>https://dinki.github.io/View-Assist/blog/june-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/june-update"/>
+        <updated>2024-06-11T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[We are closing in on complete roll out with only a few more items needing to be sorted.  I am pleased to say that support for the project is fantastic with a good number of folks helping out on Discord.  We are growing in number of both Discord users and Youtube subscribers which gives the project more visibility and the number of people lending a hand is growing in turn.  The goal is to have everything rolled out and start pumping out custom sentences and views to expand the capabilities of View Assist.]]></summary>
+        <content type="html"><![CDATA[<p>We are closing in on complete roll out with only a few more items needing to be sorted.  I am pleased to say that support for the project is fantastic with a good number of folks helping out on Discord.  We are growing in number of both Discord users and Youtube subscribers which gives the project more visibility and the number of people lending a hand is growing in turn.  The goal is to have everything rolled out and start pumping out custom sentences and views to expand the capabilities of View Assist.</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[May Update]]></title>
+        <id>https://dinki.github.io/View-Assist/blog/may-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/may-update"/>
+        <updated>2024-05-10T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Things are pretty crazy with work and life events but these should settle down next week.  Despite this I have managed to release a few videos.  I'll be honest, I am not in this to make flashy Youtube videos with cool WLED lighting.  What you see is what you get.  I am here to help others set up View Assist and to build a foundation for easy to share, expandable functionality for Assist with all satellites being able to operate both as a group and individually.  The videos are one shot recordings and there will be hiccups but I'll do my best to address anything needing to be corrected in the comments and here on the wiki.  The videos are really a means to provide additional context to the wiki.]]></summary>
+        <content type="html"><![CDATA[<p>Things are pretty crazy with work and life events but these should settle down next week.  Despite this I have managed to release a few videos.  I'll be honest, I am not in this to make flashy Youtube videos with cool WLED lighting.  What you see is what you get.  I am here to help others set up View Assist and to build a foundation for easy to share, expandable functionality for Assist with all satellites being able to operate both as a group and individually.  The videos are one shot recordings and there will be hiccups but I'll do my best to address anything needing to be corrected in the comments and here on the wiki.  The videos are really a means to provide additional context to the wiki.</p>
+<p>If you haven't checked out the Youtube channel please take a look and, not to sound cliché, like, subscribe, and comment as this will help draw a larger audience and perhaps some other contributors.</p>
+<p><a href="https://www.youtube.com/channel/UCm1i3EkmUwsQnrbq_Sr37jw" target="_blank" rel="noopener noreferrer">https://www.youtube.com/channel/UCm1i3EkmUwsQnrbq_Sr37jw</a></p>
+<hr>
+<p>All videos and wiki pages are now available for creating the Assist satellite devices using Stream Assist for wake word detection.  At present, someone should be able to go through the wiki and/or Youtube videos and install the components necessary to create a device that will listen for wake word and then action and respond.  Next steps are underway for tying these devices into the View Assist system.  The first video for this was uploaded today with a few more to follow before the complete View Assist configuration series is complete.  We have some good folks beta testing VA on the Discord channel and it is fantastic to see them get their VA system running and the excitement that follows.  More good stuff coming soon.</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
+    </entry>
     <entry>
         <title type="html"><![CDATA[April Update]]></title>
         <id>https://dinki.github.io/View-Assist/blog/april-update</id>
