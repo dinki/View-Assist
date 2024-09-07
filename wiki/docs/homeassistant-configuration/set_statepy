@@ -1,0 +1,25 @@
+---
+title: set_state.py installation
+sidebar_position: 3
+---
+
+## View Assist device control through Python set_state
+The View Assist satellite devices hold data and settings.  These devices and their attributes are updated using a python script called set_state .  This will involve file manipulation so if you need help you can watch this [video for installing file editor addon](https://www.youtube.com/watch?v=ncKWaLpJ1DQ) in HASSOS.  Here is how to install this python script for use with View Assist
+
+[![Image](https://img.youtube.com/vi/iDJH2bn_Wao/mqdefault.jpg)](https://www.youtube.com/watch?v=iDJH2bn_Wao)
+
+Detailed install video:
+https://www.youtube.com/watch?v=iDJH2bn_Wao
+
+* Download the set_state.py by right clicking this link and choose 'save link as': [set_state.py](https://raw.githubusercontent.com/xannor/hass_py_set_state/master/python_scripts/set_state.py)
+* Open the configuration.yaml file located in the 'homeassistant' config directory in a file editor
+* Add a line to the bottom of the configuration file containing ```python_script:``` and save the file
+* Go back into file editor and create a new folder in the config directory called ```python_scripts```
+* Find that new folder and click it to enter
+* Use the upload file option and upload the 'set_state.py' file into the 'python_scripts' folder you created
+* Restart Home Assistant
+* Check that the service is installed by going to Developer Tools -> Services and search for 'set_state'.  You should see the service listed in the results as 'Python Scripts: set_state'
+
+Note that for HASSOS users the configuration folder shows up as ```homeassistant``` where other installs have this defined as ```/config```
+
+For more information see the set_state Github page at: https://github.com/xannor/hass_py_set_state

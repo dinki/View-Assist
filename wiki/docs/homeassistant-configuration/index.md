@@ -9,3 +9,6 @@ Several Home Assistant custom integrations (or custom_components as they are oft
 **Required**
 - **Browser Mod** - allows switching views and routing playback audio to your tablet
 - **Stream Assist** - listens to audio coming from tablet to process wake word and pass to Assist Pipeline
+- **set_state.py** - used to set states for the View Assist satellite devices
+
+Additional Home Assistant integrations may be required for some custom sentence blueprints.  You will be advised on the detailed installation page which you may need.  These will be stored in the 'Optional' section and should be skipped until needed.
