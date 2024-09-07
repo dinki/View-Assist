@@ -1,6 +1,6 @@
 ---
-slug: april-update
-title: April Update
+slug: april2024-update
+title: April 2024 Update
 authors: [dinki]
 ---
 Decided that it may be wise to include some status updates as if you look at the file upload dates it appears that the project is not active.  Nothing could be farther from the truth.  As it stands now, some major enhancements have been implemented.  Some of these include:
