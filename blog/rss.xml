@@ -59,13 +59,5 @@
 </ul>
 <p>The delay in posting is due to the need to tighten things up and reduce the amount of effort required for users to implement and to better handle errors.  I have made a lot of progress on this front and hope that I will be able to release the enhanced version soon</p>]]></content:encoded>
         </item>
-        <item>
-            <title><![CDATA[Welcome]]></title>
-            <link>https://dinki.github.io/View-Assist/blog/welcome</link>
-            <guid>https://dinki.github.io/View-Assist/blog/welcome</guid>
-            <pubDate>Thu, 26 Aug 2021 00:00:00 GMT</pubDate>
-            <description><![CDATA[Welcome to the View Assist blog]]></description>
-            <content:encoded><![CDATA[<p>Welcome to the View Assist blog</p>]]></content:encoded>
-        </item>
     </channel>
 </rss>

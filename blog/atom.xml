@@ -78,16 +78,4 @@
             <uri>https://github.com/dinki/View-Assist</uri>
         </author>
     </entry>
-    <entry>
-        <title type="html"><![CDATA[Welcome]]></title>
-        <id>https://dinki.github.io/View-Assist/blog/welcome</id>
-        <link href="https://dinki.github.io/View-Assist/blog/welcome"/>
-        <updated>2021-08-26T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Welcome to the View Assist blog]]></summary>
-        <content type="html"><![CDATA[<p>Welcome to the View Assist blog</p>]]></content>
-        <author>
-            <name>dinki</name>
-            <uri>https://github.com/dinki/View-Assist</uri>
-        </author>
-    </entry>
 </feed>
