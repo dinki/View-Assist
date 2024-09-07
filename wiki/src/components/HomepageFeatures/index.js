@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Bring Your Own Device',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/undraw_devices.svg').default,
     description: (
       <>
          Android tablet, Wyoming satellite, ESPHome, PC, phone, or any other device, 
@@ -15,7 +15,7 @@ const FeatureList = [
   },
   {
     title: 'Build Your Own Dashboard',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('@site/static/img/undraw_add_information.svg').default,
     description: (
       <>
         Customizable and capable of integrating with existing dashboards, View Assist 
@@ -24,8 +24,8 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Extend Your Own Voice',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Extend Your Voice',
+    Svg: require('@site/static/img/undraw_collaborators_re_hont.svg').default,
     description: (
       <>
         Use ready-made custom sentences, blueprints and views to enhance your voice powered
