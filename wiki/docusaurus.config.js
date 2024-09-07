@@ -11,7 +11,7 @@ import tailwindPlugin from './plugins/tailwind-plugin.cjs';
 const config = {
   title: 'View Assist',
   tagline: 'Adding visual feedback and extended functionality to Home Assistant voice',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   // Set the production url of your site here
   url: 'https://dinki.github.io',
