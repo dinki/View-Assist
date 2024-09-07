@@ -1,6 +1,6 @@
 ---
-sidebar_position: 1
-title: Step One Assist Pipeline installation
+sidebar_position: 2
+title: "Step One: Assist Pipeline installation"
 ---
 
 # Assist Pipeline
