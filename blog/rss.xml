@@ -59,5 +59,22 @@
 </ul>
 <p>The delay in posting is due to the need to tighten things up and reduce the amount of effort required for users to implement and to better handle errors.  I have made a lot of progress on this front and hope that I will be able to release the enhanced version soon</p>]]></content:encoded>
         </item>
+        <item>
+            <title><![CDATA[September Update]]></title>
+            <link>https://dinki.github.io/View-Assist/blog/september-update</link>
+            <guid>https://dinki.github.io/View-Assist/blog/september-update</guid>
+            <pubDate>Tue, 07 Sep 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:]]></description>
+            <content:encoded><![CDATA[<p>August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:</p>
+<ul>
+<li>Browse your favorite website on your View Assist Satellite</li>
+<li>Search Wikipedia using voice</li>
+<li>Use AI to do searches</li>
+<li>Get sports scores from US major sports teams</li>
+<li>Get accurate estimated travel times using Waze</li>
+</ul>
+<p>With these, the addition addition of pyscript has opened a lot of new avenues for improvement.  A long outstanding request for my personal use as well as user request is the addition of timers.  I am happy to say that I now have timers working on my dev system!  This timer system will allow users to not only set timers but also alarms and reminders.  Additionally, I am sure that this can be extended further to allow users to do things like 'play sound machine for 20 minutes'.  Exciting times ahead.</p>
+<p>On the social front, we continue to increase our Youtube subscribers and recently crossed over to 200 Discord members.  This is fantastic and the community is really showing up to not only help each other but also to contribute.  User theonecubed has put in some hardwork to get the framework done for the View Assist wiki move from Github over to Docusarus.  This will prove to be most beneficial as other users will now be able to contribute via Github pull requests.  Everyone is encouraged to participate with wiki updates.</p>]]></content:encoded>
+        </item>
     </channel>
 </rss>

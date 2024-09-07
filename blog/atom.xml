@@ -78,4 +78,25 @@
             <uri>https://github.com/dinki/View-Assist</uri>
         </author>
     </entry>
+    <entry>
+        <title type="html"><![CDATA[September Update]]></title>
+        <id>https://dinki.github.io/View-Assist/blog/september-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/september-update"/>
+        <updated>2021-09-07T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:]]></summary>
+        <content type="html"><![CDATA[<p>August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:</p>
+<ul>
+<li>Browse your favorite website on your View Assist Satellite</li>
+<li>Search Wikipedia using voice</li>
+<li>Use AI to do searches</li>
+<li>Get sports scores from US major sports teams</li>
+<li>Get accurate estimated travel times using Waze</li>
+</ul>
+<p>With these, the addition addition of pyscript has opened a lot of new avenues for improvement.  A long outstanding request for my personal use as well as user request is the addition of timers.  I am happy to say that I now have timers working on my dev system!  This timer system will allow users to not only set timers but also alarms and reminders.  Additionally, I am sure that this can be extended further to allow users to do things like 'play sound machine for 20 minutes'.  Exciting times ahead.</p>
+<p>On the social front, we continue to increase our Youtube subscribers and recently crossed over to 200 Discord members.  This is fantastic and the community is really showing up to not only help each other but also to contribute.  User theonecubed has put in some hardwork to get the framework done for the View Assist wiki move from Github over to Docusarus.  This will prove to be most beneficial as other users will now be able to contribute via Github pull requests.  Everyone is encouraged to participate with wiki updates.</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
+    </entry>
 </feed>
