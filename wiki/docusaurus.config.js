@@ -10,7 +10,7 @@ import tailwindPlugin from './plugins/tailwind-plugin.cjs';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'View Assist',
-  tagline: 'Providing visual feedback for the Home Assistant voice assistant.',
+  tagline: 'Adding visual feedback and extended functionality to Home Assistant voice',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
