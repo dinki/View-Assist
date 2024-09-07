@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[7472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Welcome","permalink":"/View-Assist/blog/welcome","unlisted":false},{"title":"MDX Blog Post","permalink":"/View-Assist/blog/mdx-blog-post","unlisted":false}]}')}}]);
