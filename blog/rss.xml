@@ -4,10 +4,25 @@
         <title>View Assist Blog</title>
         <link>https://dinki.github.io/View-Assist/blog</link>
         <description>View Assist Blog</description>
-        <lastBuildDate>Thu, 26 Aug 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 18 Apr 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[April-Update]]></title>
+            <link>https://dinki.github.io/View-Assist/blog/2024/04/18/April-Update</link>
+            <guid>https://dinki.github.io/View-Assist/blog/2024/04/18/April-Update</guid>
+            <pubDate>Thu, 18 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[Decided that it may be wise to include some status updates as if you look at the file upload dates it appears that the project is not active.  Nothing could be farther from the truth.  As it stands now, some major enhancements have been implemented.  Some of these include:]]></description>
+            <content:encoded><![CDATA[<p>Decided that it may be wise to include some status updates as if you look at the file upload dates it appears that the project is not active.  Nothing could be farther from the truth.  As it stands now, some major enhancements have been implemented.  Some of these include:</p>
+<ul>
+<li>Ability to control displays individually</li>
+<li>Modes have been enabled as well as do not disturb</li>
+<li>Ability to include voice only satellites both with onboard wake word (eg ESP32) and with HA handling the wake words (eg anything using Stream Assist)</li>
+<li>Additional custom sentences for media playback, volume control, weather forecast, shopping list, setting alarms and reminders, and others</li>
+</ul>
+<p>The delay in posting is due to the need to tighten things up and reduce the amount of effort required for users to implement and to better handle errors.  I have made a lot of progress on this front and hope that I will be able to release the enhanced version soon</p>]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[Welcome]]></title>
             <link>https://dinki.github.io/View-Assist/blog/welcome</link>
