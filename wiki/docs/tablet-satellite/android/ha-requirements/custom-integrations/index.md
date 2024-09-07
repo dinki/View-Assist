@@ -1,14 +1,9 @@
 ---
-sidebar_position: 2
-title: Custom Integrations
+sidebar_position: 5
+title: Optional Home Assistant Integrations
 ---
 
-Several Home Assistant custom integrations (or custom_components as they are often referred to) are used for several pieces of the View Assist flow.  These can all be installed using the **Home Assistant Community Store (HACS)**.  If you do not have HACS installed, [visit the official documentation](https://hacs.xyz/docs/setup/prerequisites) for instructions and then return here to proceed.
+The Home Assistant integrations listed in this section are optional.  You should only install these if the custom sentence blueprint instructs you to do so.  If you are just setting up your View Assist satellites for the first time you can skip this section and move to Step Three.
 
-**Required**
-- **[Browser Mod](custom-integrations/browsermod)** - allows switching views and routing playback audio to your tablet
-- **[Stream Assist](custom-integrations/streamassist)** - listens to audio coming from tablet to process wake word and pass to Assist Pipeline
-
-**Optional**
-- **[Chime TTS](custom-integrations/chimetts)** - allows prepending/appending a chime or sound to TTS (text-to-speech) messages
+- **Chime TTS** - allows prepending/appending a chime or sound to TTS (text-to-speech) messages
 
