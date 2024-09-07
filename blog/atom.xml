@@ -2,11 +2,32 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://dinki.github.io/View-Assist/blog</id>
     <title>View Assist Blog</title>
-    <updated>2024-08-12T00:00:00.000Z</updated>
+    <updated>2024-09-07T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://dinki.github.io/View-Assist/blog"/>
     <subtitle>View Assist Blog</subtitle>
     <icon>https://dinki.github.io/View-Assist/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[September 2024 Update]]></title>
+        <id>https://dinki.github.io/View-Assist/blog/september2024-update</id>
+        <link href="https://dinki.github.io/View-Assist/blog/september2024-update"/>
+        <updated>2024-09-07T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:]]></summary>
+        <content type="html"><![CDATA[<p>August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:</p>
+<ul>
+<li>Browse your favorite website on your View Assist Satellite</li>
+<li>Search Wikipedia using voice</li>
+<li>Use AI to do searches</li>
+<li>Get sports scores from US major sports teams</li>
+<li>Get accurate estimated travel times using Waze</li>
+</ul>
+<p>With these, the addition addition of pyscript has opened a lot of new avenues for improvement.  A long outstanding request for my personal use as well as user request is the addition of timers.  I am happy to say that I now have timers working on my dev system!  This timer system will allow users to not only set timers but also alarms and reminders.  Additionally, I am sure that this can be extended further to allow users to do things like 'play sound machine for 20 minutes'.  Exciting times ahead.</p>
+<p>On the social front, we continue to increase our Youtube subscribers and recently crossed over to 200 Discord members.  This is fantastic and the community is really showing up to not only help each other but also to contribute.  User theonecubed has put in some hardwork to get the framework done for the View Assist wiki move from Github over to Docusarus.  This will prove to be most beneficial as other users will now be able to contribute via Github pull requests.  Everyone is encouraged to participate with wiki updates.</p>]]></content>
+        <author>
+            <name>dinki</name>
+            <uri>https://github.com/dinki/View-Assist</uri>
+        </author>
+    </entry>
     <entry>
         <title type="html"><![CDATA[August 2024 Update]]></title>
         <id>https://dinki.github.io/View-Assist/blog/august2024-update</id>
@@ -73,27 +94,6 @@
 <li>Additional custom sentences for media playback, volume control, weather forecast, shopping list, setting alarms and reminders, and others</li>
 </ul>
 <p>The delay in posting is due to the need to tighten things up and reduce the amount of effort required for users to implement and to better handle errors.  I have made a lot of progress on this front and hope that I will be able to release the enhanced version soon</p>]]></content>
-        <author>
-            <name>dinki</name>
-            <uri>https://github.com/dinki/View-Assist</uri>
-        </author>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[September Update]]></title>
-        <id>https://dinki.github.io/View-Assist/blog/september-update</id>
-        <link href="https://dinki.github.io/View-Assist/blog/september-update"/>
-        <updated>2021-09-07T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:]]></summary>
-        <content type="html"><![CDATA[<p>August brought us a ton of changes and lots more custom sentences.  Some of the highlights were:</p>
-<ul>
-<li>Browse your favorite website on your View Assist Satellite</li>
-<li>Search Wikipedia using voice</li>
-<li>Use AI to do searches</li>
-<li>Get sports scores from US major sports teams</li>
-<li>Get accurate estimated travel times using Waze</li>
-</ul>
-<p>With these, the addition addition of pyscript has opened a lot of new avenues for improvement.  A long outstanding request for my personal use as well as user request is the addition of timers.  I am happy to say that I now have timers working on my dev system!  This timer system will allow users to not only set timers but also alarms and reminders.  Additionally, I am sure that this can be extended further to allow users to do things like 'play sound machine for 20 minutes'.  Exciting times ahead.</p>
-<p>On the social front, we continue to increase our Youtube subscribers and recently crossed over to 200 Discord members.  This is fantastic and the community is really showing up to not only help each other but also to contribute.  User theonecubed has put in some hardwork to get the framework done for the View Assist wiki move from Github over to Docusarus.  This will prove to be most beneficial as other users will now be able to contribute via Github pull requests.  Everyone is encouraged to participate with wiki updates.</p>]]></content>
         <author>
             <name>dinki</name>
             <uri>https://github.com/dinki/View-Assist</uri>
