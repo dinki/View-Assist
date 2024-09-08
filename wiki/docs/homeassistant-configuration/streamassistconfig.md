@@ -1,6 +1,6 @@
 ---
 title: Stream Assist
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 **Repo:** https://github.com/AlexxIT/StreamAssist

@@ -1,9 +1,9 @@
 ---
 title: Browser Mod Config
-sidebar_position: 1
+sidebar_position: 3
 ---
 
-# Browser Mod
+# Browser Mod (required for display capable satellites)
 Browser Mod 2 custom integration provides several key pieces of functionality for an Android Tablet Satellite:
   - Provides media player entity for voice response
   - Hides Header and Sidebar from tablet display
