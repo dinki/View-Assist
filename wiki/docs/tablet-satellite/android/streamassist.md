@@ -1,8 +1,14 @@
 ---
-title: Stream Assist
+title: Stream Assist Integration
 sidebar_position: 3
 ---
 
+Stream Assist integration is used to receive the RTSP stream from the Android device to do wake word detection.  Stream Assist depends on a Home Assistant Assist being configured.  
+
+[![](https://img.youtube.com/vi/DkRCgv2LzR8/mqdefault.jpg)](https://youtu.be/DkRCgv2LzR8)
+
+Detailed install video:
+https://youtu.be/DkRCgv2LzR8
 **Repo:** https://github.com/AlexxIT/StreamAssist
 
 ## Installation

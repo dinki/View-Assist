@@ -1,5 +1,5 @@
 ---
-title: Browser Mod
+title: Browser Mod Integration
 sidebar_position: 4
 ---
 
