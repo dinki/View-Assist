@@ -130,12 +130,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tablet Satellite Setup',
+                label: 'Satellite Setup',
                 to: '/docs/tablet-satellite',
               },
               {
-                label: 'View Assist Setup',
-                to: '/docs/view-assist',
+                label: 'Sentence Gallery',
+                to: '/docs/gallery',
               }
             ],
           },
