@@ -131,11 +131,11 @@ const config = {
             items: [
               {
                 label: 'Satellite Setup',
-                to: '/docs/tablet-satellite',
+                to: '/docs/satellite-configuration',
               },
               {
-                label: 'Sentence Gallery',
-                to: '/docs/gallery',
+                label: 'Extend Voice Functionality',
+                to: '/docs/extend-functionality',
               }
             ],
           },
