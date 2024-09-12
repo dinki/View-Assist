@@ -18,8 +18,8 @@ This is a dictionary.  The format is "what you want to call the camera by voice"
 
 Here the user could say 'show front camera' or 'show driveway camera' and camera.front_camera would be shown for both sentences.  Note that double quotes are required for defining these dictionaries as single quotes will cause errors.
 
-Requirements:
-* [camera view](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/camera/camera.yaml)
+## Requirements
+* Install [camera view](../views/camera)
 
 ## To do
 
@@ -27,6 +27,8 @@ Requirements:
 * Set default message for not found cameras
 * Add multicamera view when Frigate card dev changes released to main
 
-## Change Log
+## Changelog
 
-v 1.0.0 Initial release
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

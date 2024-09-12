@@ -14,3 +14,8 @@ Or import using [raw link](https://raw.githubusercontent.com/dinki/View-Assist/m
 * Install [Waze Travel Time integration](https://www.home-assistant.io/integrations/waze_travel_time/) Note: limited to users in US, North America, European Union, Israel, and Australia
 * Set up one Waze Travel Time sesnor.  
 
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

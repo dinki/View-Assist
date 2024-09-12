@@ -18,7 +18,7 @@ This custom sentence allows for an on demand call to OpenAI for answering questi
 User says "Ask AI" plus the question to be answered
 
 ### Requirements
-- **View**:  [Info view](https://github.com/dinki/View-Assist/wiki/View-Assist-Custom-Views-Gallery#info)
+- **View**:  [Info view](../views/info)
 - **Integrations**: [Open AI Conversation](https://www.home-assistant.io/integrations/openai_conversation/)
 - **API Key**: A paid API key is required
 
@@ -29,3 +29,9 @@ User says "Ask AI" plus the question to be answered
 [![Image](https://img.youtube.com/vi/2xSvFU5Xlss/mqdefault.jpg)](https://www.youtube.com/watch?v=2xSvFU5Xlss)
   
 Detailed install video: https://www.youtube.com/watch?v=2xSvFU5Xlss
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

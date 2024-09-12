@@ -5,8 +5,14 @@
 [![Image](https://img.youtube.com/vi/DvKvlPslk6M/mqdefault.jpg)](https://www.youtube.com/watch?v=DvKvlPslk6M)
 
 Detailed install video: https://youtu.be/DvKvlPslk6M
+Required View: [weather view](../views/weather)
 
-
-This custom sentence is triggered by saying "How's the weather".  It will respond with the current temperature and weather condition as an audio response.  The forecast view will appear on the screens of all View Assist satellites with displays.
+This custom sentence is triggered by saying "How's the weather".  It will respond with the current temperature and weather condition as an audio response.  The forecast view will appear on the screens of all View Assist satellites with displays. 
 
 Special thanks to Scratt for his work on this blueprint
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

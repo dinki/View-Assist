@@ -8,7 +8,13 @@ Detailed install video: https://youtu.be/6pUEMUD2QcU
 
 User can search for general knowledge questions on people, places, things, etc on Wikipedia.  This custom sentence blueprint requires that Pyscript be installed (Watch the [Install video](https://youtu.be/jpJxZaisbGQ)).  Download the file 'viewassist-wikisearch.py' and place it in your Home Assistant configuration directory in the 'pyscript' subdirectory.  
 
-You will also need the [info](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20dashboard%20and%20views/views/info) and [infopic](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20dashboard%20and%20views/views/infopic) views installed.
+You will also need the [info](../views/info) and [infopic](../views/info) views installed.
 
 
 Special thanks to Scratt for his work on this automation
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

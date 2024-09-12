@@ -12,4 +12,10 @@ https://youtu.be/Vun2GC_xW-8
 
 Shows a webpage of the users choosing by configuring the website url, command text trigger, response text, and whether to set device to hold mode to avoid interrupted surfing.
 
-Requires [webpage](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20dashboard%20and%20views/views/webpage) view
+Requires [webpage](../views/webpage) view
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

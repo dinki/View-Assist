@@ -5,7 +5,7 @@
 [![Image](https://img.youtube.com/vi/h6WmQ7LiO_0/mqdefault.jpg)](https://www.youtube.com/watch?v=h6WmQ7LiO_0)
 
 Detailed install video: https://youtu.be/h6WmQ7LiO_0
-
+Required View: [list view](../views/list)
 
 Allows user to add and remove items from a shopping list.  User can also request to show the shopping list and it will be displayed on View Assist satellite devices with displays.
 
@@ -13,11 +13,13 @@ Allows user to add and remove items from a shopping list.  User can also request
 
 Special thanks to Elwing for her work on this automation and view
 
-## Change Log
-1.0.0 Initial release
 
-1.1.0 Added function
 
-1.1.1 Move list view variable out of dictionary
+## Changelog
 
-1.1.2 Add entity to VA config for all calls to ensure no errors show when not set
+| Version | Description |
+| ------- | ----------- |
+| v 1.1.2 | Add entity to VA config for all calls to ensure no errors show when not set |
+| v 1.1.1 | Move list view variable out of dictionary |
+| v 1.1.0 | Added function |
+| v 1.0.0 | Initial release |

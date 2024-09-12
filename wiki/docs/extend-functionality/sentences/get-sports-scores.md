@@ -16,7 +16,13 @@ Requirements:
   * [Team Tracker extension](https://github.com/vasqued2/ha-teamtracker) v0.1.4.1 must be installed.  This can be installed with HACS
   * [Team Tracker Card](https://github.com/vasqued2/ha-teamtracker-card).  This can be installed with HACS
   * A Team Tracker sensor device created using the UI (not YAML).  Suggested name 'team_tracker'.  I configured mine as NFL and team 'NO'.  It doesn't matter though.  Any valid NFL team is fine (Who Dat!).
-  * View Assist [sports view](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/sports/sports.yaml) using provided YAML (will link when released).  Suggested name 'sports'
+  * View Assist [sports view](../views/sports) using provided YAML (will link when released).  Suggested name 'sports'
 
 
 Thanks to vasqued2 for the great work on Team Tracker and Mr. Picc010 for his help with the voice response logic
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |
