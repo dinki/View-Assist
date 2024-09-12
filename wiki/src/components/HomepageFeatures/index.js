@@ -14,7 +14,7 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Build Your Own Dashboard',
+    title: 'Build Your Own Experience',
     Svg: require('@site/static/img/undraw_add_information.svg').default,
     description: (
       <>
@@ -33,6 +33,15 @@ const FeatureList = [
       </>
     ),
   },
+  {
+    title: 'Create a Network',
+    Svg: require('@site/static/img/undraw_having_fun.svg').default,
+    description: (
+      <>
+        Create a network of satellite devices which will allow you to broadcast messages, display alaerts and more!
+      </>
+    ),
+  },  
 ];
 
 function Feature({Svg, title, description}) {
