@@ -1,7 +1,6 @@
 ---
 title: Browser Mod Integration
 sidebar_position: 4
-pagination_next: /docs/viewassist-setup/homeassistant-configuration
 ---
 
 # Browser Mod
