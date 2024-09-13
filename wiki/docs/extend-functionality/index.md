@@ -1,5 +1,5 @@
 ---
-title: "Step Four: Extend Voice Functionality"
+title: "Extend Voice Functionality"
 sidebar_position: 5
 ---
 
