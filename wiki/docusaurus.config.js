@@ -80,15 +80,15 @@ const config = {
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // editUrl:
+          //  'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // editUrl:
+          //  'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -143,16 +143,20 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Discord',
+                label: 'View Assist Discord',
                 href: 'https://discord.gg/3WXXfGAf8T',
               },
+              {
+                label: 'View Assist Discussions',
+                href: 'https://github.com/dinki/View-Assist/discussions',
+              },              
             ],
           },
           {
             title: 'More',
             items: [
               {
-                label: 'GitHub',
+                label: 'View Assist GitHub',
                 href: 'https://github.com/dinki/View-Assist',
               },
             ],

@@ -1,5 +1,8 @@
 ---
 sidebar_class_name: "hidden-sidebar-item"
+pagination_next: null
+pagination_prev: null
+custom_edit_url: null
 ---
 
 # Find IP of Android Device

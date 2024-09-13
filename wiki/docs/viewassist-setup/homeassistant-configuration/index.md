@@ -1,4 +1,5 @@
 ---
+id: haconfig
 title: "Step Three: Home Assistant Configuration"
 sidebar_position: 4
 ---
