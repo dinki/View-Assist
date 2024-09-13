@@ -23,9 +23,9 @@ Detailed install video: https://youtu.be/-7cHfqZMa1c
 
 ### Configuration
 1. Find the IPWebcam Icon and tap it to launch.
-2. Scroll down until you see the **Service Control** heading and tap on **Optional Permissions**.
+1. Scroll down until you see the **Service Control** heading and tap on **Optional Permissions**.
 1. Tap **Allow streaming in background** and then turn on **Allow display over other apps**.
-1. Tap back and then activate the checkbox on **Show camera overlay**. This will prevent another window from appearing over your dashboard.
+1. Tap back and then deactivate the checkbox on **Show camera overlay**. 
 1. Tap back and scroll up until you see **Power management** tap it and under *Misc* Turn on **Disable notification** and **Stream on device boot**. 
 1. Tap back to get back to the main setting screen.
 1. Scroll down until you see the *Misc* section and tap on **Audio mode**. Choose **Audio Only**.
