@@ -58,4 +58,4 @@ https://github.com/AlexxIT/StreamAssist?tab=readme-ov-file#installation
 #### Microphone State
 Upon restart, the Microphone for Stream Assist is often in the off state. Before attempting to use, you'll need to make sure it is on for it to recognize voice prompts. As part of the control automation discussed later, we'll make sure this mic is always on.
 
-![banner](https://github.com/dinki/View-Assist/assets/2521542/f8355663-1653-41bc-ac25-61f806e9c479)
+![](./sa1.png)

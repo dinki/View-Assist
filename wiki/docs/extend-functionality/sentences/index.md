@@ -3,7 +3,7 @@ title: Sentence Gallery
 sidebar_position: 1
 ---
 
-View Assist is easily extendable by adding custom sentences which provide data to different custom views. On this page you will find a gallery of premade custom sentences. You will find links to the requirements and installation instructions. Blueprints have been made available for easy installation. All custom sentence blueprint require that Stream Assist user have version 2.1.0 or greater.
+View Assist is easily extendable by adding custom sentences which provide data to different custom views. On this page you will find a gallery of premade custom sentences. You will find links to the requirements and installation instructions. Blueprints have been made available for easy installation. 
 
 We encourage everyone to share their creations so that others might enjoy what you have brought to life.
 

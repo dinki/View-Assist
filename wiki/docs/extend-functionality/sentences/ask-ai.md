@@ -20,15 +20,12 @@ User says "Ask AI" plus the question to be answered
 ### Requirements
 - **View**:  [Info view](../views/info)
 - **Integrations**: [Open AI Conversation](https://www.home-assistant.io/integrations/openai_conversation/)
-- **API Key**: A paid API key is required
+- **API Key**:  Must have a paid OpenAI account.  Don't worry.  The price to use is very low (pennies a month).  See [this video](https://www.youtube.com/watch?v=4D6bIDcVOWc) for more information for pricing and set up
 
-**Detailed install**: [Detailed instructions](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Ask%20AI)
+Advice from Discord user vash2695 wrote "In case it hasn't been mentioned already, you should set that integration to use "gpt-4o-mini". It's substantially smarter than 3.5 while also being cheaper!"
 
-### Video
+Additionally, user Andrew Steel is reporting that this blueprint will also work with local Ollama AI using [hass-ollama-conversation](https://github.com/ej52/hass-ollama-conversation#options)
 
-[![Image](https://img.youtube.com/vi/2xSvFU5Xlss/mqdefault.jpg)](https://www.youtube.com/watch?v=2xSvFU5Xlss)
-  
-Detailed install video: https://www.youtube.com/watch?v=2xSvFU5Xlss
 
 ## Changelog
 

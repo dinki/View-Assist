@@ -21,12 +21,6 @@ User says "Broadcast" plus the message to broadcast
     - Chime TTS: [Video](https://youtu.be/yU4H2-o66lI) | [Project Page](https://nimroddolev.github.io/chime_tts/docs/quick-start/installing-chime-tts)
     - Google Translate TTS: [YAML Code](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Broadcast#google-translate-configuration) | [HA page](https://www.home-assistant.io/integrations/google_translate/)
 
-## Installation
-
-[![Image](https://img.youtube.com/vi/dZLcBbkZaes/mqdefault.jpg)](https://www.youtube.com/watch?v=dZLcBbkZaes)
-
-  Detailed install video:
-  https://youtu.be/dZLcBbkZaes
 
 This automation requires the Chime TTS extension and a TTS service.  The Google Translate TTS works well for this.  Instructions for installing below.
 

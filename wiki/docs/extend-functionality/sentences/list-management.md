@@ -5,6 +5,7 @@
 [![Image](https://img.youtube.com/vi/h6WmQ7LiO_0/mqdefault.jpg)](https://www.youtube.com/watch?v=h6WmQ7LiO_0)
 
 Detailed install video: https://youtu.be/h6WmQ7LiO_0
+
 Required View: [list view](../views/list)
 
 Allows user to add and remove items from a shopping list.  User can also request to show the shopping list and it will be displayed on View Assist satellite devices with displays.
