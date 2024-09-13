@@ -16,9 +16,6 @@ The following Android applications have been tested and found to be working. The
 ---
 
 ## IP Webcam {#ip-webcam}
-
-[![](https://img.youtube.com/vi/-7cHfqZMa1c/mqdefault.jpg)](https://youtu.be/-7cHfqZMa1c)
-
 Detailed install video: https://youtu.be/-7cHfqZMa1c
 
 ### Installation
@@ -26,18 +23,18 @@ Detailed install video: https://youtu.be/-7cHfqZMa1c
 
 ### Configuration
 1. Find the IPWebcam Icon and tap it to launch.
-1. Scroll down until you see the *IP Webcam settings* section.
-1. Tap on **Power management** and under *Misc* Turn on **Disable notification** and **Stream on device boot**. 
+1. Scroll down until you see the **Service Control** heading and tap on **Optional Permissions**.
+1. Tap **Allow streaming in background** and then turn on **Allow display over other apps**.
+1. Tap back and then deactivate the checkbox on **Show camera overlay**. 
+1. Tap back and scroll up until you see **Power management** tap it and under *Misc* Turn on **Disable notification** and **Stream on device boot**. 
 1. Tap back to get back to the main setting screen.
 1. Scroll down until you see the *Misc* section and tap on **Audio mode**. Choose **Audio Only**.
 
     :::info 
     While you can stream both audio and video via IPWebcam, we recommend using the **Audio Only** mode to reduce bandwidth and minimize video being streamed to your HA instance. Many users also prefer this due to the location of these tablet devices on the interior of their home such as in bedrooms.
     :::
-2. Scroll down under the **Service Control** heading and tap on **Optional Permissions**.
-1. Tap **Allow streaming in background** and accept Android system permissions when prompted.
-1. Tap on **Show camera overlay**. This will prevent another window from appearing over your dashboard.
-1. Tap back and then tap on **Start server**.  
+
+1. Tap back and then scroll down and tap on **Start server**.  
 1. When prompted, Allow all permissions as requested by Android OS (camera, microphone, etc.)
 
 ---
@@ -46,9 +43,6 @@ Detailed install video: https://youtu.be/-7cHfqZMa1c
 :::note
 RtpMic can only be installed via the Google Play store on devices running older versions of Android OS. Users have been successful manually sideloading the application on newer versions but that is beyond this tutorial.
 :::
-
-[![](https://img.youtube.com/vi/SkyErx7TE30/mqdefault.jpg)](https://youtu.be/SkyErx7TE30)
-
 Detailed install video:
 https://youtu.be/SkyErx7TE30
 
@@ -67,4 +61,3 @@ https://youtu.be/SkyErx7TE30
     - Auto start streaming 
     - Start at boot
 1. Allow any permissions Android system may prompt for
-
