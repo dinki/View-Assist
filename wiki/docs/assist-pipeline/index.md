@@ -9,8 +9,10 @@ The Assist Pipeline provides the wake word detection, speech-to-text and text-to
 ## Installation
 Official Home Assistant version of these instructions: https://www.home-assistant.io/voice_control/voice_remote_local_assistant/
 
+[![Image](https://img.youtube.com/vi/Kk4c6klihBk/mqdefault.jpg)](https://www.youtube.com/watch?v=Kk4c6klihBk)
+
 Watch a Video of Assist Pipeline installation: https://www.youtube.com/watch?v=Kk4c6klihBk
 
-[![Image](https://img.youtube.com/vi/Kk4c6klihBk/mqdefault.jpg)](https://www.youtube.com/watch?v=Kk4c6klihBk)
+
 
 Once complete you may move to the next step of setting up your devices

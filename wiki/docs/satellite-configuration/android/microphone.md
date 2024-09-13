@@ -43,8 +43,10 @@ Detailed install video: https://youtu.be/-7cHfqZMa1c
 :::note
 RtpMic can only be installed via the Google Play store on devices running older versions of Android OS. Users have been successful manually sideloading the application on newer versions but that is beyond this tutorial.
 :::
-Detailed install video:
-https://youtu.be/SkyErx7TE30
+
+[![Image](https://img.youtube.com/vi/SkyErx7TE30/mqdefault.jpg)](https://www.youtube.com/watch?v=SkyErx7TE30)
+
+Detailed install video:  https://youtu.be/SkyErx7TE30
 
 ### Installation
 1. Download and install the app from the [Google Play Store](https://play.google.com/store/apps/details?id=com.rtpmic&hl=en_US&gl=US)
