@@ -131,7 +131,7 @@ const config = {
             items: [
               {
                 label: 'Satellite Setup',
-                to: '/docs/satellite-configuration',
+                to: '/docs/viewassist-setup/satellite-configuration',
               },
               {
                 label: 'Extend Voice Functionality',
