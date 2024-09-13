@@ -24,30 +24,30 @@ Items with asterisks are either fully or partially written but have not been rel
 
 # Completed
 
-* Tell me the weather:  [How's the weather](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Hows%20the%20weather)
-* Make broadcast announcements to all speakers: [Broadcast](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Broadcast)
-* How do you spell [WORD] : [Spell a Word](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Spell%20a%20Word)
-* Respond when I say thank you : [Thank You](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Thank%20You)
-* Tell me the time : [What is the Time](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/What%20time%20is%20it)
-* Add/remove/show items from shopping list : [List Management](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/List%20Management)
-* Show recipes (Mealie) and any other website by voice : [Show Webpage](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Show%20Webpage)
-* Do general knowledge search (limited through Wikipedia) : [Search Wikipedia](https://github.com/dinki/View-Assist/wiki/View-Assist-Custom-Sentences-Gallery#search-wikipedia)
-* Tell me a joke [Tell Me a Joke](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Tell%20Me%20a%20Joke)
-* Remember [some fact] : Use [List Management](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/List%20Management) with a new list called 'Remember' and modify the Blueprint command sentences as desired
-* How do you say 'word or phrase' in Spanish/German/French/etc : [Ask AI](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Ask%20AI)
-* Unit conversions : [Ask AI](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Ask%20AI)
-* Math functions  : [Ask AI](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Ask%20AI)
-* Flip a coin, magic 8 ball, pick a number, rock paper scissors, roll dice : [Ask AI](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Ask%20AI)
-* Repeat what you just said : [Device Functions](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Device%20Functions)
-* Ability to put device in do not disturb mode and set other modes by voice : [Device Functions](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Device%20Functions)
-* Dim screen for sleeping but make clock still visible : [Device Functions](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Device%20Functions) set mode to night
-* Show [Viewname] : [Device Functions](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Device%20Functions) set mode to night
+* Tell me the weather:  [How's the weather](extend-functionality/sentences/hows-the-weather)
+* Make broadcast announcements to all speakers: [Broadcast](extend-functionality/sentences/broadcast)
+* How do you spell [WORD] : [Spell a Word](extend-functionality/sentences/spell-a-word)
+* Respond when I say thank you : [Thank You](extend-functionality/sentences/thank-you)
+* Tell me the time : [What is the Time](extend-functionality/sentences/what-time-is-it)
+* Add/remove/show items from shopping list : [List Management](extend-functionality/sentences/list-management)
+* Show recipes (Mealie) and any other website by voice : [Show Webpage](extend-functionality/sentences/show-webpage)
+* Do general knowledge search (limited through Wikipedia) : [Search Wikipedia](extend-functionality/sentences/search-wikipedia)
+* Tell me a joke [Tell Me a Joke](extend-functionality/sentences/tell-me-a-joke)
+* Remember [some fact] : Use [List Management](extend-functionality/sentences/list-management) with a new list called 'Remember' and modify the Blueprint command sentences as desired
+* How do you say 'word or phrase' in Spanish/German/French/etc : [Ask AI](extend-functionality/sentences/ask-ai)
+* Unit conversions : [Ask AI](extend-functionality/sentences/ask-ai)
+* Math functions  : [Ask AI](extend-functionality/sentences/ask-ai)
+* Flip a coin, magic 8 ball, pick a number, rock paper scissors, roll dice : [Ask AI](extend-functionality/sentences/ask-ai)
+* Repeat what you just said : [Device Functions](extend-functionality/sentences/device-functions)
+* Ability to put device in do not disturb mode and set other modes by voice : [Device Functions](extend-functionality/sentences/device-functions)
+* Dim screen for sleeping but make clock still visible : [Device Functions](extend-functionality/sentences/device-functions) set mode to night
+* Show [Viewname] : [Device Functions](extend-functionality/sentences/device-functions) set mode to night
 * Show devices that change when using built in HA commands : [Control Automation](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20control%20automations)
-* Show sports scores when asked  : [Get Sports Scores](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Get%20Sports%20Scores)
-* Volume controls by voice : [Device Functions](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Device%20Functions)
-* Show security cameras : [View Cameras](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/View%20Camera)
-* Play Spotify (Music Assistant) : [Play Music with Music Assistant](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Play%20Music%20with%20Music%20Assistant)
-* Play Tunein Radio stations (Music Assistant) : [Play TuneIn with Music Assistant](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Play%20TuneIn%20with%20Music%20Assistant)
+* Show sports scores when asked  : [Get Sports Scores](extend-functionality/sentences/get-sports-scores)
+* Volume controls by voice : [Device Functions](extend-functionality/sentences/device-functions)
+* Show security cameras : [View Cameras](extend-functionality/sentences/view-camera)
+* Play Spotify (Music Assistant) : [Play Music with Music Assistant](extend-functionality/sentences/play-music-with-ma)
+* Play Tunein Radio stations (Music Assistant) : [Play TuneIn with Music Assistant](extend-functionality/sentences/play-tunein-with-ma)
 * Resume music playback after announcements : Use Snapcast or FullyKiosk media player as musicplayer device until BrowserMod is fixed to honor announce 
-* Show traffic conditions and travel time for commute : [Travel Times by Waze](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Travel%20Times%20by%20Waze)
-* Set thermostat by saying I'm cold/I'm hot  : [Thermostat Control](https://github.com/dinki/View-Assist/tree/main/View%20Assist%20custom%20sentences/Thermostat%20Control)
+* Show traffic conditions and travel time for commute : [Travel Times by Waze](extend-functionality/sentences/travel-times-by-waze)
+* Set thermostat by saying I'm cold/I'm hot  : [Thermostat Control](extend-functionality/sentences/thermostat-control)
