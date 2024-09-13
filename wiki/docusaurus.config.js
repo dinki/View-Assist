@@ -162,7 +162,7 @@ const config = {
             ],
           },
         ],
-        copyright: `<p>Find View Assist useful? Consider showing your support: <a href="https://www.buymeacoffee.com/dinki" rel="nofollow"><br \><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" id="buyMeACoffee"></a></p> Copyright © ${new Date().getFullYear()} View Assist`,
+        copyright: `<p>Find View Assist useful? Consider showing your support: <a href="https://www.buymeacoffee.com/dinki" rel="nofollow"><br \><br \><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" id="buyMeACoffee"></a></p> Copyright © ${new Date().getFullYear()} View Assist`,
       },
       prism: {
         theme: prismThemes.github,
