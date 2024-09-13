@@ -9,7 +9,8 @@ View Assist provides visual feedback for the Home Assistant Assist voice assista
 
 [![](https://img.youtube.com/vi/t0jG4LZzKqs/mqdefault.jpg)](https://www.youtube.com/watch?v=t0jG4LZzKqs)
 
-^^^ Click for demo video on Youtube ^^^
+Demo Video:  https://www.youtube.com/watch?v=t0jG4LZzKqs
+
 
 This project is designed so that you can pick and choose the parts that you want for your needs.  The custom sentences can be modified for those who may only be interested in voice only.  The dashboard views may be interesting to others who are writing their own custom sentences.
 

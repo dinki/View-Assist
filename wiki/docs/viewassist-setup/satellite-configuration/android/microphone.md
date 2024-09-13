@@ -10,12 +10,15 @@ In order to leverage your tablet as a voice assistant satellite, you'll need to 
 
 The following Android applications have been tested and found to be working. The current recommendation is to use IP Webcam, however the choice is ultimately yours. You only need to install and configure ONE of the following applications.
 
-- [IP Webcam](#ip-webcam)
+- [IP Webcam (Recommended)](#ip-webcam)
 - [RtpMic](#rtpmic)
 
 ---
 
 ## IP Webcam {#ip-webcam}
+
+[![Image](https://img.youtube.com/vi/-7cHfqZMa1c/mqdefault.jpg)](https://www.youtube.com/watch?v=-7cHfqZMa1c)
+
 Detailed install video: https://youtu.be/-7cHfqZMa1c
 
 ### Installation

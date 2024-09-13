@@ -7,9 +7,9 @@ Stream Assist integration is used to receive the RTSP stream from the Android de
 
 [![](https://img.youtube.com/vi/DkRCgv2LzR8/mqdefault.jpg)](https://youtu.be/DkRCgv2LzR8)
 
-Detailed install video:
-https://youtu.be/DkRCgv2LzR8
-**Repo:** https://github.com/AlexxIT/StreamAssist
+Detailed install video:  https://youtu.be/DkRCgv2LzR8
+
+Stream Assist Github: https://github.com/AlexxIT/StreamAssist
 
 ## Installation
 1. Open HACS (typically in side navigation in your Home Assistant instance)  
@@ -56,7 +56,7 @@ You **must** restart Home Assistant to complete the installation.
 --------
 
 ### Additional Notes
-For help finding your tablet's IP address, see this guide:  https://github.com/dinki/View-Assist/wiki/Find-IP-of-Android-device
+For help finding your tablet's IP address, see [this guide](/docs/misc/find-ip).
 
 Additional installation and configuration can be found here:
 https://github.com/AlexxIT/StreamAssist?tab=readme-ov-file#installation
@@ -64,4 +64,4 @@ https://github.com/AlexxIT/StreamAssist?tab=readme-ov-file#installation
 #### Microphone State
 Upon restart, the Microphone for Stream Assist is often in the off state. Before attempting to use, you'll need to make sure it is on for it to recognize voice prompts. As part of the control automation discussed later, we'll make sure this mic is always on.
 
-![banner](https://github.com/dinki/View-Assist/assets/2521542/f8355663-1653-41bc-ac25-61f806e9c479)
+![](./sa-micstate.png)

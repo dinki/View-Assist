@@ -1,6 +1,6 @@
 ---
 title: "Extend Voice Functionality"
-sidebar_position: 5
+sidebar_position: 3
 ---
 
 View Assist is easily extendable by adding custom sentences which provide data to different custom views. In this section you will find a gallery of premade custom sentence blueprints for easy installation. You will find links to the requird integrations, required views and installation instructions.
