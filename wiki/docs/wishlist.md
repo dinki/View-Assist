@@ -42,7 +42,7 @@ Items with asterisks are either fully or partially written but have not been rel
 * Ability to put device in do not disturb mode and set other modes by voice : [Device Functions](extend-functionality/sentences/device-functions)
 * Dim screen for sleeping but make clock still visible : [Device Functions](extend-functionality/sentences/device-functions) set mode to night
 * Show [Viewname] : [Device Functions](extend-functionality/sentences/device-functions) set mode to night
-* Show devices that change when using built in HA commands : [Control Automation](homeassistant-configuration/viewassist-configuration/control-automations)
+* Show devices that change when using built in HA commands : [Control Automation](viewassist-setup/homeassistant-configuration/viewassist-configuration/control-automations)
 * Show sports scores when asked  : [Get Sports Scores](extend-functionality/sentences/get-sports-scores)
 * Volume controls by voice : [Device Functions](extend-functionality/sentences/device-functions)
 * Show security cameras : [View Cameras](extend-functionality/sentences/view-camera)
