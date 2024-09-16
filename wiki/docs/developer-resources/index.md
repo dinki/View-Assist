@@ -3,4 +3,4 @@ title: "Developer Resources"
 sidebar_position: 4
 ---
 
-Placeholder
+Developer related documentation coming soon!
