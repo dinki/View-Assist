@@ -1,0 +1,65 @@
+# View Assist - Spell a Word (v 1.0.0)
+# Written by - Dinki
+blueprint:
+  name: View Assist - Spell a Word
+  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.0)
+  domain: automation
+  input:
+    command_prompt:
+      name: Command Text
+      description: The phrase you want to use to trigger the automation
+      default: "[please] [how do you| can you] spell {word}"
+    group_entity: 
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites"                  
+    view:
+      name: Dashboard view
+      description: The View Assist dashboard view to use for displaying text (example /dashboard-viewassist/info)
+      default: "/dashboard-viewassist/info" 
+alias: View Assist - Spell a Word
+description: "Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable"
+variables:
+  command_prompt: !input command_prompt
+  group_entity: !input group_entity
+  view: !input view
+  target_satellite_device: |-
+    {% for sat in expand(group_entity) %}
+      {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+trigger:
+  - platform: conversation
+    command:
+      - !input command_prompt
+condition: []
+action:
+  - set_conversation_response: >-
+      {{ trigger.slots.word }} is spelled  ... {% set spaced_text = '...
+      '.join(trigger.slots.word) %}{{ spaced_text }}
+  - if:
+      - condition: template
+        value_template: >-
+          {% if target_satellite_device_type != 'audio_only' %}true{% else
+          %}false{% endif %}
+    then:
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          title: ""
+          message: <center>{{ trigger.slots.word |upper }}</center>
+          message_font_size: 6vw
+      - service: browser_mod.navigate
+        data:
+          path: "{{ view }}"
+        target:
+          device_id: "{{ target_display_device }}"
+mode: single

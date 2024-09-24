@@ -1,0 +1,43 @@
+# View Assist - Thank you (v 1.0.0)
+# Written by - Dinki
+blueprint:
+  name: View Assist - Thank you 
+  description: Give thanks to Assist and receive a kind response (View Assist thankyou v 1.0.0)
+  domain: automation
+  input:
+    command_prompt1:
+      name: Command Text 1
+      description: The first phrase you want to use to trigger the automation
+      default: "(Thank you|Thanks) [so much]"
+    command_prompt2:
+      name: Command Text 2
+      description: The second phrase you want to use to trigger the automation (can be blank)
+      default: "(You are great|You're Great)"      
+    assist_response: 
+      name: Assist response
+      description: The list of random responses
+      default: |- 
+        {{ [
+        "Glad I could help",
+        "My pleasure",
+        "Happy to assist",
+        "It was nothing",
+        "Anytime",
+        "You're too kind",
+        "Don't mention it",
+        "It's the least I could do" ] | random }}                
+    view:
+      name: Dashboard view
+      description: The View Assist dashboard view to use for displaying text (example /dashboard-viewassist/info)
+      default: "/dashboard-viewassist/info" 
+alias: VIEW ASSIST - Thank you
+description: ""
+trigger:
+  - platform: conversation
+    command:
+      - !input command_prompt1
+      - !input command_prompt2
+condition: []
+action:
+  - set_conversation_response: !input assist_response
+mode: single

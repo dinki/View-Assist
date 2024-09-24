@@ -1,0 +1,43 @@
+# View Assist - Spell a Word (v 1.0.0)
+# Written by - Dinki
+alias: View Assist - Spell a Word
+description: "Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable"
+variables:
+  dashboard: /dashboard-viewassist/info
+  target_satellite_device: |-
+    {% for sat in expand('group.viewassist_satellites') %}
+      {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+trigger:
+  - platform: conversation
+    command:
+      - "([please] [how do you | can you] spell {word} | how is {word} spelled)"
+condition: []
+action:
+  - set_conversation_response: >-
+      {{ trigger.slots.word }} is spelled  ... {% set spaced_text = '...
+      '.join(trigger.slots.word) %}{{ spaced_text }}
+  - if:
+      - condition: template
+        value_template: >-
+          {% if target_satellite_device_type != 'audio_only' %}true{% else
+          %}false{% endif %}
+    then:
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          title: ""
+          message: <center>{{ trigger.slots.word |upper }}</center>
+          message_font_size: 6vw
+      - service: browser_mod.navigate
+        data:
+          path: "{{ dashboard }}"
+        target:
+          device_id: "{{ target_display_device }}"
+
+mode: single

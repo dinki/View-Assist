@@ -1,0 +1,154 @@
+blueprint:
+  name: View Assist - Travel Times by Waze
+  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.0)
+  domain: automation
+  input:
+    travelfromhome:
+      name: Travel from home
+      description: The phrase used to get directions from home
+      default: "how long (does | will) it take to (go | drive) to {destination}"
+    travelfromatob:
+      name: Travel from point A to point B
+      description: The phrase used to get directions from point A to point B
+      default: "how long (does | will) it take to (go | drive) from {origin} to {destination}"
+    traveltoafromb:
+      name: Travel to point B from point A
+      description: The phrase used to get directions to point B from point A
+      default: "how long (does | will) it take to (go | drive) to {destination} from {origin}"
+    home:
+      name: Home
+      description: The default starting point address
+      default: "1600 Pennsylvania Avenue NW, Washington, DC 20500"
+    places:
+      name: Places
+      description: A list of your favorite places with their addresses
+      default: '{"work":"123 Main Street, Beverly Hills, CA 90210","the white house":"1600 Pennsylvania Avenue NW, Washington, DC 20500"}'
+    region:
+      name: Region
+      description: Your Waze region
+      selector:
+        select:
+          options:
+            - us
+            - na
+            - eu
+            - il
+            - au    
+      default: us 
+    view:
+      name: View
+      description: The View Assist dashboard view to use for text information display
+      default: "/dashboard-viewassist/info"      
+    group_entity: 
+      name: Group Entity
+      description: The group entity that holds the list of ViewAssist devices
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites" 
+trigger:
+  - platform: conversation
+    command: !input travelfromhome
+    id: travelfromhome
+  - platform: conversation
+    command: 
+      - !input travelfromatob
+      - !input traveltoafromb
+    id: travelfromatob    
+condition: []
+action:
+  - variables:
+      view: !input view
+      home: !input home
+      region: !input region
+      input_places: !input places
+      group_entity: !input group_entity
+      places: "{{ input_places | from_json}}"
+      origin: >-
+        {% if trigger.slots.origin |lower in places
+        %}{{places[trigger.slots.origin]}}{% else
+        %}{{trigger.slots.origin}}{%endif%}  
+      destination: >-
+        {% if trigger.slots.destination |lower in places
+        %}{{places[trigger.slots.destination]}}{% else
+        %}{{trigger.slots.destination}}{%endif%}
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"        
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - travelfromhome
+        sequence:
+          - action: waze_travel_time.get_travel_times
+            data:
+              region: "{{ region }}"
+              origin: "{{ home }}"
+              destination: "{{ destination }}"
+            response_variable: routes_response
+          - set_conversation_response: >
+              It will take about {% set time =
+              routes_response['routes'][0]['duration'] | round %}{% if time > 60
+              %}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{
+              hours }} hours and {{ minutes }} minutes{% else %}{{ time }}
+              minutes{% endif %} to drive to {{ trigger.slots.destination |
+              title }}
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              title: Travel Time
+              message_font_size: 4vw
+              message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive to {{ trigger.slots.destination | title }}"
+          - if:
+              - condition: template
+                value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"            
+      - conditions:
+          - condition: trigger
+            id:
+              - travelfromatob
+        sequence:
+          - action: waze_travel_time.get_travel_times
+            data:
+              region: "{{ region }}"
+              origin: "{{ origin }}"
+              destination: "{{ destination }}"
+            response_variable: routes_response
+          - set_conversation_response: >
+              It will take about {% set time =
+              routes_response['routes'][0]['duration'] | round %}{% if time > 60
+              %}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{
+              hours }} hours and {{ minutes }} minutes{% else %}{{ time }}
+              minutes{% endif %} to drive from {{ trigger.slots.origin | title
+              }} to {{ trigger.slots.destination | title }}
+            enabled: true
+          - service: python_script.set_state
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              title: Travel Time
+              message_font_size: 4vw
+              message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{ hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive from {{ trigger.slots.origin | title }} to {{ trigger.slots.destination | title }}"
+          - if:
+              - condition: template
+                value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+            then:
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ view }}"
+                target:
+                  device_id: "{{target_display_device}}"             
+mode: single
