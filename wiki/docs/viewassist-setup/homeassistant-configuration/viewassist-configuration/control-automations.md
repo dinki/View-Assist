@@ -52,7 +52,7 @@ These are the configuration parameters needed for configuration:
 Below is the blueprint that will configure these automations for each device.  Click the link to import the blueprint:
 
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView+Assist+control+automations%2Fblueprint-devicecontrol.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_control_automations%2Fblueprint-devicecontrol.yaml)
 
 After importing, click on the newly imported blueprint and set the configuration options as detailed above.  Hit save to write out an automation based on that blueprint.  Change the word 'template' in the name to your device name so it can be unique and identifiable.
 
