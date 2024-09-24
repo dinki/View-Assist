@@ -1,6 +1,6 @@
 # Get Sports Scores
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView+Assist+custom+sentences%2FGet+Sports+Scores%2Fblueprint-getsportsscores.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2FGet_Sports_Scores%2Fblueprint-getsportsscores.yaml)
 
 [![Image](https://img.youtube.com/vi/Dv7Z_xJk6Ug/mqdefault.jpg)](https://www.youtube.com/watch?v=Dv7Z_xJk6Ug)
 
