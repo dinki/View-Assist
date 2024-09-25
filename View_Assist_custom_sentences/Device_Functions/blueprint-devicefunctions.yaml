@@ -21,11 +21,11 @@ blueprint:
       default: "(set do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])"
     set_volume:
       name: Set Volume Command 
-      description: The command to use to set volume levels level directly
+      description: The command to use to set volume level directly
       default: "[set | turn] [the] volume [to] {level}"
     adjust_volume:
       name: Adjust Volume Command 
-      description: The command to use to set volume levels by step
+      description: The command to use to set volume level by step
       default: "turn {up_down} [the] volume"      
     mute_volume:
       name: Mute Volume Command 
