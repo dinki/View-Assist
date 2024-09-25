@@ -1,0 +1,133 @@
+type: custom:button-card
+variables:
+  locatecardversion: 1.0.0
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "map map"
+        "assist assist"       
+    - grid-template-columns: 1.5fr 1.5fr
+    - grid-template-rows: min-content max-content
+  card:
+    - background: black
+    - background-size: cover
+  custom_fields:
+    map:
+      - align-self: center
+      - justify-self: center
+      - width: 100%
+      - height: 100%
+      - position: absolute
+      - justify-content: center
+    location:
+      - align-self: center
+      - justify-self: center
+      - position: absolute
+      - width: 90%
+      - padding: 3%
+      - z-index: 2
+      - top: 70vh
+custom_fields:
+  title: ' '
+  map:
+    card:
+      type: map
+      entities:
+        - entity: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.location_source}
+            catch { return ""}]]]
+      theme_mode: light
+      default_zoom: 14
+      aspect_ratio: 1.5/1
+      auto_fit: true
+      fit_zones: false
+      card_mod:
+        style:
+          ha-map $ ha-entity-marker $: |
+            .marker {
+              color: white !important;              
+              background-color: #03a9f4 !important;
+              opacity: 80% !important;              
+              font-size: 3vw !important;
+              font-weight: bold !important;
+              height: 5vw !important;
+              width: 5vw !important;                
+             }              
+          ha-map$: |
+            .leaflet-control-attribution {
+              visibility: hidden;
+             }           
+            .leaflet-control-zoom {
+              right: -11px;
+              top: 24vh;
+              transform: scale(1.8)  
+             }
+          ha-icon-button$: |
+            mwc-icon-button[title="Reset focus"]{
+              --mdc-icon-size: 65px;
+              right: -10px !important;
+              position: relative !important;
+              display: flex !important              
+            }
+  location:
+    card:
+      type: custom:button-card
+      custom_fields:
+        location_text: |-
+          [[[
+            var var_geocoded_location = hass.states[variables.var_assistsat_entity].attributes.geocoded_source;
+            var geocoded_location = hass.states[var_geocoded_location].state;
+            return `${geocoded_location}`   
+          ]]]      
+        updated: |-
+          [[[
+            var var_geocoded_location = hass.states[variables.var_assistsat_entity].attributes.geocoded_source;                  
+            var var_last_changed = new Date(hass.states[var_geocoded_location].last_changed);
+            const current_date = new Date();
+            const diff = current_date - var_last_changed;
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+            let last_changed;
+            if (minutes < 1) {
+              last_changed = "now";          
+            } else if (minutes < 60) {                    
+              last_changed = rtf.format(-minutes, 'minute');  // e.g., "5 minutes ago"
+            } else if (hours < 24) {
+              last_changed = rtf.format(-hours, 'hour');  // e.g., "2 hours ago"
+            } else {
+              last_changed = rtf.format(-days, 'day');  // e.g., "3 days ago"
+            }
+            return `${"last changed "+last_changed}`  
+          ]]]
+      show_icon: false
+      show_name: false
+      styles:
+        grid:
+          - grid-template-areas: '"location_text" "updated"'
+          - grid-template-columns: 1fr
+          - grid-template-rows: 1fr min-content min-content
+        card:
+          - justify-content: center
+          - align-items: center
+          - padding: 2%
+          - border-radius: 1vw
+          - background-color: grey
+          - border: none
+          - filter: opacity(75%)
+        custom_fields:
+          location_text:
+            - font-size: 6vh
+            - color: black
+            - text-wrap: wrap
+            - font-weight: bold
+            - text-align: center
+          updated:
+            - font-size: 4vh
+            - color: black
