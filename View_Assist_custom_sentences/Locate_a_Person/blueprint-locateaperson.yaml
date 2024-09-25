@@ -19,7 +19,7 @@ blueprint:
       default: /dashboard-viewassist/info
     defined_names:
      name: Defined Names
-     description: This is the phonetic name followed by the person of interest identified in Home Assistant
+     description: This is the phonetic name followed by the person's name as configured in the Home Assistant settings
      default: '{"john":"jon","simon":"simon"}'          
     group_entity:
       name: Group Entity
