@@ -5,6 +5,6 @@
 This blueprint enables you to display the location of a home assistant user on a map. The map also shows the geocoded address with most recent location update in relative time. If you choose to hold the view, it will provide real-time updates as the tracking device sends new location data.
 
 Requirements:
-  * The *Background location* needs to be enabled. It can be found in the home assistant mobile app -> settings -> companion app -> Location sensors.
-  * The *Geolocation sensor* needs to be enabled along with it's setting to *Update sensor with location sensors*. It can be found in the home assistant mobile app -> settings -> companion app -> manage sensors.  
-  * The *Background access* also needs to be enabled. It can be found in the home assistant mobile app -> settings -> companion app -> other settings.
+  * The **Background location** needs to be enabled. It can be found in the home assistant mobile app -> settings -> companion app -> Location sensors.
+  * The **Geolocation sensor** needs to be enabled along with it's setting to *Update sensor with location sensors*. It can be found in the home assistant mobile app -> settings -> companion app -> manage sensors.  
+  * The **Background access** also needs to be enabled. It can be found in the home assistant mobile app -> settings -> companion app -> other settings.
