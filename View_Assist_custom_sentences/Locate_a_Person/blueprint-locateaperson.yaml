@@ -36,7 +36,7 @@ blueprint:
 alias: View Assist - Locate a Person
 description: "Ask Assist to locate a person"
 variables:
-  view: !input view
+  view_locate: !input view_locate
   view_info: !input view_info
   input_defined_names: !input defined_names
   persons_name: "{{ input_defined_names | from_json}}"  
