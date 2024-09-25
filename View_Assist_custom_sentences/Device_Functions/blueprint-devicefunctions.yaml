@@ -144,7 +144,7 @@ action:
                           entity_id: " {{ target_satellite_device }} "
                           do_not_disturb: true
             else:
-              - set_conversation_response: "Sorry.  {{ trigger.slots.mode }} is not a valid mode. "
+              - set_conversation_response: "Sorry.  {{ trigger.slots.mode }} is not a valid mode. Please try {{ modes }}."
       - conditions:
           - condition: trigger
             id:
