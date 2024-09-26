@@ -1,5 +1,7 @@
 # Locate a Person
 
+<a href="https://github.com/jsittner/View-Assist/blob/locate-a-person/View_Assist_custom_sentences/Locate_a_Person/locate_example.png"><img src="https://github.com/jsittner/View-Assist/blob/locate-a-person/View_Assist_custom_sentences/Locate_a_Person/locate_example.png" width="60%"></a>
+
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/jsittner/View-Assist/blob/locate-a-person/View_Assist_custom_sentences/Locate_a_Person/blueprint-locateaperson.yaml)
 
 This blueprint enables you to display the location of a home assistant user on a map. The map also shows the geocoded address with most recent location update in relative time. If you choose to hold the view, it will provide real-time updates as the tracking device sends new location data.
