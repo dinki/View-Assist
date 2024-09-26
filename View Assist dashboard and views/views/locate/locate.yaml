@@ -23,14 +23,20 @@ styles:
       - height: 100%
       - position: absolute
       - justify-content: center
+      - z-index: 1
     location:
       - align-self: center
       - justify-self: center
       - position: absolute
-      - width: 90%
-      - padding: 3%
       - z-index: 2
       - top: 70vh
+      - width: 90%
+    hold_card:
+      - align-self: center
+      - justify-self: center
+      - position: absolute
+      - width: 80vw
+      - z-index: 3
 custom_fields:
   title: ' '
   map:
@@ -42,7 +48,7 @@ custom_fields:
             hass.states[variables.var_assistsat_entity].attributes.location_source}
             catch { return ""}]]]
       theme_mode: light
-      default_zoom: 14
+      default_zoom: 15
       aspect_ratio: 1.5/1
       auto_fit: true
       fit_zones: false
@@ -65,14 +71,14 @@ custom_fields:
             .leaflet-control-zoom {
               right: -11px;
               top: 24vh;
-              transform: scale(1.8)  
+              transform: scale(1.8)
              }
           ha-icon-button$: |
             mwc-icon-button[title="Reset focus"]{
               --mdc-icon-size: 65px;
               right: -10px !important;
               position: relative !important;
-              display: flex !important              
+              display: flex !important
             }
   location:
     card:
@@ -110,7 +116,9 @@ custom_fields:
       show_name: false
       styles:
         grid:
-          - grid-template-areas: '"location_text" "updated"'
+          - grid-template-areas: |
+              "location_text" 
+              "updated"
           - grid-template-columns: 1fr
           - grid-template-rows: 1fr min-content min-content
         card:
@@ -131,3 +139,28 @@ custom_fields:
           updated:
             - font-size: 4vh
             - color: black
+  hold_card:
+    card:
+      type: custom:button-card
+      show_icon: false
+      show_name: false
+      tap_action:
+        action: call-service
+        service: python_script.set_state
+        service_data:
+          entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+          mode: hold
+      double_tap_action:
+        action: call-service
+        service: python_script.set_state
+        service_data:
+          entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+          mode: normal
+      styles:
+        card:
+          - top: 10vh
+          - border-radius: 1vw
+          - background-color: transparent
+          - height: 90vh
+          - width: 100vw
+          - border: none

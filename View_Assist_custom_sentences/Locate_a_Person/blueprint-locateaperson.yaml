@@ -91,10 +91,9 @@ action:
         data:
           entity_id: "{{ target_satellite_device }}"
           title: ""
-          message: >-
-            <center>The name {{ trigger.slots.person |capitalize}} hasn't been defined</center>
+          message: "{{ trigger.slots.person |capitalize}} hasn't been defined"
           message_font_size: 6vw
-      - set_conversation_response: The name {{ trigger.slots.person }} hasn't been defined
+      - set_conversation_response: "{{ trigger.slots.person }} hasn't been defined"
       - data:
           path: "{{ view_info }}"
         target:
