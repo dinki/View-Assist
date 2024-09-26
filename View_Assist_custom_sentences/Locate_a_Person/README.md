@@ -9,7 +9,7 @@ https://youtu.be/n83rJK8fibE
 
 This blueprint enables you to display the location of a home assistant user on a map. The map also shows the geocoded address with most recent location update in relative time. If you choose to hold the view, it will provide real-time updates as the tracking device sends new location data.
 
-Requires [webpage](https://github.com/jsittner/View-Assist/blob/locate-a-person/View%20Assist%20dashboard%20and%20views/views/locate/) view
+Requires [locate](https://github.com/jsittner/View-Assist/blob/locate-a-person/View%20Assist%20dashboard%20and%20views/views/locate/) view
 
 Tracker Requirements:
   * The **Background location** needs to be enabled. It can be found in the home assistant mobile app -> settings -> companion app -> Location sensors.
