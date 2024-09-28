@@ -1,7 +1,7 @@
 # Special thanks to Mr. Picc010 for his contribution to this blueprint
 blueprint:
   name: View Assist - Get Sports Scores
-  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.0.0)
+  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.1.0)
   domain: automation
   input:
     team_tracker:
@@ -11,7 +11,20 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain: sensor       
+            - domain: sensor 
+    college_teams:
+      name: College Teams
+      description: College Teams can be added but it is complicated.  You will need to know a few specifics for defining.  See Team Tracker docs here.
+      default: "sensor.team_tracker"
+      selector:
+        object:
+      default:
+        college_teams:
+          lsu football:
+            team_id: LSU
+            conference_id: "8"
+            league_path: college-football
+            sport_path: football
     group_entity: 
       name: Group Entity
       description: The group entity that holds the list of ViewAssist devices
@@ -27,16 +40,17 @@ blueprint:
 trigger:
   - platform: conversation
     command:
-      - how did the {team} do
+      - how did [the] {team} do
       - (what is | what's) the score of the {team} (game | match)
-      - how are the {team} doing
-      - how is the {team} (game | match) going
+      - how (is | are) [the] {team} doing
+      - how (is | are) [the] {team} (game | match) [going]
 condition: []
 action:
   - variables:
       group_entity: !input group_entity
       view: !input view
       team_tracker: !input team_tracker
+      college_teams: !input college_teams
       target_satellite_device: |-
         {% for sat in expand(group_entity) %}
           {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
@@ -233,6 +247,7 @@ action:
           sport_path: "{{ sport_path }}"
           team_id: "{{ query_team |lower}}"
           league_path: "{{ league_path }}"
+          is_singular: false
         enabled: true
 # nfl_teams
   - if:
@@ -250,6 +265,7 @@ action:
           sport_path: "{{ sport_path }}"
           team_id: "{{ query_team |lower}}"
           league_path: "{{ league_path }}"
+          is_singular: false
         enabled: true
 # nba_teams
   - if:
@@ -260,6 +276,7 @@ action:
           query_team: "{{ nba_teams[(trigger.slots.team)|lower] }}"
           sport_path: basketball
           league_path: nba
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -277,6 +294,7 @@ action:
           query_team: "{{ wnba_teams[(trigger.slots.team)|lower] }}"
           sport_path: basketball
           league_path: wnba
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -294,6 +312,7 @@ action:
           query_team: "{{ mls_teams[(trigger.slots.team)|lower] }}"
           sport_path: soccer
           league_path: mls
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -311,6 +330,7 @@ action:
           query_team: "{{ nhl_teams[(trigger.slots.team)|lower] }}"
           sport_path: hockey
           league_path: nhl
+          is_singular: false
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
@@ -320,9 +340,37 @@ action:
           league_path: "{{ league_path }}"
         enabled: true
     enabled: true
+# college_teams
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in college_teams }}"
+    then:
+      - variables:
+          query_team: "{{ college_teams[(trigger.slots.team)|lower]['team_id'] }}"
+          sport_path: "{{ college_teams[(trigger.slots.team)|lower]['sport_path'] }}"
+          league_path: "{{ college_teams[(trigger.slots.team)|lower]['league_path'] }}"
+          conference_id: "{{ college_teams[(trigger.slots.team)|lower]['conference_id'] }}"
+          is_singular: true
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data: >
+          {{
+            {
+              "sport_path": sport_path,
+              "team_id": query_team |lower,
+              "league_path": league_path,
+               "conference_id": conference_id | string
+            }
+          }}
+        enabled: true    
   - set_conversation_response: |-
-      {% if is_state(team_tracker, 'POST')%} 
-        The {{state_attr(team_tracker,'team_name')}} Played the {{state_attr(team_tracker,'opponent_name')}} and 
+      {% if is_state(team_tracker, 'POST')%}
+        {% if is_singular is false %}
+          The {{state_attr(team_tracker,'team_name')}} played the {{state_attr(team_tracker,'opponent_name')}} and
+        {% else %}
+          {{state_attr(team_tracker,'team_name')}} played {{state_attr(team_tracker,'opponent_name')}} and
+        {% endif %}  
           {% if is_state_attr(team_tracker,'team_winner', false) %}
             lost
           {% else %}
@@ -330,9 +378,17 @@ action:
           {% endif %} 
         {{state_attr(team_tracker,'team_score')}} - {{state_attr(team_tracker,'opponent_score')}}  
       {% elif is_state(team_tracker, 'PRE') %} 
-        The {{state_attr(team_tracker,'team_name')}} play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}} 
+        {% if is_singular is false %}
+          The {{state_attr(team_tracker,'team_name')}} play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}
+        {% else %}
+          {{state_attr(team_tracker,'team_name')}} plays {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}
+        {% endif %}
       {% elif is_state(team_tracker, 'IN') %} 
-        The {{state_attr(team_tracker,'team_name')}} are currently playing the {{state_attr(team_tracker,'opponent_name')}}. 
+        {% if is_singular is false %}
+          The {{state_attr(team_tracker,'team_name')}} are currently playing the {{state_attr(team_tracker,'opponent_name')}}. 
+        {% else %}
+          {{state_attr(team_tracker,'team_name')}} is currently playing {{state_attr(team_tracker,'opponent_name')}}. 
+        {% endif %}
         The score is {{state_attr(team_tracker,'team_name')}} {{state_attr(team_tracker,'team_score')}}, {{state_attr(team_tracker,'opponent_name')}}  {{state_attr(team_tracker,'opponent_score')}} 
       {% elif is_state(team_tracker, 'NOT_FOUND') %} 
         The {{ trigger.slots.team }} have no games on today's schedule
