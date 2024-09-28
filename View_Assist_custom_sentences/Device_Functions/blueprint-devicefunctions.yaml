@@ -1,0 +1,260 @@
+blueprint:
+  name: View Assist - Device Functions
+  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.2.2)
+  domain: automation
+  input:
+    repeat_command:
+      name: Repeat Command
+      description: The phrase you want to use to trigger repeating last spoken response
+      default: "(what did you say  | [please] say that again [please] | [please] repeat that [please])"
+    mode_command:
+      name: Mode Command
+      description: The command to use to trigger the mode change automation
+      default: "(set mode [to] {mode} | turn on {mode} mode | set [to] {mode} mode)"
+    view_command:
+      name: View Command
+      description: The command to use to trigger the view change automation
+      default: "(set view [to] {view} | change [to] {view} view | set [to] {view} view)"
+    dnd_command:
+      name: Do Not Disturb Command 
+      description: The command to use to trigger turning off DND mode
+      default: "(set do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])"
+    set_volume:
+      name: Set Volume Command 
+      description: The command to use to set volume level directly
+      default: "[set | turn] [the] volume [to] {level}"
+    adjust_volume:
+      name: Adjust Volume Command 
+      description: The command to use to set volume level by step
+      default: "turn {up_down} [the] volume"      
+    mute_volume:
+      name: Mute Volume Command 
+      description: The command to use to mute audio
+      default: "mute [the] [volume]"    
+    unmute_volume:
+      name: Unmute Volume Command 
+      description: The command to use to unmute audio
+      default: "unmute [the] [volume]"
+    stop_music:
+      name: Stop Music Command 
+      description: The command to use to stop music playback
+      default: "stop [the] music"        
+    modes:
+      name: Modes
+      description: The available modes (do not include do not disturb)
+      default: "['normal', 'night', 'hold', 'cycle']"
+    views:
+      name: Views
+      description: The available views as named on your dashboard
+      default: "['clock', 'weather', 'info', 'infopic']"  
+    group_entity: 
+      name: Group Entity
+      description: The group entity that holds the list of ViewAssist devices
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites" 
+trigger:
+  - platform: conversation
+    command: !input repeat_command
+    id: repeat
+  - platform: conversation
+    command: !input mode_command
+    id: mode 
+  - platform: conversation
+    command: !input dnd_command
+    id: dndoff
+  - platform: conversation
+    command: !input view_command
+    id: view
+  - platform: conversation
+    command: !input set_volume
+    id: set_volume
+  - platform: conversation
+    command: !input adjust_volume
+    id: adjust_volume
+  - platform: conversation
+    command: !input mute_volume
+    id: mute_volume
+  - platform: conversation
+    command: !input unmute_volume
+    id: unmute_volume
+  - platform: conversation
+    command: !input stop_music
+    id: stop_music
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - repeat
+        sequence:
+          - set_conversation_response: >-
+              I said {{ state_attr(target_satellite_device, 'last_said')| replace("I said ", "")}}
+      - conditions:
+          - condition: trigger
+            id:
+              - dndoff
+        sequence:
+          - service: python_script.set_state
+            data:
+              entity_id: " {{ target_satellite_device }} "
+              do_not_disturb: false
+          - set_conversation_response: Do not disturb mode is now off
+      - conditions:
+          - condition: trigger
+            id:
+              - mode
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ trigger.slots.mode in modes or trigger.slots.mode in ['do not disturb'] }}
+            then:
+              - set_conversation_response: Setting mode to {{ trigger.slots.mode }}
+                enabled: true
+              - choose:
+                  - conditions:
+                      - condition: template
+                        value_template: >-
+                          {{ trigger.slots.mode in modes }}
+                    sequence:
+                      - if:
+                          - condition: template
+                            value_template: >-
+                              {% if target_satellite_device_type == 'audio_only'
+                              %}true{% else %}false{% endif %}
+                        then:
+                          - set_conversation_response: >-
+                              Sorry.  {{ trigger.slots.mode }} is not a valid mode for
+                              this device
+                        else:
+                          - service: python_script.set_state
+                            data:
+                              entity_id: " {{ target_satellite_device }} "
+                              mode: "{{ trigger.slots.mode }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ trigger.slots.mode in ['do not disturb'] }}"
+                    sequence:
+                      - service: python_script.set_state
+                        data:
+                          entity_id: " {{ target_satellite_device }} "
+                          do_not_disturb: true
+            else:
+              - set_conversation_response: "Sorry.  {{ trigger.slots.mode }} is not a valid mode. Please try {{ modes }}."
+      - conditions:
+          - condition: trigger
+            id:
+              - view
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if target_satellite_device_type != 'audio_only'
+                  %}true{% else %}false{% endif %}
+            then:
+              - set_conversation_response: Switching view to {{ trigger.slots.view }} view
+                enabled: true
+              - service: browser_mod.navigate
+                data:
+                  path: "{{ trigger.slots.view }}"
+                target:
+                  device_id: "{{target_display_device}}"
+            else:        
+              - set_conversation_response: >-
+                  Sorry.  This device does not have a display
+            else:
+              - set_conversation_response: "Sorry.  {{ trigger.slots.view }} is not a valid view. "
+      - conditions:
+          - condition: trigger
+            id:
+              - set_volume
+        sequence:
+          - service: media_player.volume_set
+            data:
+              volume_level: |-
+                {% if trigger.id == "set_volume" %} 
+                  {% if trigger.slots.level.endswith('%') %}
+                    {{ (trigger.slots.level |replace('%',' ') | int)/100 }}
+                  {% else %}
+                    {{ (trigger.slots.level | int)/10 }}
+                  {% endif %}
+                {% endif %}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: The volume was set to {{ trigger.slots.level }}
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - adjust_volume
+        sequence:
+          - service: >
+              {% if trigger.slots.up_down == "down" %} media_player.volume_down
+              {% endif %} 
+
+              {% if trigger.slots.up_down == "up" %} media_player.volume_up {%
+              endif %}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: The volume has been turned {{ trigger.slots.up_down }}
+            enabled: true
+      - conditions:
+          - condition: trigger
+            id:
+              - mute_volume
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: true
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - unmute_volume
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: false
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: "Sound has been restored"
+      - conditions:
+          - condition: trigger
+            id:
+              - stop_music
+        sequence:
+          - target:
+              entity_id:
+                - "{{ target_musicplayer_device }}"
+            data: {}
+            action: media_player.media_stop
+          - data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: normal
+            action: python_script.set_state
+          - action: timer.finish
+            target:
+              entity_id: "{{ target_timer_device }}"
+            data: {}           
+          - set_conversation_response: Music stopped          
+              
+variables:
+  modes: !input modes
+  views: !input views
+  group_entity: !input group_entity
+  target_satellite_device: |-
+    {% for sat in expand(group_entity) %}
+      {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
+  target_timer_device: "{{ state_attr(target_satellite_device, 'timer_device') }}"    
+  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"              

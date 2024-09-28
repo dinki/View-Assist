@@ -16,7 +16,7 @@ button_card_templates:
           } else {
             var options = { hour: "numeric", minute: "2-digit" };      
           }
-            return new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","");
+            return new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
         ]]]
       var_date_short: |
         [[[    
@@ -99,7 +99,7 @@ button_card_templates:
           const weatherIconsDay  = {
             "clear-night": "mdi:weather-night", 
             "cloudy": "mdi:weather-cloudy",
-            "dust":"mdi:weather-dust",
+            "dust": "mdi:weather-dust",
             "fog": "mdi:weather-fog",
             "hail": "mdi:weather-hail",
             "hazy": "mdi:weather-hazy", 
@@ -117,7 +117,7 @@ button_card_templates:
             "snowy-heavy": "mdi:weather-snowy-heavy",
             "snowy-rainy": "mdi:weather-snowy-rainy",
             "sunny": "mdi:weather-sunny",
-            "tornado":"mdi:weather-tornado",
+            "tornado": "mdi:weather-tornado",
             "windy":  "mdi:weather-windy",
             "windy-variant": "mdi:weather-windy-variant",
           };
