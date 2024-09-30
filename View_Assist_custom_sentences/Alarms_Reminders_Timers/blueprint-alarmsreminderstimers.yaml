@@ -136,9 +136,11 @@ action:
                       time_type: "{{ (trigger.slots.when).split(' ')[1] }}"
                       time_start: "{{ time_int * time_values[time_type] }}"
                       alarm_time: >-
-                        {{ (now() +
-                        timedelta(seconds=time_start)).strftime('%Y-%m-%d
-                        %H:%M:%S') }}
+                        {% if use_24hr is true %}
+                          {{ (now() + timedelta(seconds=time_start)) }}
+                        {% else %}
+                          {{ (now() + timedelta(seconds=time_start)).strftime('%Y-%m-%d %H:%M:%S') }}
+                        {% endif %}
                       alarm_id: >-
                         {% if trigger.slots.reminder is defined %}{{
                         trigger.slots.reminder }}{% elif trigger.slots.name is
@@ -283,9 +285,11 @@ action:
                 {% set unique_id = 'va' + now().timestamp() | int | string +
                 (range(100, 999) | random | string) %}{{ unique_id | string}}
               alarm_time: >-
-                {{ (now()|as_datetime +
-                timedelta(minutes=snooze_time)).strftime('%Y-%m-%d %H:%M:%S')
-                }}  
+                {% if use_24hr is true %}
+                  {{ (now() + timedelta(minutes=snooze_time)) }}
+                {% else %}
+                  {{ (now() + timedelta(minutes=snooze_time)).strftime('%Y-%m-%d %H:%M:%S') }}
+                {% endif %}                  
               alarm_id: "{{ trigger.event.data.alarm_id | lower }}"
               timer_list:
                 - unique_id: "{{ unique_id }}"
