@@ -73,7 +73,7 @@ action:
       group_entity: !input group_entity
       alarmsound_path: !input alarmsound_path
       view: !input view
-      snooze_time: !input snooze_time
+      snooze_time: 1
       use_24hr: !input use_24hr
   - choose:
       - conditions:
