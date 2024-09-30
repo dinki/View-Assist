@@ -73,7 +73,8 @@ action:
       group_entity: !input group_entity
       alarmsound_path: !input alarmsound_path
       view: !input view
-      snooze_time: 1
+      snooze_time_input: !input snooze_time
+      snooze_time: "{{ snooze_time_input | int }}"
       use_24hr: !input use_24hr
   - choose:
       - conditions:
