@@ -70,11 +70,11 @@ trigger:
 condition: []
 action:
   - variables:
-      group_entity: group.viewassist_satellites
-      alarmsound_path: http://192.168.0.25:8123/local/viewassist/alarm1.mp3
-      view: /dashboard-viewassist/alarm
-      snooze_time: 1
-      use_24hr: false
+      group_entity: !input group_entity
+      alarmsound_path: !input alarmsound_path
+      view: !input view
+      snooze_time: !input snooze_time
+      use_24hr: !input use_24hr
   - choose:
       - conditions:
           - condition: trigger
