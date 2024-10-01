@@ -5,6 +5,10 @@ sidebar_position: 3
 
 # Control Automations
 
+:::info
+Note that this entire section is only necessary if using View Assist with video enabled satellites.  It is not necessary to install these for voice only satellites.
+:::
+
 View Assist is controlled using core control automations per view device.  Other automations control things like alarms and reminders.  This page details the installation and configuration of some of these automations
 
 ## Installation

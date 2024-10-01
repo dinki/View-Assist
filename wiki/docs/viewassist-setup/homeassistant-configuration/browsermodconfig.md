@@ -3,7 +3,12 @@ title: Browser Mod Config
 sidebar_position: 3
 ---
 
-# Browser Mod (required for display capable satellites)
+# Browser Mod
+
+:::info
+Note that these steps are only necessary if using View Assist with video enabled satellites.  It is not necessary to install these for voice only satellites.
+:::
+
 Browser Mod 2 custom integration provides several key pieces of functionality for an Android Tablet Satellite:
   - Provides media player entity for voice response
   - Hides Header and Sidebar from tablet display

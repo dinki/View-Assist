@@ -4,6 +4,8 @@ sidebar_position: 1
 ---
 
 # Device Configuration 
+
+
 View Assist devices are created using custom template sensors. These devices contain important information like browser mod ID, media_player device, microphone device, and timer device.  Additionally this configuration sets the attributes needed for different modes, data to displayed and more. These attributes are consumed by control automations and display views.
 
 [![Image](https://img.youtube.com/vi/5RQvzEFfwuY/mqdefault.jpg)](https://www.youtube.com/watch?v=5RQvzEFfwuY)
@@ -16,6 +18,11 @@ An error exists in the video where I do not configure the browser_id attribute. 
 :::
 ---
 ## Create Timer Helper
+
+:::info
+Note that these steps are only necessary if using View Assist with video enabled satellites.  It is not necessary to install these for voice only satellites.
+:::
+
 Each `view_audio` or `view_only` View Assist device needs a timer helper that allows the control automation to reset the display to a default state. If you are using an `audio_only` device you can skip this step.
 
 1. In Home Assistant click on **Settings*- in the sidebar
@@ -29,24 +36,51 @@ Each `view_audio` or `view_only` View Assist device needs a timer helper that al
 1. Click **Create**
 
 ## Satellite Custom Device Configuration
-Each View Assist device must have its own configuration in Home Assistant. This allows for setting properties for each device that may have a unique condition for that device (eg night mode for a device in a dark room).  These devices are set up in YAML as a template device in `configuration.yaml`.  When setting up more than one device, you'll duplicate everything from the `-name:` line and below for each device you are configuring.  The Home Assistant service must be restarted any time a change is made to the `configuration.yaml` file. 
 
 :::info
-As an alternative you can use the [packages approach](https://www.home-assistant.io/docs/configuration/packages/#create-a-packages-folder) if you find your `configuration.yaml` file becoming long/unwieldy. 
+Note that these steps must be taken for all View Assist satellites.  Choose the correct configuration based on type.  View Assist satellites with screens must use the view_audio type while voice only satellites must use the audio_only configuration
 :::
 
+Each View Assist device must have its own configuration in Home Assistant. This allows for setting properties for each device that may have a unique condition for that device (eg night mode for a device in a dark room).  These devices are set up in YAML as a template device in `configuration.yaml`.  When setting up more than one device, you'll duplicate everything from the `-name:` line and below for each device you are configuring.  The Home Assistant service must be restarted any time a change is made to the `configuration.yaml` file. 
+
+### Satellites with displays (view_audio) example:
 ```yaml
 template:
   - sensor:
-    - name: ViewAssist-livingroom
+    - name: ViewAssist_livingroom
       state: ""
       attributes:
         type: view_audio
         mic_device: "sensor.streamassist_livingroom_stt" 
         mediaplayer_device: "media_player.browsermod_livingroom" 
-        display_device: "sensor.browsermod-livingroom_browser_path" 
+        display_device: "sensor.browsermod_livingroom_browser_path" 
         browser_id: "ViewAssist-livingroom"
         timer_device: "timer.viewassist-livingroom" 
+        view_timeout: "20"
+        mode: "normal"
+        title: ""
+        message: ""
+        message_font_size: "3vw"
+        image: ""
+        timer: ""
+        alarm: "idle"
+        cycle_view: ""
+        do_not_disturb: false
+```
+
+### Voice Only Satellites (audio_only) example:
+```yaml
+template:
+  - sensor:
+    - name: ViewAssist_diningroom
+      state: ""
+      attributes:
+        type: audio_only
+        mic_device: "" 
+        mediaplayer_device: "" 
+        display_device: "" 
+        browser_id: ""
+        timer_device: "" 
         view_timeout: "20"
         mode: "normal"
         title: ""
@@ -106,10 +140,10 @@ group:
     entities:
       - sensor.viewassist_livingroom
       - sensor.viewassist_kitchen
-      - sensor.viewassist_bedroom
+      - sensor.viewassist_diningroom
 ```
-:::info
-Dashes in template sensor names will be replaced by underscores to a template sensor named ViewAssistant-livingroom like in the example above, will become sensor.viewassist_livingroom for the group.
+:::warning
+Dashes in template sensor and device names will be replaced by underscores by Home Assistant.  This has been shown to be problematic so it is advised to not use dashes at all to avoid headaches.
 :::
 
 

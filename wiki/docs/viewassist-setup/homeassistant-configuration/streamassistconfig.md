@@ -2,6 +2,9 @@
 title: Stream Assist
 sidebar_position: 1
 ---
+:::info
+Note that these steps are only necessary if using View Assist with video enabled satellites.  It is not necessary to install these for voice only satellites.
+:::
 
 **Repo:** https://github.com/AlexxIT/StreamAssist
 
