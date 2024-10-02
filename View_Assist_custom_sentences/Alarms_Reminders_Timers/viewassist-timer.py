@@ -57,3 +57,27 @@ def get_time_difference(target_time: str = "") -> dict:
     
     # Return the time difference in a dictionary
     return {"time_difference": time_difference}
+
+@service(supports_response="optional")
+def get_time_difference2(target_time: str = "") -> dict:
+    """yaml
+    name: View Assist Get Time Difference 2
+    description: Returns a human-readable time difference between a given time and now in hh:mm:ss format
+    """  
+    # Parse the target time from the input string
+    target_time = datetime.strptime(target_time, "%Y-%m-%d %H:%M:%S")
+    
+    # Get the current time
+    now = datetime.now()
+    
+    # Calculate the difference as a timedelta object
+    time_difference = target_time - now
+
+    # Format the time difference as hh:mm:ss
+    formatted_time_difference = str(time_difference)
+
+    # Log the time difference
+    log.warning(f"Time difference for target time '{target_time}': {formatted_time_difference}")
+    
+    # Return the formatted time difference in a dictionary
+    return {"formatted_time_difference": formatted_time_difference}
