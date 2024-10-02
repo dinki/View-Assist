@@ -1,0 +1,52 @@
+type: custom:button-card
+variables:
+  background: /local/viewassist/vapor_2.jpg
+  cctvversion: 1.0.1
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
+    - background-size: cover
+  custom_fields:
+    message:
+      - position: absolute
+      - width: 75vh
+      - text-align: self
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+custom_fields:
+  message:
+    card:
+      type: custom:circular-timer-card
+      card_mod:
+        style: |
+          ha-card {
+            color: white !important;
+            background: transparent;
+            --accent-color: red;
+            --primary-color: white;
+            --secondary-text-color: white;
+            --secondary-background-color: red;
+          }
+      entity: timer.viewassist_pyramid_user_timer
+      name: "[[[ return variables.var_alarm_name ]]]"
+      bins: 60
+      pad_angle: 0.5
+      corner_radius: 1
+      color:
+        - "#1e7883"
+        - "#a9bdbb"
+        - "#ee7256"
+      color_state: false
+      empty_bar_color: grey
+      secondary_info_size: 50%
+      layout: circular
+      direction: countdown
+      primary_info: name
+      secondary_info: timer
+      tap_action: toggle
+      hold_action: more_info
+      double_tap_action: cancel
