@@ -30,6 +30,7 @@ template:
         musicplayer_device: "media_player.browsermod-livingroom_2"
         display_device: "sensor.browsermod-livingroom_browser_path"
         browser_id: "ViewAssist-livingroom"
+        user_timer: "timer.viewassist_livingroom_user_timer"
         timer_device: "timer.viewassist-livingroom"
         view_timeout: "20"
         mode: "normal"
