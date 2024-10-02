@@ -29,6 +29,18 @@ blueprint:
           filter:
             - domain: group
       default: "group.viewassist_satellites" 
+    timer_view:
+      name: Timer View
+      description: The View Assist dashboard view to use for displaying the timer countdown
+      default: "/dashboard-viewassist/timer"
+    user_timer:
+      name: User Timer
+      description: View Assist user facing timer
+      selector:
+        entity:
+          filter:
+            - domain: timer
+      default: "timer.viewassist_pyramid_user_timer"
 trigger:
   - platform: conversation
     command:
@@ -67,6 +79,10 @@ trigger:
     command:
       - list my timers
     id: listtimer
+  - platform: conversation
+    command:
+      - show {name} timer
+    id: showtimer
 condition: []
 action:
   - variables:
@@ -76,6 +92,7 @@ action:
       snooze_time_input: !input snooze_time
       snooze_time: "{{ snooze_time_input | int }}"
       use_24hr: !input use_24hr
+      timer_view: !input timer_view
   - choose:
       - conditions:
           - condition: trigger
@@ -482,4 +499,36 @@ action:
                 {% set last_timer = timer_names.pop() %}
                 You have {{ timer_count }} active timers and they are {{ timer_names | join(', ') }} and {{ last_timer }}.
               {% endif %}
+      - conditions:
+          - condition: trigger
+            id:
+              - showtimer
+        sequence:
+          - variables:
+              target_satellite_device: |-
+                {% for sat in expand(group_entity) %}
+                  {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+                    {{ sat.entity_id }}
+                  {% endif %}
+                {% endfor %}
+              target_time: >-
+                {{state_attr(target_satellite_device,'timer_list') |
+                selectattr('timer_id', 'eq', trigger.slots.name)|
+                map(attribute='target_time') | first }}
+            enabled: true
+          - action: pyscript.get_time_difference2
+            data:
+              target_time: "{{ target_time }}"
+            response_variable: time_remaining
+          - service: timer.start
+            data:
+              duration: "{{ time_remaining['formatted_time_difference'] }}"
+            target:
+              entity_id: "{{ state_attr(target_satellite_device, 'user_timer') }}"
+          - data:
+              path: "{{ timer_view }}"
+            target:
+              device_id: "{{device_id(state_attr(target_satellite_device, 'display_device')) }}"
+            action: browser_mod.navigate
+          - set_conversation_response: "showing timer"
 mode: parallel
