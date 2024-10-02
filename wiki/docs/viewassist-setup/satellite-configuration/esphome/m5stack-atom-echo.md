@@ -45,6 +45,8 @@ Next we install ESPHome by going to Settings -> Add-ons and clicking the button 
 
 Make sure to  turn on the sidebar view for easy access to ESPHome. Once you have ESPHome installed and running go to the ESPHome webui in a Chromium based browser and you should see your configured M5Stack Atom Echo ready to be adopted by ESPHome. Follow the adoption process and once its configured click edit and paste the provided firmware yaml. 
 
+The firmware yaml can be found here: [m5stack-atom-echo.yaml](./m5stack-atom-echo.yaml)
+
 Take note of the follow in the new config:
 
 ```
