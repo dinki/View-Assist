@@ -47,6 +47,7 @@ blueprint:
           filter:
             - domain: group
       default: "group.viewassist_satellites" 
+  source_url: https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View_Assist_custom_sentences/Travel_Times_by_Waze/blueprint-traveltimesbywaze.yaml
 trigger:
   - platform: conversation
     command: !input travelfromhome
