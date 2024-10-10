@@ -27,7 +27,7 @@ To create a new view:
 * Click '+ Add Card' in the bottom right
 * Search for Custom Button Card card and choose it
 * Highlight the default text and delete it
-* Find a card template in the files section and copy paste the raw code into the card configuration (eg [link to clock GH raw code](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/clock/clock.yaml))
+* Find a card template in the files section and copy paste the raw code into the card configuration (eg [instructions found here](/wiki/docs/viewassist-setup/homeassistant-configuration/viewassist-configuration/dashboard-views/views.md)
 * Click 'Save'
 * Click 'Done' on the top bar
 
