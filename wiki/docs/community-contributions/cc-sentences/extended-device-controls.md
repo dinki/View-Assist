@@ -47,7 +47,6 @@ This blueprint enhances the control of View Assist device displays and audio pla
 For the following features, separate media players must be defined for `mediaplayer_device` and `musicplayer_device` in the config:
 - **Auto Music Mode:**
     - Switches to music mode and navigates to the music view when `musicplayer_device` starts playing. This applies even when playback starts from any sources other than just voice commands.
-* Music Mode Timeout:
 - **Music Mode Timeout:**
     - Automatically returns to normal mode and the home page after a user-defined period of inactivity in music playback.
 - **Music Duck:**
