@@ -1,0 +1,444 @@
+blueprint:
+  name: View Assist Community Contributions - Extended Device Control - Display & Audio
+  description: __Optional Extended Features:__
+    - Decreases music volume when triggered by wake-word or broadcast, raises
+    music volume when TTS ends.
+
+    - Play a custom sound when wake word is detected.
+
+    - Play a custom sound when STT detects silence.
+
+    - Switch to music mode when musicplayer_device playing.
+
+    - Revert to normal mode when musicplayer_device idle for specified duration.
+
+    __Must make new automation for each device.__
+
+    __Some features require modifications to the View Assist device config yaml file.__
+
+    (View Assist Community Contributions - Extended Device Control - Display & Audio v 1.0.0)
+  domain: automation
+  source_url: https://gist.github.com/Flight-Lab/ed20af4f6f7a4a5258a668317ae61671
+  author: Flab
+  homeassistant:
+    min_version: 2024.6.0
+  input:
+    stock_dc:
+      name: Stock Device Control Inputs
+      icon: mdi:exclamation-thick
+      description: Use the same inputs here that you used in the stock Device Control blueprint.
+      collapsed: false
+      input:
+        satellite:
+          name: Satellite
+          description: The View Assist device entity to control (e.g. sensor.viewassist_living_room)
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - sensor
+              multiple: false
+          default:
+        display:
+          name: Display Device
+          description: The browsermod display device used by View Assist (e.g. sensor.browsermod_livingroom_browser_path)
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - sensor
+              multiple: false
+          default:
+        home:
+          name: Default Home screen
+          description: The screen to return to after timeout
+          default: /dashboard-viewassist/clock
+        music:
+          name: Default Music View screen
+          description: The view to return to when in music mode
+          default: /dashboard-viewassist/music
+    various_inputs:
+      name: Various inputs
+      icon: mdi:exclamation-thick
+      description: Set and forget.
+      collapsed: false
+      input:
+        wake:
+          name: wake
+          description: The wake sensor for the above View Assist device (e.g. sensor.viewassist_living_room_wake)
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - sensor
+              multiple: false
+          default:
+        stt_sensor:
+          name: STT Sensor
+          description: The STT sensor for the above View Assist device (e.g. sensor.viewassist_living_room_stt)
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - sensor
+              multiple: false
+          default:
+        mediaplayer_device:
+          name: mediaplayer_device
+          description: The media_player used for TTS playback.
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - media_player
+              multiple: false
+          default:
+        musicplayer_device:
+          name: musicplayer_device
+          description: The media_player used for music playback.
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - media_player
+              multiple: false
+          default:
+        broadcast:
+          name: Broadcast Automation
+          description: The Automation used for broadcast. (e.g. automation.view_assist_broadcast)
+          selector:
+            entity:
+              filter:
+                - domain:
+                    - automation
+              multiple: false
+          default: automation.view_assist_broadcast
+    extras_stock:
+      name: __Extras__ - Stock settings
+      icon: mdi:exclamation-thick
+      description: Features that do not require any adjustments to the stock settings
+      collapsed: false
+      input:
+        wake_alert:
+          name: Wake Word Detected Alert
+          description: Plays sound when wake word is detected.
+          selector:
+            boolean: {}
+          default: false
+        wake_alert_file:
+          name: Wake Word Detected Sound
+          description: Sound to use for Wake Word Alert. Target mediaplayer_device or soundplayer_device.
+          selector:
+            media: {}
+          default:
+        stt_silence_alert:
+          name: STT Silence Alert
+          description: Plays sound when no STT detected.
+          selector:
+            boolean: {}
+          default: false
+        stt_silence_file:
+          name: STT Not Detected Sound
+          description: Sound to use for STT Silence Alert. Target mediaplayer_device or soundplayer_device.
+          selector:
+            media: {}
+          default:
+    extras_misc_config_edits:
+      name: __Extras__ - Miscellaneous Config Edits
+      icon: mdi:exclamation-thick
+      collapsed: false
+      input:
+        fkb_load_start_url:
+          name: Fully Kiosk Browser Load Start URL
+          description:
+            Selecting 'true' will load the Fully Kiosk Browser start URL
+            when the Home Assistant server starts up. This is to ensure that Browser
+            Mod is activated. Requires 'fkb_device' in View Assist device config file.
+          selector:
+            boolean: {}
+          default: false
+    extras_mediaplayers:
+      name: __Extras__ - Dual Media Players
+      icon: mdi:volume-high
+      description: Requires mediaplayer_device and musicplayer_device to use different media players in View Assist device config.
+      collapsed: false
+      input:
+        music_mode_auto_opt_in:
+          name: Auto Music Mode Opt-in
+          description: Automatically enter music mode when musicplayer_device is playing.
+          selector:
+            boolean: {}
+          default: false
+        music_mode_timeout_opt_in:
+          name: Music Mode Timeout Opt-in
+          description: Automatically revert from music to normal mode and navigate to the default view when musicplayer_device is paused for Music Mode Timeout Length.
+          selector:
+            boolean: {}
+          default: false
+        music_mode_timeout:
+          name: Music Mode Timeout Length
+          description:
+            Time to wait before turning music mode off after musicplayer_device
+            is paused. Leave set to 0 if no timeout desired.
+          selector:
+            duration: {}
+          default:
+            hours: 0
+            minutes: 5
+            seconds: 0
+        music_duck_opt_in:
+          name: Music Volume Duck Opt-in
+          description: Opt-in to Music Volume ducking during Assist & Broadcast.
+          selector:
+            boolean: {}
+          default: false
+        volume_duck:
+          name: Volume Duck %
+          description:
+            Set how much the music volume ducks during assist, as a percentage of the current volume.
+            0 will mute the volume, 1 will not decrease the volume at all.
+          selector:
+            number:
+              min: 0.0
+              max: 1.0
+              step: 0.01
+              mode: slider
+          default: 0.5
+        tts_timeout:
+          name: TTS Timeout
+          description:
+            How long to wait after TTS failure for volume to reset. Setting
+            too short may cut off long TTS responses. (Never seen this get triggered, its just a failsafe)
+          selector:
+            duration: {}
+          default:
+            hours: 0
+            minutes: 2
+            seconds: 0
+            milliseconds: 0
+triggers:
+  - platform: homeassistant
+    event: start
+    id: startup
+  - trigger: state
+    entity_id:
+      - !input wake
+    to: end
+    from: start
+    id: wake
+  - trigger: state
+    entity_id:
+      - !input broadcast
+    attribute: current
+    id: broadcast
+  - trigger: state
+    entity_id:
+      - !input musicplayer_device
+    from:
+    to: playing
+    id: music_start
+  - trigger: state
+    entity_id:
+      - !input musicplayer_device
+    to: idle
+    from: playing
+    for: !input music_mode_timeout
+    id: music_stop
+variables:
+  satellite: !input satellite
+  display: !input display
+  mediaplayer_device: !input mediaplayer_device
+  musicplayer_device: !input musicplayer_device
+  music_duck_opt_in: !input music_duck_opt_in
+  music_mode_auto_opt_in: !input music_mode_auto_opt_in
+  music_mode_timeout: !input music_mode_timeout
+  music_mode_timeout_opt_in: !input music_mode_timeout_opt_in
+  fkb_load_start_url: !input fkb_load_start_url
+  stt_sensor: !input stt_sensor
+  wake_alert: !input wake_alert
+  stt_silence_alert: !input stt_silence_alert
+  volume_duck: !input volume_duck
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - startup
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ fkb_load_start_url == true
+                  and
+                  state_attr (satellite,'fkb_device') != 'none' }}
+            then:
+              - action: button.press
+                target:
+                  entity_id: button.{{state_attr (satellite,'fkb_device')}}_load_start_url
+                data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - music_start
+          - condition: template
+            value_template: >-
+              {{ music_mode_auto_opt_in == true
+              and
+              mediaplayer_device != musicplayer_device }}
+          - condition: state
+            entity_id: !input satellite
+            attribute: mode
+            state: normal
+        sequence:
+          - action: browser_mod.navigate
+            data:
+              path: "{{ music }}"
+            target:
+              device_id: "{{device_id(display)}}"
+          - action: python_script.set_state
+            data:
+              entity_id: !input satellite
+              mode: music
+      - conditions:
+          - condition: trigger
+            id:
+              - music_stop
+          - condition: template
+            value_template: >-
+              {{ music_mode_timeout_opt_in == true 
+              and
+              mediaplayer_device != musicplayer_device }}
+          - condition: state
+            entity_id: !input satellite
+            attribute: mode
+            state: music
+        sequence:
+          - action: browser_mod.navigate
+            data:
+              path: "{{home}}"
+            target:
+              device_id: "{{device_id(display)}}"
+          - action: python_script.set_state
+            data:
+              entity_id: !input satellite
+              mode: normal
+      - conditions:
+          - condition: trigger
+            id: wake
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ wake_alert == true }}"
+            then:
+              - action: media_player.play_media
+                data: !input wake_alert_file
+          - choose:
+              - conditions:
+                  - condition: state
+                    entity_id: !input musicplayer_device
+                    state: idle
+                  - condition: template
+                    value_template: "{{ stt_silence_alert == true }}"
+                sequence:
+                  - wait_for_trigger:
+                      - trigger: template
+                        value_template: >-
+                          {{ states(stt_sensor) ==
+                          'no-text-recognized' }}
+                    timeout:
+                      hours: 0
+                      minutes: 0
+                      seconds: 30
+                      milliseconds: 0
+                  - action: media_player.play_media
+                    data: !input stt_silence_file
+              - conditions:
+                  - condition: state
+                    entity_id: !input musicplayer_device
+                    state: playing
+                  - condition: template
+                    value_template: >-
+                      {{ music_duck_opt_in == true
+                      and
+                      mediaplayer_device != musicplayer_device }}
+                sequence:
+                  - variables:
+                      initial_volume: >-
+                        {{ state_attr(musicplayer_device, 'volume_level') }}
+                  - action: media_player.volume_set
+                    data:
+                      volume_level: "{{ initial_volume | float * volume_duck }}"
+                    target:
+                      entity_id: !input musicplayer_device
+                  - wait_for_trigger:
+                      - trigger: template
+                        value_template: >-
+                          {{ states(stt_sensor) in ['no-text-recognized', 'end'] }}
+                    timeout:
+                      hours: 0
+                      minutes: 0
+                      seconds: 30
+                      milliseconds: 0
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: >-
+                              {{ states(stt_sensor) == 'no-text-recognized' }}
+                        sequence:
+                          - action: media_player.volume_set
+                            data:
+                              volume_level: "{{ initial_volume }}"
+                            target:
+                              entity_id: !input musicplayer_device
+                      - conditions:
+                          - condition: template
+                            value_template: >-
+                              {{ states(stt_sensor) == 'end' }}
+                        sequence:
+                          - wait_for_trigger:
+                              - entity_id: !input mediaplayer_device
+                                from: playing
+                                to: idle
+                                trigger: state
+                            timeout: !input tts_timeout
+                          - action: media_player.volume_set
+                            data:
+                              volume_level: "{{ initial_volume }}"
+                            target:
+                              entity_id: !input musicplayer_device
+      - conditions:
+          - condition: trigger
+            id: broadcast
+          - condition: state
+            entity_id: !input musicplayer_device
+            state: playing
+          - condition: template
+            value_template: >-
+              {{ music_duck_opt_in == true
+              and
+              mediaplayer_device != musicplayer_device }}
+        sequence:
+          - variables:
+              initial_volume: >-
+                {{ state_attr(musicplayer_device, 'volume_level') }}
+          - wait_for_trigger:
+              - entity_id: !input mediaplayer_device
+                to: playing
+                trigger: state
+          - action: media_player.volume_set
+            data:
+              volume_level: "{{ initial_volume | float * volume_duck }}"
+            target:
+              entity_id: !input musicplayer_device
+          - wait_for_trigger:
+              - entity_id: !input mediaplayer_device
+                from: playing
+                to: idle
+                trigger: state
+          - action: media_player.volume_set
+            data:
+              volume_level: "{{ initial_volume }}"
+            target:
+              entity_id: !input musicplayer_device
+mode: parallel
