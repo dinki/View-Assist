@@ -30,7 +30,7 @@ This blueprint enhances the control of View Assist device displays and audio pla
 ---
 
 ## Included Features: 
-
+---
 ### No Changes to Stock View Assist Device Configuration Needed:
 - **Assist Audio Feedback:**
     - Play a custom sound when wake word is detected (set Stream Assist `STT start media` to `null` if using this feature).
@@ -58,7 +58,7 @@ For the following features, separate media players must be defined for `mediapla
 > [!IMPORTANT]  
 > These features require stable and reliable state changes between idle and playing for both `mediaplayer_device` and `musicplayer_device`. Ensure that the media players are consistently available.
 
-## Recommended Media Players:
+### Recommended Media Players:
 * **musicplayer_device:** [Snapcast](https://play.google.com/store/apps/details?id=de.badaix.snapcast&hl=en_US) (exposed via Music Assistant) **FREE**
 * **mediaplayer_device:** [AirReceiver](https://play.google.com/store/apps/details?id=com.softmedia.receiver&hl=en_US) audio (exposed via Music Assistant) **$2.99**
 <details>
