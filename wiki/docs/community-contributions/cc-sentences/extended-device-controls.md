@@ -7,8 +7,10 @@ This blueprint enhances the control of View Assist device displays and audio pla
 
 > [!note]    
 > **Each device requires its own automation.**        
-> Most features require modifications to the View Assist device configuration YAML file.
+> Most features require modifications to the View Assist device configuration YAML file.        
 > All features are opt-in. 
+
+---
 
 ### Summary of Optional Features:
 - Automatically decrease music volume when triggered by wake-word detection or the broadcast automation, and restore
@@ -34,10 +36,14 @@ This blueprint enhances the control of View Assist device displays and audio pla
     - Play a custom sound when wake word is detected (set Stream Assist `STT start media` to `null` if using this feature).
     - Play a custom sound when STT detects silence (sound is not played if Music Duck is activated, as the volume returning to normal signals the end of listening).
 
+---
+
 ### Features Requiring Configuration Changes:
 - **Home Assistant Startup:**
     - Fully Kiosk Browser automatically loads the start URL on server startup.  
     - Requires setting `fkb_device:` in the config file, which should match the device name in the Fully Kiosk Browser integration.      (e.g., `fkb_device: "pyramid"`)
+
+---
 
 ### Features Requiring Separate Media Players:
 For the following features, separate media players must be defined for `mediaplayer_device` and `musicplayer_device` in the config:
