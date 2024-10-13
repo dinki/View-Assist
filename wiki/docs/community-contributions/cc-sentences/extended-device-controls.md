@@ -1,15 +1,16 @@
 ---
 
-# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.0</sub>: 
+# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.0</sub> 
 This blueprint enhances the control of View Assist device displays and audio playback. 
 
 ---
 
 > [!note]    
 > **Each device requires its own automation.**        
-> Some features require modifications to the View Assist device configuration YAML file. 
+> Most features require modifications to the View Assist device configuration YAML file.
+> All features are opt-in. 
 
-### Optional Extended Features Summary:
+### Summary of Optional Features:
 - Automatically decrease music volume when triggered by wake-word detection or the broadcast automation, and restore
     music volume when TTS ends.
 - Play a custom sound when wake word is detected.
@@ -17,14 +18,14 @@ This blueprint enhances the control of View Assist device displays and audio pla
 - Switch to music mode when `musicplayer_device` is playing.
 - Revert to normal mode when `musicplayer_device` is idle for specified duration.
  
-> [!note]
-> All features are opt-in and most require corresponding device configuration changes.
 <details>
 <summary>Blueprint Input Page Screenshot:</summary>
     
 ![VACC-EDC-1](https://github.com/user-attachments/assets/f0461fe4-73fe-4ef9-9c07-1859dd171ea1)
 
 </details>
+
+---
 
 ## Included Features: 
 
