@@ -50,7 +50,7 @@ For the following features, separate media players must be defined for `mediapla
 - **Music Mode Timeout:**
     - Automatically returns to normal mode and the home page after a user-defined period of inactivity in music playback.
 - **Music Duck:**
-    - Lowers the music volume by a user-defined percentage when triggered by a wake word or broadcast, and restores the original volume when TTS ends.
+    - Lowers the music volume (by a user-defined percentage of the current volume) when triggered by a wake word or broadcast, and restores the original volume when TTS ends.
 
 > [!IMPORTANT]  
 > These features require stable and reliable state changes between idle and playing for both `mediaplayer_device` and `musicplayer_device`. Ensure that the media players are consistently available.
