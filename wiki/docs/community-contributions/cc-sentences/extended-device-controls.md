@@ -6,9 +6,9 @@ This blueprint enhances the control of View Assist device displays and audio pla
 ---
 
 > [!note]    
-> **Each device requires its own automation.**        
-> Most features require modifications to the View Assist device configuration YAML file.        
-> All features are opt-in. 
+> * Each device requires its own automation.        
+> * Most features require modifications to the View Assist device configuration YAML file.        
+> * All features are opt-in. 
 
 ---
 
