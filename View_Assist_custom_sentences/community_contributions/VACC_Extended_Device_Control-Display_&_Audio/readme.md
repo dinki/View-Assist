@@ -4,7 +4,7 @@ Title: Extended Device Controls
 ---
 # View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.0</sub> 
 This blueprint enhances the control of View Assist device displays and audio playback. 
----
+
 ---
 
 > [!note]    
