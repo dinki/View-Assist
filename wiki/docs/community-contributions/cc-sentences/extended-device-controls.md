@@ -12,7 +12,7 @@ This blueprint enhances the control of View Assist device displays and audio pla
 
 ---
 
-### Summary of Optional Features:
+## Summary of Optional Features:
 - Automatically decrease music volume when triggered by wake-word detection or the broadcast automation, and restore
     music volume when TTS ends.
 - Play a custom sound when wake word is detected.
@@ -29,23 +29,21 @@ This blueprint enhances the control of View Assist device displays and audio pla
 
 ---
 
-## Included Features: 
----
-### No Changes to Stock View Assist Device Configuration Needed:
+## Features Requiring No Changes to Stock View Assist Device Configuration:
 - **Assist Audio Feedback:**
     - Play a custom sound when wake word is detected (set Stream Assist `STT start media` to `null` if using this feature).
     - Play a custom sound when STT detects silence (sound is not played if Music Duck is activated, as the volume returning to normal signals the end of listening).
 
 ---
 
-### Features Requiring Configuration Changes:
+## Features Requiring Configuration Changes:
 - **Home Assistant Startup:**
     - Fully Kiosk Browser automatically loads the start URL on server startup.  
     - Requires setting `fkb_device:` in the config file, which should match the device name in the Fully Kiosk Browser integration.      (e.g., `fkb_device: "pyramid"`)
 
 ---
 
-### Features Requiring Separate Media Players:
+## Features Requiring Separate Media Players:
 For the following features, separate media players must be defined for `mediaplayer_device` and `musicplayer_device` in the config:
 - **Auto Music Mode:**
     - Switches to music mode and navigates to the music view when `musicplayer_device` starts playing. This applies even when playback starts from any sources other than just voice commands.
@@ -58,7 +56,7 @@ For the following features, separate media players must be defined for `mediapla
 > [!IMPORTANT]  
 > These features require stable and reliable state changes between idle and playing for both `mediaplayer_device` and `musicplayer_device`. Ensure that the media players are consistently available.
 
-### Recommended Media Players:
+## Recommended Media Players:
 * **musicplayer_device:** [Snapcast](https://play.google.com/store/apps/details?id=de.badaix.snapcast&hl=en_US) (exposed via Music Assistant) **FREE**
 * **mediaplayer_device:** [AirReceiver](https://play.google.com/store/apps/details?id=com.softmedia.receiver&hl=en_US) audio (exposed via Music Assistant) **$2.99**
 <details>
@@ -82,7 +80,7 @@ This player operates independently of the device's system volume, similar to Sna
 
 <summary>Other Confirmed Working Media Players:</summary>
 
-* [Fully Kiosk Browser](https://play.google.com/store/apps/details?id=de.ozerov.fully&hl=en_US) media player (exposed via Music Assistant) 
+* [Fully Kiosk Browser](https://play.google.com/store/apps/details?id=de.ozerov.fully&hl=en_US) media player (exposed via Music Assistant)
     > [!WARNING]
     > Only use the media player exposed by Music Assistant; others may become unavailable or fail to trigger actions.
   - There may be a delay between state changes and actual audio playback (1-2 seconds for both start and end of playback).
