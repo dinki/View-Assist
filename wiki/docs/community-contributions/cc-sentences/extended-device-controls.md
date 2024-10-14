@@ -2,7 +2,7 @@
 title: Extended Device Controls
 ---
 
-This blueprint enhances the control of View Assist device displays and audio playback. This is a community contribution with user Flightlab(Github)/flab (Discord) as the author.  Support can be obtained through the View Assist [Discord server](https://discord.com/channels/1241796965344481440/1295408431498395709) or the [discussion group](https://github.com/dinki/View-Assist/discussions) on Github.  Please tag the author in your message.
+This blueprint enhances the control of View Assist device displays and audio playback. This is a community contribution with user Flight-Lab(Github)/flab (Discord) as the author.  Support can be obtained through the View Assist [Discord server](https://discord.com/channels/1241796965344481440/1295408431498395709) or the [discussion group](https://github.com/dinki/View-Assist/discussions) on Github.  Please tag the author in your message.
 
 ---
 
