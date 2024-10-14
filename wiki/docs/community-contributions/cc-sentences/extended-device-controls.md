@@ -1,17 +1,16 @@
 ---
-Title: Extended Device Controls
+title: Extended Device Controls
 ---
----
-# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.0</sub> 
-This blueprint enhances the control of View Assist device displays and audio playback. 
+
+This blueprint enhances the control of View Assist device displays and audio playback. This is a community contribution with user Flightlab(Github)/flab (Discord) as the author.  Support can be obtained through the View Assist [Discord server](https://discord.com/channels/1241796965344481440/1295408431498395709) or the [discussion group](https://github.com/dinki/View-Assist/discussions) on Github.  Please tag the author in your message.
 
 ---
 
-> [!note]    
+:::info[Note]    
 > * Each device requires its own automation.        
 > * Most features require modifications to the View Assist device configuration YAML file.        
 > * All features are opt-in. 
-
+:::
 ---
 
 ## Summary of Optional Features:
@@ -108,3 +107,9 @@ Bring Wall Panel features up to parity with FKB
 soundplayer_device
 
 -->
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |

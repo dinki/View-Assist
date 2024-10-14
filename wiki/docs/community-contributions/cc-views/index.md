@@ -15,6 +15,6 @@ We encourage everyone to share their creations so that others might enjoy what y
 These user contributions are supported by the contributors only as they are not a part of the core of View Assist
 :::
 
-| View | Description | Author |
-| ---- | ----------- | ------ |
-| Placeholder | Placeholder | dinki |
+| View | Description | Github User | Discord User |
+| ---- | ----------- | ----------- | ------------ |
+| Placeholder | Placeholder | dinki | dinki |
