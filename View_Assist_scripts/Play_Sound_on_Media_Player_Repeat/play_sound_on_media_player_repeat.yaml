@@ -1,0 +1,35 @@
+alias: Play Sound on Media Player repeat
+sequence:
+  - repeat:
+      while:
+        - condition: template
+          value_template: "{{ True }}"
+      sequence:
+        - action: script.turn_on
+          target:
+            entity_id: script.play_sound_on_media_player
+          data:
+            variables:
+              media_player: "{{ media_player }}"
+              sound_file: "{{ sound_file }}"
+        - wait_for_trigger:
+            - trigger: template
+              value_template: "{{ is_state(media_player, 'idle') }}"
+description: Play a sound file on a specific media player entity
+fields:
+  media_player:
+    description: The media player entity to play the sound on
+    example: media_player.living_room_speaker
+    required: true
+    selector:
+      entity:
+        domain: media_player
+  sound_file:
+    description: The URL or file path of the sound to play
+    example: /local/sounds/alert.mp3
+    required: true
+    selector:
+      text:
+        multiline: false
+mode: single
+icon: mdi:file-music-outline
