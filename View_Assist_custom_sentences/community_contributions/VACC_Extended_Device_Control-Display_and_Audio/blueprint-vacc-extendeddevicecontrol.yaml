@@ -240,7 +240,7 @@ blueprint:
           default: 0.1
         volume_step_delay:
           name: Volume Step Delay
-          description: The delay between each incremental step up when returning from the ducked volume to the initial volume.
+          description: The delay between each incremental step up when returning from the ducked volume to the initial volume. (One second maximum.)
           selector:
             number:
               min: 0.0
