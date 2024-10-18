@@ -15,4 +15,4 @@ These user contributions are supported by the contributors only as they are not 
 
 | Sentence | Description | Github User | Discord User |
 | -------- | ----------- | ----------- | ------------ |
-| [Extended Device Controls](extended-device-controls.md) | Enhances the control of View Assist device displays and audio playback | Flight-Lab | flab |
+| [Extended Device Controls](extended-device-controls.md) | Enhances the control of View Assist device displays and audio playback | [Flight-Lab](https://github.com/Flight-Lab) | flab |
