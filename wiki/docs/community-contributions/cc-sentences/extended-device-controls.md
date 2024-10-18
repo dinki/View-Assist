@@ -3,7 +3,7 @@ title: Extended Device Controls
 ---
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FVACC_Extended_Device_Control-Display_and_Audio%2Fblueprint-vacc-extendeddevicecontrol.yaml)
 
-This blueprint enhances the control of View Assist device displays and audio playback. This is a community contribution with user Flight-Lab(Github)/flab (Discord) as the author.  Support can be obtained through the View Assist [Discord server](https://discord.com/channels/1241796965344481440/1295408431498395709) or the [discussion group](https://github.com/dinki/View-Assist/discussions) on Github.  Please tag the author in your message.
+This blueprint enhances the control of View Assist device displays and audio playback. This is a community contribution authored by user [Flight-Lab (Github)](https://github.com/Flight-Lab)/flab (Discord).  Support can be obtained through the View Assist [Discord server](https://discord.com/channels/1241796965344481440/1295408431498395709) or the [discussion group](https://github.com/dinki/View-Assist/discussions) on Github.  Please tag the author in your message.
 
 ---
 
@@ -17,6 +17,7 @@ This blueprint enhances the control of View Assist device displays and audio pla
 ## Summary of Optional Features:
 - Automatically decrease music volume when triggered by wake-word detection or the broadcast automation, and restore
     music volume when TTS ends.
+  - option to gradually increase volume
 - Play a custom sound when wake word is detected.
 - Play a custom sound when STT detects silence.
 - Switch to music mode when `musicplayer_device` is playing.
@@ -53,6 +54,8 @@ For the following features, separate media players must be defined for `mediapla
     - Automatically returns to normal mode and the home page after a user-defined period of inactivity in music playback.
 - **Music Duck:**
     - Lowers the music volume (by a user-defined percentage of the current volume) when triggered by a wake word or broadcast, and restores the original volume when TTS ends.
+    - **Volume Step:**
+        - Gradually increase volume after ducking for a smoother experience. Step size and time between steps are both user selectable variables.
 
 > [!IMPORTANT]  
 > These features require stable and reliable state changes between idle and playing for both `mediaplayer_device` and `musicplayer_device`. Ensure that the media players are consistently available.
@@ -113,4 +116,5 @@ soundplayer_device
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.1 | Add option to gradually increase volume after ducking |
 | v 1.0.0 | Initial release |
