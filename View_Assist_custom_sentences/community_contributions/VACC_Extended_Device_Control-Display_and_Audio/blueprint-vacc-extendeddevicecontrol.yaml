@@ -233,7 +233,7 @@ blueprint:
           description: How much volume should raise on each incremental step.
           selector:
             number:
-              min: 0.0
+              min: 0.02
               max: 0.2
               step: 0.01
               mode: slider
