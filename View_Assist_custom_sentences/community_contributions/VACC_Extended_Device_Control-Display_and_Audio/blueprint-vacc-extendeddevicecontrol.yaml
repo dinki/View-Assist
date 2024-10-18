@@ -1,24 +1,30 @@
 blueprint:
-  name: View Assist Community Contributions - Extended Device Control - Display & Audio
-  description: __Optional Extended Features:__
-    - Decreases music volume when triggered by wake-word or broadcast, raises
-    music volume when TTS ends.
+  name:
+    View Assist Community Contributions - Extended Device Control - Display &
+    Audio
+  description:
+    "__Optional Extended Features:__ 
+    
+    - Decreases music volume when triggered
+    by wake-word or broadcast, returns to initial music volume when TTS ends. (Option to raise volume gradually.)
 
-    - Play a custom sound when wake word is detected.
+    - Choose and play sound when wake word is detected.
 
-    - Play a custom sound when STT detects silence.
+    - Choose and play sound when STT detects silence.
 
-    - Switch to music mode when musicplayer_device playing.
+    - Set music mode when musicplayer_device playing.
 
-    - Revert to normal mode when musicplayer_device idle for specified duration.
+    - Set normal mode when musicplayer_device idle for set duration.
 
     __Must make new automation for each device.__
 
-    __Some features require modifications to the View Assist device config yaml file.__
+    __Some features require edits and/or additions to the View Assist device config
+    yaml file.__
 
-    (View Assist Community Contributions - Extended Device Control - Display & Audio v 1.0.0)
+    (View Assist Community Contributions - Extended Device Control - Display & Audio
+    v 1.0.1)"
   domain: automation
-  source_url: https://gist.github.com/Flight-Lab/ed20af4f6f7a4a5258a668317ae61671
+  source_url: https://gist.github.com/Flight-Lab/6ddb640f756791d59b6fd9be93375eee
   author: Flab
   homeassistant:
     min_version: 2024.6.0
@@ -26,7 +32,9 @@ blueprint:
     stock_dc:
       name: Stock Device Control Inputs
       icon: mdi:exclamation-thick
-      description: Use the same inputs here that you used in the stock Device Control blueprint.
+      description:
+        Use the same inputs here that you used in the stock Device Control
+        blueprint.
       collapsed: false
       input:
         satellite:
@@ -127,7 +135,9 @@ blueprint:
           default: false
         wake_alert_file:
           name: Wake Word Detected Sound
-          description: Sound to use for Wake Word Alert. Target mediaplayer_device or soundplayer_device.
+          description:
+            Sound to use for Wake Word Alert. Target mediaplayer_device
+            or soundplayer_device.
           selector:
             media: {}
           default:
@@ -139,7 +149,9 @@ blueprint:
           default: false
         stt_silence_file:
           name: STT Not Detected Sound
-          description: Sound to use for STT Silence Alert. Target mediaplayer_device or soundplayer_device.
+          description:
+            Sound to use for STT Silence Alert. Target mediaplayer_device
+            or soundplayer_device.
           selector:
             media: {}
           default:
@@ -160,7 +172,9 @@ blueprint:
     extras_mediaplayers:
       name: __Extras__ - Dual Media Players
       icon: mdi:volume-high
-      description: Requires mediaplayer_device and musicplayer_device to use different media players in View Assist device config.
+      description:
+        Requires mediaplayer_device and musicplayer_device to use different
+        media players in View Assist device config.
       collapsed: false
       input:
         music_mode_auto_opt_in:
@@ -171,7 +185,10 @@ blueprint:
           default: false
         music_mode_timeout_opt_in:
           name: Music Mode Timeout Opt-in
-          description: Automatically revert from music to normal mode and navigate to the default view when musicplayer_device is paused for Music Mode Timeout Length.
+          description:
+            Automatically revert from music to normal mode and navigate
+            to the default view when musicplayer_device is paused for Music Mode Timeout
+            Length.
           selector:
             boolean: {}
           default: false
@@ -187,7 +204,7 @@ blueprint:
             minutes: 5
             seconds: 0
         music_duck_opt_in:
-          name: Music Volume Duck Opt-in
+          name: Music Volume Duck Opt-In
           description: Opt-in to Music Volume ducking during Assist & Broadcast.
           selector:
             boolean: {}
@@ -195,8 +212,9 @@ blueprint:
         volume_duck:
           name: Volume Duck %
           description:
-            Set how much the music volume ducks during assist, as a percentage of the current volume.
-            0 will mute the volume, 1 will not decrease the volume at all.
+            Set how much the music volume ducks during assist, as a percentage
+            of the current volume. 0 will mute the volume, 1 will not decrease the
+            volume at all.
           selector:
             number:
               min: 0.0
@@ -204,11 +222,38 @@ blueprint:
               step: 0.01
               mode: slider
           default: 0.5
+        volume_step_opt_in:
+          name: Volume Step Opt-In
+          description: Opt-in to having the music volume increase gradually after ducking.
+          selector:
+            boolean: {}
+          default: false
+        volume_step_increment:
+          name: Volume Step Increment
+          description: How much volume should raise on each incremental step.
+          selector:
+            number:
+              min: 0.0
+              max: 0.2
+              step: 0.01
+              mode: slider
+          default: 0.1
+        volume_step_delay:
+          name: Volume Step Delay
+          description: The delay between each incremental step up when returning from the ducked volume to the initial volume.
+          selector:
+            number:
+              min: 0.0
+              max: 1.0
+              step: 0.01
+              mode: slider
+          default: 0.1
         tts_timeout:
           name: TTS Timeout
           description:
             How long to wait after TTS failure for volume to reset. Setting
-            too short may cut off long TTS responses. (Never seen this get triggered, its just a failsafe)
+            too short may cut off long TTS responses. (Never seen this get triggered,
+            its just a failsafe)
           selector:
             duration: {}
           default:
@@ -258,6 +303,8 @@ variables:
   wake_alert: !input wake_alert
   stt_silence_alert: !input stt_silence_alert
   volume_duck: !input volume_duck
+  volume_step_opt_in: !input volume_step_opt_in
+  volume_step_increment: !input volume_step_increment
 conditions: []
 actions:
   - choose:
@@ -268,10 +315,9 @@ actions:
         sequence:
           - if:
               - condition: template
-                value_template: >-
-                  {{ fkb_load_start_url == true
-                  and
-                  state_attr (satellite,'fkb_device') != 'none' }}
+                value_template:
+                  "{{ fkb_load_start_url == true and state_attr (satellite,'fkb_device')
+                  != 'none' }}"
             then:
               - action: button.press
                 target:
@@ -282,10 +328,9 @@ actions:
             id:
               - music_start
           - condition: template
-            value_template: >-
-              {{ music_mode_auto_opt_in == true
-              and
-              mediaplayer_device != musicplayer_device }}
+            value_template:
+              "{{ music_mode_auto_opt_in == true and mediaplayer_device !=
+              musicplayer_device }}"
           - condition: state
             entity_id: !input satellite
             attribute: mode
@@ -305,10 +350,9 @@ actions:
             id:
               - music_stop
           - condition: template
-            value_template: >-
-              {{ music_mode_timeout_opt_in == true 
-              and
-              mediaplayer_device != musicplayer_device }}
+            value_template:
+              "{{ music_mode_timeout_opt_in == true  and mediaplayer_device
+              != musicplayer_device }}"
           - condition: state
             entity_id: !input satellite
             attribute: mode
@@ -343,9 +387,7 @@ actions:
                 sequence:
                   - wait_for_trigger:
                       - trigger: template
-                        value_template: >-
-                          {{ states(stt_sensor) ==
-                          'no-text-recognized' }}
+                        value_template: "{{ states(stt_sensor) == 'no-text-recognized' }}"
                     timeout:
                       hours: 0
                       minutes: 0
@@ -358,14 +400,12 @@ actions:
                     entity_id: !input musicplayer_device
                     state: playing
                   - condition: template
-                    value_template: >-
-                      {{ music_duck_opt_in == true
-                      and
-                      mediaplayer_device != musicplayer_device }}
+                    value_template:
+                      "{{ music_duck_opt_in == true and mediaplayer_device !=
+                      musicplayer_device }}"
                 sequence:
                   - variables:
-                      initial_volume: >-
-                        {{ state_attr(musicplayer_device, 'volume_level') }}
+                      initial_volume: "{{ state_attr(musicplayer_device, 'volume_level') }}"
                   - action: media_player.volume_set
                     data:
                       volume_level: "{{ initial_volume | float * volume_duck }}"
@@ -373,8 +413,9 @@ actions:
                       entity_id: !input musicplayer_device
                   - wait_for_trigger:
                       - trigger: template
-                        value_template: >-
-                          {{ states(stt_sensor) in ['no-text-recognized', 'end'] }}
+                        value_template:
+                          "{{ states(stt_sensor) in ['no-text-recognized', 'end']
+                          }}"
                     timeout:
                       hours: 0
                       minutes: 0
@@ -383,18 +424,47 @@ actions:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template: >-
-                              {{ states(stt_sensor) == 'no-text-recognized' }}
+                            value_template: "{{ states(stt_sensor) == 'no-text-recognized' }}"
                         sequence:
-                          - action: media_player.volume_set
-                            data:
-                              volume_level: "{{ initial_volume }}"
-                            target:
-                              entity_id: !input musicplayer_device
+                          - if:
+                              - condition: template
+                                value_template: "{{ volume_step_opt_in == true }}"
+                            then:
+                              - repeat:
+                                  while:
+                                    - condition: template
+                                      value_template: >
+                                        {% set current_volume = state_attr(musicplayer_device, 'volume_level') | float %}
+                                        {{ current_volume < (initial_volume | float) }}
+                                  sequence:
+                                    - action: media_player.volume_set
+                                      target:
+                                        entity_id: !input musicplayer_device
+                                      data:
+                                        volume_level: >
+                                          {% set ducked_volume = state_attr(musicplayer_device, 'volume_level') | float %}
+                                          {% set increment = volume_step_increment | float %}
+                                          {% set new_volume = ducked_volume + increment %}
+                                          {% if new_volume > (initial_volume | float) %}
+                                            {{ initial_volume }}
+                                          {% else %}
+                                            {{ new_volume }}
+                                          {% endif %}
+                                    - delay:
+                                        seconds: !input volume_step_delay
+                            else:
+                              - if:
+                                  - condition: template
+                                    value_template: "{{ volume_step_opt_in != true }}"
+                                then:
+                                  - action: media_player.volume_set
+                                    target:
+                                      entity_id: !input musicplayer_device
+                                    data:
+                                      volume_level: "{{ initial_volume }}"
                       - conditions:
                           - condition: template
-                            value_template: >-
-                              {{ states(stt_sensor) == 'end' }}
+                            value_template: "{{ states(stt_sensor) == 'end' }}"
                         sequence:
                           - wait_for_trigger:
                               - entity_id: !input mediaplayer_device
@@ -402,11 +472,42 @@ actions:
                                 to: idle
                                 trigger: state
                             timeout: !input tts_timeout
-                          - action: media_player.volume_set
-                            data:
-                              volume_level: "{{ initial_volume }}"
-                            target:
-                              entity_id: !input musicplayer_device
+                          - if:
+                              - condition: template
+                                value_template: "{{ volume_step_opt_in == true }}"
+                            then:
+                              - repeat:
+                                  while:
+                                    - condition: template
+                                      value_template: >
+                                        {% set current_volume = state_attr(musicplayer_device, 'volume_level') | float %}
+                                        {{ current_volume < (initial_volume | float) }}
+                                  sequence:
+                                    - action: media_player.volume_set
+                                      target:
+                                        entity_id: !input musicplayer_device
+                                      data:
+                                        volume_level: >
+                                          {% set ducked_volume = state_attr(musicplayer_device, 'volume_level') | float %}
+                                          {% set increment = volume_step_increment | float %}
+                                          {% set new_volume = ducked_volume + increment %}
+                                          {% if new_volume > (initial_volume | float) %}
+                                            {{ initial_volume }}
+                                          {% else %}
+                                            {{ new_volume }}
+                                          {% endif %}
+                                    - delay:
+                                        seconds: !input volume_step_delay
+                            else:
+                              - if:
+                                  - condition: template
+                                    value_template: "{{ volume_step_opt_in != true }}"
+                                then:
+                                  - action: media_player.volume_set
+                                    target:
+                                      entity_id: !input musicplayer_device
+                                    data:
+                                      volume_level: "{{ initial_volume }}"
       - conditions:
           - condition: trigger
             id: broadcast
@@ -414,14 +515,12 @@ actions:
             entity_id: !input musicplayer_device
             state: playing
           - condition: template
-            value_template: >-
-              {{ music_duck_opt_in == true
-              and
-              mediaplayer_device != musicplayer_device }}
+            value_template:
+              "{{ music_duck_opt_in == true and mediaplayer_device != musicplayer_device
+              }}"
         sequence:
           - variables:
-              initial_volume: >-
-                {{ state_attr(musicplayer_device, 'volume_level') }}
+              initial_volume: "{{ state_attr(musicplayer_device, 'volume_level') }}"
           - wait_for_trigger:
               - entity_id: !input mediaplayer_device
                 to: playing
@@ -436,9 +535,40 @@ actions:
                 from: playing
                 to: idle
                 trigger: state
-          - action: media_player.volume_set
-            data:
-              volume_level: "{{ initial_volume }}"
-            target:
-              entity_id: !input musicplayer_device
+          - if:
+              - condition: template
+                value_template: "{{ volume_step_opt_in == true }}"
+            then:
+              - repeat:
+                  while:
+                    - condition: template
+                      value_template: >
+                        {% set current_volume = state_attr(musicplayer_device, 'volume_level') | float %}
+                        {{ current_volume < (initial_volume | float) }}
+                  sequence:
+                    - action: media_player.volume_set
+                      target:
+                        entity_id: !input musicplayer_device
+                      data:
+                        volume_level: >
+                          {% set ducked_volume = state_attr(musicplayer_device, 'volume_level') | float %}
+                          {% set increment = volume_step_increment | float %}
+                          {% set new_volume = ducked_volume + increment %}
+                          {% if new_volume > (initial_volume | float) %}
+                            {{ initial_volume }}
+                          {% else %}
+                            {{ new_volume }}
+                          {% endif %}
+                    - delay:
+                        seconds: !input volume_step_delay
+            else:
+              - if:
+                  - condition: template
+                    value_template: "{{ volume_step_opt_in != true }}"
+                then:
+                  - action: media_player.volume_set
+                    target:
+                      entity_id: !input musicplayer_device
+                    data:
+                      volume_level: "{{ initial_volume }}"
 mode: parallel
