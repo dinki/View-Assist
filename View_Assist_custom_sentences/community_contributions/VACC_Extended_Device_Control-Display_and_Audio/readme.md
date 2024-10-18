@@ -1,5 +1,5 @@
 ---
-# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.0</sub> 
+# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.1</sub> 
 This blueprint enhances the control of View Assist device displays and audio playback. 
 
 ---
@@ -14,6 +14,7 @@ This blueprint enhances the control of View Assist device displays and audio pla
 ## Summary of Optional Features:
 - Automatically decrease music volume when triggered by wake-word detection or the broadcast automation, and restore
     music volume when TTS ends.
+  - option to gradually increase volume
 - Play a custom sound when wake word is detected.
 - Play a custom sound when STT detects silence.
 - Switch to music mode when `musicplayer_device` is playing.
@@ -50,6 +51,8 @@ For the following features, separate media players must be defined for `mediapla
     - Automatically returns to normal mode and the home page after a user-defined period of inactivity in music playback.
 - **Music Duck:**
     - Lowers the music volume (by a user-defined percentage of the current volume) when triggered by a wake word or broadcast, and restores the original volume when TTS ends.
+    - **Volume Step:**
+        - Gradually increase volume after ducking for a smoother experience. Step size and time between steps are both user selectable variables.
 
 > [!IMPORTANT]  
 > These features require stable and reliable state changes between idle and playing for both `mediaplayer_device` and `musicplayer_device`. Ensure that the media players are consistently available.
