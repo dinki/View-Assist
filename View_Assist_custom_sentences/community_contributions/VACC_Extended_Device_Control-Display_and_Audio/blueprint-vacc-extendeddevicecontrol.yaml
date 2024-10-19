@@ -141,6 +141,9 @@ blueprint:
           selector:
             media: {}
           default:
+            entity_id: ""
+            media_content_id: ""
+            media_content_type: ""
         stt_silence_alert:
           name: STT Silence Alert
           description: Plays sound when no STT detected.
@@ -155,6 +158,9 @@ blueprint:
           selector:
             media: {}
           default:
+            entity_id: ""
+            media_content_id: ""
+            media_content_type: ""
     extras_misc_config_edits:
       name: __Extras__ - Miscellaneous Config Edits
       icon: mdi:exclamation-thick
