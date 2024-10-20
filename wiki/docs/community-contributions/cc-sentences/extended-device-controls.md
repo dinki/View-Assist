@@ -116,5 +116,6 @@ soundplayer_device
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.2 | Updates to blueprint inputs & descriptions |
 | v 1.0.1 | Add option to gradually increase volume after ducking |
 | v 1.0.0 | Initial release |
