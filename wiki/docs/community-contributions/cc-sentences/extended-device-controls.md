@@ -37,7 +37,7 @@ This blueprint enhances the control of View Assist device displays and audio pla
 <img width="1054" alt="vacc-edc-misc-config-edits" src="https://github.com/user-attachments/assets/5f7754d2-6bc0-4cfe-81c1-d0fc106dc447">
 
 
-![vacc-edc-dual-mp]()
+![vacc-edc-dual-mp](<img width="959" alt="vac-edc-dual-mp" src="https://github.com/user-attachments/assets/b7c81ac6-2e32-43b7-9ee1-dff2ca6b415f">)
 
 </details>
 
