@@ -24,7 +24,7 @@ This blueprint enhances the control of View Assist device displays and audio pla
 - Revert to normal mode when `musicplayer_device` is idle for specified duration.
  
 <details>
-<summary>Blueprint Input Page Screenshot:</summary>
+<summary>Blueprint Input Page Screenshots:</summary>
     
 <img width="830" alt="vac-edc-stock-inputs" src="https://github.com/user-attachments/assets/e7ce0dbd-02df-470d-aca6-b70f46fede81">
 
