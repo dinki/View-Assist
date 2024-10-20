@@ -22,7 +22,7 @@ blueprint:
     yaml file.__
 
     (View Assist Community Contributions - Extended Device Control - Display & Audio
-    v 1.0.1)"
+    v 1.0.2)"
   domain: automation
   source_url: https://gist.github.com/Flight-Lab/6ddb640f756791d59b6fd9be93375eee
   author: Flab
@@ -141,6 +141,9 @@ blueprint:
           selector:
             media: {}
           default:
+            entity_id: ""
+            media_content_id: ""
+            media_content_type: ""
         stt_silence_alert:
           name: STT Silence Alert
           description: Plays sound when no STT detected.
@@ -155,6 +158,9 @@ blueprint:
           selector:
             media: {}
           default:
+            entity_id: ""
+            media_content_id: ""
+            media_content_type: ""
     extras_misc_config_edits:
       name: __Extras__ - Miscellaneous Config Edits
       icon: mdi:exclamation-thick
@@ -233,14 +239,14 @@ blueprint:
           description: How much volume should raise on each incremental step.
           selector:
             number:
-              min: 0.0
+              min: 0.02
               max: 0.2
               step: 0.01
               mode: slider
           default: 0.1
         volume_step_delay:
           name: Volume Step Delay
-          description: The delay between each incremental step up when returning from the ducked volume to the initial volume.
+          description: The delay between each incremental step up when returning from the ducked volume to the initial volume. (One second maximum.)
           selector:
             number:
               min: 0.0

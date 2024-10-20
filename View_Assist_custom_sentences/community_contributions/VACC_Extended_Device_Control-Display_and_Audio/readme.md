@@ -1,5 +1,5 @@
 ---
-# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.1</sub> 
+# View Assist Community Contributions - Extended Device Control - Display & Audio <sub>v1.0.2</sub> 
 This blueprint enhances the control of View Assist device displays and audio playback. 
 
 ---
