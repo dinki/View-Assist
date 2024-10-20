@@ -26,15 +26,15 @@ This blueprint enhances the control of View Assist device displays and audio pla
 <details>
 <summary>Blueprint Input Page Screenshots:</summary>
     
-<img width="830" alt="vac-edc-stock-inputs" src="https://github.com/user-attachments/assets/e7ce0dbd-02df-470d-aca6-b70f46fede81">
+<img width="1000" alt="vac-edc-stock-inputs" src="https://github.com/user-attachments/assets/e7ce0dbd-02df-470d-aca6-b70f46fede81">
 
-<img width="830" alt="vacc-edc-various-inputs" src="https://github.com/user-attachments/assets/9f66a908-6ac0-499e-bfe8-a3476f104c7f">
+<img width="1000" alt="vacc-edc-various-inputs" src="https://github.com/user-attachments/assets/9f66a908-6ac0-499e-bfe8-a3476f104c7f">
 
-<img width="830" alt="vacc-edc-stock-settings" src="https://github.com/user-attachments/assets/b94df527-b0a7-4ba5-9502-83cc9e2c3bdb">
+<img width="1000" alt="vacc-edc-stock-settings" src="https://github.com/user-attachments/assets/b94df527-b0a7-4ba5-9502-83cc9e2c3bdb">
 
-<img width="830" alt="vacc-edc-various-config-edits" src="https://github.com/user-attachments/assets/8f1ed826-36fc-43fc-97aa-9158d6efe66f">
+<img width="1000" alt="vacc-edc-various-config-edits" src="https://github.com/user-attachments/assets/8f1ed826-36fc-43fc-97aa-9158d6efe66f">
 
-<img width="830" alt="vacc-edc-dual-mp" src="https://github.com/user-attachments/assets/2ac9cc9f-dc5b-402d-95fb-fe8d6dcccb7a">
+<img width="1000" alt="vacc-edc-dual-mp" src="https://github.com/user-attachments/assets/2ac9cc9f-dc5b-402d-95fb-fe8d6dcccb7a">
 
 </details>
 
