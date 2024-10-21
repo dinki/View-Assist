@@ -10,7 +10,9 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 * Calculate foreign currencies to euro/USD/etc * in beta testing
 * Set alarm/reminders on individual devices * in beta testing
 * Timers TIMERS Timers!!! * WoRkInG!!  Won't be long!
-* Sound machine for sleep/noise cancelling *
+* Sound machine for sleep/noise cancelling * Won't be long
+* Alert me when packages are delivered
+* Locate one of my family members
 * Tell me if it will rain today or tomorrow *
 * Drop in to another satellite device(s) and have a conversation like an intercom
 * Announce when washer/dryer are done, alarm is set, etc *
