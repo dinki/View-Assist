@@ -1,0 +1,126 @@
+type: custom:button-card
+variables:
+  assist_group: group.viewassist_satellites
+  var_weather_entity: weather.home
+  use_24_hour_time: false
+  browser_mod_bid: "[[[ return localStorage.getItem(\"browser_mod-browser-id\") ]]]"
+  default_satellite: |-
+    [[[
+      return hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.type === "view_audio")
+    ]]]      
+  var_assistsat_entity: |-
+    [[[
+      return hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+    ]]]
+  var_assisting: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var micdevice = hass.states[assistbid].attributes.mic_device;
+      var micstate = hass.states[micdevice].state;
+      var assisting = micstate.includes("start");
+      return `${assisting}`
+    ]]]
+  var_mic_device: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var micdevice = hass.states[assistbid].attributes.mic_device;
+      var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+      return `${micdevice}`
+    ]]]
+  var_mic_mute: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var micdevice = hass.states[assistbid].attributes.mic_device;
+      var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+      var micstate = hass.states[micdevice].state;
+      return `${micstate}`
+    ]]]
+  var_mic_switch: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var micdevice = hass.states[assistbid].attributes.mic_device;
+      var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
+      return `${micswitch}`
+    ]]]        
+  var_mediaplayer_device: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
+      return `${mediadevice}`
+    ]]]        
+  var_mediaplayer_mute: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
+      var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
+      return `${mediaplayerstate}`
+    ]]]
+  var_title: "[[[ return states[variables.var_assistsat_entity].attributes.title; ]]]"
+  var_message: "[[[ return states[variables.var_assistsat_entity].attributes.message; ]]]"
+  var_image: "[[[ return states[variables.var_assistsat_entity].attributes.image; ]]]"
+  var_font_size: >-
+    [[[ return
+    states[variables.var_assistsat_entity].attributes.message_font_size; ]]]
+  var_intent_entities: >-
+    [[[ return
+    states[variables.var_assistsat_entity].attributes.data.intent_entities ]]]
+template:
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content max-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-color: "#059bf1"
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - height: 100vdh
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: "-10%"
+custom_fields:
+  title: Troubleshooting
+  message: >-
+    [[[
+
+    return `assist_group: <b
+    style="font-weight:400;">${variables.assist_group}</b><br />
+    browsermod_bid:  <b
+    style="font-weight:400;">${variables.browser_mod_bid}</b><br />    
+    default_satellite: <b
+    style="font-weight:400;">${variables.default_satellite}</b><br />
+    var_assistsat_entity: <b
+    style="font-weight:400;">${variables.var_assistsat_entity}</b><br />
+    var_assisting: <b style="font-weight:400;">${variables.var_assisting}</b><br
+    /> var_mic_device: <b
+    style="font-weight:400;">${variables.var_mic_device}</b><br /> var_mic_mute:
+    <b style="font-weight:400;">${variables.var_mic_mute}</b><br />
+    var_mic_switch: <b
+    style="font-weight:400;">${variables.var_mic_switch}</b><br />
+    var_mediaplayer_device: <b
+    style="font-weight:400;">${variables.var_mediaplayer_device}</b><br />
+    var_mediaplayer_mute: <b
+    style="font-weight:400;">${variables.var_mediaplayer_mute}</b><br />
+    var_title: <b style="font-weight:400;">${variables.var_title}</b><br />
+    var_message: <b style="font-weight:400;">${variables.var_message}</b><br />
+    var_image: <b style="font-weight:400;">${variables.var_image}</b><br />
+    var_font_size: <b style="font-weight:400;">${variables.var_font_size}</b><br
+    /> var_intent_entities: <b
+    style="font-weight:400;">${variables.var_intent_entities}</b><br /> ` ]]]
