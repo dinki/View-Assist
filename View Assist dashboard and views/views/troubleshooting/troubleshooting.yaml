@@ -5,73 +5,163 @@ variables:
   use_24_hour_time: false
   browser_mod_bid: "[[[ return localStorage.getItem(\"browser_mod-browser-id\") ]]]"
   default_satellite: |-
-    [[[
+    [[[ try {
       return hass.states[variables.assist_group].attributes.entity_id
-         .find((eid) => hass.states[eid].attributes.type === "view_audio")
+         .find((eid) => hass.states[eid].attributes.type === "view_audio");
+      } catch { return  ""}
     ]]]      
+  var_current_time: |
+    [[[
+      try
+      {
+        if (variables.use_24_hour_time) {
+          var options = { hour: "2-digit", minute: "2-digit", hour12: false };
+        } else {
+          var options = { hour: "numeric", minute: "2-digit" };      
+        }
+        
+        let time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
+        
+        if(variables.use_24_hour_time) {
+          time = time.replace("24:", "00:");
+        }
+        return time;
+      } catch { return  ""}
+    ]]]
+  var_date_short: |
+    [[[    
+      const options = { weekday: "short", month: "short", day: "numeric", };
+      try {return new Date().toLocaleDateString([], options);} catch { return  ""}  
+    ]]]
+  var_date_long: |
+    [[[
+          const options = { weekday: "long", month: "long", day: "numeric", year: 'numeric' };
+          try {return new Date().toLocaleDateString([], options)} catch { return  ""}
+    ]]]
   var_assistsat_entity: |-
     [[[
-      return hass.states[variables.assist_group].attributes.entity_id
+      try {
+        return hass.states[variables.assist_group].attributes.entity_id
          .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        } catch { return  ""}
+      
     ]]]
   var_assisting: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-      var micdevice = hass.states[assistbid].attributes.mic_device;
-      var micstate = hass.states[micdevice].state;
-      var assisting = micstate.includes("start");
-      return `${assisting}`
-    ]]]
+      try 
+      {
+        var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var micdevice = hass.states[assist_assistbid].attributes.mic_device;
+        var micstate = hass.states[micdevice].state;
+        if (micdevice.includes("_stt")) 
+        {
+          var assisting = micstate.includes("start");
+        }
+        else
+        {
+          var assisting = !micstate.includes("wake_word");
+        }
+        return `${assisting}`;
+      } catch { return  ""}
+    ]]] 
   var_mic_device: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-      var micdevice = hass.states[assistbid].attributes.mic_device;
-      var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
-      return `${micdevice}`
+      try
+      {
+        var micdevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
+        if (micdevice.includes("_stt"))
+          {
+            var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+          }
+        return `${micdevice}`;
+      } catch { return  ""}
     ]]]
   var_mic_mute: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-      var micdevice = hass.states[assistbid].attributes.mic_device;
-      var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
-      var micstate = hass.states[micdevice].state;
-      return `${micstate}`
+      try {
+        var micmute_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var micdevice = hass.states[micmute_assistbid].attributes.mic_device;
+        if (micdevice.includes("_stt"))
+          {
+            var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+          }            
+        var micstate = hass.states[micdevice].state;
+        return `${micstate}`;
+      } catch { return  "";}
     ]]]
   var_mic_switch: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-      var micdevice = hass.states[assistbid].attributes.mic_device;
-      var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
-      return `${micswitch}`
+      try {
+        var micswitch_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var micdevice = hass.states[micswitch_assistbid].attributes.mic_device;
+        if (micdevice.includes("_stt"))
+          {
+            var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
+          }
+        else
+          {
+            var micswitch = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
+          }
+        return `${micswitch}`;
+      } catch { return  "";}
     ]]]        
   var_mediaplayer_device: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-      var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
-      return `${mediadevice}`
+      try {
+        var mediadevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
+        return `${mediadevice}`;
+      } catch { return  "";}
     ]]]        
   var_mediaplayer_mute: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-      var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
-      var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
-      return `${mediaplayerstate}`
+      try {
+        var mediaplayer_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
+        var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
+        return `${mediaplayerstate}`;
+      } catch { return  "";}
     ]]]
-  var_title: "[[[ return states[variables.var_assistsat_entity].attributes.title; ]]]"
-  var_message: "[[[ return states[variables.var_assistsat_entity].attributes.message; ]]]"
-  var_image: "[[[ return states[variables.var_assistsat_entity].attributes.image; ]]]"
-  var_font_size: >-
-    [[[ return
-    states[variables.var_assistsat_entity].attributes.message_font_size; ]]]
-  var_intent_entities: >-
-    [[[ return
-    states[variables.var_assistsat_entity].attributes.data.intent_entities ]]]
+  var_title: |-
+    [[[ 
+      try 
+      {
+        return states[variables.var_assistsat_entity].attributes.title;
+      } catch { return  ""} 
+    ]]]
+  var_message: |-
+    [[[ 
+      try 
+      {
+        return states[variables.var_assistsat_entity].attributes.message;
+      } catch { return  ""} 
+    ]]]
+  var_image: |-
+    [[[ 
+      try 
+      {
+        return states[variables.var_assistsat_entity].attributes.image;
+      } catch { return  ""} 
+    ]]]
+  var_font_size: |-
+    [[[ 
+      try 
+      {
+        return states[variables.var_assistsat_entity].attributes.message_font_size;
+      }
+      catch { return  ""} 
+    ]]]
+  var_intent_entities: |-
+    [[[  try { 
+      return states[variables.var_assistsat_entity].attributes.data.intent_entities
+    } catch { return "" } ]]]
 template:
   - body_template
 styles:
