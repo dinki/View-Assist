@@ -8,12 +8,10 @@ View Assist provides visual feedback for the Home Assistant Assist voice assista
 ^^^ Click for demo video on Youtube ^^^
 
 
-*WARNING* I am not a programmer I am just someone who knows just enough to be dangerous.  I am 100% certain that better ways exist than the way I am doing things and I am hoping that the HA community will continue to help improve this project through code submissions and comments in the issues section. 
+The information in this repo is separated into different subdirectories with install information stored in the wiki.  This project is designed so that you can pick and choose the parts that you want for your needs.  The custom sentences can be modified for those who may only be interested in voice only.  The dashboard views may be interesting to others who are writing their own custom sentences.
 
-The information in this repo is separated into different subdirectories with additional readmes in each.  This project is designed so that you can pick and choose the parts that you want for your needs.  The custom sentences can be modified for those who may only be interested in voice only.  The dashboard views may be interesting to others who are writing their own custom sentences.
-
-Please see the Wiki for detailed information https://github.com/dinki/View-Assist/wiki
-
+Please see the Wiki for detailed information [https://github.com/dinki/View-Assist/wiki
+](https://dinki.github.io/View-Assist/)
 UDPATE:  I've been made aware of a really cool device and I've been working on getting it to work with View Assist.  The Lenovo Thinksmart device is a nice Android tablet with a nice sounding speaker at an unbelievably low price (~$40 USD). [https://amzn.to/3POGKW3](https://amzn.to/4bRBnhk)
 
 
