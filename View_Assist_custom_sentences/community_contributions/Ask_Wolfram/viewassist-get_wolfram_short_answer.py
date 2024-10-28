@@ -1,3 +1,5 @@
+import requests
+
 @service(supports_response="optional")
 def viewassist_wolfram_short_answer(query=None, return_response=True):
     """yaml
