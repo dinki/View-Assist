@@ -55,26 +55,34 @@ trigger:
     command:
       - !input command_prompt
 condition: []
-action:
+actions:
   - if:
       - condition: template
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
     then:
       - variables:
-          location_source: >-
+          person_source: "{{ 'person.'+persons_name[trigger.slots.person] }}"
+          tracker_source: >-
             {{ state_attr('person.'+persons_name[trigger.slots.person],
             'source') }}
           geocoded_source: >-
-            {% set geocoded = 'sensor.' + location_source.split('.', 1)[1] +
+            {% set geocoded = 'sensor.' + tracker_source.split('.', 1)[1] +
             '_geocoded_location'%} {{ geocoded }}
-      - set_conversation_response: >-
-          {{ persons_name[trigger.slots.person] }} has been located in {{
-          state_attr(geocoded_source, 'locality') }}
+          location_source: |-
+            {% if states(person_source) != 'not_home' %}
+              {{ states(person_source)|capitalize }}
+            {% elif not states(geocoded_source) in ['unknown'] %}
+              {{ states(geocoded_source) }}
+            {% else %}
+              {{ "Unknown Location" }}
+            {% endif %}
+      - set_conversation_response: "{{ persons_name[trigger.slots.person] }} has been located."
       - action: python_script.set_state
         data:
           entity_id: "{{ target_satellite_device }}"
-          location_source: "{{ location_source }}"
-          geocoded_source: "{{ geocoded_source }}"
+          locate_data: >-
+            {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
+            geocoded_source, 'location_text': location_source } }}
       - if:
           - condition: template
             value_template: >-
