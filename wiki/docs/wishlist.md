@@ -12,14 +12,13 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 * Timers TIMERS Timers!!! * WoRkInG!!  Won't be long!
 * Sound machine for sleep/noise cancelling * Won't be long
 * Alert me when packages are delivered
-* Locate one of my family members
+* Locate one of my family members * in beta testing
 * Tell me if it will rain today or tomorrow *
 * Drop in to another satellite device(s) and have a conversation like an intercom
 * Announce when washer/dryer are done, alarm is set, etc *
 * Some sort of visual notice when I am on a Teams call/meeting so family can not be their normal selves
 * [Dictate messages to be sent to HA mobile devices](https://github.com/dinki/View-Assist/discussions/19#discussioncomment-9745565)
 * View and add calendar events
-* Asking for weather at specific city
 * Photo frame [photodash](https://github.com/apop880/photodash) [ha Google photos](https://github.com/Daanoz/ha-google-photos) [random](https://picsum.photos/) [ha slideshow](https://github.com/garthschoeddert/HASlideshow-lfix)
 
 Items with asterisks are either fully or partially written but have not been released.  If you would like to finish any of these let me know and I will provide what I have and guide as needed
@@ -37,8 +36,8 @@ Items with asterisks are either fully or partially written but have not been rel
 * Tell me a joke [Tell Me a Joke](extend-functionality/sentences/tell-me-a-joke)
 * Remember [some fact] : Use [List Management](extend-functionality/sentences/list-management) with a new list called 'Remember' and modify the Blueprint command sentences as desired
 * How do you say 'word or phrase' in Spanish/German/French/etc : [Ask AI](extend-functionality/sentences/ask-ai)
-* Unit conversions : [Ask AI](extend-functionality/sentences/ask-ai)
-* Math functions  : [Ask AI](extend-functionality/sentences/ask-ai)
+* Unit conversions : [Conversions](community-contributions/cc-sentences/conversions.md)
+* Math functions  : [Calculations](community-contributions/cc-sentences/calculations.md)
 * Flip a coin, magic 8 ball, pick a number, rock paper scissors, roll dice : [Ask AI](extend-functionality/sentences/ask-ai)
 * Repeat what you just said : [Device Functions](extend-functionality/sentences/device-functions)
 * Ability to put device in do not disturb mode and set other modes by voice : [Device Functions](extend-functionality/sentences/device-functions)
@@ -53,3 +52,4 @@ Items with asterisks are either fully or partially written but have not been rel
 * Resume music playback after announcements : Use Snapcast or FullyKiosk media player as musicplayer device until BrowserMod is fixed to honor announce 
 * Show traffic conditions and travel time for commute : [Travel Times by Waze](extend-functionality/sentences/travel-times-by-waze)
 * Set thermostat by saying I'm cold/I'm hot  : [Thermostat Control](extend-functionality/sentences/thermostat-control)
+* Asking for weather at specific city : [Ask Wolfram](community-contributions/cc-sentences/ask-wolfram.md)
