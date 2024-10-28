@@ -38,14 +38,16 @@ styles:
       - width: 80vw
       - z-index: 3
 custom_fields:
-  title: ' '
+  title: >-
+    [[[ return new Date().toLocaleTimeString([], { hour: "numeric",
+    minute: "2-digit" }).toLowerCase(); ]]]  
   map:
     card:
       type: map
       entities:
         - entity: >-
             [[[ try {return
-            hass.states[variables.var_assistsat_entity].attributes.location_source}
+            hass.states[variables.var_assistsat_entity].attributes.locate_data['person']}
             catch { return ""}]]]
       theme_mode: light
       default_zoom: 15
@@ -85,15 +87,14 @@ custom_fields:
       type: custom:button-card
       custom_fields:
         location_text: |-
-          [[[
-            var var_geocoded_location = hass.states[variables.var_assistsat_entity].attributes.geocoded_source;
-            var geocoded_location = hass.states[var_geocoded_location].state;
-            return `${geocoded_location}`   
-          ]]]      
+          [[[ try {
+            var var_location_text = hass.states[variables.var_assistsat_entity].attributes.locate_data.location_text;
+            return `${var_location_text}`}
+          catch { return ""}]]]           
         updated: |-
-          [[[
-            var var_geocoded_location = hass.states[variables.var_assistsat_entity].attributes.geocoded_source;                  
-            var var_last_changed = new Date(hass.states[var_geocoded_location].last_changed);
+          [[[ try {
+            var var_tracker = hass.states[variables.var_assistsat_entity].attributes.locate_data.person;                  
+            var var_last_changed = new Date(hass.states[var_tracker].last_changed);
             const current_date = new Date();
             const diff = current_date - var_last_changed;
             const minutes = Math.floor(diff / (1000 * 60));
@@ -110,8 +111,8 @@ custom_fields:
             } else {
               last_changed = rtf.format(-days, 'day');  // e.g., "3 days ago"
             }
-            return `${"last changed "+last_changed}`  
-          ]]]
+            return `${"last changed "+last_changed}`}
+          catch { return ""}]]]          
       show_icon: false
       show_name: false
       styles:
