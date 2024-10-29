@@ -27,6 +27,7 @@ blueprint:
       default: dark
       selector:
         select:
+          mode: dropdown
           options:
             - dark
             - light    
