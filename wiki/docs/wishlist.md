@@ -12,7 +12,6 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 * Timers TIMERS Timers!!! * WoRkInG!!  Won't be long!
 * Sound machine for sleep/noise cancelling * Won't be long
 * Alert me when packages are delivered
-* Locate one of my family members * in beta testing
 * Tell me if it will rain today or tomorrow *
 * Drop in to another satellite device(s) and have a conversation like an intercom
 * Announce when washer/dryer are done, alarm is set, etc *
@@ -53,3 +52,4 @@ Items with asterisks are either fully or partially written but have not been rel
 * Show traffic conditions and travel time for commute : [Travel Times by Waze](extend-functionality/sentences/travel-times-by-waze)
 * Set thermostat by saying I'm cold/I'm hot  : [Thermostat Control](extend-functionality/sentences/thermostat-control)
 * Asking for weather at specific city : [Ask Wolfram](community-contributions/cc-sentences/ask-wolfram.md)
+* Locate one of my family members : [Locate a Person](extend-functionality/sentences/locate-a-person.md)
