@@ -50,10 +50,10 @@ custom_fields:
             hass.states[variables.var_assistsat_entity].attributes.locate_data['person']}
             catch { return ""}]]]
       theme_mode: |-
-          [[[ try {
-            var var_map_mode = hass.states[variables.var_assistsat_entity].attributes.locate_data.map_mode;
-            return `${var_map_mode}`}
-          catch { return "light"}]]]   
+        [[[ try {
+          var var_map_mode = hass.states[variables.var_assistsat_entity].attributes.locate_data.map_mode;
+          return `${var_map_mode}`}
+        catch { return "dark"}]]]   
       default_zoom: 15
       aspect_ratio: 1.5/1
       auto_fit: true
