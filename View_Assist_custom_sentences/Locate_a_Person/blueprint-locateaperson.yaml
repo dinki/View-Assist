@@ -87,7 +87,7 @@ actions:
           entity_id: "{{ target_satellite_device }}"
           locate_data: >-
             {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
-            geocoded_source, 'location_text': location_source } }}
+            geocoded_source, 'location_text': location_source, 'map_mode': map_mode } }}
       - if:
           - condition: template
             value_template: >-
