@@ -24,10 +24,11 @@ blueprint:
     map_mode:
       name: Map Mode Theme
       description: This will change the map mode theme
-      select:
-        options:
-          - dark
-          - light    
+      selector:
+        select:
+          options:
+            - dark
+            - light    
     group_entity:
       name: Group Entity
       description: >-
