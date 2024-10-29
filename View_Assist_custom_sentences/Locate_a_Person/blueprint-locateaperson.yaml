@@ -23,8 +23,12 @@ blueprint:
      default: '{"john":"jon","simon":"simon"}'
     map_mode:
       name: Map Mode Theme
-      description: This will change the map mode theme (dark/light)
-      default: dark  
+      description: This will change the map mode theme
+      default: dark
+      select:
+        options:
+          - dark
+          - light    
     group_entity:
       name: Group Entity
       description: >-
