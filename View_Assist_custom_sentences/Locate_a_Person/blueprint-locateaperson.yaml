@@ -20,7 +20,11 @@ blueprint:
     defined_names:
      name: Defined Names
      description: This is the phonetic name followed by the Person's name as configured in the Home Assistant settings
-     default: '{"john":"jon","simon":"simon"}'          
+     default: '{"john":"jon","simon":"simon"}'
+    map_mode:
+      name: Map Mode Theme
+      description: This will change the map mode theme (dark/light)
+      default: dark  
     group_entity:
       name: Group Entity
       description: >-
@@ -38,6 +42,7 @@ description: "Ask Assist to locate a person"
 variables:
   view_locate: !input view_locate
   view_info: !input view_info
+  map_mode: !input map_mode
   input_defined_names: !input defined_names
   persons_name: "{{ input_defined_names | from_json}}"  
   group_entity: !input group_entity
