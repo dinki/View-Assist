@@ -1,6 +1,6 @@
 # Locate a Person
 
-<a href="https://github.com/dinki/View-Assist/blob/main/locate-a-person/View_Assist_custom_sentences/Locate_a_Person/locate_example.png"><img src="https://github.com/dinki/View-Assist/blob/main/locate-a-person/View_Assist_custom_sentences/Locate_a_Person/locate_example.png" width="60%"></a>
+<a href="./locate_example.png"><img src="./locate_example.png" width="60%"></a>
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/dinki/View-Assist/blob/main/View_Assist_custom_sentences/Locate_a_Person/blueprint-locateaperson.yaml)
 
