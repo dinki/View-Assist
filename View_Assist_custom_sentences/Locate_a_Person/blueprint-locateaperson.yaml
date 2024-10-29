@@ -87,7 +87,12 @@ actions:
             {% else %}
               {{ "Unknown Location" }}
             {% endif %}
-      - set_conversation_response: "{{ persons_name[trigger.slots.person] }} has been located."
+      - set_conversation_response: |-
+          {% if states(person_source) == 'not_home' %}
+            {{ persons_name[trigger.slots.person] }} is away.
+          {% else %}
+            {{ persons_name[trigger.slots.person] }} is at {{ states(person_source) }}
+          {% endif %}
       - action: python_script.set_state
         data:
           entity_id: "{{ target_satellite_device }}"
