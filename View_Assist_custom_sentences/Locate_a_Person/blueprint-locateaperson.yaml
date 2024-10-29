@@ -1,0 +1,126 @@
+# View Assist - Locate a Person (v 1.0.0)
+# Written by - jsittner
+blueprint:
+  name: View Assist - Locate a Person
+  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.0)
+  domain: automation
+  input:
+    command_prompt:
+      name: Command Text
+      description: The phrase you want to use to trigger the automation
+      default: "(locate|map) [my] {person}"  
+    view_locate:
+      name: Locate View
+      description: The View Assist dashboard view used for the locate view
+      default: /dashboard-viewassist/locate
+    view_info:
+      name: Info View
+      description: The View Assist dashboard view used for the info display
+      default: /dashboard-viewassist/info
+    defined_names:
+     name: Defined Names
+     description: This is the phonetic name followed by the Person's name as configured in the Home Assistant settings
+     default: '{"john":"jon","simon":"simon"}'
+    map_mode:
+      name: Map Mode Theme
+      description: This will change the map mode theme
+      default: dark
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - dark
+            - light    
+    group_entity:
+      name: Group Entity
+      description: >-
+        The group that holds the list of View Assist satellites(example
+        group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain:
+                - group
+          multiple: false
+      default: group.viewassist_satellites
+alias: View Assist - Locate a Person
+description: "Ask Assist to locate a person"
+variables:
+  view_locate: !input view_locate
+  view_info: !input view_info
+  map_mode: !input map_mode
+  input_defined_names: !input defined_names
+  persons_name: "{{ input_defined_names | from_json}}"  
+  group_entity: !input group_entity
+  target_satellite_device: |-
+    {% for sat in expand('group.viewassist_satellites') %}
+      {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+trigger:
+  - platform: conversation
+    command:
+      - !input command_prompt
+condition: []
+actions:
+  - if:
+      - condition: template
+        value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
+    then:
+      - variables:
+          person_source: "{{ 'person.'+persons_name[trigger.slots.person] }}"
+          tracker_source: >-
+            {{ state_attr('person.'+persons_name[trigger.slots.person],
+            'source') }}
+          geocoded_source: >-
+            {% set geocoded = 'sensor.' + tracker_source.split('.', 1)[1] +
+            '_geocoded_location'%} {{ geocoded }}
+          location_source: |-
+            {% if states(person_source) != 'not_home' %}
+              {{ states(person_source)|capitalize }}
+            {% elif not states(geocoded_source) in ['unknown'] %}
+              {{ states(geocoded_source) }}
+            {% else %}
+              {{ "Unknown Location" }}
+            {% endif %}
+      - set_conversation_response: |-
+          {% if states(person_source) == 'not_home' %}
+            {{ persons_name[trigger.slots.person] }} is away.
+          {% else %}
+            {{ persons_name[trigger.slots.person] }} is at {{ states(person_source) }}
+          {% endif %}
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          locate_data: >-
+            {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
+            geocoded_source, 'location_text': location_source, 'map_mode': map_mode } }}
+      - if:
+          - condition: template
+            value_template: >-
+              {% if target_satellite_device_type != 'audio_only' %}true{% else
+              %}false{% endif %}
+        then:
+          - data:
+              path: "{{ view_locate }}"
+            target:
+              device_id: "{{ target_display_device }}"
+            action: browser_mod.navigate
+    else:
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
+          title: ""
+          message: "{{ trigger.slots.person |capitalize}} hasn't been defined"
+          message_font_size: 6vw
+      - set_conversation_response: "{{ trigger.slots.person }} hasn't been defined"
+      - data:
+          path: "{{ view_info }}"
+        target:
+          device_id: "{{ target_display_device }}"
+        action: browser_mod.navigate
+mode: single  
