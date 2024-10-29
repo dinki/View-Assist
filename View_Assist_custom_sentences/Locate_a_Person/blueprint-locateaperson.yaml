@@ -24,7 +24,7 @@ blueprint:
     map_mode:
       name: Map Mode Theme
       description: This will change the map mode theme
-      selector:
+      select:
         options:
           - dark
           - light    
