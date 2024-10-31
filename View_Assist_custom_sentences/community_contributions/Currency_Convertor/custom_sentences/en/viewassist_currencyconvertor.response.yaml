@@ -1,0 +1,9 @@
+language: "en"
+responses:
+  intents:
+    ConvertCurrency:
+      speech: "{amount} {fromcurrency} converts to {convert} {tocurrency}"
+      screen: "{amount} {fromcurrency} converts to {convert} {tocurrency}"
+    ExchangeCurrency:
+      speech: "The  exchange rate to {exchangecurrency} is {exchange}"
+      screen: "The  exchange rate from {basecurrency} to {exchangecurrency} is {exchange}"

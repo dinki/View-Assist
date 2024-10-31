@@ -1,0 +1,25 @@
+ConvertCurrency:
+  action:
+    - action: mqtt.publish
+      data:
+        topic: viewassist/intent/currencyconvertor
+        qos: "1"
+        retain: false
+        payload: >-
+          {"intent": "convert",
+           "fromcurrency": "{{ fromcurrency }}",
+           "tocurrency": "{{ tocurrency }}",
+           "devices": "{{ area_devices(area) }}"
+          }
+ExchangeCurrency:
+  action:
+    - action: mqtt.publish
+      data:
+        topic: viewassist/intent/currencyconvertor
+        qos: "1"
+        retain: false
+        payload: >-
+          {"intent": "exchange",
+           "tocurrency": "{{ tocurrency }}",
+           "devices": "{{ area_devices(area) }}"
+          }
