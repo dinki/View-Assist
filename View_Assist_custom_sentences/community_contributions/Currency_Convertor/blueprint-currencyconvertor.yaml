@@ -1,0 +1,240 @@
+# Currency Convertor
+blueprint:
+  name: View Assist - Currency Convertor
+  description: Convert currency from one type to another (View Assist Currency Convertor v 0.2.0)
+  domain: automation
+  input:
+    rapid_apikey:
+      name: Rapid Api Key
+      description: Your Rapid Api Key
+      default: YOURAPIKEY
+    tts_device:
+      name: Text to Speech Device
+      description: Your TTS Device to play media
+      default: tts.piper
+    tts_language:
+      name: Text to Speech language
+      description: Your preferred language for TTS
+      default: en_US
+    tts_model:
+      name: Text to Speech voice model
+      description: Your preferred voice model for TTS
+      default: en_US-amy-medium
+    group_entity:
+      name: Group Entity
+      description: The group that holds the list of View Assist satellites(example
+        group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - group
+          multiple: false
+      default: group.viewassist_satellites
+    view_path:
+      name: Dashboard Info view
+      description: The View Assist dashboard view to use for displaying information (example /dashboard-viewassist/info)
+      default: /dashboard-viewassist/info
+trigger:
+  - platform: mqtt
+    topic: viewassist/intent/currencyconvertor
+condition: []
+action:
+  - variables:
+      rapidapikey: !input rapid_apikey
+      tts_device: !input tts_device
+      tts_language: !input tts_language
+      tts_model: !input tts_model
+      group_entity: !input group_entity
+      view: !input view_path
+      target_satellite_device: |-
+        {% for sat in expand(group_entity) %}
+          {% if (device_id(sat.attributes.mic_device) in trigger.payload_json['devices'] ) or (device_id(sat.attributes.display_device) in trigger.payload_json['devices'] ) %}
+            {{ sat.entity_id }}
+          {% endif %}
+        {% endfor %}
+      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+    enabled: true
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.payload_json['intent'] == 'exchange'}}"
+        sequence:
+          - action: pyscript.currencyconvertor
+            data:
+              rapidapikey: "{{ rapidapikey }}"
+              currencyto: "{{ trigger.payload_json['tocurrency'] }}"
+            response_variable: conversion_response
+          - if:
+              - condition: template
+                value_template: "{{ conversion_response['error'] == 0 }}"
+            then:
+              - action: pyscript.response_handler
+                data:
+                  intent: ExchangeCurrency
+                  response: speech
+                  custom: viewassist-currencyconvertor
+                  exchange: "{{ conversion_response['data']['value'] | round(2) }}"
+                  exchangecurrency: "{{ trigger.payload_json['tocurrency'] }}"
+                response_variable: response_speech
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}?message={{response_speech['message'] | replace(" ", "+")}}&language={{
+                    tts_language}}&voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
+              - if:
+                  - condition: template
+                    value_template: >-
+                      {% if target_satellite_device_type != 'audio_only'
+                      %}true{% else %}false{% endif %}
+                then:
+                  - action: pyscript.response_handler
+                    data:
+                      intent: ExchangeCurrency
+                      response: screen
+                      custom: viewassist-currencyconvertor
+                      basecurrency: "{{ conversion_response['data']['from'] }}"
+                      exchange: "{{ conversion_response['data']['value'] | round(2) }}"
+                      exchangecurrency: "{{ conversion_response['data']['to'] }}"
+                    response_variable: response_screen
+                  - action: python_script.set_state
+                    data:
+                      entity_id: "{{ target_satellite_device }}"
+                      title: Currency Convertor
+                      message_font_size: 4vw
+                      message: "{{ response_screen['message'] }}"
+                    enabled: true
+                  - data:
+                      path: "{{ view }}"
+                      target:
+                        device_id: "{{target_display_device}}"
+                    action: browser_mod.navigate
+                enabled: true
+            else:
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}?message=Error+{{conversion_response['error']}}+Message+{{
+                    conversion_response['message']}}&language={{tts_language}}&voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
+              - if:
+                  - condition: template
+                    value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+                then:
+                  - data:
+                      entity_id: "{{ target_satellite_device }}"
+                      title: Currency Convertor
+                      message_font_size: 4vw
+                      message: >-
+                        Error {{ conversion_response['error'] }} Message {{
+                        conversion_response['message'] }}
+                    action: python_script.set_state
+                  - data:
+                      path: "{{ view }}"
+                      target:
+                        device_id: "{{target_display_device}}"
+                    action: browser_mod.navigate
+                enabled: true
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.payload_json['intent'] == 'convert'}}"
+        sequence:
+          - action: pyscript.currencyconvertor
+            data:
+              rapidapikey: "{{ rapidapikey }}"
+              currencyfrom: "{{ trigger.payload_json['fromcurrency'] }}"
+              currencyto: "{{ trigger.payload_json['tocurrency'] }}"
+            response_variable: conversion_response
+          - if:
+              - condition: template
+                value_template: "{{ conversion_response['error'] == 0 }}"
+            then:
+              - action: pyscript.response_handler
+                data:
+                  intent: ConvertCurrency
+                  response: speech
+                  custom: viewassist-currencyconvertor
+                  amount: "{{ conversion_response['data']['amount'] }}"
+                  fromcurrency: "{{ trigger.payload_json['fromcurrency'].split(' ',2)[1] }}"
+                  convert: "{{ conversion_response['data']['value'] | round(2) }}"
+                  tocurrency: "{{ trigger.payload_json['tocurrency'] }}"
+                response_variable: response_speech
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}?message={{response_speech['message'] | replace(" ", "+")}}&language={{
+                    tts_language}}&voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
+              - if:
+                  - condition: template
+                    value_template: >-
+                      {% if target_satellite_device_type != 'audio_only'
+                      %}true{% else %}false{% endif %}
+                then:
+                  - action: pyscript.response_handler
+                    data:
+                      intent: ConvertCurrency
+                      response: screen
+                      custom: viewassist-currencyconvertor
+                      amount: "{{ conversion_response['data']['amount'] }}"
+                      fromcurrency: "{{ conversion_response['data']['from'] }}"
+                      convert: "{{ conversion_response['data']['value'] | round(2) }}"
+                      tocurrency: "{{ conversion_response['data']['to'] }}"
+                    response_variable: response_screen
+                  - data:
+                      entity_id: "{{ target_satellite_device }}"
+                      title: Currency Convertor
+                      message_font_size: 4vw
+                      message: "{{ response_screen['message'] }}"
+                    action: python_script.set_state
+                  - data:
+                      path: "{{ view }}"
+                      target:
+                        device_id: "{{target_display_device}}"
+                    action: browser_mod.navigate
+                enabled: true
+            else:
+              - action: media_player.play_media
+                target:
+                  entity_id: "{{target_mediaplayer_device}}"
+                data:
+                  media_content_id: >-
+                    media-source://tts/{{
+                    tts_device}}?message=Error+{{conversion_response['error']}}+Message+{{
+                    conversion_response['message']}}&language={{tts_language}}&voice={{tts_model}}
+                  media_content_type: provider
+                enabled: true
+              - if:
+                  - condition: template
+                    value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+                then:
+                  - data:
+                      entity_id: "{{ target_satellite_device }}"
+                      title: Currency Convertor
+                      message_font_size: 4vw
+                      message: >-
+                        Error {{ conversion_response['error'] }} Message {{
+                        conversion_response['message'] }}
+                    action: python_script.set_state
+                  - data:
+                      path: "{{ view }}"
+                      target:
+                        device_id: "{{target_display_device}}"
+                    action: browser_mod.navigate
+                enabled: true
+mode: single

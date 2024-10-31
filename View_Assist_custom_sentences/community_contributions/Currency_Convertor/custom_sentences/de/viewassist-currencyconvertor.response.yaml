@@ -1,0 +1,9 @@
+language: "de"
+responses:
+  intents:
+    ConvertCurrency:
+      speech: "{amount} {fromcurrency} sind {convert} {tocurrency}"
+      screen: "{amount} {fromcurrency} sind {convert} {tocurrency}"
+    ExchangeCurrency:
+      speech: "Der Wechselkurs von {exchangecurrency} beträgt {exchange}"
+      screen: "Der Wechselkurs von {basecurrency} zu {exchangecurrency} beträgt {exchange}"
