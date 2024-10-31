@@ -1,4 +1,5 @@
 # Currency Convertor
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FCurrency_Convertor%2Fblueprint-currencyconvertor.yaml)
 
 ## Prequisites
 
@@ -48,9 +49,3 @@ files from your preferred language directory (esp. 'en') and place this files in
 
 You must get an API key from **rapidapi.com** for the [required API](https://rapidapi.com/pwshub-pwshub-default/api/crypto-market-prices) (totally free no credit card needed) \
 You must add your API key to the 'rapidapikey' field in the blueprint.
-
-## Blueprint
-
-**DEV Blueprint Link!  Remove before push to main!!**
-
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2FAndrewSteel%2FView-Assist%2Frefs%2Fheads%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FCurrency_Convertor%2Fblueprint-currencyconvertor.yaml)
