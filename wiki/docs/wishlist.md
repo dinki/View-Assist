@@ -7,7 +7,6 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 
 ## Wishlist
 
-* Calculate foreign currencies to euro/USD/etc * in beta testing
 * Set alarm/reminders on individual devices * in beta testing
 * Timers TIMERS Timers!!! * WoRkInG!!  Won't be long!
 * Sound machine for sleep/noise cancelling * Won't be long
@@ -53,3 +52,4 @@ Items with asterisks are either fully or partially written but have not been rel
 * Set thermostat by saying I'm cold/I'm hot  : [Thermostat Control](extend-functionality/sentences/thermostat-control)
 * Asking for weather at specific city : [Ask Wolfram](community-contributions/cc-sentences/ask-wolfram.md)
 * Locate one of my family members : [Locate a Person](extend-functionality/sentences/locate-a-person.md)
+* Calculate foreign currencies to euro/USD/etc : [Currency Convertor](community-contributions/cc-sentences/currency-convertor.md)
