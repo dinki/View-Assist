@@ -23,7 +23,7 @@ styles:
     - grid-template-columns: 1fr 1fr
   card:
     - background-size: cover
-    - background-color: '#24292c'
+    - background-color: "#24292c"
   custom_fields:
     alarm_name:
       - justify-self: center
@@ -66,9 +66,9 @@ styles:
           === "night") return "block"; else return "none"; ]]]      
       - z-index: 3
 custom_fields:
-  title: ' '
-  alarm_name: '[[[ return variables.var_alarm_name ]]]'
-  time: '[[[ return variables.var_current_time ]]]'
+  title: " "
+  alarm_name: "[[[ return variables.var_alarm_name ]]]"
+  time: "[[[ return variables.var_current_time ]]]"
   snooze:
     card:
       type: custom:button-card
@@ -77,11 +77,12 @@ custom_fields:
       show_name: true
       tap_action:
         action: call-service
-        service: python_script.set_state
+        service: pyscript.broadcast_event
         service_data:
-          alarm: snooze
-          mode: normal
-          entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+          event_name: viewassist
+          event_data:
+            command: snooze alarm
+            entity_id: "[[[ return variables.var_assistsat_entity ]]]"
       styles:
         card:
           - display: flex
@@ -105,11 +106,12 @@ custom_fields:
       show_name: true
       tap_action:
         action: call-service
-        service: python_script.set_state
+        service: pyscript.broadcast_event
         service_data:
-          alarm: idle
-          mode: normal
-          entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+          event_name: viewassist
+          event_data:
+            command: dismiss alarm
+            entity_id: "[[[ return variables.var_assistsat_entity ]]]"
       styles:
         card:
           - display: flex
@@ -120,7 +122,7 @@ custom_fields:
           - border-radius: 5vh
           - color: white
           - border: none
-          - background-color: '#2899f3'
+          - background-color: "#2899f3"
         name:
           - font-size: 5vh
           - color: white
