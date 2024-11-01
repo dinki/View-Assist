@@ -34,6 +34,7 @@ trigger:
     command:
       - Set an alarm for {time}
       - set a timer for {when}
+      - set a {when} timer      
     id: setalarm
   - platform: conversation
     command:
@@ -50,11 +51,12 @@ trigger:
     command:
       - (Turn off | cancel | stop | snooze) alarm
     id: turnoffalarm
-  - platform: event
-    event_type: viewassist
+  - event_type: viewassist
     event_data:
       timer_status: expired
     id: ringalarm
+    trigger: event
+    alias: When viewassist event timer expired fires
   - platform: conversation
     command:
       - how much time (is) left on my {name} timer
@@ -67,6 +69,20 @@ trigger:
     command:
       - list my timers
     id: listtimer
+  - alias: When SNOOZE button pressed
+    event_type: viewassist
+    trigger: event
+    id: snoozealarm
+    enabled: true
+    event_data:
+      command: snooze alarm
+  - alias: When DISMISS button pressed
+    event_type: viewassist
+    trigger: event
+    id: turnoffalarm
+    enabled: true
+    event_data:
+      command: dismiss alarm    
 condition: []
 action:
   - variables:
@@ -113,31 +129,16 @@ action:
                   - condition: template
                     value_template: "{{ trigger.slots.when is defined}}"
                 then:
+                  - action: pyscript.convert_to_seconds
+                    data:
+                      time_when: "{{ trigger.slots.when }}"
+                    response_variable: time_start
                   - variables:
-                      time_values:
-                        second: 1
-                        seconds: 1
-                        minute: 60
-                        minutes: 60
-                        hour: 3600
-                        hours: 3600
-                      time_words:
-                        one: 1
-                        two: 2
-                        three: 3
-                        four: 4
-                        five: 5
-                        six: 6
-                        seven: 7
-                        eight: 8
-                        nine: 9
-                      time_int: >-
-                        {% set word = (trigger.slots.when).split(' ')[0] %}{{
-                        time_words[word] if word in time_words else word|int}}
-                      time_type: "{{ (trigger.slots.when).split(' ')[1] }}"
-                      time_start: "{{ time_int * time_values[time_type] }}"
+                      total_seconds: "{{ time_start.total_seconds }}"
                       alarm_time: >-
-                          {{ (now() + timedelta(seconds=time_start)).strftime('%Y-%m-%d %H:%M:%S') }}
+                        {{ (now() +
+                        timedelta(seconds=total_seconds)).strftime('%Y-%m-%d
+                        %H:%M:%S') }}
                       alarm_id: >-
                         {% if trigger.slots.reminder is defined %}{{
                         trigger.slots.reminder }}{% elif trigger.slots.name is
@@ -305,25 +306,13 @@ action:
             target:
               device_id: "{{target_display_device}}"
             action: browser_mod.navigate
-          - repeat:
-              sequence:
-                - data:
-                    media_content_id: "{{ alarmsound_path }}"
-                    media_content_type: music
-                  target:
-                    entity_id: "{{ target_mediaplayer_device }}"
-                  enabled: true
-                  action: media_player.play_media
-                - delay:
-                    seconds: 2
-                - wait_template: "{{ states(target_mediaplayer_device) == 'idle'}}"
-                  continue_on_timeout: true
-                  enabled: true
-              while:
-                - condition: template
-                  value_template: >-
-                    {{ (state_attr(target_satellite_device,'alarm') ==
-                    'alarming') }}
+          - action: script.turn_on
+            target:
+              entity_id: script.play_sound_on_media_player_repeat
+            data:
+              variables:
+                media_player: "{{ target_mediaplayer_device }}"
+                sound_file: "{{ alarmsound_path }}"
           - if:
               - condition: template
                 value_template: >-
@@ -355,12 +344,17 @@ action:
               - turnoffalarm
         sequence:
           - variables:
-              target_satellite_device: |-
-                {% for sat in expand(group_entity) %}
-                  {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
-                    {{ sat.entity_id }}
-                  {% endif %}
-                {% endfor %}
+              target_satellite_device: >-
+                {% if trigger.event.data.entity_id is defined and
+                trigger.event.data.entity_id is not none %}
+                  {{ trigger.event.data.entity_id }}
+                {% else %}
+                  {% for sat in expand(group_entity) %}
+                    {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+                      {{ sat.entity_id }}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
               target_display_device: >-
                 {{ device_id(state_attr(target_satellite_device,
                 'display_device')) }}
@@ -374,6 +368,16 @@ action:
               mode: normal
             action: python_script.set_state
             enabled: true
+          - action: media_player.media_stop
+            metadata: {}
+            data: {}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - action: script.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: script.play_sound_on_media_player_repeat            
           - set_conversation_response: ""
             enabled: true
       - conditions:
@@ -482,4 +486,66 @@ action:
                 {% set last_timer = timer_names.pop() %}
                 You have {{ timer_count }} active timers and they are {{ timer_names | join(', ') }} and {{ last_timer }}.
               {% endif %}
+      - conditions:
+          - condition: trigger
+            id:
+              - snoozealarm
+        sequence:
+          - variables:
+              target_satellite_device: "{{ trigger.event.data.entity_id }}"
+              target_display_device: >-
+                {{ device_id(state_attr(target_satellite_device,
+                'display_device')) }}
+              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+              old_list: >-
+                {{ state_attr(target_satellite_device,'timer_list') |
+                rejectattr('unique_id', 'eq', trigger.event.data.unique_id) |
+                rejectattr('target_time', 'lt', now()|string) | list }}
+              unique_id: >-
+                {% set unique_id = 'va' + now().timestamp() | int | string +
+                (range(100, 999) | random | string) %}{{ unique_id | string}}
+              alarm_time: >-
+                {{ (now()|as_datetime +
+                timedelta(minutes=snooze_time)).strftime('%Y-%m-%d %H:%M:%S')
+                }}  
+              alarm_id: "{{ trigger.event.data.alarm_id | lower }}"
+              timer_list:
+                - unique_id: "{{ unique_id }}"
+                  alarm_type: Alarm
+                  alarm_id: Rescheduled Alarm
+                  target_satellite_device: "{{ target_satellite_device }}"
+                  target_mediaplayer_device: "{{ target_mediaplayer_device }}"
+                  target_display_device: "{{ target_display_device }}"
+                  target_time: "{{ alarm_time }}"
+          - data:
+              event_name: viewassist
+              event_data:
+                unique_id: "{{ unique_id }}"
+                timer_status: expired
+                alarm_type: Alarm
+                target_satellite_device: "{{ target_satellite_device }}"
+                target_mediaplayer_device: "{{ target_mediaplayer_device }}"
+                target_display_device: "{{ target_display_device }}"
+                alarm_id: Rescheduled Alarm
+              target_time: "{{ alarm_time }}"
+            action: pyscript.schedule_event_at_time
+          - data:
+              alarm: rescheduled
+              mode: normal
+              entity_id: "{{ target_satellite_device }}"
+              timer_list: "{{ timer_list + old_list }}"
+            action: python_script.set_state
+            enabled: true
+          - action: media_player.media_stop
+            metadata: {}
+            data: {}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - action: script.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: script.play_sound_on_media_player_repeat
+          - set_conversation_response: ""
+            enabled: true
 mode: parallel
