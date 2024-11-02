@@ -18,10 +18,10 @@ styles:
   custom_fields:
     map:
       - align-self: center
-      - justify-self: center
       - width: 100%
       - height: 100%
       - position: absolute
+      - justify-content: center
       - z-index: 1
     location:
       - align-self: center
