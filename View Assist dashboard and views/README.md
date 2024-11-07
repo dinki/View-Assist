@@ -24,6 +24,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add option to device configuration blueprint to allow users to set launch icons.  These will be added to the list on start up and never removed
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
+* Add ability to set default background in device configuration blueprint and use in clock card
 
 
 # Done
