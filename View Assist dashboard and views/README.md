@@ -8,9 +8,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add select for listening CSS preference to device configuration blueprint.  Choices are new (default) and existing bar
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint
 * Use microphone type to set variables in variable template
-* Move existing bar to bottom of screen
 * Update all existing full screen views to take up all available space
-  * Clock - use absolute positioning for date and time
   * Alarm - use absolute positioning for snooze and dismiss buttons
   * Weather - also look at clipping
   * Music - default done (thanks @JimmyJamesBob); alternative done (?)
@@ -34,5 +32,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Change method for displaying icons using VA device attribute status_icons list (thanks @JimmyJamesBob)
 * Proof of concept automation for adding/removing default icons (mic mute, speaker mute, do not disturb, hold mode)
 * Test proof of concept icon display and automation with at least one user (thanks @JimmyJamesBob)
+* Move existing bar to bottom of screen
 * Update all existing full screen views to take up all available space
+  * Clock - use absolute positioning for date and time  
   *  Locate
