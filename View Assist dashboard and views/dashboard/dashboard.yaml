@@ -264,7 +264,7 @@ button_card_templates:
           - position: absolute
           - justify-self: start
           - align-self: start
-          - z-index: 2
+          - z-index: 1
           - font-size: 200%
           - font-weight: 400
           - width: max-content
@@ -276,13 +276,14 @@ button_card_templates:
           - align-self: start
           - justify-content: right
           - margin-top: '-5%'
+          - z-index: 1
         assist:
           - justify-self: end
           - height: 10px
           - position: absolute
           - width: 100%
-          - z-index: 2
-          - top: 95%
+          - z-index: 1
+          - bottom: 0%
           - animation: >-
               [[[ if (variables.var_assisting == "true") return "pulse 2s
               infinite"; else return "" ]]]
@@ -310,7 +311,7 @@ button_card_templates:
                 margin: 0
                 card_margin: 0
                 place-content: end
-                grid-template-columns: repeat(auto-fit, minmax(max(4vw, 4vw), 4vw))
+                grid-template-columns: repeat(auto-fit, minmax(max(6vw, 6vw), 6vw))
               cards: |-
                 [[[{
                   const buttonList = [];
