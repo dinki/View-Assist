@@ -16,8 +16,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
   * Sports
   * All Cameras (custom)
   * Camera
-  * Intent
-  * List
   * Webpage
   * Thermostat - also look at making larger
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds
@@ -26,6 +24,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
 * Add ability to set default background in device configuration blueprint and use in clock card
+* Look at setting default dashboard in VA device config so things like buttons can be more dynamic
 
 
 # Done
@@ -39,3 +38,5 @@ This is a list of things to do and things done for the dashboard/ui upgrade
   * Clock - use absolute positioning for date and time  
   * Locate
   * Music - default done (thanks @JimmyJamesBob);
+  * List (no change needed)
+  * Intent (no change needed)  
