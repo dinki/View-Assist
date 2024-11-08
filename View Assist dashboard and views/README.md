@@ -12,7 +12,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Update all existing full screen views to take up all available space
   * Alarm - use absolute positioning for snooze and dismiss buttons
   * Weather - also look at clipping
-  * Music - alternative done (?)
   * Sports
   * All Cameras (custom)
   * Camera
@@ -37,6 +36,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Update all existing full screen views to take up all available space
   * Clock - use absolute positioning for date and time  
   * Locate
-  * Music - default done (thanks @JimmyJamesBob);
+  * Music - default and alternative (thanks @JimmyJamesBob);
   * List (no change needed)
   * Intent (no change needed)  
