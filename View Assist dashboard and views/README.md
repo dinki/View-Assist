@@ -5,6 +5,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Incorporate proof of concept icon handling automation into device configuration blueprint
 * Insure icon list is always defined.  Do this either in device configuration blueprint on startup, device configuration default or handle in icon handling sequences (aka update jinja to handle)
 * Add new VA Assist listening CSS
+* Look at both assisting and processing variants of the bar and popup
 * Add select for listening CSS preference to device configuration blueprint.  Choices are new (default) and existing bar
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint
 * Use microphone type to set variables in variable template
