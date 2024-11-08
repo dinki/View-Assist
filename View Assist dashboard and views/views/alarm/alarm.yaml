@@ -1,5 +1,6 @@
 type: custom:button-card
 variables:
+  alarmcardversion: 1.0.1
   background: /local/viewassist/Samples/ziyao-xiong-TSh4_IYjHRc-unsplash.jpg
   var_alarm_name: |-
     [[[
@@ -27,14 +28,14 @@ styles:
   custom_fields:
     alarm_name:
       - justify-self: center
-      - z-index: 2
+      - z-index: 1
       - font-size: 10vh
       - position: grid
       - color: white
       - align-content: end
     time:
       - justify-self: center
-      - z-index: 2
+      - z-index: 1
       - font-size: 45vh
       - font-weight: bold
       - position: grid
@@ -55,16 +56,6 @@ styles:
       - width: max-content
       - position: grid
       - top: 70%
-    night:
-      - position: absolute
-      - min-height: 200%
-      - width: 200%
-      - backdrop-filter: brightness(5%)
-      - overflow: hidden
-      - display: >-
-          [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode
-          === "night") return "block"; else return "none"; ]]]      
-      - z-index: 3
 custom_fields:
   title: " "
   alarm_name: "[[[ return variables.var_alarm_name ]]]"
@@ -128,4 +119,3 @@ custom_fields:
           - color: white
           - font-weight: bold
           - text-align: center
-  night: .
