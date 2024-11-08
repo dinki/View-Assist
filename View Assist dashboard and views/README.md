@@ -4,13 +4,13 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 
 * Incorporate proof of concept icon handling automation into device configuration blueprint
 * Insure icon list is always defined.  Do this either in device configuration blueprint on startup, device configuration default or handle in icon handling sequences (aka update jinja to handle)
+* Add launch button config to device configuration blueprint and set on restart
 * Add new VA Assist listening CSS
 * Look at both assisting and processing variants of the bar and popup
-* Add select for listening CSS preference to device configuration blueprint.  Choices are new (default) and existing bar
-* Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint
+* Add select for listening CSS preference to device configuration template.  Choices are new (default) and existing bar
+* Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration template
 * Use microphone type to set variables in variable template
 * Update all existing full screen views to take up all available space
-  * Alarm - use absolute positioning for snooze and dismiss buttons
   * Weather - also look at clipping
   * Sports
   * All Cameras (custom)
@@ -18,7 +18,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
   * Webpage
   * Thermostat - also look at making larger
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds
-* Test launch icons in status bar
 * Add option to device configuration blueprint to allow users to set launch icons.  These will be added to the list on start up and never removed
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
@@ -38,4 +37,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
   * Locate
   * Music - default and alternative (thanks @JimmyJamesBob);
   * List (no change needed)
-  * Intent (no change needed)  
+  * Intent (no change needed)
+  * Alarm - Updated in beta repo      
+* Test launch icons in status bar
