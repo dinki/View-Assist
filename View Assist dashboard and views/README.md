@@ -19,6 +19,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Document how to manipulate icon lists for developers
 * Add ability to set default background in device configuration blueprint and use in clock card
 * Look at setting default dashboard in VA device config so things like buttons can be more dynamic
+* Fix restart HA goes to night mode when HA unavailable
 
 
 # Done
