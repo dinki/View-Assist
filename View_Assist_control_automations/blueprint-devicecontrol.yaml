@@ -1,6 +1,7 @@
 blueprint:
   name: View Assist - Control display template
-  description: This is used as a base for setting up display control on a View Assist Satellite (View Assist control v 1.2.1)
+  description: This is used as a base for setting up display control on a View Assist
+    Satellite (View Assist control v 1.3.0)
   domain: automation
   input:
     satellite:
@@ -9,49 +10,59 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain: sensor      
+          - domain:
+            - sensor
+          multiple: false
     display:
       name: Display Device
       description: The browsermod display device used by View Assist (example sensor.browsermod_livingroom_browser_path)
       selector:
         entity:
           filter:
-            - domain: sensor       
+          - domain:
+            - sensor
+          multiple: false
     timer:
       name: Timer
       description: The associated timer device entity for the satellite (example timer.viewassist_living_room)
       selector:
         entity:
           filter:
-            - domain: timer
+          - domain:
+            - timer
+          multiple: false
     intent:
       name: Intent
       description: The above View Assist device entity intent sensor (example sensor.viewassist_living_room_intent)
       selector:
         entity:
           filter:
-            - domain: sensor            
+          - domain:
+            - sensor
+          multiple: false
     dashboard:
       name: Dashboard
       description: The base dashboard for View Assist (do not include trailing slash)
-      default: "/dashboard-viewassist"
+      default: /dashboard-viewassist
     home:
       name: Default Home screen
       description: The screen to return to after timeout
-      default: "/dashboard-viewassist/clock"
+      default: /dashboard-viewassist/clock
     music:
       name: Default Music View screen
       description: The view to return to when in music mode
-      default: "/dashboard-viewassist/music"
+      default: /dashboard-viewassist/music
     intent_view:
       name: Intent View screen
-      description: The view to display for default HA actions for displaying those entities
-      default: "/dashboard-viewassist/intent"
+      description: The view to display for default HA actions for displaying those
+        entities
+      default: /dashboard-viewassist/intent
     micunmute:
       name: Unmute Mic
-      description: Unmute microphone on HA start/restart.  Helpful for Stream Assist devices
+      description: Unmute microphone on HA start/restart.  Helpful for Stream Assist
+        devices
       selector:
-        boolean:
+        boolean: {}
       default: true
     micdevice:
       name: Mic device
@@ -59,37 +70,96 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain:
-                - switch
-          multiple: false      
+          - domain:
+            - switch
+          multiple: false
+  source_url: https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20control%20automations/blueprint-devicecontrol.yaml
+
+trigger_variables:
+  trigger_satellite: !input satellite
 trigger:
-  - platform: state
-    entity_id:
-      - !input display
-    id: ModeControl
-  - platform: state
-    entity_id:
-      - !input satellite
-    id: ModeControl
-    attribute: mode
-  - platform: event
-    event_type: timer.finished
-    event_data:
-      entity_id: !input timer
-    id: timerend
-  - platform: state
-    entity_id:
-      - !input satellite
-    id: Cycle
-    attribute: mode
-    to: cycle
-  - platform: homeassistant
-    event: start
-    id: startup
-  - platform: state
-    entity_id:
-      - !input intent
-    id: intent    
+- platform: state
+  entity_id:
+  - !input display
+  id: ModeControl
+- platform: state
+  entity_id:
+  - !input satellite
+  id: ModeControl
+  attribute: mode
+- platform: event
+  event_type: timer.finished
+  event_data:
+    entity_id: !input timer
+  id: timerend
+- platform: state
+  entity_id:
+  - !input satellite
+  id: Cycle
+  attribute: mode
+  to: cycle
+- platform: homeassistant
+  event: start
+  id: startup
+- platform: state
+  entity_id:
+  - !input intent
+  id: intent
+- platform: state
+  entity_id:
+    - !input satellite
+  attribute: mode
+  id: holdchange
+  to: hold
+- platform: state
+  entity_id:
+    - !input satellite
+  attribute: mode
+  id: holdchange
+  from: hold
+- platform: state
+  entity_id:
+    - !input satellite
+  attribute: do_not_disturb
+  id: dndchange
+  to: true
+- platform: state
+  entity_id:
+    - !input satellite
+  attribute: do_not_disturb
+  id: dndchange
+  to: false
+- id: mediaplayerchange
+  platform: template
+  value_template: >
+    {% set ent = state_attr(trigger_satellite, 'mediaplayer_device') %} 
+    {{ state_attr(ent, 'is_volume_muted') | bool }}
+  alias: Mediaplayer muted
+- id: mediaplayerchange
+  platform: template
+  value_template: >
+    {% set ent = state_attr(trigger_satellite, 'mediaplayer_device') %} 
+    {{ not state_attr(ent, 'is_volume_muted') | bool }}
+  alias: Mediaplayer unmuted  
+- alias: Mic muted
+  id: micchange
+  platform: template
+  value_template: >-
+    {% set target_device =  state_attr(trigger_satellite, 'mic_device') %}
+      {% if '_stt' in target_device %}
+        {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
+      {% endif %}
+    {{ not states(target_device) | bool }}
+- alias: Mic unmuted
+  id: micchange
+  platform: template
+  value_template: >-
+    {% set target_device =  state_attr(trigger_satellite, 'mic_device') %}
+      {% if '_stt' in target_device %}
+        {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
+      {% endif %}
+    {{ states(target_device) | bool }}
+
 variables:
   satellite: !input satellite
   dashboard: !input dashboard
@@ -100,146 +170,211 @@ variables:
   micdevice: !input micdevice
   intent: !input intent
   intent_view: !input intent_view
-
 action:
-  - choose:
-      - conditions:
-          - condition: trigger
-            id:
-              - ModeControl
+- choose:
+  - conditions:
+    - condition: trigger
+      id:
+      - ModeControl
+    sequence:
+    - service: timer.start
+      data:
+        duration: '{{states[satellite].attributes.view_timeout}}'
+      target:
+        entity_id: !input timer
+  - conditions:
+    - condition: trigger
+      id:
+      - timerend
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input satellite
+        state: normal
+        attribute: mode
+        enabled: true
+      then:
+      - service: browser_mod.navigate
+        data:
+          path: '{{home}}'
+        target:
+          device_id: '{{device_id(display)}}'
+    - if:
+      - condition: state
+        entity_id: !input satellite
+        state: music
+        attribute: mode
+        enabled: true
+      then:
+      - service: browser_mod.navigate
+        data:
+          path: '{{ music }}'
+        target:
+          device_id: '{{device_id(display)}}'
+  - conditions:
+    - condition: trigger
+      id:
+      - Cycle
+    sequence:
+    - repeat:
+        while:
+        - condition: state
+          entity_id: !input satellite
+          state: cycle
+          attribute: mode
         sequence:
-          - service: timer.start
-            data:
-              duration: >-
-                {{states[satellite].attributes.view_timeout}}
-            target:
-              entity_id: !input timer
-      - conditions:
-          - condition: trigger
-            id:
-              - timerend
-        sequence:
-          - if:
+        - repeat:
+            for_each: '{{ state_attr (satellite,''cycle_view'')}}'
+            sequence:
+            - if:
               - condition: state
                 entity_id: !input satellite
-                state: normal
+                state: cycle
                 attribute: mode
-                enabled: true
-            then:
+              then:
               - service: browser_mod.navigate
                 data:
-                  path: "{{home}}"
+                  path: '{{dashboard}}/{{repeat.item}}'
                 target:
-                  device_id: "{{device_id(display)}}"
-          - if:
+                  device_id: '{{device_id(display)}}'
+            - if:
               - condition: state
                 entity_id: !input satellite
-                state: music
+                state: cycle
                 attribute: mode
-                enabled: true
-            then:
-              - service: browser_mod.navigate
-                data:
-                  path: "{{ music }}"
-                target:
-                  device_id: "{{device_id(display)}}"
-      - conditions:
-          - condition: trigger
-            id:
-              - Cycle
-        sequence:
-          - repeat:
-              while:
-                - condition: state
-                  entity_id: !input satellite
-                  state: cycle
-                  attribute: mode
-              sequence:
-                - repeat:
-                    for_each: >-
-                      {{ state_attr (satellite,'cycle_view')}}
-                    sequence:
-                      - if:
-                          - condition: state
-                            entity_id: !input satellite
-                            state: cycle
-                            attribute: mode
-                        then:
-                          - service: browser_mod.navigate
-                            data:
-                              path: "{{dashboard}}/{{repeat.item}}"
-                            target:
-                              device_id: "{{device_id(display)}}"
-                      - if:
-                          - condition: state
-                            entity_id: !input satellite
-                            state: cycle
-                            attribute: mode
-                        then:
-                          - wait_for_trigger:
-                              platform: event
-                              event_type: timer.finished
-                              event_data:
-                                entity_id: !input timer
-      - conditions:
-          - condition: trigger
-            id:
-              - startup
-        sequence:
-          - if:
-              - condition: template
-                value_template: "{{ micunmute is true }}"
-            then:        
-              - service: switch.turn_on
-                target:
-                  entity_id: !input micdevice                              
-      - conditions:
-          - condition: trigger
-            id:
-              - intent
-        sequence:
-          - if:
-              - condition: template
-                value_template: >-
-                  {{ state_attr(intent, 'intent_output')['response']['speech']['plain']['speech'] 
-                  is not in "Sorry, I couldn't understand that"}}
-            then:
-              - service: python_script.set_state
-                data:
-                  entity_id: "{{ satellite }}"
-                  last_said: >-
-                    {{ state_attr(intent,
-                    'intent_output')['response']['speech']['plain']['speech']}}
-                enabled: true 
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ satellite }}"
-              intent_entities: >-
-                {% set list =
-                state_attr(intent,'intent_output')['response']['data']['success']
-                | map(attribute='id') | list %}  {% set prefix = ('light',
-                'switch', 'cover', 'boolean') %}  {% set data =
-                namespace(filtered_list=[]) %}  {% for item in list %}
-                    {%- if item.startswith(prefix) %} 
-                        {% set data.filtered_list = data.filtered_list + [item] %}
-                    {% endif -%}
-                {% endfor %}  {% set list = data.filtered_list %} [ {% for e
-                in list %}  {{ {'type': 'custom:button-card','entity': e,
-                'tap_action':{'action':'toggle'},
-                'double_tap_action':{'action':'more-info'}} }} , {% endfor %}
-                ]
-            enabled: true
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if 'id' in
-                  state_attr(intent,
-                  'intent_output')['response']['data']['success'][0] %} true {%
-                  else %} false {% endif %}
-            then:
-              - service: browser_mod.navigate
-                data:
-                  path: "{{ intent_view }}"
-                target:
-                  device_id: "{{device_id(display)}}"
+              then:
+              - wait_for_trigger:
+                  platform: event
+                  event_type: timer.finished
+                  event_data:
+                    entity_id: !input timer
+  - conditions:
+    - condition: trigger
+      id:
+      - startup
+    sequence:
+    - if:
+      - condition: template
+        value_template: '{{ micunmute is true }}'
+      then:
+      - service: switch.turn_on
+        target:
+          entity_id: !input micdevice
+  - conditions:
+    - condition: trigger
+      id:
+      - intent
+    sequence:
+    - if:
+      - condition: template
+        value_template: '{{ state_attr(intent, ''intent_output'')[''response''][''speech''][''plain''][''speech'']  is
+          not in "Sorry, I couldn''t understand that"}}'
+      then:
+      - service: python_script.set_state
+        data:
+          entity_id: '{{ satellite }}'
+          last_said: '{{ state_attr(intent, ''intent_output'')[''response''][''speech''][''plain''][''speech'']}}'
+        enabled: true
+    - service: python_script.set_state
+      data:
+        entity_id: '{{ satellite }}'
+        intent_entities: "{% set list = state_attr(intent,'intent_output')['response']['data']['success']
+          | map(attribute='id') | list %}  {% set prefix = ('light', 'switch', 'cover',
+          'boolean') %}  {% set data = namespace(filtered_list=[]) %}  {% for item
+          in list %}\n    {%- if item.startswith(prefix) %} \n        {% set data.filtered_list
+          = data.filtered_list + [item] %}\n    {% endif -%}\n{% endfor %}  {% set
+          list = data.filtered_list %} [ {% for e in list %}  {{ {'type': 'custom:button-card','entity':
+          e, 'tap_action':{'action':'toggle'}, 'double_tap_action':{'action':'more-info'}}
+          }} , {% endfor %} ]"
+      enabled: true
+    - if:
+      - condition: template
+        value_template: '{% if ''id'' in state_attr(intent, ''intent_output'')[''response''][''data''][''success''][0]
+          %} true {% else %} false {% endif %}'
+      then:
+      - service: browser_mod.navigate
+        data:
+          path: '{{ intent_view }}'
+        target:
+          device_id: '{{device_id(display)}}'          
+  - conditions:
+      - condition: trigger
+        id:
+          - holdchange
+    sequence:
+      - variables:
+          icon_list: >-
+            {% set old_list = state_attr(satellite, 'status_icons') or [] %}  
+            {% set target_device = satellite %}  
+            {% if state_attr(target_device, 'mode') != 'hold' %}
+              {% set new_list = old_list | reject('eq', 'hold') | list %}
+            {% elif state_attr(target_device, 'mode') == 'hold' %}
+              {% set new_list = ['hold'] + old_list | unique | list %}
+            {% endif %} 
+            {{ new_list }}
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ satellite }}"
+          status_icons: "{{ icon_list }}"
+  - conditions:
+      - condition: trigger
+        id:
+          - dndchange
+    sequence:
+      - variables:
+          icon_list: >-
+            {% set old_list = state_attr(satellite,'status_icons') or [] %}
+            {% set target_device = satellite %}  
+            {% if state_attr(target_device, 'do_not_disturb') == false %}
+              {% set new_list = old_list | reject('eq', 'dnd') | list %}
+            {% elif state_attr(target_device, 'do_not_disturb') == true %}
+              {% set new_list = ['dnd'] + old_list | unique | list %}
+            {% endif %}  
+            {{ new_list }}
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ satellite }}"
+          status_icons: "{{ icon_list }}"          
+  - conditions:
+      - condition: trigger
+        id:
+          - micchange
+    sequence:
+      - variables:
+          icon_list: >-
+            {% set old_list = state_attr(satellite,'status_icons') or [] %}   
+            {% set target_device = state_attr(satellite, 'mic_device') %} 
+            {% if target_device and '_stt' in target_device %}
+              {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
+            {% endif %}    
+            {% if states(target_device) == 'on' %}
+              {% set new_list = old_list | reject('eq', 'mic') | list %}
+            {% elif states(target_device) == 'off' %}
+              {% set new_list = ['mic'] + old_list | unique | list %}
+            {% endif %}   
+            {{ new_list }}
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ satellite }}"
+          status_icons: "{{ icon_list }}" 
+
+  - conditions:
+      - condition: trigger
+        id:
+          - mediaplayerchange
+    sequence:
+      - variables:
+          icon_list: >-
+            {% set old_list = state_attr(satellite, 'status_icons') or [] %} 
+            {% set target_device = state_attr(satellite, 'mediaplayer_device') %}    
+            {% if state_attr(target_device, 'is_volume_muted') == false %}
+              {% set new_list = old_list | reject('eq', 'mediaplayer') | list %}
+            {% elif state_attr(target_device, 'is_volume_muted') == true %}
+              {% set new_list = ['mediaplayer'] + old_list | unique | list %}
+            {% endif %} 
+            {{ new_list }}
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ satellite }}"
+          status_icons: "{{ icon_list }}"
 mode: parallel
