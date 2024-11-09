@@ -2,22 +2,24 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 
 # To do
 
-* Incorporate proof of concept icon handling automation into device configuration blueprint
+
 * Insure icon list is always defined.  Do this either in device configuration blueprint on startup, device configuration default or handle in icon handling sequences (aka update jinja to handle)
 * Add new VA Assist listening CSS
 * Look at both assisting and processing variants of the bar and popup
-* Add launch button config to device configuration blueprint and set on restart
-* Add select for listening CSS preference to device configuration blueprint and set on start up.  Choices are new (default) and existing bar
 * Add option to device configuration blueprint to allow users to set launch icons.  These will be added to the list on start up and never removed
+* Add default options (timeout, mode, do_not_disturb, background) to BP and set on start
+* Add ability to set default background in device configuration blueprint and use in clock card.  Set on start
+* Add select for listening CSS preference to device configuration blueprint and set on start up.  Choices are new (default) and existing bar
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint and set on start up
 * Use microphone type to set variables in variable template of dashboard
+* Update YAML template device config to reflect changes above
+* Give device id in YAML config so that device can have an area ??
 * Update all existing full screen views to take up all available space
   * Camera
   * Webpage
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
-* Add ability to set default background in device configuration blueprint and use in clock card
 * Look at setting default dashboard in VA device config so things like buttons can be more dynamic
 * Fix restart HA goes to night mode when HA unavailable
 
@@ -34,3 +36,4 @@ This is a list of things to do and things done for the dashboard/ui upgrade
   * Music - default and alternative (thanks @JimmyJamesBob);
   * Alarm - Updated in beta repo      
 * Test launch icons in status bar
+* Incorporate proof of concept icon handling automation into device configuration blueprint
