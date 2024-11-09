@@ -4,76 +4,139 @@ blueprint:
     Satellite (View Assist control v 1.3.0)
   domain: automation
   input:
-    satellite:
-      name: Satellite
-      description: The View Assist device entity to control (example sensor.viewassist_living_room)
-      selector:
-        entity:
-          filter:
-          - domain:
-            - sensor
-          multiple: false
-    display:
-      name: Display Device
-      description: The browsermod display device used by View Assist (example sensor.browsermod_livingroom_browser_path)
-      selector:
-        entity:
-          filter:
-          - domain:
-            - sensor
-          multiple: false
-    timer:
-      name: Timer
-      description: The associated timer device entity for the satellite (example timer.viewassist_living_room)
-      selector:
-        entity:
-          filter:
-          - domain:
-            - timer
-          multiple: false
-    intent:
-      name: Intent
-      description: The above View Assist device entity intent sensor (example sensor.viewassist_living_room_intent)
-      selector:
-        entity:
-          filter:
-          - domain:
-            - sensor
-          multiple: false
-    dashboard:
-      name: Dashboard
-      description: The base dashboard for View Assist (do not include trailing slash)
-      default: /dashboard-viewassist
-    home:
-      name: Default Home screen
-      description: The screen to return to after timeout
-      default: /dashboard-viewassist/clock
-    music:
-      name: Default Music View screen
-      description: The view to return to when in music mode
-      default: /dashboard-viewassist/music
-    intent_view:
-      name: Intent View screen
-      description: The view to display for default HA actions for displaying those
-        entities
-      default: /dashboard-viewassist/intent
-    micunmute:
-      name: Unmute Mic
-      description: Unmute microphone on HA start/restart.  Helpful for Stream Assist
-        devices
-      selector:
-        boolean: {}
-      default: true
-    micdevice:
-      name: Mic device
-      description: The microphone entity to unmute on HA start/restart. (example switch.viewassist_living_room_mic)
-      selector:
-        entity:
-          filter:
-          - domain:
-            - switch
-          multiple: false
-  source_url: https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20control%20automations/blueprint-devicecontrol.yaml
+    device_definitions:
+      name: Device Definitions
+      icon: mdi:cog
+      description: These options set the various associated devices for controlling this satellite device
+      input:
+        satellite:
+          name: Satellite
+          description: The View Assist device entity to control (example sensor.viewassist_living_room)
+          selector:
+            entity:
+              filter:
+              - domain:
+                - sensor
+              multiple: false
+        display:
+          name: Display Device
+          description: The browsermod display device used by View Assist (example sensor.browsermod_livingroom_browser_path)
+          selector:
+            entity:
+              filter:
+              - domain:
+                - sensor
+              multiple: false
+        timer:
+          name: Timer
+          description: The associated timer device entity for the satellite (example timer.viewassist_living_room)
+          selector:
+            entity:
+              filter:
+              - domain:
+                - timer
+              multiple: false
+        intent:
+          name: Intent
+          description: The above View Assist device entity intent sensor (example sensor.viewassist_living_room_intent)
+          selector:
+            entity:
+              filter:
+              - domain:
+                - sensor
+              multiple: false
+        mic_type:
+          name: Microphone Type
+          description: The microphone provider type
+          default: Stream Assist
+          selector:
+            select:
+              custom_value: true
+              options:
+                - Stream Assist
+                - HassMic
+                - Home Assistant Voice Satellite
+    dashboard_definitions:
+      name: Dashboard Definitions
+      icon: mdi:monitor
+      description: These options set the dashboard options for displaying on this satellite device
+      input:
+        dashboard:
+          name: Dashboard
+          description: The base dashboard for View Assist (do not include trailing slash)
+          default: /dashboard-viewassist
+        home:
+          name: Default Home screen
+          description: The screen to return to after timeout
+          default: /dashboard-viewassist/clock
+        music:
+          name: Default Music View screen
+          description: The view to return to when in music mode
+          default: /dashboard-viewassist/music
+        intent_view:
+          name: Intent View screen
+          description: The view to display for default HA actions for displaying those
+            entities
+          default: /dashboard-viewassist/intent
+        default_background:
+          name: Default background
+          description: The path to the default background image for this device
+          default: /local/viewassist/backgrounds/mybackground.jpg
+        assist_bar:
+          name: Assist bar
+          description: The Assist bar style to use for wake word and intent processing
+          default: flashing bar
+          selector:
+            select:
+              custom_value: true
+              options:
+                - flashing bar
+                - blur pop up         
+    default_definitions:
+      name: Dashboard Definitions
+      icon: mdi:format-list-bulleted
+      description: These options set the dashboard options for displaying on this satellite device
+      input:
+        mode:
+          name: Default mode
+          description: The default mode for this satellite device
+          default: "normal"
+        view_timeout:
+          name: View Timeout
+          description: The default time out value for this satellite device in seconds before returning to default view
+          default: "20"                
+        do_not_disturb:
+          name: Do not disturb
+          description: Default state for do not disturb mode
+          selector:
+            boolean: {}
+          default: false
+        status_icons:
+          name: Launch icons
+          description: Advanced option! List of custom launch icons to set on start up.  Do not change this if you do not know what you are doing
+          default: "[]"
+    streamassist_option:
+      name: Optional.  Stream Assist specific
+      description: These options set the dashboard options for displaying on this satellite device
+      collapsed: true
+      input:  
+        micunmute:
+          name: Unmute Mic
+          description: Unmute microphone on HA start/restart.  Helpful for Stream Assist
+            devices
+          selector:
+            boolean: {}
+          default: false
+        micdevice:
+          name: Mic device
+          description: The microphone entity to unmute on HA start/restart. (example switch.viewassist_living_room_mic)
+          default: ""
+          selector:
+            entity:
+              filter:
+              - domain:
+                - switch
+              multiple: false
 
 trigger_variables:
   trigger_satellite: !input satellite
@@ -170,6 +233,13 @@ variables:
   micdevice: !input micdevice
   intent: !input intent
   intent_view: !input intent_view
+  default_background: !input default_background
+  mode: !input mode
+  view_timeout: !input view_timeout
+  do_not_disturb: !input do_not_disturb
+  status_icons: !input status_icons
+  assist_bar: !input assist_bar
+  mic_type: !input mic_type
 action:
 - choose:
   - conditions:
@@ -260,6 +330,17 @@ action:
       - service: switch.turn_on
         target:
           entity_id: !input micdevice
+      - service: python_script.set_state
+        data:
+          entity_id: '{{ satellite }}'
+          default_background: "{{ default_background }}"
+          mode: "{{ mode }}"
+          view_timeout: "{{ view_timeout }}"
+          do_not_disturb: "{{ do_not_disturb }}"
+          status_icons: "{{ status_icons }}"
+          assist_bar: "{{ assist_bar }}"
+          mic_type: "{{ mic_type }}"          
+        enabled: true
   - conditions:
     - condition: trigger
       id:
@@ -357,7 +438,6 @@ action:
         data:
           entity_id: "{{ satellite }}"
           status_icons: "{{ icon_list }}" 
-
   - conditions:
       - condition: trigger
         id:
