@@ -3,7 +3,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 # To do
 
 
-* Edit clock card to use default_background variable in VA device attributes
 * Add new VA Assist listening CSS
 * Use VA device assist bar type to determine which to show when called
 * Look at both assisting and processing variants of the bar and popup
@@ -39,3 +38,5 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add ability to set default background in device configuration blueprint and use in clock card.  Set on start
 * Add select for listening CSS preference to device configuration blueprint and set on start up.  Choices are new (default) and existing bar
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint and set on start up
+* Edit clock card to use default_background variable in VA device attributes
+
