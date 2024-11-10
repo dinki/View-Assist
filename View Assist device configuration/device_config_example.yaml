@@ -9,11 +9,10 @@
 #  * timer_device: Used to assign the timer helper device used for screen time outs
 #  * display_device: Used to determine the correct Browser Mod instance to use for display
 #  * browser_id: Used to assign the browser being used by Browsermod.  This will match the name you give the device in your Browsermod configuration
-#  * view_timeout: Amount of time (seconds) before switching views as controlled by mode (Default 20 seconds)
-# All other lines should be copied as is without change
+#
 #
 # Multiple sensors can be created by copy pasting the definition from the "- name" line until the end of
-# The "do not disturb line" to the end of the template block and modifying with the next sensor details
+# the "timer_device" to the end of the template block and modifying with the next sensor details
 # You must create a timer helper device per device
 # You must create a sesnor helper group (eg group.viewassist_satellites) and include all View Assist satellites in the group
 #
@@ -31,14 +30,5 @@ template:
         display_device: "sensor.browsermod-livingroom_browser_path"
         browser_id: "ViewAssist-livingroom"
         timer_device: "timer.viewassist-livingroom"
-        view_timeout: "20"
-        mode: "normal"
-        title: ""
-        message: ""
-        message_font_size: "3vw"
-        image: ""
-        timer: ""
-        alarm: "idle"
-        cycle_view: ""
-        do_not_disturb: false
+
         
