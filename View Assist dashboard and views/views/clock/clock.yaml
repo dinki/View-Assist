@@ -1,5 +1,6 @@
 type: custom:button-card
 variables:
+  clockcardversion: 1.1.0
   var_background: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.default_background}
@@ -56,7 +57,7 @@ custom_fields:
       name: "[[[ return variables.var_weather_temperature ]]]"
       tap_action:
         action: navigate
-        navigation_path: /dashboard-viewassist/weather
+        navigation_path: weather
       styles:
         card:
           - background-color: transparent
