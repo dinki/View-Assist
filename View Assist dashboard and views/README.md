@@ -7,7 +7,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Use VA device assist bar type to determine which to show when called
 * Look at both assisting and processing variants of the bar and popup
 * Use microphone type to set variables in variable template of dashboard
-* Update YAML template device config to reflect changes made making these unnecessary to define manually
 * Give device id in YAML config so that device can have an area ??
 * Update all existing full screen views to take up all available space
   * Camera
@@ -39,3 +38,4 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint and set on start up
 * Edit clock card to use default_background variable in VA device attributes
 * Look at using default dashboard in VA device config so things like buttons can be more dynamic (weather button on clock screen) -- fixed by making it relative instead of absolute.  Uses current dashboard.
+* Update YAML template device config to reflect changes made making these unnecessary to define manually
