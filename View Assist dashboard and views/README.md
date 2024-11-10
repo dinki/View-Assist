@@ -15,7 +15,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
-* Look at using default dashboard in VA device config so things like buttons can be more dynamic (weather button on clock screen)
 * Fix restart HA goes to night mode when HA unavailable
 
 
@@ -39,4 +38,4 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add select for listening CSS preference to device configuration blueprint and set on start up.  Choices are new (default) and existing bar
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint and set on start up
 * Edit clock card to use default_background variable in VA device attributes
-
+* Look at using default dashboard in VA device config so things like buttons can be more dynamic (weather button on clock screen) -- fixed by making it relative instead of absolute.  Uses current dashboard.
