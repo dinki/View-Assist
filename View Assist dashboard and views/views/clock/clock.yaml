@@ -1,6 +1,10 @@
 type: custom:button-card
 variables:
-  background: /local/viewassist/Samples/ziyao-xiong-TSh4_IYjHRc-unsplash.jpg
+  var_background: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.default_background}
+    catch { return
+    ""}]]]  
 template:
   - variable_template
   - body_template
@@ -14,7 +18,7 @@ styles:
     - grid-template-rows: min-content min-content min-content min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
+    - background: "[[[ return `center / cover no-repeat url(${variables.var_background})` ]]]"
     - background-size: cover
   custom_fields:
     time:
