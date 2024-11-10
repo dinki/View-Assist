@@ -329,7 +329,7 @@ action:
       then:
       - service: switch.turn_on
         target:
-          entity_id: !input micdevice
+          entity_id: "{{ micdevice }}"
       - service: python_script.set_state
         data:
           entity_id: '{{ satellite }}'
