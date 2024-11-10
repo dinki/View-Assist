@@ -367,7 +367,7 @@ button_card_templates:
       action: call-service
       service: homeassistant.turn_on
       service_data:
-        entity_id: switch.viewassist_masterbedroom_mic
+        entity_id: '[[[ return variables.var_mic_device ]]]'
   hold:
     type: custom:button-card
     template: icon_template
