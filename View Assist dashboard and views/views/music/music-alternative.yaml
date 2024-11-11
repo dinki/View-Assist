@@ -23,7 +23,7 @@
               type: custom:mod-card
               card:
                 type: custom:mini-media-player
-                entity: '[[[ return variables.var_music_device ]]]'
+                entity: '[[[ return variables.var_musicplayer_device ]]]'
                 artwork: cover
                 hide:
                   icon: true
