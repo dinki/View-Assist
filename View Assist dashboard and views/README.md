@@ -14,7 +14,8 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
 * Fix restart HA goes to night mode when HA unavailable
-
+* Add font definition
+* Add ability to select icon size
 
 # Done
 
