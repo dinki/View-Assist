@@ -130,7 +130,7 @@ blueprint:
         micdevice:
           name: Mic device
           description: The microphone entity to unmute on HA start/restart. (example switch.viewassist_living_room_mic)
-          default: ""
+          default: {}
           selector:
             entity:
               filter:
