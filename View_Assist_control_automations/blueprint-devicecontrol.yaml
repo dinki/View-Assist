@@ -330,17 +330,17 @@ action:
       - service: switch.turn_on
         target:
           entity_id: !input micdevice
-      - service: python_script.set_state
-        data:
-          entity_id: '{{ satellite }}'
-          default_background: "{{ default_background }}"
-          mode: "{{ mode }}"
-          view_timeout: "{{ view_timeout }}"
-          do_not_disturb: "{{ do_not_disturb }}"
-          status_icons: "{{ status_icons }}"
-          assist_bar: "{{ assist_bar }}"
-          mic_type: "{{ mic_type }}"          
-        enabled: true
+    - service: python_script.set_state
+      data:
+        entity_id: '{{ satellite }}'
+        default_background: "{{ default_background }}"
+        mode: "{{ mode }}"
+        view_timeout: "{{ view_timeout }}"
+        do_not_disturb: "{{ do_not_disturb }}"
+        status_icons: "{{ status_icons }}"
+        assist_bar: "{{ assist_bar }}"
+        mic_type: "{{ mic_type }}"          
+      enabled: true
   - conditions:
     - condition: trigger
       id:
