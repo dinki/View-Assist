@@ -163,7 +163,18 @@ trigger:
   to: cycle
 - platform: homeassistant
   event: start
-  id: startup
+  id: set_attributes
+# Fix for quick reload
+# Currently a bit unstable as it does not work every time
+- id: set_attributes
+  platform: template
+  value_template: >
+    {{ state_attr(trigger_satellite, 'default_background') is none }}
+  for:
+    seconds: 5
+- platform: homeassistant
+  event: start
+  id: mic_unmute    
 - platform: state
   entity_id:
   - !input intent
@@ -321,7 +332,19 @@ action:
   - conditions:
     - condition: trigger
       id:
-      - startup
+      - mic_unmute
+    sequence:
+    - if:
+      - condition: template
+        value_template: '{{ micunmute is true }}'
+      then:
+      - service: switch.turn_on
+        target:
+          entity_id: !input micdevice                    
+  - conditions:
+    - condition: trigger
+      id:
+      - set_attributes
     sequence:
     - if:
       - condition: template
