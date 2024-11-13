@@ -101,8 +101,8 @@ blueprint:
           description: The path to the default background image for this device
           default: /local/viewassist/backgrounds/mybackground.jpg
         assist_prompt:
-          name: Assist bar
-          description: The Assist bar style to use for wake word and intent processing
+          name: Assist Prompt
+          description: The Assist prompt style to use for wake word and intent processing
           default: flashing bar
           selector:
             select:
