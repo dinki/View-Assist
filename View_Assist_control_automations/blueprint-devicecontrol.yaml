@@ -18,6 +18,24 @@ blueprint:
               - domain:
                 - sensor
               multiple: false
+        group_entity:
+          name: Group Entity
+          description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
+          selector:
+            entity:
+              filter:
+              - domain:
+                - group
+              multiple: false 
+        weather_entity:
+          name: Weather Entity
+          description: The weather entity to display on this View Assist satellite(example weather.home)
+          selector:
+            entity:
+              filter:
+              - domain:
+                - weather
+              multiple: false                     
         display:
           name: Display Device
           description: The browsermod display device used by View Assist (example sensor.browsermod_livingroom_browser_path)
@@ -93,9 +111,9 @@ blueprint:
                 - flashing bar
                 - blur pop up         
     default_definitions:
-      name: Dashboard Definitions
+      name: Default Definitions
       icon: mdi:format-list-bulleted
-      description: These options set the dashboard options for displaying on this satellite device
+      description: These options set some of the default values on this satellite device
       input:
         mode:
           name: Default mode
@@ -115,6 +133,27 @@ blueprint:
           name: Launch icons
           description: Advanced option! List of custom launch icons to set on start up.  Do not change this if you do not know what you are doing
           default: "[]"
+        status_icons_size:
+          name: Status Icons Size
+          description: Size of the icons in the status icon display
+          default: medium
+          selector:
+            select:
+              custom_value: true
+              options:
+                - small
+                - medium
+                - large
+        font_style:
+          name: Font Style
+          description: The default font to use for this satellite device.  Font name must match perfectly and be available
+          default: "Roboto"
+        use_24_hour_time:
+          name: Use 24 hour time
+          description: Sets clock display to 24 hour time when enabled
+          selector:
+            boolean: {}
+          default: false                                 
     streamassist_option:
       name: Optional.  Stream Assist specific
       description: These options set the dashboard options for displaying on this satellite device
@@ -236,6 +275,8 @@ trigger:
 
 variables:
   satellite: !input satellite
+  group_entity: !input group_entity
+  weather_entity: !input weather_entity
   dashboard: !input dashboard
   display: !input display
   home: !input home
@@ -251,6 +292,9 @@ variables:
   status_icons: !input status_icons
   assist_prompt: !input assist_prompt
   mic_type: !input mic_type
+  status_icons_size: !input status_icons_size
+  font_style: !input font_style
+  use_24_hour_time: !input use_24_hour_time
 action:
 - choose:
   - conditions:
