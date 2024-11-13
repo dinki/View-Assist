@@ -82,7 +82,7 @@ blueprint:
           name: Default background
           description: The path to the default background image for this device
           default: /local/viewassist/backgrounds/mybackground.jpg
-        assist_bar:
+        assist_prompt:
           name: Assist bar
           description: The Assist bar style to use for wake word and intent processing
           default: flashing bar
@@ -249,7 +249,7 @@ variables:
   view_timeout: !input view_timeout
   do_not_disturb: !input do_not_disturb
   status_icons: !input status_icons
-  assist_bar: !input assist_bar
+  assist_prompt: !input assist_prompt
   mic_type: !input mic_type
 action:
 - choose:
@@ -361,7 +361,7 @@ action:
         view_timeout: "{{ view_timeout }}"
         do_not_disturb: "{{ do_not_disturb }}"
         status_icons: "{{ status_icons }}"
-        assist_bar: "{{ assist_bar }}"
+        assist_prompt: "{{ assist_prompt }}"
         mic_type: "{{ mic_type }}"          
       enabled: true
   - conditions:
