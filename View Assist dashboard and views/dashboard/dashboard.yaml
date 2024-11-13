@@ -82,13 +82,13 @@ button_card_templates:
             return `${assisting_text}`;
           } catch { return  ""}
         ]]]      
-      var_assist_bar: |-
+      var_assist_prompt: |-
         [[[
           try {
             var assistbar_assistbid = hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-            var assist_bar = hass.states[assistbar_assistbid].attributes.assist_bar;
-            return `${assist_bar}`;
+            var assist_prompt = hass.states[assistbar_assistbid].attributes.assist_prompt;
+            return `${assist_prompt}`;
           } catch { return  "";}
         ]]]             
       var_mic_device: |-
@@ -297,7 +297,7 @@ button_card_templates:
       custom_fields:
         filter1:
           - display: >-
-              [[[ if (variables.var_assist_bar == "blur pop up") return "block";
+              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
               else return "none"; ]]]       
           - position: absolute
           - top: 0px
@@ -309,7 +309,7 @@ button_card_templates:
           - color: transparent
         filter2:
           - display: >-
-              [[[ if (variables.var_assist_bar == "blur pop up") return "block";
+              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
               else return "none"; ]]]       
           - top: 0px
           - left: 0px
@@ -343,7 +343,7 @@ button_card_templates:
           - z-index: 1
         assistbar:
           - display: >-
-              [[[ if (variables.var_assist_bar == "flashing bar") return
+              [[[ if (variables.var_assist_prompt == "flashing bar") return
               "block"; else return "none"; ]]]
           - justify-self: center
           - height: 10vh
@@ -357,7 +357,7 @@ button_card_templates:
           - height: 10px
         assistblur:
           - display: >-
-              [[[ if (variables.var_assist_bar == "blur pop up") return "block";
+              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
               else return "none"; ]]]           
           - position: absolute
           - vertical-align: middle
