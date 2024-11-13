@@ -3,8 +3,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 # To do
 
 
-* Add new VA Assist listening CSS
-* Use VA device assist bar type to determine which to show when called
 * Look at both assisting and processing variants of the bar and popup
 * Use microphone type to set variables in variable template of dashboard
 * Give device id in YAML config so that device can have an area ??
@@ -17,6 +15,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add font definition
 * Add ability to select icon size
 * Move assist_group,  var_weather_entity, and use_24_hour_time to BP and pull those values into variable template
+* Rename assist_bar to assist_prompt in both dashboard and BP
 
   
 # Done
@@ -42,3 +41,5 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Edit clock card to use default_background variable in VA device attributes
 * Look at using default dashboard in VA device config so things like buttons can be more dynamic (weather button on clock screen) -- fixed by making it relative instead of absolute.  Uses current dashboard.
 * Update YAML template device config to reflect changes made making these unnecessary to define manually
+* Add new VA Assist listening CSS
+* Use VA device assist bar type to determine which to show when called
