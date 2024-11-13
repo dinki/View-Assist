@@ -3,7 +3,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 # To do
 
 
-* Look at both assisting and processing variants of the bar and popup (confirm that it is working in SA)
 * Use microphone type to set variables in variable template of dashboard
 * Give device id in YAML config so that device can have an area ??
 * Update all existing full screen views to take up all available space
@@ -12,10 +11,10 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
 * Fix restart HA goes to night mode when HA unavailable
-* Add font definition
-* Add ability to select icon size
-* Move assist_group,  var_weather_entity, and use_24_hour_time to BP and pull those values into variable template
-* See if a trigger exists for BP update and set values if that happens to avoid reload automation
+* Add font definition (BP input created and assigned to variable but not set in attributes or used in dashboard)
+* Add ability to select icon size (BP input created and assigned to variable but not set in attributes or used in dashboard)
+* Move assist_group,  var_weather_entity, and use_24_hour_time to BP and pull those values into variable template (BP input created and assigned to variable but not set in attributes or used in dashboard)
+* See if a trigger exists for BP update and set values if that happens to avoid reload automation (question posted on forum)
 
   
 # Done
@@ -45,3 +44,4 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Update YAML template device config to reflect changes made making these unnecessary to define manually
 * Add new VA Assist listening CSS
 * Use VA device assist bar type to determine which to show when called
+* Look at both assisting and processing variants of the bar and popup (not working in SA but less impactful when others move to HassMic)
