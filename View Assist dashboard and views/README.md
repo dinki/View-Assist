@@ -16,7 +16,9 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Fix restart HA goes to night mode when HA unavailable
 * Add font definition
 * Add ability to select icon size
+* Move assist_group,  var_weather_entity, and use_24_hour_time to BP and pull those values into variable template
 
+  
 # Done
 
 * Change method for displaying icons using VA device attribute status_icons list (thanks @JimmyJamesBob)
