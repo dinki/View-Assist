@@ -16,6 +16,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add ability to select icon size
 * Move assist_group,  var_weather_entity, and use_24_hour_time to BP and pull those values into variable template
 * Rename assist_bar to assist_prompt in both dashboard and BP
+* See if a trigger exists for BP update and set values if that happens to avoid reload automation
 
   
 # Done
