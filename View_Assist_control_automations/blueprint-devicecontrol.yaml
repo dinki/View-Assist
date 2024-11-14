@@ -210,7 +210,13 @@ trigger:
   value_template: >
     {{ state_attr(trigger_satellite, 'default_background') is none }}
   for:
-    seconds: 5   
+    seconds: 10
+- id: set_attributes_on_save
+  platform: event
+  event_type: call_service
+  event_data:
+    domain: automation
+    service: reload
 - platform: state
   entity_id:
   - !input intent
@@ -369,11 +375,13 @@ action:
                   platform: event
                   event_type: timer.finished
                   event_data:
-                    entity_id: !input timer
+                    entity_id: !input timer 
   - conditions:
     - condition: trigger
       id:
       - startup
+      - missing_attributes
+      - set_attributes_on_save
     sequence:
     - if:
       - condition: template
@@ -381,23 +389,21 @@ action:
       then:
       - service: switch.turn_on
         target:
-          entity_id: !input micdevice                    
-  - conditions:
-    - condition: trigger
-      id:
-      - startup
-      - missing_attributes
-    sequence:
+          entity_id: !input micdevice                       
     - service: python_script.set_state
       data:
-        entity_id: '{{ satellite }}'
+        entity_id: "{{ satellite }}"
         default_background: "{{ default_background }}"
         mode: "{{ mode }}"
+        weather_entity: "{{ weather_entity }}"
         view_timeout: "{{ view_timeout }}"
         do_not_disturb: "{{ do_not_disturb }}"
         status_icons: "{{ status_icons }}"
         assist_prompt: "{{ assist_prompt }}"
-        mic_type: "{{ mic_type }}"          
+        mic_type: "{{ mic_type }}"
+        status_icons_size: "{{ status_icons_size }}"
+        font_style: "{{ font_style }}"
+        use_24_hour_time: "{{ use_24_hour_time }}"    
       enabled: true
   - conditions:
     - condition: trigger
