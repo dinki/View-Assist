@@ -2,7 +2,13 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
-      var_weather_entity: weather.home
+      var_assistsat_entity_weather_entity: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.weather_entity;
+          } catch { return  ""} 
+        ]]]      
       var_assistsat_entity_status_icons_size: |
         [[[ 
           try 
@@ -10,7 +16,6 @@ button_card_templates:
             return states[variables.var_assistsat_entity].attributes.status_icons_size;
           } catch { return  "6vw"} 
         ]]]
-
       var_assistsat_entity_use_24_hour_time: |
         [[[ 
           try 
@@ -18,7 +23,6 @@ button_card_templates:
             return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
           } catch { return  false} 
         ]]]
-      
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
@@ -203,7 +207,7 @@ button_card_templates:
         [[[ 
           try 
           {
-            return (states[variables.var_weather_entity].attributes.temperature  + '°');
+            return (states[variables. var_assistsat_entity_weather_entity].attributes.temperature  + '°');
           }
           catch { return  ""}
         ]]]      
@@ -242,7 +246,7 @@ button_card_templates:
           };
           try
           {
-            var condition = states[variables.var_weather_entity].state;
+            var condition = states[variables. var_assistsat_entity_weather_entity].state;
             if (states['sun.sun'] === 'above_horizon') {
               var weather_icon = weatherIconsDay[condition]; 
             } else {
