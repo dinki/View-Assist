@@ -2,8 +2,15 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
-      var_weather_entity: weather.home
+      var_weather_entity: |-
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.weather_entity;
+          } catch { return  ""} 
+        ]]]      
       use_24_hour_time: false
+      
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
@@ -56,7 +63,7 @@ button_card_templates:
             var micstate = hass.states[micdevice].state;
             if (micdevice.includes("_stt")) 
             {
-              var assisting = micstate.includes("start");
+              var assisting = micstate.includes("start") || micstate.includes("vad")
             }
             else
             {
@@ -73,24 +80,24 @@ button_card_templates:
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
-            var assisting_text = "How Can I Assist?";
+            var assisting_text = "How can I assist?";
             if (micdevice.includes("_stt") && !micstate?.includes("start")) {
-              assisting_text = "Processing Request";
+              assisting_text = "Processing request";
             } else if (micdevice.includes("_simple_state") && !micstate?.includes("stt-listening")) {
-              assisting_text = "Processing Request";
+              assisting_text = "Processing request";
             } 
             return `${assisting_text}`;
           } catch { return  ""}
-        ]]]      
+        ]]]              
       var_assist_prompt: |-
         [[[
           try {
-            var assistbar_assistbid = hass.states[variables.assist_group].attributes.entity_id
+            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-            var assist_prompt = hass.states[assistbar_assistbid].attributes.assist_prompt;
+            var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
             return `${assist_prompt}`;
           } catch { return  "";}
-        ]]]             
+        ]]]            
       var_mic_device: |-
         [[[
           try
@@ -297,8 +304,8 @@ button_card_templates:
       custom_fields:
         filter1:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
-              else return "none"; ]]]       
+              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              "block"; else return "none"; ]]]       
           - position: absolute
           - top: 0px
           - left: 0px
@@ -309,8 +316,8 @@ button_card_templates:
           - color: transparent
         filter2:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
-              else return "none"; ]]]       
+              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              "block"; else return "none"; ]]]       
           - top: 0px
           - left: 0px
           - position: absolute
@@ -357,8 +364,8 @@ button_card_templates:
           - height: 10px
         assistblur:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
-              else return "none"; ]]]           
+              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              "block"; else return "none"; ]]]           
           - position: absolute
           - vertical-align: middle
           - justify-self: center
@@ -505,3 +512,1436 @@ button_card_templates:
     tap_action:
       action: navigate
       navigation_path: /dashboard-iconrework/weather
+views:
+  - title: Clock
+    path: clock
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          clockcardversion: 1.1.0
+          var_background: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.default_background}
+            catch { return ""}]]]  
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "time time"
+                "date date"
+                "assist assist"
+            - grid-template-rows: min-content min-content min-content min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.var_background})` ]]]
+            - background-size: cover
+          custom_fields:
+            time:
+              - justify-self: center
+              - z-index: 1
+              - font-size: 55vh
+              - font-weight: bold
+              - position: absolute
+              - color: white
+            date:
+              - justify-self: center
+              - align-self: center
+              - z-index: 1
+              - font-size: 15vh
+              - width: max-content
+              - position: absolute
+              - top: 70%
+            night:
+              - position: absolute
+              - min-height: 200%
+              - width: 200%
+              - backdrop-filter: brightness(5%)
+              - overflow: hidden
+              - display: >-
+                  [[[ try {if
+                  (hass.states[variables.var_assistsat_entity].attributes.mode
+                  === "night") return "block"; else return "none";} catch {
+                  return  "none"}
+                   ]]]      
+              - z-index: 2
+        custom_fields:
+          title:
+            card:
+              type: custom:button-card
+              icon: '[[[ return variables.var_weather_icon ]]]'
+              name: '[[[ return variables.var_weather_temperature ]]]'
+              tap_action:
+                action: navigate
+                navigation_path: weather
+              styles:
+                card:
+                  - background-color: transparent
+                  - border-width: 0px
+                  - width: 50%
+                  - margin-left: 5%
+                  - margin-top: '-5%'
+                grid:
+                  - grid-template-areas: '"i n"'
+                  - grid-template-rows: min-content min-content
+                name:
+                  - font-size: 15vh
+                  - color: white
+                icon:
+                  - width: 25vw
+                  - color: white
+          time: '[[[ return variables.var_current_time ]]]'
+          date: '[[[ return variables.var_date_short ]]]'
+          night: .
+  - title: weather
+    path: weather
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          var_forecast_entity: weather.home
+          var_forecast_type: daily
+          weathercardversion: 1.0.2
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "message message"
+                "assist assist"        
+            - grid-template-rows: min-content max-content min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background-color: '#059bf1'
+            - border-width: 0px
+            - border-radius: 0px
+          custom_fields:
+            message:
+              - position: relative
+              - height: 100vdh
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+              - padding: '-10%'
+        custom_fields:
+          title: ''
+          message:
+            card:
+              type: weather-forecast
+              entity: '[[[ return variables.var_forecast_entity ]]]'
+              forecast_type: '[[[ return variables.var_forecast_type ]]]'
+              card_mod:
+                style:
+                  .: |
+                    ha-card { background: #059bf9}
+                    ha-card.type-weather-forecast {
+                      justify-content: start !important;
+                    }
+                    ha-card.type-weather-forecast>div.content {
+                      div {
+                        padding-top: 0px;
+                      }
+                    }
+                    ha-card.type-weather-forecast>div.content {
+                      display: flex;​
+                    }
+                  ha-card.type-weather-forecast>div.content: |
+                    svg {
+                      width: 15vw !important;
+                      height: 15vh !important;
+                      flex: unset !important;
+                    }
+                  ha-card.type-weather-forecast>div.forecast: |
+                    div {
+                      padding-top: 2vh;
+                      font-size: 6vh;
+                      justify-content: space-evenly !important;
+                    }
+                  ha-card.type-weather-forecast>div.content>div.info:
+                    .: |
+                      div.name-state {
+                        display: flex;
+                        flex-direction: column;
+                      }
+                    div.name-state:
+                      .: |
+                        div.state {
+                          font-size: 10vh !important;
+                        }
+                        div.name {
+                          display: none;
+                          max-height: 0px !important;
+                        }
+                    div.temp-attribute: |
+                      .temp {
+                        font-size: 8vh !important;
+                        padding-bottom: 0px;
+                      }
+                      .attribute {
+                        font-size: 5vh !important;
+                        color:  #e1e1e1 !important;
+                      }  
+                      .temp span {
+                        font-size: 7vh !important;
+                        margin-left: -1vh;
+                      }
+                      .templow {
+                        padding-top: 0px;
+                        color: #e1e1e1 !important;
+                        text-align: right;
+                      }
+  - title: music
+    path: music
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          musiccardversion: 1.0.0
+          var_musicplayer_device: |-
+            [[[
+              var assistbid = hass.states[variables.assist_group].attributes.entity_id
+               .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+              var musicdevice = hass.states[assistbid].attributes.musicplayer_device;
+              return `${musicdevice}`
+            ]]]   
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background-color: black;
+          custom_fields:
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - align-self: center
+              - justify-self: center
+              - width: 100%
+              - height: 100%
+              - position: absolute
+              - justify-content: center
+              - text-align: start
+        custom_fields:
+          title: ''
+          message:
+            card:
+              type: custom:mod-card
+              card:
+                type: media-control
+                name: ' '
+                entity: '[[[ return variables.var_musicplayer_device ]]]'
+              style: |
+                ha-card {
+                  width: 100vw !important;
+                  height: 100vh !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  box-shadow: none !important;
+                  --paper-card-background-color: transparent !important;
+                }
+  - title: sports
+    path: sports
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          sportsversion: 1.0.0
+          var_teamtracker_device: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.team_tracker}
+            catch { return  "sensor.team_tracker"}]]]
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background-color: '#1c1c1c'
+            - background-size: cover
+          custom_fields:
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - align-self: center
+              - justify-self: center
+              - width: 100%
+              - position: absolute
+              - justify-content: center
+              - text-align: start
+        custom_fields:
+          title: ''
+          message:
+            card:
+              type: custom:teamtracker-card
+              entity: '[[[ return variables.var_teamtracker_device ]]]'
+  - title: All Cameras
+    path: allcameras
+    type: panel
+    cards:
+      - type: custom:button-card
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "message message"
+                "assist assist"        
+            - grid-template-rows: min-content 4fr min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background-color: '#00000'
+            - border-width: 0px
+            - border-radius: 0px
+          custom_fields:
+            message:
+              - position: relative
+              - width: 100%
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+        custom_fields:
+          title: All Cameras
+          message:
+            card:
+              type: vertical-stack
+              min-width: 100%
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - show_state: false
+                      show_name: false
+                      camera_view: live
+                      type: picture-entity
+                      entity: camera.doorbell_restream
+                    - show_state: false
+                      show_name: false
+                      camera_view: live
+                      type: picture-entity
+                      entity: camera.front_restream
+                - type: horizontal-stack
+                  cards:
+                    - show_state: false
+                      show_name: false
+                      camera_view: live
+                      type: picture-entity
+                      entity: camera.patio_restream
+                    - show_state: false
+                      show_name: false
+                      camera_view: live
+                      type: picture-entity
+                      entity: camera.back_restream
+  - title: camera
+    path: camera
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          cameracardversion: 1.0.1
+          var_camera: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.camera} catch
+            { return  "camera.front_restream"}]]]
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.background})` ]]]
+            - background-size: cover
+          message:
+            - font-size: '[[[ return variables.var_font_size ]]]'
+            - align-self: center
+            - justify-self: center
+            - width: 100%
+            - height: 100%
+            - position: absolute
+            - justify-content: center
+            - text-align: start
+        custom_fields:
+          title: >-
+            [[[ try {return
+            hass.states[variables.var_camera].attributes.friendly_name} catch
+            {return ""}]]]  
+          message:
+            card:
+              type: custom:mod-card
+              card:
+                type: custom:frigate-card
+                menu:
+                  style: none
+                cameras:
+                  - camera_entity: camera.front_restream
+                    live_provider: ha
+                dimensions:
+                  max_height: 100vh
+                  max_wdith: 100vw
+              style: |
+                ha-card {
+                  width: 100vw !important;
+                  height: 100vh !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  box-shadow: none !important;
+                  --paper-card-background-color: transparent !important;
+                }          
+  - title: info
+    path: info
+    cards:
+      - type: custom:button-card
+        variables:
+          background: /local/viewassist/announcebird.png
+          infocardversion: 1.0.0
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "message message"
+                "assist assist"        
+            - grid-template-rows: min-content 4fr min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.background})` ]]]
+            - background-size: cover
+          custom_fields:
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - position: relative
+              - padding: 10px
+              - border-radius: 10px
+              - width: 95%
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+              - padding: 2%
+        custom_fields:
+          message: '[[[ return variables.var_message ]]]'
+    type: panel
+  - title: infopic
+    path: infopic
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          background: /local/viewassist/announcebird.png
+          infopiccardversion: 1.0.0
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "image message"
+                "assist assist"       
+            - grid-template-rows: min-content 4fr min-content
+            - grid-template-columns: 1fr 2fr
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.background})` ]]]
+            - background-size: cover
+          custom_fields:
+            image:
+              - align-self: center
+              - justify-self: center
+              - object-fit: contain
+              - width: 75%
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - position: relative
+              - padding: 10px
+              - border-radius: 10px
+              - width: 95%
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+              - padding: 2%
+        custom_fields:
+          image:
+            card:
+              type: picture
+              image: >-
+                [[[ return
+                states[variables.var_assistsat_entity].attributes.image; ]]]
+          message: '[[[ return variables.var_message ]]]'
+  - title: intent
+    path: intent
+    type: panel
+    cards:
+      - type: custom:button-card
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background-color: '#000000'
+            - border-width: 0px
+            - border-radius: 0px
+          custom_fields:
+            message:
+              - position: relative
+              - width: 100%
+              - align-self: middle
+              - justify-self: center
+        custom_fields:
+          title: ''
+          message:
+            card:
+              type: custom:layout-card
+              layout_type: custom:masonry-layout
+              layout:
+                max_cols: 3
+              cards: >-
+                [[[ try {return
+                hass.states[variables.var_assistsat_entity].attributes.intent_entities}
+                catch { return ""}]]]
+  - title: List
+    path: list
+    cards:
+      - type: custom:button-card
+        variables:
+          listcardversion: 1.0.1
+          var_list: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.list} catch {
+            return  "todo.shopping_list"}]]]
+          background: /local/viewassist/announcebird.png
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.background})` ]]]
+            - background-size: cover
+        custom_fields:
+          message:
+            card:
+              type: todo-list
+              entity: '[[[ return variables.var_list ]]]'
+              card_mod:
+                style:
+                  .: |
+                    ha-card {
+                      background-color: transparent;
+                      box-shadow: none;
+                      border: none;
+                      position: absolute;
+                      top: 15vh;
+                    }
+                    ha-check-list-item {
+                      color: white;
+                      font-size: 3vw;
+                      line-height: 1.6;
+                    }
+                    ha-card.type-todo-list div.header {
+                      display: none;
+                    }
+                    ha-card.type-todo-list .addRow {
+                      display: none;
+                    }
+                    ha-card.type-todo-list div.divider {
+                      display: none;
+                    }
+                    ha-check-list-item.editRow.completed {
+                      display: none;
+                    }
+    type: panel
+  - title: webpage
+    path: webpage
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          var_url: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.data["url"]}
+            catch { return "https://www.home-assistant.io/"}]]]
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background-color: '#00000'
+            - border-width: 0px
+            - border-radius: 0px
+          custom_fields:
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - align-self: center
+              - justify-self: center
+              - height: 100%
+              - width: 100%
+              - position: absolute
+              - justify-content: center
+              - text-align: start
+        custom_fields:
+          message:
+            card:
+              type: iframe
+              url: '[[[ return variables.var_url ]]]'
+              aspect_ratio: 50%
+  - title: troubleshoot
+    path: troubleshoot
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          assist_group: group.viewassist_satellites
+          var_weather_entity: weather.home
+          use_24_hour_time: false
+          browser_mod_bid: '[[[ return localStorage.getItem("browser_mod-browser-id") ]]]'
+          default_satellite: |-
+            [[[ try {
+              return hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.type === "view_audio");
+              } catch { return  ""}
+            ]]]      
+          var_current_time: |
+            [[[
+              try
+              {
+                if (variables.use_24_hour_time) {
+                  var options = { hour: "2-digit", minute: "2-digit", hour12: false };
+                } else {
+                  var options = { hour: "numeric", minute: "2-digit" };      
+                }
+                
+                let time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
+                
+                if(variables.use_24_hour_time) {
+                  time = time.replace("24:", "00:");
+                }
+                return time;
+              } catch { return  ""}
+            ]]]
+          var_date_short: |
+            [[[    
+              const options = { weekday: "short", month: "short", day: "numeric", };
+              try {return new Date().toLocaleDateString([], options);} catch { return  ""}  
+            ]]]
+          var_date_long: |
+            [[[
+                  const options = { weekday: "long", month: "long", day: "numeric", year: 'numeric' };
+                  try {return new Date().toLocaleDateString([], options)} catch { return  ""}
+            ]]]
+          var_assistsat_entity: |-
+            [[[
+              try {
+                return hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                } catch { return  ""}
+              
+            ]]]
+          var_assisting: |-
+            [[[
+              try 
+              {
+                var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                var micdevice = hass.states[assist_assistbid].attributes.mic_device;
+                var micstate = hass.states[micdevice].state;
+                if (micdevice.includes("_stt")) 
+                {
+                  var assisting = micstate.includes("start");
+                }
+                else
+                {
+                  var assisting = !micstate.includes("wake_word");
+                }
+                return `${assisting}`;
+              } catch { return  ""}
+            ]]] 
+          var_mic_device: |-
+            [[[
+              try
+              {
+                var micdevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
+                if (micdevice.includes("_stt"))
+                  {
+                    var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+                  }
+                return `${micdevice}`;
+              } catch { return  ""}
+            ]]]
+          var_mic_mute: |-
+            [[[
+              try {
+                var micmute_assistbid = hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                var micdevice = hass.states[micmute_assistbid].attributes.mic_device;
+                if (micdevice.includes("_stt"))
+                  {
+                    var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+                  }            
+                var micstate = hass.states[micdevice].state;
+                return `${micstate}`;
+              } catch { return  "";}
+            ]]]
+          var_mic_switch: |-
+            [[[
+              try {
+                var micswitch_assistbid = hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                var micdevice = hass.states[micswitch_assistbid].attributes.mic_device;
+                if (micdevice.includes("_stt"))
+                  {
+                    var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
+                  }
+                else
+                  {
+                    var micswitch = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
+                  }
+                return `${micswitch}`;
+              } catch { return  "";}
+            ]]]        
+          var_mediaplayer_device: |-
+            [[[
+              try {
+                var mediadevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
+                return `${mediadevice}`;
+              } catch { return  "";}
+            ]]]        
+          var_mediaplayer_mute: |-
+            [[[
+              try {
+                var mediaplayer_assistbid = hass.states[variables.assist_group].attributes.entity_id
+                 .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+                var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
+                var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
+                return `${mediaplayerstate}`;
+              } catch { return  "";}
+            ]]]
+          var_title: |-
+            [[[ 
+              try 
+              {
+                return states[variables.var_assistsat_entity].attributes.title;
+              } catch { return  ""} 
+            ]]]
+          var_message: |-
+            [[[ 
+              try 
+              {
+                return states[variables.var_assistsat_entity].attributes.message;
+              } catch { return  ""} 
+            ]]]
+          var_image: |-
+            [[[ 
+              try 
+              {
+                return states[variables.var_assistsat_entity].attributes.image;
+              } catch { return  ""} 
+            ]]]
+          var_font_size: |-
+            [[[ 
+              try 
+              {
+                return states[variables.var_assistsat_entity].attributes.message_font_size;
+              }
+              catch { return  ""} 
+            ]]]
+          var_intent_entities: |-
+            [[[  try { 
+              return states[variables.var_assistsat_entity].attributes.data.intent_entities
+            } catch { return "" } ]]]
+        template:
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "message message"
+                "assist assist"        
+            - grid-template-rows: min-content max-content min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background-color: '#059bf1'
+            - border-width: 0px
+            - border-radius: 0px
+          custom_fields:
+            message:
+              - position: relative
+              - height: 100vdh
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+              - padding: '-10%'
+        custom_fields:
+          title: Troubleshooting
+          message: >-
+            [[[
+
+            return `assist_group: <b
+            style="font-weight:400;">${variables.assist_group}</b><br />
+            browsermod_bid:  <b
+            style="font-weight:400;">${variables.browser_mod_bid}</b><br />    
+            default_satellite: <b
+            style="font-weight:400;">${variables.default_satellite}</b><br />
+            var_assistsat_entity: <b
+            style="font-weight:400;">${variables.var_assistsat_entity}</b><br />
+            var_assisting: <b
+            style="font-weight:400;">${variables.var_assisting}</b><br />
+            var_mic_device: <b
+            style="font-weight:400;">${variables.var_mic_device}</b><br />
+            var_mic_mute: <b
+            style="font-weight:400;">${variables.var_mic_mute}</b><br />
+            var_mic_switch: <b
+            style="font-weight:400;">${variables.var_mic_switch}</b><br />
+            var_mediaplayer_device: <b
+            style="font-weight:400;">${variables.var_mediaplayer_device}</b><br
+            /> var_mediaplayer_mute: <b
+            style="font-weight:400;">${variables.var_mediaplayer_mute}</b><br />
+            var_title: <b style="font-weight:400;">${variables.var_title}</b><br
+            /> var_message: <b
+            style="font-weight:400;">${variables.var_message}</b><br />
+            var_image: <b style="font-weight:400;">${variables.var_image}</b><br
+            /> var_font_size: <b
+            style="font-weight:400;">${variables.var_font_size}</b><br />
+            var_intent_entities: <b
+            style="font-weight:400;">${variables.var_intent_entities}</b><br />
+            ` ]]]
+  - title: entity
+    path: entity
+    type: panel
+    cards:
+      - type: custom:button-card
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background-color: '#00000'
+            - border-width: 0px
+            - border-radius: 0px
+          custom_fields:
+            message:
+              - position: relative
+              - width: 100%
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+        custom_fields:
+          message:
+            card:
+              type: custom:button-card
+              entity: >-
+                [[[ try {return
+                hass.states[variables.var_assistsat_entity].attributes.data["intent_entities"][0]}
+                catch { return "light.coffee_area"}]]]
+  - title: calendar
+    path: calendar
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          var_list: >-
+            [[[ try {return
+            hass.states['calendar.donny_s_home_calendar'].attributes["list"]}
+            catch { return "No events found"}]]]
+          background: /local/viewassist/announcebird.png
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.background})` ]]]
+            - background-size: cover
+            - border-radius: 10px
+            - padding: 16px
+            - box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5)
+        custom_fields:
+          message:
+            card:
+              type: calendar
+              entities:
+                - calendar.donny_s_home_calendar
+              card_mod:
+                style: |
+                  ha-card {
+                    background-color: transparent;
+                        box-shadow: none;
+                        border: none;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        margin: 0;
+                        padding: 0;
+                  }
+                  ha-check-list-item {
+                    color: white;
+                    font-size: 3vw;
+                    line-height: 1.6;
+                  }
+                  ha-card.type-calendar-card div.header {
+                    display: none;
+                  }
+                  ha-card.type-calendar-card .addRow {
+                    display: none;
+                  }
+                  ha-card.type-calendar-card div.divider {
+                    display: none;
+                  }
+                  ha-check-list-item.editRow.completed {
+                    display: none;
+                  }
+  - title: thermostat
+    path: thermostat
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          thermostatversion: 1.0.0
+          climate_device: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.data["url"]}
+            catch { return "climate.trane_model_tzemt400ab32maa_mode"}]]]
+        template:
+          - variable_template
+          - body_template
+        styles:
+          card:
+            - background-color: '#1c1c1c'
+            - background-size: cover
+          custom_fields:
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - position: relative
+              - padding: 10px
+              - border-radius: 10px
+              - width: 95%
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+              - padding: 2%
+        custom_fields:
+          title: ''
+          message:
+            card:
+              type: thermostat
+              entity: '[[[ return variables.climate_device ]]]'
+              name: ' '
+              card_mod:
+                style:
+                  .: |
+                    .content {
+                      transform: scale(1.8);
+                    }
+                  ha-icon-button:
+                    $:
+                      mwc-icon-button:
+                        $:
+                          button: |
+                            mwc-ripple {
+                              display: none;
+                            }
+  - title: alarm
+    path: alarm
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          alarmcardversion: 1.0.1
+          background: /local/viewassist/Samples/ziyao-xiong-TSh4_IYjHRc-unsplash.jpg
+          var_alarm_name: |-
+            [[[
+              var assistbid = hass.states[variables.assist_group].attributes.entity_id
+                .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+              var alarm_name = hass.states[assistbid].attributes.alarm_name;
+              try {return `${alarm_name}`;} catch { return  ""}
+            ]]] 
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"
+                "alarm_name alarm_name"
+                "time time"
+                "snooze dismiss"
+                "assist assist"
+            - grid-template-rows: .5fr min-content min-content min-content min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background-size: cover
+            - background-color: '#24292c'
+          custom_fields:
+            alarm_name:
+              - justify-self: center
+              - z-index: 1
+              - font-size: 10vh
+              - position: grid
+              - color: white
+              - align-content: end
+            time:
+              - justify-self: center
+              - z-index: 1
+              - font-size: 45vh
+              - font-weight: bold
+              - position: grid
+              - color: white
+            snooze:
+              - justify-self: center
+              - align-self: center
+              - z-index: 1
+              - font-size: 15vh
+              - width: max-content
+              - position: grid
+              - top: 70%
+            dismiss:
+              - justify-self: center
+              - align-self: center
+              - z-index: 1
+              - font-size: 15vh
+              - width: max-content
+              - position: grid
+              - top: 70%
+        custom_fields:
+          title: ' '
+          alarm_name: '[[[ return variables.var_alarm_name ]]]'
+          time: '[[[ return variables.var_current_time ]]]'
+          snooze:
+            card:
+              type: custom:button-card
+              name: Snooze
+              show_icon: false
+              show_name: true
+              tap_action:
+                action: call-service
+                service: pyscript.broadcast_event
+                service_data:
+                  event_name: viewassist
+                  event_data:
+                    command: snooze alarm
+                    entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+              styles:
+                card:
+                  - display: flex
+                  - justify-content: center
+                  - align-items: center
+                  - width: 30vw
+                  - height: 10vh
+                  - border-radius: 5vw
+                  - border: none
+                  - background-color: white
+                name:
+                  - font-size: 5vh
+                  - color: black
+                  - font-weight: bold
+                  - text-align: center
+          dismiss:
+            card:
+              type: custom:button-card
+              name: Dismiss
+              show_icon: false
+              show_name: true
+              tap_action:
+                action: call-service
+                service: pyscript.broadcast_event
+                service_data:
+                  event_name: viewassist
+                  event_data:
+                    command: dismiss alarm
+                    entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+              styles:
+                card:
+                  - display: flex
+                  - justify-content: center
+                  - align-items: center
+                  - width: 30vw
+                  - height: 10vh
+                  - border-radius: 5vh
+                  - color: white
+                  - border: none
+                  - background-color: '#2899f3'
+                name:
+                  - font-size: 5vh
+                  - color: white
+                  - font-weight: bold
+                  - text-align: center
+  - title: traffic
+    path: traffic
+    type: panel
+    cards:
+      - type: custom:button-card
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "map map"
+                "sensors sensors"
+                "assist assist"        
+            - grid-template-rows: min-content 4fr min-content
+            - grid-template-columns: 1fr 1fr
+          card:
+            - background-color: '#00000'
+          custom_fields:
+            map:
+              - position: absolute
+              - width: 100%
+              - top: 10%
+              - z-index: 1
+            sensors:
+              - justify-self: start
+              - z-index: 2
+              - font-size: 100%
+              - width: min-content
+              - position: absolute
+              - top: 20%
+              - right: 5%
+              - text-align: justify
+        custom_fields:
+          title: Traffic
+          map:
+            card:
+              type: iframe
+              url: >-
+                https://embed.waze.com/iframe?zoom=12&lat=30.192618&lon=-92.045174&ct=livemap
+          sensors:
+            card:
+              type: entities
+              entities:
+                - entity: sensor.deon_to_fohi
+                - entity: sensor.deon_to_lgmc
+                - entity: sensor.deon_to_uhc
+                - entity: sensor.gracie_to_tchs
+              show_header_toggle: false
+              card_mod:
+                style: |
+                  ha-card  {
+                    background-color: white;
+                    color: black;
+                    background-size: cover;
+                    border-radius: 0;
+                   } 
+  - title: Photo
+    path: photo
+    type: panel
+    cards:
+      - type: custom:button-card
+        template:
+          - variable_template
+          - body_template
+        variables:
+          photocardversion: 1.0.0
+          var_photo_image: >-
+            [[[ try {return
+            hass.states[variables.var_assistsat_entity].attributes.photo_image}
+            catch { return  ""}]]]
+        styles:
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.var_photo_image})` ]]]
+            - background-size: cover
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "message message"
+                "clock clock"
+                "assist assist"        
+            - grid-template-rows: min-content min-content min-content min-content
+            - grid-template-columns: 1fr 1fr
+          custom_fields:
+            message:
+              - position: relative
+              - padding: 10px
+              - width: 100%
+              - justify-content: center
+              - align-self: center
+            clock:
+              - justify-self: start
+              - align-self: center
+              - font-size: 500%
+              - width: max-content
+              - position: absolute
+              - top: 65%
+        custom_fields:
+          title: ''
+          clock:
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  name: '[[[ return variables.var_current_time ]]]'
+                  styles:
+                    name:
+                      - font-size: 1000%
+                      - text-shadow: 2px 2px black
+                    card:
+                      - background-color: transparent
+                      - border-width: 0px
+                - type: custom:button-card
+                  icon: '[[[ return variables.var_weather_icon ]]]'
+                  name: '[[[ return variables.var_weather_temperature ]]]'
+                  styles:
+                    card:
+                      - background-color: transparent
+                      - border-width: 0px
+                      - width: 50%
+                      - position: relative
+                      - bottom: '-40%'
+                    grid:
+                      - grid-template-areas: '"i n"'
+                      - grid-template-rows: min-content min-content
+                    name:
+                      - font-size: 400%
+                      - text-shadow: 2px 2px black
+                    icon:
+                      - width: 80%
+                      - text-shadow: 2px 2px black
+  - title: infopic_map
+    path: infopic-map
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          background: /local/viewassist/announcebird.png
+          infopiccardversion: 1.0.0
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "map message"
+                "assist assist"       
+            - grid-template-rows: min-content 4fr min-content
+            - grid-template-columns: 1.5fr 1.5fr
+          card:
+            - background: >-
+                [[[ return `center / cover no-repeat
+                url(${variables.background})` ]]]
+            - background-size: cover
+          custom_fields:
+            map:
+              - align-self: center
+              - justify-self: center
+              - object-fit: contain
+              - width: 75%
+            message:
+              - font-size: '[[[ return variables.var_font_size ]]]'
+              - position: relative
+              - padding-left: 30px;
+              - border-radius: 10px
+              - width: 95%
+              - text-align: start
+              - text-wrap: wrap
+              - justify-content: center
+              - align-self: center
+        custom_fields:
+          map:
+            card:
+              type: map
+              entities:
+                - entity: '[[[ return variables.var_image ]]]'
+              theme_mode: auto
+          message: '[[[ return variables.var_message ]]]'
+  - title: locate
+    path: locate
+    type: panel
+    cards:
+      - type: custom:button-card
+        variables:
+          locatecardversion: 1.0.0
+        template:
+          - variable_template
+          - body_template
+        styles:
+          grid:
+            - grid-template-areas: |
+                "title status"  
+                "map map"
+                "assist assist"       
+            - grid-template-columns: 1.5fr 1.5fr
+            - grid-template-rows: min-content max-content
+          card:
+            - background: black
+            - background-size: cover
+          custom_fields:
+            map:
+              - align-self: center
+              - width: 100%
+              - height: 100%
+              - position: absolute
+              - justify-content: center
+              - z-index: 1
+            location:
+              - align-self: center
+              - justify-self: center
+              - position: absolute
+              - z-index: 2
+              - top: 70vh
+              - width: 90%
+            hold_card:
+              - align-self: center
+              - justify-self: center
+              - position: absolute
+              - width: 80vw
+              - z-index: 3
+        custom_fields:
+          title: >-
+            [[[ return new Date().toLocaleTimeString([], { hour: "numeric",
+            minute: "2-digit" }).toLowerCase(); ]]]  
+          map:
+            card:
+              type: map
+              entities:
+                - entity: >-
+                    [[[ try {return
+                    hass.states[variables.var_assistsat_entity].attributes.locate_data['person']}
+                    catch { return ""}]]]
+              theme_mode: |-
+                [[[ try {
+                  var var_map_mode = hass.states[variables.var_assistsat_entity].attributes.locate_data.map_mode;
+                  return `${var_map_mode}`}
+                catch { return "dark"}]]]   
+              default_zoom: 15
+              aspect_ratio: 1.5/1
+              auto_fit: true
+              fit_zones: false
+              card_mod:
+                style:
+                  ha-map $ ha-entity-marker $: |
+                    .marker {
+                      color: white !important;              
+                      background-color: #03a9f4 !important;
+                      opacity: 80% !important;              
+                      font-size: 3vw !important;
+                      font-weight: bold !important;
+                      height: 5vw !important;
+                      width: 5vw !important;                
+                     }              
+                  ha-map$: |
+                    .leaflet-control-attribution {
+                      visibility: hidden;
+                     }           
+                    .leaflet-control-zoom {
+                      right: -11px;
+                      top: 24vh;
+                      transform: scale(1.8)
+                     }
+                  ha-icon-button$: |
+                    mwc-icon-button[title="Reset focus"]{
+                      --mdc-icon-size: 65px;
+                      right: -10px !important;
+                      position: relative !important;
+                      display: flex !important
+                    }
+          location:
+            card:
+              type: custom:button-card
+              custom_fields:
+                location_text: |-
+                  [[[ try {
+                    var var_location_text = hass.states[variables.var_assistsat_entity].attributes.locate_data.location_text;
+                    return `${var_location_text}`}
+                  catch { return ""}]]]           
+                updated: |-
+                  [[[ try {
+                    var var_tracker = hass.states[variables.var_assistsat_entity].attributes.locate_data.person;                  
+                    var var_last_changed = new Date(hass.states[var_tracker].last_changed);
+                    const current_date = new Date();
+                    const diff = current_date - var_last_changed;
+                    const minutes = Math.floor(diff / (1000 * 60));
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+                    let last_changed;
+                    if (minutes < 1) {
+                      last_changed = "now";          
+                    } else if (minutes < 60) {                    
+                      last_changed = rtf.format(-minutes, 'minute');  // e.g., "5 minutes ago"
+                    } else if (hours < 24) {
+                      last_changed = rtf.format(-hours, 'hour');  // e.g., "2 hours ago"
+                    } else {
+                      last_changed = rtf.format(-days, 'day');  // e.g., "3 days ago"
+                    }
+                    return `${"last changed "+last_changed}`}
+                  catch { return ""}]]]          
+              show_icon: false
+              show_name: false
+              styles:
+                grid:
+                  - grid-template-areas: |
+                      "location_text" 
+                      "updated"
+                  - grid-template-columns: 1fr
+                  - grid-template-rows: 1fr min-content min-content
+                card:
+                  - justify-content: center
+                  - align-items: center
+                  - padding: 2%
+                  - border-radius: 1vw
+                  - background-color: grey
+                  - border: none
+                  - filter: opacity(75%)
+                custom_fields:
+                  location_text:
+                    - font-size: 6vh
+                    - color: black
+                    - text-wrap: wrap
+                    - font-weight: bold
+                    - text-align: center
+                  updated:
+                    - font-size: 4vh
+                    - color: black
+          hold_card:
+            card:
+              type: custom:button-card
+              show_icon: false
+              show_name: false
+              tap_action:
+                action: call-service
+                service: python_script.set_state
+                service_data:
+                  entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+                  mode: hold
+              double_tap_action:
+                action: call-service
+                service: python_script.set_state
+                service_data:
+                  entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+                  mode: normal
+              styles:
+                card:
+                  - top: 10vh
+                  - border-radius: 1vw
+                  - background-color: transparent
+                  - height: 90vh
+                  - width: 100vw
+                  - border: none
