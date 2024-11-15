@@ -56,7 +56,7 @@ button_card_templates:
             var micstate = hass.states[micdevice].state;
             if (micdevice.includes("_stt")) 
             {
-              var assisting = micstate.includes("start");
+              var assisting = micstate.includes("start") || micstate.includes("vad")
             }
             else
             {
@@ -73,21 +73,21 @@ button_card_templates:
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
-            var assisting_text = "How Can I Assist?";
+            var assisting_text = "How can I assist?";
             if (micdevice.includes("_stt") && !micstate?.includes("start")) {
-              assisting_text = "Processing Request";
+              assisting_text = "Processing request";
             } else if (micdevice.includes("_simple_state") && !micstate?.includes("stt-listening")) {
-              assisting_text = "Processing Request";
+              assisting_text = "Processing request";
             } 
             return `${assisting_text}`;
           } catch { return  ""}
-        ]]]      
+        ]]]              
       var_assist_prompt: |-
         [[[
           try {
-            var assistbar_assistbid = hass.states[variables.assist_group].attributes.entity_id
+            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-            var assist_prompt = hass.states[assistbar_assistbid].attributes.assist_prompt;
+            var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
             return `${assist_prompt}`;
           } catch { return  "";}
         ]]]             
@@ -241,6 +241,7 @@ button_card_templates:
           } catch { return  ""} 
         ]]]
   body_template:
+    template: assist_template
     show_state: false
     show_icon: false
     show_name: false
@@ -294,36 +295,7 @@ button_card_templates:
         - color: white
         - font-family: '"Roboto", sans-serif'
         - font-weight: 300
-      custom_fields:
-        filter1:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
-              else return "none"; ]]]       
-          - position: absolute
-          - top: 0px
-          - left: 0px
-          - height: 150%
-          - width: 150%
-          - overflow: hidden
-          - z-index: 0
-          - color: transparent
-        filter2:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
-              else return "none"; ]]]       
-          - top: 0px
-          - left: 0px
-          - position: absolute
-          - height: 150%
-          - width: 150%
-          - backdrop-filter: brightness(100%)
-          - overflow: hidden
-          - color: transparent
-          - z-index: 0
-          - animation: >-
-              [[[ if (variables.var_assisting == "true" ||
-              variables.var_thinking == "true") return "brightness .1s
-              ease-in-out forwards"; else return "" ]]]      
+      custom_fields:   
         title:
           - position: absolute
           - justify-self: start
@@ -340,75 +312,8 @@ button_card_templates:
           - align-self: start
           - justify-content: right
           - margin-top: '-5%'
-          - z-index: 1
-        assistbar:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "flashing bar") return
-              "block"; else return "none"; ]]]
-          - justify-self: center
-          - height: 10vh
-          - position: absolute
-          - width: 100%
-          - z-index: 1
-          - bottom: 0%
-          - animation: >-
-              [[[ if (variables.var_assisting == "true") return "pulse 2s
-              infinite"; else return "" ]]]
-          - height: 10px
-        assistblur:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return "block";
-              else return "none"; ]]]           
-          - position: absolute
-          - vertical-align: middle
-          - justify-self: center
-          - justify-content: center
-          - align-self: center
-          - z-index: 10
-    extra_styles: |
-      @keyframes pulse {
-        0%, 100% {
-          background-color: #f56a3f;
-        }
-        50% {
-          background-color: #9e42b0;
-        }
-      }
-      @keyframes brightness {
-        100% { backdrop-filter: brightness(50%) blur(10px); z-index:9; }
-      }      
+          - z-index: 1  
     custom_fields:
-      filter1: .
-      filter2: .
-      assistbar: .
-      assistblur:
-        card:
-          type: custom:button-card
-          name: '[[[ return variables.var_assisting_text ]]]'
-          show_icon: true
-          icon: mdi:comment-processing-outline
-          tap_action:
-            action: none
-          styles:
-            card:
-              - display: >-
-                  [[[ if (variables.var_assisting == "true") return "block";
-                  else return "none"; ]]]  
-              - padding: 3vh
-              - background: white
-              - height: 15vmin
-            grid:
-              - grid-template-areas: '"i n"'
-              - grid-template-columns: 1fr 4fr
-              - grid-template-rows: 1fr
-            icon:
-              - color: black
-              - width: 10vw
-            name:
-              - color: black
-              - text-align: start
-              - font-size: 6vmin
-              - font-weight: bold
       title: '[[[ return variables.var_title ]]]'
       status:
         card:
@@ -444,7 +349,115 @@ button_card_templates:
 
                   return buttonList;
                 }]]]
-                  
+  assist_template:
+    styles:
+      card: null
+      custom_fields:
+        assistbar:
+          - display: >-
+              [[[ if (variables.var_assist_prompt == "flashing bar") return
+              "block"; else return "none"; ]]]
+          - justify-self: center
+          - height: 10vh
+          - position: absolute
+          - width: 100%
+          - z-index: 1
+          - bottom: 0%
+          - animation: >-
+              [[[ if (variables.var_assisting == "true") return "pulse 2s
+              infinite"; else return "" ]]]
+          - height: 10px
+        filterblur:
+          - display: >-
+              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              "block"; else return "none"; ]]]       
+          - top: 0px
+          - left: 0px
+          - position: absolute
+          - height: 150%
+          - width: 150%
+          - backdrop-filter: brightness(100%)
+          - overflow: hidden
+          - color: transparent
+          - z-index: 0
+          - animation: >-
+              [[[ if (variables.var_assisting == "true" ||
+              variables.var_thinking == "true") return "brightness .1s
+              ease-in-out forwards"; else return "" ]]]      
+        assistblur:
+          - display: >-
+              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              "block"; else return "none"; ]]]           
+          - position: absolute
+          - vertical-align: middle
+          - justify-self: center
+          - justify-content: center
+          - align-self: center
+          - z-index: 10
+          - opacity: 0
+          - animation: >-
+              [[[ if (variables.var_assisting == "true") return "growFromCenter
+              .4s ease-in-out forwards"; else return "" ]]]
+    extra_styles: |
+      @keyframes pulse {
+        0%, 100% {
+          background-color: #f56a3f;
+        }
+        50% {
+          background-color: #9e42b0;
+        }
+      }
+      @keyframes growFromCenter {
+        75% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes brightness {
+        100% { backdrop-filter: brightness(50%) blur(10px); z-index:9; }
+      }    
+    custom_fields:
+      assistbar: .
+      filterblur: .
+      assistblur:
+        card:
+          type: custom:button-card
+          name: '[[[ return variables.var_assisting_text ]]]'
+          show_icon: true
+          icon: >-
+            [[[ if (variables.var_assisting_text.includes("How")) return
+            "mdi:comment-processing-outline"; else return
+            "mdi:dots-horizontal"; ]]]  
+          tap_action:
+            action: none
+          styles:
+            card:
+              - display: >-
+                  [[[ if (variables.var_assisting == "true") return "block";
+                  else return "none"; ]]]  
+              - padding: 4vh
+              - padding-top: 2vh
+              - padding-bottom: 2vh
+              - background: white
+              - height: 15vh
+              - width: 45vw
+              - border-radius: 8vh
+            grid:
+              - grid-template-areas: '"i n"'
+              - grid-template-columns: 1fr 4fr
+              - grid-template-rows: 1fr
+            icon:
+              - color: rgb(3,169,244)
+              - width: 10vw
+            name:
+              - color: black
+              - text-align: start
+              - font-size: 5vh
+              - font-weight: bold                  
   icon_template:
     template: variable_template
     aspect_ratio: 1/1
