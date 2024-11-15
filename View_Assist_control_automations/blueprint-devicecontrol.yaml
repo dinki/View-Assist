@@ -141,9 +141,12 @@ blueprint:
             select:
               custom_value: true
               options:
-                - small
-                - medium
-                - large
+                - label: Small
+                  value: 6vw
+                - label: Medium
+                  value: 7vw  
+                - label: Large
+                  value: 8vw
         font_style:
           name: Font Style
           description: The default font to use for this satellite device.  Font name must match perfectly and be available
@@ -217,6 +220,7 @@ trigger:
   event_data:
     domain: automation
     service: reload
+  alias: Trigger reload on event
 - platform: state
   entity_id:
   - !input intent
@@ -381,7 +385,6 @@ action:
       id:
       - startup
       - missing_attributes
-      - set_attributes_on_save
     sequence:
     - if:
       - condition: template
@@ -404,6 +407,7 @@ action:
         status_icons_size: "{{ status_icons_size }}"
         font_style: "{{ font_style }}"
         use_24_hour_time: "{{ use_24_hour_time }}"    
+        group_entity: "{{ group_entity }}"        
       enabled: true
   - conditions:
     - condition: trigger
@@ -521,4 +525,37 @@ action:
         data:
           entity_id: "{{ satellite }}"
           status_icons: "{{ icon_list }}"
+
+
+  - conditions:
+      - condition: trigger
+        id:
+          - set_attributes_on_save
+      - condition: template
+        value_template: "{{ trigger.event.data.service_data.id == this.attributes.id }}"
+    sequence:
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 5
+          milliseconds: 0
+        enabled: true
+
+      - data:
+          entity_id: "{{ satellite }}"
+          default_background: "{{ default_background }}"
+          mode: "{{ mode }}"
+          weather_entity: "{{ weather_entity }}"
+          view_timeout: "{{ view_timeout }}"
+          do_not_disturb: "{{ do_not_disturb }}"
+          status_icons: "{{ status_icons }}"
+          assist_prompt: "{{ assist_prompt }}"
+          mic_type: "{{ mic_type }}"
+          status_icons_size: "{{ status_icons_size }}"
+          font_style: "{{ font_style }}"
+          use_24_hour_time: "{{ use_24_hour_time }}"
+          assist_group: "{{ assist_group }}"
+        enabled: true
+        action: python_script.set_state
+
 mode: parallel
