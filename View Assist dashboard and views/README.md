@@ -12,7 +12,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Document how to manipulate icon lists for developers
 * Fix restart HA goes to night mode when HA unavailable
 * Add ability to select icon size (BP input created, assigned to variable, and set in attributes but not used in dashboard)
-* Move assist_group,  var_weather_entity, and use_24_hour_time to BP and pull those values into variable template (BP input created and assigned to variable, and set in attributes but not used in dashboard)
+* Move assist_group,  var_weather_entity, and use_24_hour_time (done) to BP and pull those values into variable template (BP input created and assigned to variable, and set in attributes but not used in dashboard)
 * See if a trigger exists for BP update and set values if that happens to avoid reload automation (trigger works but needs condition; can it piggy back on current set option?)
 
   
