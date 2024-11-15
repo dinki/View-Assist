@@ -457,10 +457,20 @@ action:
               {% set new_list = ['hold'] + old_list | unique | list %}
             {% endif %} 
             {{ new_list }}
+          var_mic_type: |-
+            {% set state1 = mic_type %} 
+            {% set state2 = states[satellite].attributes.mic_type %} 
+            {% if state1 != state2 %}
+              {% set updated_state = state1 %}
+              {{ updated_state }}
+            {% else %}
+              {{ mic_type }}
+            {% endif %}
       - action: python_script.set_state
         data:
           entity_id: "{{ satellite }}"
           status_icons: "{{ icon_list }}"
+          mic_type: "{{ var_mic_type }}"
   - conditions:
       - condition: trigger
         id:
