@@ -3,15 +3,21 @@ button_card_templates:
     variables:
       assist_group: group.viewassist_satellites
       var_weather_entity: weather.home
-      use_24_hour_time: false
       var_assistsat_entity_status_icons_size: |
         [[[ 
           try 
           {
             return states[variables.var_assistsat_entity].attributes.status_icons_size;
-          } catch { return  ""} 
+          } catch { return  "6vw"} 
         ]]]
 
+      var_assistsat_entity_use_24_hour_time: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
+          } catch { return  false} 
+        ]]]
       
       default_satellite: |-
         [[[ try {
@@ -23,7 +29,7 @@ button_card_templates:
         [[[
           try
           {
-            if (variables.use_24_hour_time) {
+            if (variables.var_assistsat_entity_use_24_hour_time) {
               var options = { hour: "2-digit", minute: "2-digit", hour12: false };
             } else {
               var options = { hour: "numeric", minute: "2-digit" };      
@@ -31,7 +37,7 @@ button_card_templates:
             
             let time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
             
-            if(variables.use_24_hour_time) {
+            if(variables.var_assistsat_entity_use_24_hour_time) {
               time = time.replace("24:", "00:");
             }
             return time;
