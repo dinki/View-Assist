@@ -4,8 +4,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 
 
 * Give device id in YAML config so that device can have an area ??
-* Update all existing full screen views to take up all available space
-  * Camera
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
@@ -24,6 +22,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
   * Music - default and alternative (thanks @JimmyJamesBob);
   * Alarm - Updated in beta repo
   * Webpage     
+  * Camera
 * Test launch icons in status bar
 * Incorporate proof of concept icon handling automation into device configuration blueprint
 * Insure icon list is always defined.  Do this either in device configuration blueprint on startup, device configuration default or handle in icon handling sequences (aka update jinja to handle)
