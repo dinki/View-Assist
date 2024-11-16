@@ -7,7 +7,7 @@ button_card_templates:
           try 
           {
             return states[variables.var_assistsat_entity].attributes.font_style;
-          } catch { return  ""} 
+          } catch { return  "Roboto"} 
         ]]]      
       var_assistsat_entity_weather_entity: |
         [[[ 
@@ -137,10 +137,15 @@ button_card_templates:
             var micmute_assistbid = hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
             var micdevice = hass.states[micmute_assistbid].attributes.mic_device;
-            if (micdevice.includes("_stt"))
+            var mictype = hass.states[micmute_assistbid].attributes.mic_type;
+            if (mictype == "Stream Assist")
               {
                 var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
-              }            
+              }
+            else if (mictype == "HassMic")
+              {
+                var micswitch = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
+              }              
             var micstate = hass.states[micdevice].state;
             return `${micstate}`;
           } catch { return  "";}
@@ -151,11 +156,12 @@ button_card_templates:
             var micswitch_assistbid = hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
             var micdevice = hass.states[micswitch_assistbid].attributes.mic_device;
-            if (micdevice.includes("_stt"))
+            var mictype = hass.states[micswitch_assistbid].attributes.mic_type;
+            if (mictype == "Stream Assist")
               {
                 var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
               }
-            else
+            else if (mictype == "HassMic")
               {
                 var micswitch = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
               }
