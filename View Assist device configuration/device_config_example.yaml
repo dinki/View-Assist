@@ -2,6 +2,8 @@
 #
 # You must set the following variables:
 #  * name: Device name (eg ViewAssist-livingroom)
+#  * unique_id:  Unique ID allows for editing in the UI, adding to areas, etc (eg viewassist_livingroom)
+#  * icon: Sets an icon for the satellite (recommended mdi:glasses)
 #  * type:  Used to determine a/v capabilities ("view_audio", "view_only", "audio_only". Default "view_audio")
 #  * mic_device:  Used to assign microphone to View Assist device
 #  * mediaplayer_device: Used to assign the media player used for View Assist text-to-speech playback
@@ -22,6 +24,8 @@ template:
   - sensor:
     - name: ViewAssist-livingroom
       state: ""
+      unique_id : "viewassist_livingroom"
+      icon: "mdi:glasses"    
       attributes:
         type: view_audio
         mic_device: "sensor.streamassist-livingroom_stt"
