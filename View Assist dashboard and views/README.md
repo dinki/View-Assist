@@ -3,15 +3,12 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 # To do
 
 
-* Use microphone type to set variables in variable template of dashboard
 * Give device id in YAML config so that device can have an area ??
 * Update all existing full screen views to take up all available space
   * Camera
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
-* Fix restart HA goes to night mode when HA unavailable
-* Move assist_group,  var_weather_entity (done), and use_24_hour_time (done) to BP and pull those values into variable template (BP input created and assigned to variable, and set in attributes but not used in dashboard)
 * See if a trigger exists for BP update and set values if that happens to avoid reload automation (trigger works but needs condition; can it piggy back on current set option?)
 
   
@@ -37,7 +34,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add select for microphone type (Stream Assist, HASSMic, Home Assistant voice satellite, other) to device configuration blueprint and set on start up
 * Edit clock card to use default_background variable in VA device attributes
 * Rename assist_bar to assist_prompt in both dashboard and BP
-
 * Look at using default dashboard in VA device config so things like buttons can be more dynamic (weather button on clock screen) -- fixed by making it relative instead of absolute.  Uses current dashboard.
 * Update YAML template device config to reflect changes made making these unnecessary to define manually
 * Add new VA Assist listening CSS
@@ -45,4 +41,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Look at both assisting and processing variants of the bar and popup (not working in SA but less impactful when others move to HassMic)
 * Add font definition (BP input created, assigned to variable, and set in attributes but not used in dashboard)
 * Add ability to select icon size (BP input created, assigned to variable, and set in attributes but not used in dashboard)
+* Use microphone type to set variables in variable template of dashboard
+* Move assist_group (not worth the effort??),  var_weather_entity (done), and use_24_hour_time (done) to BP and pull those values into variable template (BP input created and assigned to variable, and set in attributes but not used in dashboard)
+* Fix restart HA goes to night mode when HA unavailable (not seeing this any more)
 
