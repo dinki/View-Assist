@@ -2,11 +2,10 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 
 # To do
 
-
-* Give device id in YAML config so that device can have an area ??
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
 * See if a trigger exists for BP update and set values if that happens to avoid reload automation (trigger works but needs condition; can it piggy back on current set option?)
+* Update colors on assist bar when processing (JJB will give this a go)
 
   
 # Done
@@ -43,5 +42,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Move assist_group (not worth the effort??),  var_weather_entity (done), and use_24_hour_time (done) to BP and pull those values into variable template (BP input created and assigned to variable, and set in attributes but not used in dashboard)
 * Fix restart HA goes to night mode when HA unavailable (not seeing this any more)
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds (We can handle this if it becomes a problem)
+* Give device id in YAML config so that device can have an area ??
+
 
 
