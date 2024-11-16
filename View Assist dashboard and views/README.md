@@ -43,6 +43,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Add new VA Assist listening CSS
 * Use VA device assist bar type to determine which to show when called
 * Look at both assisting and processing variants of the bar and popup (not working in SA but less impactful when others move to HassMic)
-* Add font definition (BP input created, assigned to variable, and set in attributes but not used in dashboard) ---  **May need to adjust values in larger step**
+* Add font definition (BP input created, assigned to variable, and set in attributes but not used in dashboard)
 * Add ability to select icon size (BP input created, assigned to variable, and set in attributes but not used in dashboard)
 
