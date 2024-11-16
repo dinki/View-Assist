@@ -2,6 +2,13 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
+      var_assistsat_entity_font_style: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.font_style;
+          } catch { return  ""} 
+        ]]]      
       var_assistsat_entity_weather_entity: |
         [[[ 
           try 
@@ -312,7 +319,10 @@ button_card_templates:
         - border-radius: 0px
         - overflow: hidden
         - color: white
-        - font-family: '"Roboto", sans-serif'
+        - font-family: |-
+            [[[
+              return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
+            ]]] 
         - font-weight: 300
       custom_fields:
         title:
