@@ -393,7 +393,7 @@ button_card_templates:
       custom_fields:
         assistbar:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "flashing bar") return
+              [[[ if (variables.var_assist_prompt == "flashing bar" & variables.var_assisting == "true") return
               "block"; else return "none"; ]]]
           - justify-self: center
           - height: 10vh
@@ -402,12 +402,12 @@ button_card_templates:
           - z-index: 1
           - bottom: 0%
           - animation: >-
-              [[[ if (variables.var_assisting == "true") return "pulse 2s
-              infinite"; else return "" ]]]
+              [[[ if (variables.var_assisting_text.includes("How")) return "pulse 2s
+              infinite"; else return "pulse2 2s infinite"]]]        
           - height: 10px
         filterblur:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              [[[ if (variables.var_assist_prompt == "blur pop up" & variables.var_assisting == "true") return
               "block"; else return "none"; ]]]       
           - top: 0px
           - left: 0px
@@ -419,12 +419,10 @@ button_card_templates:
           - color: transparent
           - z-index: 0
           - animation: >-
-              [[[ if (variables.var_assisting == "true" ||
-              variables.var_thinking == "true") return "brightness .1s
-              ease-in-out forwards"; else return "" ]]]      
+              [[[ return "brightness .1s ease-in-out forwards" ]]]      
         assistblur:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return
+              [[[ if (variables.var_assist_prompt == "blur pop up" & variables.var_assisting == "true") return
               "block"; else return "none"; ]]]           
           - position: absolute
           - vertical-align: middle
@@ -434,8 +432,7 @@ button_card_templates:
           - z-index: 10
           - opacity: 0
           - animation: >-
-              [[[ if (variables.var_assisting == "true") return "growFromCenter
-              .4s ease-in-out forwards"; else return "" ]]]
+              [[[ return "growFromCenter .4s ease-in-out forwards" ]]]
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
@@ -445,6 +442,14 @@ button_card_templates:
           background-color: #9e42b0;
         }
       }
+      @keyframes pulse2 {
+        0%, 100% {
+          background-color: #03A9F4;
+        }
+        50% {
+          background-color: #cfe2f3;
+        }
+      }      
       @keyframes growFromCenter {
         75% {
           transform: scale(0);
