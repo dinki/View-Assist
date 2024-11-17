@@ -136,7 +136,7 @@ blueprint:
         status_icons_size:
           name: Status Icons Size
           description: Size of the icons in the status icon display
-          default: medium
+          default: 7vw
           selector:
             select:
               custom_value: true
