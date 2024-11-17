@@ -124,12 +124,17 @@ button_card_templates:
             var micdevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
             var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
-            if (micdevice.includes("_stt"))
+            var mictype = hass.states[micdevice_assistbid].attributes.mic_type;
+            if (mictype == "Stream Assist")
               {
                 var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
               }
+            else if (mictype == "HassMic")
+              {
+                var micdevice = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
+              } 
             return `${micdevice}`;
-          } catch { return  ""}
+          } catch { return  "dog"}
         ]]]
       var_mic_mute: |-
         [[[
@@ -144,7 +149,7 @@ button_card_templates:
               }
             else if (mictype == "HassMic")
               {
-                var micswitch = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
+                var micdevice = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
               }              
             var micstate = hass.states[micdevice].state;
             return `${micstate}`;
@@ -393,8 +398,9 @@ button_card_templates:
       custom_fields:
         assistbar:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "flashing bar") return
-              "block"; else return "none"; ]]]
+              [[[ if (variables.var_assist_prompt == "flashing bar" &
+              variables.var_assisting == "true") return "block"; else return
+              "none"; ]]]
           - justify-self: center
           - height: 10vh
           - position: absolute
@@ -402,13 +408,14 @@ button_card_templates:
           - z-index: 1
           - bottom: 0%
           - animation: >-
-              [[[ if (variables.var_assisting == "true") return "pulse 2s
-              infinite"; else return "" ]]]
+              [[[ if (variables.var_assisting_text.includes("How")) return
+              "pulse 2s infinite"; else return "pulse2 2s infinite"]]]        
           - height: 10px
         filterblur:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return
-              "block"; else return "none"; ]]]       
+              [[[ if (variables.var_assist_prompt == "blur pop up" &
+              variables.var_assisting == "true") return "block"; else return
+              "none"; ]]]       
           - top: 0px
           - left: 0px
           - position: absolute
@@ -418,14 +425,12 @@ button_card_templates:
           - overflow: hidden
           - color: transparent
           - z-index: 0
-          - animation: >-
-              [[[ if (variables.var_assisting == "true" ||
-              variables.var_thinking == "true") return "brightness .1s
-              ease-in-out forwards"; else return "" ]]]      
+          - animation: '[[[ return "brightness .1s ease-in-out forwards" ]]]      '
         assistblur:
           - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up") return
-              "block"; else return "none"; ]]]           
+              [[[ if (variables.var_assist_prompt == "blur pop up" &
+              variables.var_assisting == "true") return "block"; else return
+              "none"; ]]]           
           - position: absolute
           - vertical-align: middle
           - justify-self: center
@@ -433,9 +438,7 @@ button_card_templates:
           - align-self: center
           - z-index: 10
           - opacity: 0
-          - animation: >-
-              [[[ if (variables.var_assisting == "true") return "growFromCenter
-              .4s ease-in-out forwards"; else return "" ]]]
+          - animation: '[[[ return "growFromCenter .4s ease-in-out forwards" ]]]'
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
@@ -445,6 +448,14 @@ button_card_templates:
           background-color: #9e42b0;
         }
       }
+      @keyframes pulse2 {
+        0%, 100% {
+          background-color: #03A9F4;
+        }
+        50% {
+          background-color: #cfe2f3;
+        }
+      }      
       @keyframes growFromCenter {
         75% {
           transform: scale(0);
