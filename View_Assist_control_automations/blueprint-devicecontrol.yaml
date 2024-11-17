@@ -182,6 +182,7 @@ blueprint:
 
 trigger_variables:
   trigger_satellite: !input satellite
+  mic_type: !input mic_type
 trigger:
 - platform: state
   entity_id:
@@ -266,8 +267,10 @@ trigger:
   platform: template
   value_template: >-
     {% set target_device =  state_attr(trigger_satellite, 'mic_device') %}
-      {% if '_stt' in target_device %}
+      {% if mic_type == "Stream Assist" %}
         {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
+      {% elif mic_type == "HassMic" %}
+        {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
       {% endif %}
     {{ not states(target_device) | bool }}
 - alias: Mic unmuted
@@ -275,8 +278,10 @@ trigger:
   platform: template
   value_template: >-
     {% set target_device =  state_attr(trigger_satellite, 'mic_device') %}
-      {% if '_stt' in target_device %}
+      {% if mic_type == "Stream Assist" %}
         {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
+      {% elif mic_type == "HassMic" %}
+        {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
       {% endif %}
     {{ states(target_device) | bool }}
 
@@ -493,8 +498,10 @@ action:
           icon_list: >-
             {% set old_list = state_attr(satellite,'status_icons') or [] %}   
             {% set target_device = state_attr(satellite, 'mic_device') %} 
-            {% if target_device and '_stt' in target_device %}
+            {% if target_device and mic_type == "Stream Assist" %}
               {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
+            {% elif target_device and mic_type == "HassMic" %}
+              {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
             {% endif %}    
             {% if states(target_device) == 'on' %}
               {% set new_list = old_list | reject('eq', 'mic') | list %}
