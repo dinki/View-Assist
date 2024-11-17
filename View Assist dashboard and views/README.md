@@ -5,7 +5,6 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Document how to add button template for custom icons
 * Document how to manipulate icon lists for developers
 * See if a trigger exists for BP update and set values if that happens to avoid reload automation (trigger works but needs condition; can it piggy back on current set option?)
-* Update colors on assist bar when processing (JJB will give this a go)
 
   
 # Done
@@ -43,6 +42,7 @@ This is a list of things to do and things done for the dashboard/ui upgrade
 * Fix restart HA goes to night mode when HA unavailable (not seeing this any more)
 * Consider option to handle icon bar list color (black or white) OR figure out how to add drop shadow on icons to ensure viewable on white backgrounds (We can handle this if it becomes a problem)
 * Give device id in YAML config so that device can have an area ??
+* Update colors on assist bar when processing (JJB will give this a go)  Thank you!
 
 
 
