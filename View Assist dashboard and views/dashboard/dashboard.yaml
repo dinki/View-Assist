@@ -134,7 +134,7 @@ button_card_templates:
                 var micdevice = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
               } 
             return `${micdevice}`;
-          } catch { return  "dog"}
+          } catch { return  ""}
         ]]]
       var_mic_mute: |-
         [[[
