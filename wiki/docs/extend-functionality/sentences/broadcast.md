@@ -41,3 +41,4 @@ Note that you must have at least two View Assist devices configured and in your 
 | Version | Description |
 | ------- | ----------- |
 | v 1.0.0 | Initial release |
+| v 1.0.1 | Change condition to match boolean not string |
