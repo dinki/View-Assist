@@ -439,6 +439,8 @@ button_card_templates:
           - z-index: 10
           - opacity: 0
           - animation: '[[[ return "growFromCenter .4s ease-in-out forwards" ]]]'
+          - font-family: '"Roboto", sans-serif'
+
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
