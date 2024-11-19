@@ -18,7 +18,8 @@ Requires View Assist Control automation v1.2.0 or greater
 
 * Add voice command to set view timeout
 * Add pause, rewind/fast forward XX seconds/minutes, next/previous/restart track
-
+* Add check to timer expire to make sure timer exists for device before turning off (audio only has no timers)
+  
 ## Change log
 
 v 1.2.2 Stop music stops music player device and expires timer to go back to home screen quicker
