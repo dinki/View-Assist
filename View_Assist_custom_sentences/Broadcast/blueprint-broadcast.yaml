@@ -1,7 +1,7 @@
 blueprint:
   name: View Assist - Broadcast
   description: Say broadcast and the message and View Assist will send message to
-    all devices not in do not disturb mode (View Assist Broadcast v 1.0.0)<br />Note
+    all devices not in do not disturb mode (View Assist Broadcast v 1.0.1)<br />Note
     Chime TTS is needed for this automation
   domain: automation
   input:
@@ -80,7 +80,7 @@ action:
 - service: chime_tts.say
   target:
     entity_id: "{%- set ns = namespace(targets=[]) -%} {%- for satellite in expand(group_entity)
-      -%}\n  {%- if state_attr(satellite.entity_id,\"do_not_disturb\") == \"False\"
+      -%}\n  {%- if state_attr(satellite.entity_id,\"do_not_disturb\") != true
       -%}\n    {%- set ns.targets = ns.targets + [state_attr(satellite.entity_id,\"mediaplayer_device\")]
       -%}\n  {%- endif -%}\n{%- endfor -%} {{ns.targets}}"
   data:
