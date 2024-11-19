@@ -19,3 +19,5 @@ tts:
 ```
 
 Note that you must have at least two View Assist devices configured and in your View Assist group to use this automation
+## To Do
+* Fix logic for audio only to use boolean and not string
