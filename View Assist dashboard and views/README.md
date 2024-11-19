@@ -1,4 +1,4 @@
-# View Assist dashboard 2.0
+# View Assist Dashboard 2.0
 
 We have been hard at work making the frontend of View Assist look better.  It was a team effort and I would like to thank JimmyJamesBob and Flab for their hardwork in making this possible.  It was quite a lot of work and the results are fantastic.  View Assist is now looking like it should.  Below you will find some of the improvements as well as how to update.  We welcome your feedback, observations and suggestions.
 
@@ -27,3 +27,6 @@ We have been hard at work making the frontend of View Assist look better.  It wa
   *  Camera
 * Install the updated blueprint.  [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fviewassist-dashboard2.0%2FView_Assist_control_automations%2Fblueprint-devicecontrol.yaml)
 * Use the above blueprint to configure/reconfigure your VA devices
+
+
+!!!IMPORTANT!!!  Any changes to the blueprint will REQUIRE a restart of Home Assistant to take effect
