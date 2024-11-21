@@ -154,6 +154,6 @@ Dashes in template sensor and device names will be replaced by underscores by Ho
 
 ## Example configuration
 
-Here is the example configuration.  You can copy paste this into your configuration.yaml file, modify the values to those of your satellite sensors and timer, save the file and then restart Home Assistant for the configuration to be loaded.  You will repeat the sensor definition for any additional satellites.  All View Assist satellites must be added to the View Assist Satellite group as described above.
+Here is the example configuration.  You can copy paste this into your configuration.yaml file, modify the values to those of your satellite sensors and timer, save the file and then restart Home Assistant for the configuration to be loaded.  You will repeat the sensor definition for any additional satellites.  Copy starting from `- sensor:` to the end of the attributes.  All View Assist satellites must be added to the View Assist Satellite group as described above.
 
 [Example device configuration](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20device%20configuration/device_config_example.yaml)
