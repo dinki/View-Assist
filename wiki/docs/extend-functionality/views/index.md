@@ -17,6 +17,7 @@ Detailed install video: https://www.youtube.com/watch?v=QmWDNtikHaU
 
 | View | Description |
 | -------- | ----------- |
+| [Alarm](views/alarm) | A card that allows for interacting with alarms, reminders and timers |
 | [Camera](views/camera) | A dynamic card that allows for full screen viewing of security cameras |
 | [Clock](views/clock) | Provides a view for presenting the time, data and weather conditions |
 | [Info/Infopic](views/info) |  Provides a view for presenting text data with or without an image |

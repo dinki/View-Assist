@@ -9,6 +9,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 
 | Sentence | Description |
 | -------- | ----------- |
+| [Alarms Reminders & Timers](sentences/alarms-reminders-timers) | Allows for an on demand call to create and list alarms, reminders and timers |
 | [Ask AI](sentences/ask-ai) | Allows for an on demand call to OpenAI for answering questions |
 | [Broadcast](sentences/broadcast) | Broadcast messages to other View Assist Satellites |
 | [Device Functions](sentences/device-functions) | Extend device functions for media control, modes and repeat speech |
