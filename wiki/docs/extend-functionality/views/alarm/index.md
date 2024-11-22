@@ -4,7 +4,7 @@
 
 * **Description**: A card that allows for interacting with alarms, reminders and timers
 * **Defaultname**: alarm
-* **Current Version**: v1.0.0
+* **Current Version**: v1.0.1
 * **Code link**:  [ View Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/alarm/alarm.yaml)
 * **Special Requirements**: None
 
