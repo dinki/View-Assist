@@ -1,6 +1,6 @@
 # Alarms Reminders Timers
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fviewassist-timers_release%2FView_Assist_custom_sentences%2FAlarms_Reminders_Timers%2Fblueprint-alarmsreminderstimers.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fmain%2FView_Assist_custom_sentences%2FAlarms_Reminders_Timers%2Fblueprint-alarmsreminderstimers.yaml)
 
 While this intial version is fully functional,  I do not take any responsibility if this makes you late for work, forget to buy your wife flowers, or if your eggs get overcooked.  There's your warning and my escape clause!
 
@@ -8,7 +8,7 @@ While this intial version is fully functional,  I do not take any responsibility
 You will need to do the following to use this blueprint:
 
 * Download and install the pyscript file (.py) found in this directory and put it in your pyscript directory.  Need help?  See the pyscript video
-* Download and install the view located [here](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/viewassist-timers_release/View%20Assist%20dashboard%20and%20views/views/alarm/alarm.yaml).  Need help?  See the view installation video
+* Download and install the view located [here](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/alarm/alarm.yaml).  Need help?  See the view installation video
 * Find and upload a sound to play when the timer expires.  Need help?  See the Stream Assist video where I discuss how to find these and where to upload
 * Install blueprint using button above and configure options
 * Install the [play sound on media player](https://github.com/dinki/View-Assist/tree/main/View_Assist_scripts/Play_Sound_on_Media_Player) script.  Open the blueprint and click 'save script' button at bottom.  Keep all options the same and click 'rename' to make the script available for use
