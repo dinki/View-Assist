@@ -2,7 +2,7 @@
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fviewassist-timers_release%2FView_Assist_custom_sentences%2FAlarms_Reminders_Timers%2Fblueprint-alarmsreminderstimers.yaml)
 
-Remember that this is a beta release.  I do not take any responsibility if this makes you late for work, forget to buy your wife flowers, or if your eggs get overcooked.  There's your warning and my escape clause!
+While this intial version is fully functional,  I do not take any responsibility if this makes you late for work, forget to buy your wife flowers, or if your eggs get overcooked.  There's your warning and my escape clause!
 
 ## Requirements and installation
 You will need to do the following to use this blueprint:
@@ -33,7 +33,6 @@ This blueprint is fully functional and it does work well.  You need to know a co
 * This will not survive a restart.  The states are not persistent.  This is a big hole and I have plans to fix it.  Just know that a restart will cancel everything so don't use this for mission critical tasks just yet if you plan to restart before your timer expires
 * You can only set alarms/reminders by time for today.  I will soon add the ability to add today/tomorrow/Tuesday/etc but it's not in there yet
 * When you ask to list timers it will list timers, alarms, and reminders.  I will make these individual calls soon
-* I'm the only one who has tested this so far so challenges may lie ahead
+
  
 
-This took forever to write and is probably a lot more complicated than it needs to be but it works and it works well.  I can really use some testers and feedback.
