@@ -1,0 +1,22 @@
+---
+slug: november2024-update
+title: November 2024 Update
+authors: [dinki]
+---
+
+Well here we are already moving towards the end of the November.  Huge news to share in that the [Alarms Reminders & Timers](../docs/extend-functionality/sentences/alarms-reminders-timers.md) has finally been released.  This was the biggest undertaking short of the initial work done on View Assist.  This blueprint is massive at over 500 lines of code.  These timers were requested by many including myself and should make it that much easier to switch from your current commercial voice assistant over to Home Assistant Assist!
+
+On top of that, we are putting the finishing touches on the revamped dashboard.  This has been a huge undertaking as well and I want to thank @JimmyJamesBob and @flab their work on this rework as well as the folks who helped with the beta testing.  The release should happen very soon.  Some of the new features include:
+
+* The new blueprint offloads some of the work previously done by hardcoded values in the dashboard.  Things like the View Assist group, weather entity, and 24 hour clock preference are now handled within.  This will allow for more customization per VA satellite
+* Visually the user now has the option to set a different default background image per device
+* A new Assist prompt called 'blur pop up' is now the default.  This popup happens when you say the wake word.  The old Assist bar is still available for those who would like to continue using it
+* Many of the values that were required in the VA device config are now customizable from the blueprint.  These include mode, view timeout, do not disturb and others.  They can be removed from the VA device config when you like.  This is not a breaking change.  See the new minimum standard VA device config [here](https://github.com/dinki/View-Assist/blob/viewassist-dashboard2.0/View%20Assist%20device%20configuration/device_config_example.yaml)
+* Icon size and font style is now selectable through the blueprint.  This will allow for even more customization
+* We are introducing 'launch icons' which will act as shortcut buttons to your cutom tasks.  This can be to switch to camera views, turn on/off lights, etc.  These are tied to action calls and can be added as a persistent icon for these functions
+* Changes in CSS now allow for better placement of elements and better use of space.  The shifting of elements when icons appear/disappear has finally been resolved!
+* User now has an option to use either Stream Assist or HassMic inputs.  We will be adding other types in the future
+
+And last but definitely not least, @Jeff has been killing it with his work on [HassMic](https://github.com/jeffc/hassmic).  While his efforts are part of a separate project, he has worked closely with us to make integration easy.  HassMic will be the recommended microphone AND mediaplayer for View Assist as soon as it is out of beta which also won't be very long.  Some of us have been using it for many weeks now as the replacement for the microphone apps we have listed on the wiki and it is MUCH more robust, responsive and easy to use.  It is probably worth your while to switch over now even while in beta.  Awesome work Jeff!
+
+As we draw close to the end of the first year of View Assist I look baack at the progress made and it is substantial.  I could not be happier to hear folks saying they've ditched Alexa/Google Home in favor of Assist.  This work was done by the team and each and every one of you have contributed in one way or another.  I'm looking forward to future growth as we add more functionality and refine what we currently have.  Please reach out on Discord with any ideas and suggestions.
