@@ -15,5 +15,6 @@ This card can be added by copy pasting the raw code into a new view.
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.1 | Remove hardcoded background |
 | v 1.0.0 | Initial release |
 

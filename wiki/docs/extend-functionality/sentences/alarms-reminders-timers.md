@@ -48,5 +48,4 @@ This blueprint is fully functional and it does work well.  You need to know a co
 
 | Version | Description |
 | ------- | ----------- |
-| v 1.0.1 | Remove hardcoded background |
 | v 1.0.0 | Initial release |
