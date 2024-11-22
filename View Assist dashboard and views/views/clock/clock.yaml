@@ -3,9 +3,8 @@ variables:
   clockcardversion: 1.1.0
   var_background: >-
     [[[ try {return
-    hass.states[variables.var_assistsat_entity].attributes.default_background}
-    catch { return
-    ""}]]]  
+    hass.states[variables.var_assistsat_entity].attributes.background} catch {
+    return ""}]]]  
 template:
   - variable_template
   - body_template
@@ -19,7 +18,9 @@ styles:
     - grid-template-rows: min-content min-content min-content min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background: "[[[ return `center / cover no-repeat url(${variables.var_background})` ]]]"
+    - background: >-
+        [[[ return `center / cover no-repeat url(${variables.var_background})`
+        ]]]
     - background-size: cover
   custom_fields:
     time:
