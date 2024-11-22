@@ -1,7 +1,6 @@
 type: custom:button-card
 variables:
   alarmcardversion: 1.0.1
-  background: /local/viewassist/Samples/ziyao-xiong-TSh4_IYjHRc-unsplash.jpg
   var_alarm_name: |-
     [[[
       var assistbid = hass.states[variables.assist_group].attributes.entity_id
