@@ -1,0 +1,121 @@
+type: custom:button-card
+variables:
+  alarmcardversion: 1.0.1
+  background: /local/viewassist/Samples/ziyao-xiong-TSh4_IYjHRc-unsplash.jpg
+  var_alarm_name: |-
+    [[[
+      var assistbid = hass.states[variables.assist_group].attributes.entity_id
+        .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var alarm_name = hass.states[assistbid].attributes.alarm_name;
+      try {return `${alarm_name}`;} catch { return  ""}
+    ]]] 
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"
+        "alarm_name alarm_name"
+        "time time"
+        "snooze dismiss"
+        "assist assist"
+    - grid-template-rows: .5fr min-content min-content min-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background-size: cover
+    - background-color: "#24292c"
+  custom_fields:
+    alarm_name:
+      - justify-self: center
+      - z-index: 1
+      - font-size: 10vh
+      - position: grid
+      - color: white
+      - align-content: end
+    time:
+      - justify-self: center
+      - z-index: 1
+      - font-size: 45vh
+      - font-weight: bold
+      - position: grid
+      - color: white
+    snooze:
+      - justify-self: center
+      - align-self: center
+      - z-index: 1
+      - font-size: 15vh
+      - width: max-content
+      - position: grid
+      - top: 70%
+    dismiss:
+      - justify-self: center
+      - align-self: center
+      - z-index: 1
+      - font-size: 15vh
+      - width: max-content
+      - position: grid
+      - top: 70%
+custom_fields:
+  title: " "
+  alarm_name: "[[[ return variables.var_alarm_name ]]]"
+  time: "[[[ return variables.var_current_time ]]]"
+  snooze:
+    card:
+      type: custom:button-card
+      name: Snooze
+      show_icon: false
+      show_name: true
+      tap_action:
+        action: call-service
+        service: pyscript.broadcast_event
+        service_data:
+          event_name: viewassist
+          event_data:
+            command: snooze alarm
+            entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+      styles:
+        card:
+          - display: flex
+          - justify-content: center
+          - align-items: center
+          - width: 30vw
+          - height: 10vh
+          - border-radius: 5vw
+          - border: none
+          - background-color: white
+        name:
+          - font-size: 5vh
+          - color: black
+          - font-weight: bold
+          - text-align: center
+  dismiss:
+    card:
+      type: custom:button-card
+      name: Dismiss
+      show_icon: false
+      show_name: true
+      tap_action:
+        action: call-service
+        service: pyscript.broadcast_event
+        service_data:
+          event_name: viewassist
+          event_data:
+            command: dismiss alarm
+            entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+      styles:
+        card:
+          - display: flex
+          - justify-content: center
+          - align-items: center
+          - width: 30vw
+          - height: 10vh
+          - border-radius: 5vh
+          - color: white
+          - border: none
+          - background-color: "#2899f3"
+        name:
+          - font-size: 5vh
+          - color: white
+          - font-weight: bold
+          - text-align: center
