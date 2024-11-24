@@ -23,7 +23,6 @@ We have been hard at work making the frontend of View Assist look better.  It wa
 * You'll need to update the code for the following views to take advantage of the new functions if you are.  You only need to update views you are currently using or plan to use.  You can find these views [here](https://github.com/dinki/View-Assist/tree/viewassist-dashboard2.0/View%20Assist%20dashboard%20and%20views/views)
   *  Clock
   *  Music
-  *  Alarm (if using the beta version has been updated)
   *  Webpage
   *  Camera
 * Install the updated blueprint.  [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fviewassist-dashboard2.0%2FView_Assist_control_automations%2Fblueprint-devicecontrol.yaml)
