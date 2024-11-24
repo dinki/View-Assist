@@ -8,7 +8,7 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 ## Wishlist
 
 
-* Sound machine for sleep/noise cancelling * Won't be long
+* Sound machine for sleep/noise cancelling * In beta testing
 * Alert me when packages are delivered
 * Tell me if it will rain today or tomorrow *
 * Drop in to another satellite device(s) and have a conversation like an intercom
