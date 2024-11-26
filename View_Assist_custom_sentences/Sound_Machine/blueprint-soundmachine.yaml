@@ -1,0 +1,124 @@
+blueprint:
+  name: View Assist - Soundmachine
+  description: Plays ambient sounds for relaxation or noise cancelation
+  domain: automation
+  input:
+    soundmachine_dict:
+      name: Sound Machine Dictionary
+      description: A dictionary with names to use for the sound file and the path to the file.  Formatting is very important.  Alter the examle to fit your files
+      selector:
+        object:
+      default:
+        thunder: http://192.168.0.25:8123/local/viewassist/soundmachine/rainandthunder.mp3
+        ocean: http://192.168.0.25:8123/local/viewassist/soundmachine/oceanwaves.mp3
+    group_entity: 
+      name: Group Entity
+      description: The group entity that holds the list of ViewAssist devices
+      selector:
+        entity:
+          filter:
+            - domain: group
+      default: "group.viewassist_satellites" 
+triggers:
+  - command:
+      - (start|play) [the] {soundtype} sound machine
+      - play [the] {soundtype} sound machine for {when}
+    id: startsoundmachine
+    trigger: conversation
+  - command:
+      - (stop|turnoff) [the] sound machine
+    id: stopsoundmachine
+    trigger: conversation
+  - event_type: viewassist
+    id: stopsoundmachine
+    trigger: event
+    event_data:
+      command: stop sound machine
+conditions: []
+actions:
+  - variables:
+      group_entity: !input group_entity
+      soundmachine_dict: !input soundmachine_dict
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - startsoundmachine
+        sequence:
+          - variables:
+              target_satellite_device: |-
+                {% for sat in expand(group_entity) %}
+                  {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+                    {{ sat.entity_id }}
+                  {% endif %}
+                {% endfor %}
+              target_display_device: >-
+                {{ device_id(state_attr(target_satellite_device, 'display_device')) }}
+              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+              target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"        
+          - if:
+              - condition: template
+                value_template: "{{ trigger.slots.soundtype in soundmachine_dict }}"
+            then:
+              - if:
+                  - condition: template
+                    value_template: "{{ trigger.slots.when is defined}}"
+                then:
+                  - action: pyscript.convert_to_seconds
+                    data:
+                      time_when: "{{ trigger.slots.when }}"
+                    response_variable: time_start
+                  - variables:
+                      total_seconds: "{{ time_start.total_seconds }}"
+                      stop_time: >-
+                        {{ (now() +
+                        timedelta(seconds=total_seconds)).strftime('%Y-%m-%d
+                        %H:%M:%S') }}
+                  - data:
+                      event_name: viewassist
+                      event_data:
+                        command: stop sound machine
+                        target_satellite_device: "{{ target_satellite_device }}"
+                      target_time: "{{ stop_time }}"
+                    action: pyscript.schedule_event_at_time
+          - action: script.turn_on
+            target:
+              entity_id: script.play_sound_on_media_player_repeat
+            data:
+              variables:
+                media_player: "{{ target_mediaplayer_device }}"
+                sound_file: "{{ soundmachine_dict[trigger.slots.soundtype] }}"
+          - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - stopsoundmachine
+        sequence:
+          - variables:
+              target_satellite_device: >-
+                {% if trigger.event is defined and trigger.event.data.target_satellite_device is defined %}
+                  {{ trigger.event.data.target_satellite_device }}
+                {% else %}
+                  {% for sat in expand(group_entity) %}
+                    {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
+                      {{ sat.entity_id }}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              target_display_device: >-
+                {{ device_id(state_attr(target_satellite_device, 'display_device')) }}
+              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"        
+          - action: media_player.media_stop
+            metadata: {}
+            data: {}
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - action: script.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: script.play_sound_on_media_player_repeat
+          - set_conversation_response: ""
+    default:
+      - set_conversation_response: Something went wrong
+mode: parallel
