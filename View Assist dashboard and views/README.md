@@ -4,14 +4,13 @@ We have been hard at work making the frontend of View Assist look better.  It wa
 
 ## Notable improvements
 * The new blueprint offloads some of the work previously done by hardcoded values in the dashboard and/or views.  Things like the View Assist group, weather entity, and 24 hour clock preference are now handled within.  This will allow for more customization per VA satellite
-* Visually the user now has the option to set a different default background image per device
+* Visually the user now has the option to set a different default background image per device.  The user can also optionally set a timed interval in EITHER minutes or hours to rotate the image (requires [Pyscript script script](https://github.com/dinki/View-Assist/blob/viewassist-dashboard2.0/View_Assist_control_automations/viewassist-select_random_image.py)
 * A new Assist prompt called 'blur pop up' is now the default.  This popup happens when you say the wake word.  The old Assist bar is still available for those who would like to continue using it
 * Many of the values that were required in the VA device config are now customizable from the blueprint.  These include mode, view timeout, do not disturb and others.  They can be removed from the VA device config when you like.  This is not a breaking change.  See the new minimum standard VA device config [here](https://github.com/dinki/View-Assist/blob/viewassist-dashboard2.0/View%20Assist%20device%20configuration/device_config_example.yaml)
 * Icon size and font style are now selectable through the blueprint.  This will allow for even more customization
 * We are introducing 'launch icons' which will act as shortcut buttons to your cutom tasks.  This can be to switch to camera views, turn on/off lights, etc.  These are tied to action calls and can be added as a persistent icon for these functions
 * Changes in CSS now allow for better placement of elements and better use of space.  The shifting of elements when icons appear/disappear has finally been resolved!
 * User now has an option to use either Stream Assist or HassMic inputs.  We will be adding other types in the future
-
 
 ## Instructions for installing the new dashboard for existing users:
 
