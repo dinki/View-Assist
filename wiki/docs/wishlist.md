@@ -8,7 +8,6 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 ## Wishlist
 
 
-* Sound machine for sleep/noise cancelling * In beta testing
 * Alert me when packages are delivered
 * Tell me if it will rain today or tomorrow *
 * Drop in to another satellite device(s) and have a conversation like an intercom
@@ -16,7 +15,7 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 * Some sort of visual notice when I am on a Teams call/meeting so family can not be their normal selves
 * [Dictate messages to be sent to HA mobile devices](https://github.com/dinki/View-Assist/discussions/19#discussioncomment-9745565)
 * View and add calendar events
-* Photo frame [photodash](https://github.com/apop880/photodash) [ha Google photos](https://github.com/Daanoz/ha-google-photos) [random](https://picsum.photos/) [ha slideshow](https://github.com/garthschoeddert/HASlideshow-lfix) [immich](https://github.com/outadoc/immich-home-assistant) [lovelace-wallpanel](https://github.com/j-a-n/lovelace-wallpanel)
+* Photo frame [photodash](https://github.com/apop880/photodash) [ha Google photos](https://github.com/Daanoz/ha-google-photos) [random](https://picsum.photos/) [ha slideshow](https://github.com/garthschoeddert/HASlideshow-lfix) [immich](https://github.com/outadoc/immich-home-assistant) [lovelace-wallpanel](https://github.com/j-a-n/lovelace-wallpanel)  * In beta testing
 
 Items with asterisks are either fully or partially written but have not been released.  If you would like to finish any of these let me know and I will provide what I have and guide as needed
 
@@ -54,3 +53,5 @@ Items with asterisks are either fully or partially written but have not been rel
 * Calculate foreign currencies to euro/USD/etc : [Currency Convertor](community-contributions/cc-sentences/currency-convertor.md)
 * Set alarm/reminders on individual devices : [Alarms Reminders Timers](extend-functionality/sentences/alarms-reminders-timers)
 * Timers TIMERS Timers!!! * : [Alarms Reminders Timers](extend-functionality/sentences/alarms-reminders-timers)
+* Sound machine for sleep/noise cancelling: [Sound Machine](extend-functionality/sentences/sound-machine.md)
+
