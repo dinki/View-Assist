@@ -1,0 +1,68 @@
+type: custom:button-card
+template:
+  - variable_template
+  - body_template
+variables:
+  clockaltcardversion: 1.0.0
+  var_background: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.background} catch {
+    return  ""}]]]
+styles:
+  card:
+    - background: >-
+        [[[ return `center / cover no-repeat url(${variables.var_background})`
+        ]]]
+    - background-size: cover
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "clock clock"
+        "assist assist"        
+    - grid-template-rows: min-content min-content min-content min-content
+    - grid-template-columns: 1fr 1fr
+  custom_fields:
+    clock:
+      - justify-self: start
+      - align-self: center
+      - font-size: 500%
+      - width: max-content
+      - position: absolute
+      - top: 65%
+custom_fields:
+  title: ""
+  clock:
+    card:
+      type: horizontal-stack
+      cards:
+        - type: custom:button-card
+          name: "[[[ return variables.var_current_time ]]]"
+          styles:
+            name:
+              - font-size: 1000%
+              - text-shadow: 2px 2px black
+            card:
+              - background-color: transparent
+              - border-width: 0px
+        - type: custom:button-card
+          icon: "[[[ return variables.var_weather_icon ]]]"
+          name: "[[[ return variables.var_weather_temperature ]]]"
+          tap_action:
+            action: navigate
+            navigation_path: weather
+          styles:
+            card:
+              - background-color: transparent
+              - border-width: 0px
+              - width: 50%
+              - position: relative
+              - bottom: "-40%"
+            grid:
+              - grid-template-areas: "\"i n\""
+              - grid-template-rows: min-content min-content
+            name:
+              - font-size: 400%
+              - text-shadow: 2px 2px black
+            icon:
+              - width: 80%
+              - filter: drop-shadow(2px 2px black)
