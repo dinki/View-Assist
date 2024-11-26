@@ -25,7 +25,7 @@ styles:
       - justify-content: center
       - text-align: start
 custom_fields:
-  title: "[[[ return variables.var_current_time ]]]          "
+  title: "[[[ return variables.var_current_time ]]]"
   message:
     card:
       type: custom:mod-card
