@@ -21,6 +21,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 | [Play TuneIn with Music Assistant](sentences/play-tunein-with-ma) | Play TuneIn radio using Music Assistant |
 | [Search Wikipedia](sentences/search-wikipedia) | Search Wikipedia using voice and receive a response and image on view enabled devices |
 | [Show Webpage](sentences/show-webpage) | Show your favorite website on your view enabled device |
+| [Sound Machine](sentences/sound-machine) | Enables the user to play ambient sounds for relaxation or noise cancelation |
 | [Spell a Word](sentences/spell-a-word) | Ask View Assist to spell a word and get a response back with the spelling |
 | [Tell Me a Joke](sentences/tell-me-a-joke) | Request a joke and get ready to laugh |
 | [Thank You](sentences/thank-you) | Show your gratitude and receive a kind reply |
