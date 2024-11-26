@@ -110,40 +110,18 @@ blueprint:
           name: Default background
           description: The path to the default background image for this device
           default: /local/viewassist/backgrounds/mybackground.jpg
-        rotate_background:
-          name: Rotate Background
-          description: Allows for the background to be rotated at a timed interval set below.  Note you must set either the rotation time in minutes or hours but not both.  You also must set the background image directory
-            devices
-          selector:
-            boolean: {}
-          default: false
-
         rotate_minute:
-          name: Rotate Background every XX minutes
-          description: Select a time value to rotate background image every XX minutes (eg rotate every 5 minutes).  Note you can either select to rotate by minute or hour but not both
+          name: Rotate Background every XX minutes (Optional)
+          description: "Select a time value to rotate background image every XX minutes (/5 rotates every 5 minutes).  You must put the / character before the number. Valid values are 1-59 only.\n\n**Note you can either select to rotate by minute or hour but not both** Leave option blank if not using."
           default: 0
-          selector:
-            number:
-              min: 0
-              max: 59
-              step: 1
-              mode: slider
-              unit_of_measurement: 'minutes'
         rotate_hour:
-          name: Rotate Background every XX hours
-          description: Select a time value to rotate background image every XX hours (eg rotate every 10 hours).  Note you can either select to rotate by minute or hour but not both        
+          name: Rotate Background every XX hours (Optional)
+          description: "Select a time value to rotate background image every XX hours (/10 rotates every 10 hours).  You must put the / character before the number.\n\n**Note you can either select to rotate by minute or hour but not both** Leave option blank if not using."
           default: 0
-          selector:          
-            number:
-              min: 1
-              max: 24
-              step: 1
-              mode: slider
-              unit_of_measurement: 'hours'
         background_directory:
           name: Background Directory
-          description: The path to the directory containing the background images to randomly select for background image for this device
-          default: /local/viewassist/backgrounds/
+          description: The path to the directory containing the background images to randomly select for background image for this device.  Only necessary if using timed rotation options above
+          default: /local/viewassist/backgrounds/	
     default_definitions:
       name: Default Definitions
       icon: mdi:format-list-bulleted
@@ -318,7 +296,12 @@ trigger:
         {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
       {% endif %}
     {{ states(target_device) | bool }}
-
+- platform: time_pattern
+  minutes: !input rotate_minute
+  id: rotateimage
+- platform: time_pattern
+  hours: !input rotate_hour
+  id: rotateimage
 variables:
   satellite: !input satellite
   group_entity: !input group_entity
@@ -332,6 +315,7 @@ variables:
   intent: !input intent
   intent_view: !input intent_view
   background: !input background
+  background_directory: !input background_directory
   mode: !input mode
   view_timeout: !input view_timeout
   do_not_disturb: !input do_not_disturb
@@ -341,6 +325,7 @@ variables:
   status_icons_size: !input status_icons_size
   font_style: !input font_style
   use_24_hour_time: !input use_24_hour_time
+
 action:
 - choose:
   - conditions:
@@ -468,7 +453,7 @@ action:
         entity_id: '{{ satellite }}'
         intent_entities: "{% set list = state_attr(intent,'intent_output')['response']['data']['success']
           | map(attribute='id') | list %}  {% set prefix = ('light', 'switch', 'cover',
-          'boolean') %}  {% set data = namespace(filtered_list=[]) %}  {% for item
+          'boolean', 'fan', 'scene') %}  {% set data = namespace(filtered_list=[]) %}  {% for item
           in list %}\n    {%- if item.startswith(prefix) %} \n        {% set data.filtered_list
           = data.filtered_list + [item] %}\n    {% endif -%}\n{% endfor %}  {% set
           list = data.filtered_list %} [ {% for e in list %}  {{ {'type': 'custom:button-card','entity':
@@ -598,5 +583,17 @@ action:
           assist_group: "{{ assist_group }}"
         enabled: true
         action: python_script.set_state
-
+  - conditions:
+      - condition: trigger
+        id:
+          - rotateimage
+    sequence:
+      - action: pyscript.select_random_image
+        data: 
+          directory: "{{ background_directory }}"
+        response_variable: random_image
+      - data:
+          entity_id: "{{ satellite }}"
+          background: "{{ random_image['image_path'] }}"
+        action: python_script.set_state
 mode: parallel
