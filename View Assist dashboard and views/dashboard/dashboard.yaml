@@ -54,6 +54,18 @@ button_card_templates:
             return time;
           } catch { return  ""}
         ]]]
+      var_current_time_alt: |
+        [[[
+          try
+          {
+            var options = { hour: "numeric", minute: "2-digit" };                 
+            let time = new Date().toLocaleTimeString([], options);
+            if(variables.var_assistsat_entity_use_24_hour_time) {
+              time = time.replace("24:", "00:");
+            }
+            return time;
+          } catch { return  ""}
+        ]]]        
       var_date_short: |
         [[[    
           const options = { weekday: "short", month: "short", day: "numeric", };
@@ -440,7 +452,6 @@ button_card_templates:
           - opacity: 0
           - animation: '[[[ return "growFromCenter .4s ease-in-out forwards" ]]]'
           - font-family: '"Roboto", sans-serif'
-
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
