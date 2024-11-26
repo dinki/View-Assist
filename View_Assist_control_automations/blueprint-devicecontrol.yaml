@@ -110,6 +110,13 @@ blueprint:
           name: Default background
           description: The path to the default background image for this device
           default: /local/viewassist/backgrounds/mybackground.jpg
+        rotate_background:
+          name: Rotate Background
+          description: Allows for the background to be rotated at a timed interval set below.  Note you must set either the rotation time in minutes or hours but not both.  You also must set the background image directory
+            devices
+          selector:
+            boolean: {}
+          default: false          
         rotate_minute:
           name: Rotate Background every XX minutes (Optional)
           description: "Select a time value to rotate background image every XX minutes (/5 rotates every 5 minutes).  You must put the / character before the number. Valid values are 1-59 only.\n\n**Note you can either select to rotate by minute or hour but not both** Leave option blank if not using."
@@ -315,6 +322,7 @@ variables:
   intent: !input intent
   intent_view: !input intent_view
   background: !input background
+  rotate_background: !input rotate_background
   background_directory: !input background_directory
   mode: !input mode
   view_timeout: !input view_timeout
@@ -587,6 +595,8 @@ action:
       - condition: trigger
         id:
           - rotateimage
+      - condition: template
+        value_template: "{% if rotate_background %}true{% endif %}"          
     sequence:
       - action: pyscript.select_random_image
         data: 
