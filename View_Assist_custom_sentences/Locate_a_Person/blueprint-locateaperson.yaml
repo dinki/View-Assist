@@ -1,8 +1,7 @@
-# View Assist - Locate a Person (v 1.0.0)
 # Written by - jsittner
 blueprint:
   name: View Assist - Locate a Person
-  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.0)
+  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.1)
   domain: automation
   input:
     command_prompt:
@@ -53,7 +52,7 @@ variables:
   persons_name: "{{ input_defined_names | from_json}}"  
   group_entity: !input group_entity
   target_satellite_device: |-
-    {% for sat in expand('group.viewassist_satellites') %}
+    {% for sat in expand(group_entity) %}
       {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
         {{ sat.entity_id }}
       {% endif %}

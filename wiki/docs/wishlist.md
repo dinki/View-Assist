@@ -7,9 +7,8 @@ This page will serve as a wishlist for add on features.  Feel free to add to the
 
 ## Wishlist
 
-* Set alarm/reminders on individual devices * in beta testing
-* Timers TIMERS Timers!!! * WoRkInG!!  Won't be long!
-* Sound machine for sleep/noise cancelling * Won't be long
+
+* Sound machine for sleep/noise cancelling * In beta testing
 * Alert me when packages are delivered
 * Tell me if it will rain today or tomorrow *
 * Drop in to another satellite device(s) and have a conversation like an intercom
@@ -53,3 +52,5 @@ Items with asterisks are either fully or partially written but have not been rel
 * Asking for weather at specific city : [Ask Wolfram](community-contributions/cc-sentences/ask-wolfram.md)
 * Locate one of my family members : [Locate a Person](extend-functionality/sentences/locate-a-person.md)
 * Calculate foreign currencies to euro/USD/etc : [Currency Convertor](community-contributions/cc-sentences/currency-convertor.md)
+* Set alarm/reminders on individual devices : [Alarms Reminders Timers](extend-functionality/sentences/alarms-reminders-timers)
+* Timers TIMERS Timers!!! * : [Alarms Reminders Timers](extend-functionality/sentences/alarms-reminders-timers)
