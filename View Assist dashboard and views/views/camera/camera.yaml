@@ -33,7 +33,7 @@ custom_fields:
         menu:
           style: none
         cameras:
-          - camera_entity: camera.front_restream
+          - camera_entity:"[[[ return variables.var_camera ]]]"
             live_provider: ha
         dimensions:
           max_height: 100vh
