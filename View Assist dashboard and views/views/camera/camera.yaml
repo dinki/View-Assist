@@ -4,7 +4,7 @@ variables:
   var_camera: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.camera} catch {
-    return  "camera.front_restream"}]]]
+    return  ""}]]]
 template:
   - variable_template
   - body_template
