@@ -26,6 +26,7 @@ Use your wakeword and say things like:
 
 ### Requirements
 - **View**:  [Alarm view](../views/alarm)
+- **Pyscript**: [viewassist-timer.py](https://github.com/dinki/View-Assist/blob/main/View_Assist_custom_sentences/Alarms_Reminders_Timers/viewassist-timer.py)
 
 ### Installation
 
