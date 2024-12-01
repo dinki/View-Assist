@@ -1,3 +1,12 @@
+// @ts-check
+// `@type` JSDoc annotations allow editor autocompletion and type checking
+// (when paired with `@ts-check`).
+// There are various equivalent ways to declare your Docusaurus config.
+// See: https://docusaurus.io/docs/api/docusaurus-config
+
+import {themes as prismThemes} from 'prism-react-renderer';
+import tailwindPlugin from './plugins/tailwind-plugin.cjs';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'View Assist',
@@ -14,7 +23,7 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'dinki', // Usually your GitHub org/user name.
   projectName: 'View-Assist', // Usually your repo name.
-  deploymentBranch: 'gh-pages',
+  deploymentBranch:'gh-pages',
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
@@ -33,31 +42,31 @@ const config = {
       tagName: 'link',
       attributes: {
         rel: 'preconnect',
-        href: 'https://fonts.googleapis.com',
-      },
+        href: 'https://fonts.googleapis.com'
+      }
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'preconnect',
         href: 'https://fonts.gstatic.com',
-        crossorigin: 'anonymous',
-      },
+        crossorigin: 'anonymous'
+      }
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap',
-      },
+        href: 'https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap'
+      }
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap',
-      },
-    },
+        href: 'https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap'
+      }
+    }
   ],
 
   plugins: [tailwindPlugin],
@@ -106,7 +115,7 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
+          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/dinki/View-Assist',
             label: 'GitHub',
@@ -127,7 +136,7 @@ const config = {
               {
                 label: 'Extend Voice Functionality',
                 to: '/docs/extend-functionality',
-              },
+              }
             ],
           },
           {
@@ -140,7 +149,7 @@ const config = {
               {
                 label: 'View Assist Discussions',
                 href: 'https://github.com/dinki/View-Assist/discussions',
-              },
+              },              
             ],
           },
           {
@@ -158,11 +167,6 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-      },
-      colorMode: {
-        defaultMode: 'dark',
-        disableSwitch: false,
-        respectPrefersColorScheme: false,
       },
     }),
 };
