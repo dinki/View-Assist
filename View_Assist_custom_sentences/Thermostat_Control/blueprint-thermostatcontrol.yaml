@@ -216,8 +216,8 @@ action:
           - if:
             - condition: template
               value_template: >-
-                {% if states(thermostat) == 'cool' %}
-                heat
+                {% if states(thermostat) == 'heat' %}
+                true
                 {% endif %}              
             then:
               - data:
