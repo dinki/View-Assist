@@ -11,6 +11,9 @@ Control your thermostat device using voice.  User can say 'Raise temperature 2 d
 ## To do
 
 * Change mode to cool/heat/auto
+* Multi-zone support
+  * Target zone based on VA device area
+  * Target zone by name
   
 ## Changelog
 
