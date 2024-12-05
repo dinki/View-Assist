@@ -1,7 +1,7 @@
 type: custom:button-card
 variables:
-  thermostatversion: 1.0.0
-  climate_device: >-
+  thermostatversion: 1.0.1
+  var_climate_device: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.climate} catch {
     return ""}]]]
@@ -10,11 +10,11 @@ template:
   - body_template
 styles:
   card:
-    - background-color: '#1c1c1c'
+    - background-color: "#1c1c1c"
     - background-size: cover
   custom_fields:
     message:
-      - font-size: '[[[ return variables.var_font_size ]]]'
+      - font-size: "[[[ return variables.var_font_size ]]]"
       - position: relative
       - padding: 10px
       - border-radius: 10px
@@ -25,12 +25,12 @@ styles:
       - align-self: center
       - padding: 2%
 custom_fields:
-  title: ''
+  title: ""
   message:
     card:
       type: thermostat
-      entity: '[[[ return variables.climate_device ]]]'
-      name: ' '
+      entity: "[[[ return variables.var_climate_device ]]]"
+      name: " "
       card_mod:
         style:
           .: |
