@@ -126,6 +126,20 @@ button_card_templates:
             {
               var assisting = micstate.includes("start") || micstate.includes("vad")
             }
+            else if (micdevice.includes("assist_satellite"))
+            {
+              var assist_in_progress_sensor =  micdevice.replace("assist_satellite", "binary_sensor") + "_assist_in_progress"
+              var assist_in_progress = hass.states[assist_in_progress_sensor].state
+              // The assist_in_progress binary sensor is being deprecated, but the new state method is buggy on Wyoming satellites. This handles both.
+              if (assist_in_progress == null)
+              {
+                var  assisting = micstate.includes("listening") || micstate.includes("processing") || micstate.includes("responding")
+              }
+              else
+              {
+                var assisting = (assist_in_progress === "on") ? true : false;
+              }
+            }
             else
             {
               var assisting = micstate.includes("stt-listening") || micstate.includes("intent-processing") || micstate.includes("tts-speaking");
@@ -174,7 +188,11 @@ button_card_templates:
             else if (mictype == "HassMic")
               {
                 var micdevice = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
-              } 
+              }
+            else if (mictype == "Home Assistant Voice Satellite")
+              {
+                var micdevice = micdevice.replace("assist_satellite", "switch") + "_mute";
+              }
             return `${micdevice}`;
           } catch { return  ""}
         ]]]   
