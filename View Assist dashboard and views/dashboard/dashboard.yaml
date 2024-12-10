@@ -2,97 +2,233 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
-      var_weather_entity: weather.forecast_home
-      use_24_hour_time: false
-      default_satellite: |-
-        [[[
-          return hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.type === "view_audio")
+      var_assistsat_entity_font_style: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.font_style;
+          } catch { return  "Roboto"} 
         ]]]      
+      var_assistsat_entity_weather_entity: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.weather_entity;
+          } catch { return  ""} 
+        ]]]      
+      var_assistsat_entity_status_icons_size: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.status_icons_size;
+          } catch { return  "6vw"} 
+        ]]]
+      var_assistsat_entity_use_24_hour_time: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
+          } catch { return  false} 
+        ]]]
+      default_satellite: |-
+        [[[ try {
+          return hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.type === "view_audio");
+          } catch { return  ""}
+        ]]]    
       var_current_time: |
         [[[
-          if (variables.use_24_hour_time) {
-            var options = { hour: "2-digit", minute: "2-digit", hour12: false };
-          } else {
-            var options = { hour: "numeric", minute: "2-digit" };      
-          }
-            return new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
+          try
+          {
+            if (variables.var_assistsat_entity_use_24_hour_time) {
+              var options = { hour: "2-digit", minute: "2-digit", hour12: false };
+            } else {
+              var options = { hour: "numeric", minute: "2-digit" };      
+            }
+            
+            let time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
+            
+            if(variables.var_assistsat_entity_use_24_hour_time) {
+              time = time.replace("24:", "00:");
+            }
+            return time;
+          } catch { return  ""}
         ]]]
+      var_current_time_alt: |
+        [[[
+          try
+          {
+            var options = { hour: "numeric", minute: "2-digit" };                 
+            let time = new Date().toLocaleTimeString([], options);
+            if(variables.var_assistsat_entity_use_24_hour_time) {
+              time = time.replace("24:", "00:");
+            }
+            return time;
+          } catch { return  ""}
+        ]]]        
       var_date_short: |
-        [[[    
-          const options = { weekday: "short", month: "short", day: "numeric", };
-          return new Date().toLocaleDateString([], options);
+        [[[
+          // Automatically detect locale
+          const userLocale = navigator.language || navigator.userLanguage; // Detect browser/system locale
+          const options = { datestyle: 'long', weekday: 'short', month: 'short', day: 'numeric' }
+          try {
+            return new Date().toLocaleString(userLocale, options);
+          } catch { return ""; }
         ]]]
       var_date_long: |
         [[[
-              const options = { weekday: "long", month: "long", day: "numeric", year: 'numeric' };
-              return new Date().toLocaleDateString([], options)
+          const userLocale = navigator.language || navigator.userLanguage; // Detect browser/system locale
+          const options = { datestyle: 'long', weekday: 'long', month: 'long', day: 'numeric' }
+          try {
+            return new Date().toLocaleString(userLocale, options);
+          } catch { return ""; }          
         ]]]
+
       var_assistsat_entity: |-
         [[[
-          return hass.states[variables.assist_group].attributes.entity_id
+          try {
+            return hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            } catch { return  ""}
+          
         ]]]
       var_assisting: |-
         [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var micdevice = hass.states[assistbid].attributes.mic_device;
-          var micstate = hass.states[micdevice].state;
-          var assisting = micstate.includes("start");
-          return `${assisting}`
+          try 
+          {
+            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var micdevice = hass.states[assist_assistbid].attributes.mic_device;
+            var micstate = hass.states[micdevice].state;
+            if (micdevice.includes("_stt")) 
+            {
+              var assisting = micstate.includes("start") || micstate.includes("vad")
+            }
+            else if (micdevice.includes("assist_satellite"))
+            {
+              var assist_in_progress_sensor =  micdevice.replace("assist_satellite", "binary_sensor") + "_assist_in_progress"
+              var assist_in_progress = hass.states[assist_in_progress_sensor].state
+              // The assist_in_progress binary sensor is being deprecated, but the new state method is buggy on Wyoming satellites. This handles both.
+              if (assist_in_progress == null)
+              {
+                var  assisting = micstate.includes("listening") || micstate.includes("processing") || micstate.includes("responding")
+              }
+              else
+              {
+                var assisting = (assist_in_progress === "on") ? true : false;
+              }
+            }
+            else
+            {
+              var assisting = micstate.includes("stt-listening") || micstate.includes("intent-processing") || micstate.includes("tts-speaking");
+            }
+            return `${assisting}`;
+          } catch { return  ""}
         ]]]
-      var_mic_device: |-
+      var_assisting_text: |-
         [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var micdevice = hass.states[assistbid].attributes.mic_device;
-          var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
-          return `${micdevice}`
-        ]]]
-      var_mic_mute: |-
+          try 
+          {
+            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var micdevice = hass.states[assist_assistbid].attributes.mic_device;
+            var micstate = hass.states[micdevice].state;
+            var assisting_text = "How can I assist?";
+            if (micdevice.includes("_stt") && !micstate?.includes("start")) {
+              assisting_text = "Processing request";
+            } else if (micdevice.includes("_simple_state") && !micstate?.includes("stt-listening")) {
+              assisting_text = "Processing request";
+            } 
+            return `${assisting_text}`;
+          } catch { return  ""}
+        ]]]              
+      var_assist_prompt: |-
         [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var micdevice = hass.states[assistbid].attributes.mic_device;
-          var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
-          var micstate = hass.states[micdevice].state;
-          return `${micstate}`
-        ]]]
+          try {
+            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
+            return `${assist_prompt}`;
+          } catch { return  "";}
+        ]]]             
       var_mic_switch: |-
         [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var micdevice = hass.states[assistbid].attributes.mic_device;
-          var micswitch = micdevice.replace("sensor","switch").replace("stt","mic");      
-          return `${micswitch}`
-        ]]]        
+          try
+          {
+            var micdevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
+            var mictype = hass.states[micdevice_assistbid].attributes.mic_type;
+            if (mictype == "Stream Assist")
+              {
+                var micdevice = micdevice.replace("sensor","switch").replace("stt","mic");      
+              }
+            else if (mictype == "HassMic")
+              {
+                var micdevice = micdevice.replace("sensor","switch").replace("simple_state","microphone");      
+              }
+            else if (mictype == "Home Assistant Voice Satellite")
+              {
+                var micdevice = micdevice.replace("assist_satellite", "switch") + "_mute";
+              }
+            return `${micdevice}`;
+          } catch { return  ""}
+        ]]]   
       var_mediaplayer_device: |-
         [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
-          return `${mediadevice}`
+          try {
+            var mediadevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
+            return `${mediadevice}`;
+          } catch { return  "";}
         ]]]        
       var_mediaplayer_mute: |-
         [[[
-          var assistbid = hass.states[variables.assist_group].attributes.entity_id
-           .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-          var mediadevice = hass.states[assistbid].attributes.mediaplayer_device;
-          var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
-          return `${mediaplayerstate}`
+          try {
+            var mediaplayer_assistbid = hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
+            var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
+            return `${mediaplayerstate}`;
+          } catch { return  "";}
         ]]]
-      var_title: '[[[ return states[variables.var_assistsat_entity].attributes.title; ]]]'
-      var_message: >-
-        [[[ return states[variables.var_assistsat_entity].attributes.message;
+      var_title: |-
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.title;
+          } catch { return  ""} 
         ]]]
-      var_image: '[[[ return states[variables.var_assistsat_entity].attributes.image; ]]]'
-      var_font_size: >-
-        [[[ return
-        states[variables.var_assistsat_entity].attributes.message_font_size; ]]]
+      var_message: |-
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.message;
+          } catch { return  ""} 
+        ]]]
+      var_image: |-
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.image;
+          } catch { return  ""} 
+        ]]]
+      var_font_size: |-
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.message_font_size;
+          }
+          catch { return  ""} 
+        ]]]
       var_weather_temperature: |-
-        [[[
-          return (states[variables.var_weather_entity].attributes.temperature  + '°');  
+        [[[ 
+          try 
+          {
+            return (states[variables. var_assistsat_entity_weather_entity].attributes.temperature  + '°');
+          }
+          catch { return  ""}
         ]]]      
       var_weather_icon: |-
         [[[
@@ -127,19 +263,23 @@ button_card_templates:
             sunny: "mdi:weather-night",
             partlycloudy: "mdi:weather-night-partly-cloudy",
           };
-          var condition = states[variables.var_weather_entity].state;
-          if (states['sun.sun'] === 'above_horizon') {
-            var weather_icon = weatherIconsDay[condition]; 
-          } else {
-            var weather_icon = weatherIconsDay[condition]; 
-          }
-          
-          if (typeof(weather_icon) === 'undefined') { 
-            var weather_icon = "mdi:help" 
-          }   
-          return `${weather_icon}` 
+          try
+          {
+            var condition = states[variables. var_assistsat_entity_weather_entity].state;
+            if (states['sun.sun'] === 'above_horizon') {
+              var weather_icon = weatherIconsDay[condition]; 
+            } else {
+              var weather_icon = weatherIconsDay[condition]; 
+            }
+            
+            if (typeof(weather_icon) === 'undefined') { 
+              var weather_icon = "mdi:help" 
+            }   
+            return `${weather_icon}`;
+          } catch { return  ""} 
         ]]]
   body_template:
+    template: assist_template
     show_state: false
     show_icon: false
     show_name: false
@@ -148,19 +288,23 @@ button_card_templates:
       action: call-service
       service: python_script.set_state
       service_data:
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        entity_id: >-
+          [[[ try { return variables.var_assistsat_entity } catch { return  ""
+          }]]]
         mode: hold
     double_tap_action:
       action: call-service
       service: python_script.set_state
       service_data:
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        entity_id: >-
+          [[[ try { return variables.var_assistsat_entity } catch { return  "" }
+          ]]]
         mode: normal
     hold_action:
       action: call-service
       service: switch.toggle
       service_data:
-        entity_id: '[[[ return variables.var_mic_switch ]]]'
+        entity_id: '[[[ try { return variables.var_mic_switch } catch { return  "" } ]]]'
     aspect_ratio: 2/1
     styles:
       grid:
@@ -173,41 +317,130 @@ button_card_templates:
         - row-gap: .5rem
       card:
         - min-height: 100vh
-        - background-color: '#059bf1'
+        - background: |
+            [[[
+              if (variables.background != null) {
+                return `center / cover no-repeat url(${variables.background})`
+              } else if (variables.var_background != null) {
+                  return `center / cover no-repeat url(${variables.var_background})`
+              } else { 
+                return `center / cover no-repeat ${variables.background_color}`
+              }
+            ]]]        
         - background-size: cover
         - border-radius: 0px
         - overflow: hidden
         - color: white
-        - font-family: '"Roboto", sans-serif'
+        - font-family: |-
+            [[[
+              return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
+            ]]] 
         - font-weight: 300
       custom_fields:
         title:
+          - position: absolute
           - justify-self: start
           - align-self: start
-          - z-index: 2
+          - z-index: 1
           - font-size: 200%
           - font-weight: 400
           - width: max-content
           - margin-left: 2%
-          - margin-top: '-5%'
+          - margin-top: '-4%'
         status:
+          - position: absolute
           - justify-self: end
           - align-self: start
-          - z-index: 2
-          - font-size: 200%
-          - font-weight: 400
-          - width: max-content
-          - margin-top: '-10%'
-        assist:
-          - justify-self: end
-          - height: 10px
+          - justify-content: right
+          - margin-top: '-5%'
+          - z-index: 1
+    custom_fields:
+      title: '[[[ return variables.var_title ]]]'
+      status:
+        card:
+          type: custom:layout-card
+          layout_type: custom:horizontal-layout
+          cards:
+            - type: custom:layout-card
+              layout_type: grid-layout
+              layout:
+                margin: 0
+                card_margin: 0
+                place-content: end
+                grid-template-columns: |
+                  [[[
+                    return `repeat(auto-fit, minmax(max(${variables.var_assistsat_entity_status_icons_size}, ${variables.var_assistsat_entity_status_icons_size}), ${variables.var_assistsat_entity_status_icons_size}))`
+                  ]]]                
+              cards: |-
+                [[[{
+                  const buttonList = [];
+                  let list;
+
+                  try {
+                    list = hass.states[variables.var_assistsat_entity].attributes.status_icons;
+                  } catch (error) {
+                    list = ""; // Set list to an empty string if an error occurs
+                  }
+
+                  if (list) {
+                    for (let i = 0; i < list.length; i++) {
+                      buttonList.push({
+                        type: "custom:button-card",
+                        template: list[i]
+                      });
+                    }
+                  }
+
+                  return buttonList;
+                }]]]
+  assist_template:
+    styles:
+      card: null
+      custom_fields:
+        assistbar:
+          - display: >-
+              [[[ if (variables.var_assist_prompt == "flashing bar" &
+              variables.var_assisting == "true") return "block"; else return
+              "none"; ]]]
+          - justify-self: center
+          - height: 10vh
           - position: absolute
           - width: 100%
-          - z-index: 2
-          - top: 95%
+          - z-index: 1
+          - bottom: 0%
           - animation: >-
-              [[[ if (variables.var_assisting == "true") return "pulse 2s
-              infinite"; else return "" ]]]
+              [[[ if (variables.var_assisting_text.includes("How")) return
+              "pulse 2s infinite"; else return "pulse2 2s infinite"]]]        
+          - height: 10px
+        filterblur:
+          - display: >-
+              [[[ if (variables.var_assist_prompt == "blur pop up" &
+              variables.var_assisting == "true") return "block"; else return
+              "none"; ]]]       
+          - top: 0px
+          - left: 0px
+          - position: absolute
+          - height: 150%
+          - width: 150%
+          - backdrop-filter: brightness(100%)
+          - overflow: hidden
+          - color: transparent
+          - z-index: 0
+          - animation: '[[[ return "brightness .1s ease-in-out forwards" ]]]      '
+        assistblur:
+          - display: >-
+              [[[ if (variables.var_assist_prompt == "blur pop up" &
+              variables.var_assisting == "true") return "block"; else return
+              "none"; ]]]           
+          - position: absolute
+          - vertical-align: middle
+          - justify-self: center
+          - justify-content: center
+          - align-self: center
+          - z-index: 10
+          - opacity: 0
+          - animation: '[[[ return "growFromCenter .4s ease-in-out forwards" ]]]'
+          - font-family: '"Roboto", sans-serif'
     extra_styles: |
       @keyframes pulse {
         0%, 100% {
@@ -216,122 +449,123 @@ button_card_templates:
         50% {
           background-color: #9e42b0;
         }
+      }
+      @keyframes pulse2 {
+        0%, 100% {
+          background-color: #03A9F4;
+        }
+        50% {
+          background-color: #cfe2f3;
+        }
       }      
+      @keyframes growFromCenter {
+        75% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes brightness {
+        100% { backdrop-filter: brightness(50%) blur(10px); z-index:9; }
+      }    
     custom_fields:
-      assist: ''
-      title: '[[[ return variables.var_title ]]]'
-      status:
+      assistbar: .
+      filterblur: .
+      assistblur:
         card:
           type: custom:button-card
+          name: '[[[ return variables.var_assisting_text ]]]'
+          show_icon: true
+          icon: >-
+            [[[ if (variables.var_assisting_text.includes("How")) return
+            "mdi:comment-processing-outline"; else return "mdi:dots-horizontal";
+            ]]]  
+          tap_action:
+            action: none
           styles:
-            grid:
-              - grid-template-areas: |
-                  "mediaplayer mic hold dnd"
-              - grid-template-rows: min-content
-              - grid-template-columns: 1fr 1fr 1fr 1fr
             card:
-              - background-color: transparent
-              - border-width: 0px
-            custom_fields:
-              mediaplayer:
-                - position: relative
-                - display: >-
-                    [[[ if (variables.var_mediaplayer_mute === "true") return
-                    "block"; else return "none"; ]]]
-              mic:
-                - position: relative
-                - display: >-
-                    [[[ if (variables.var_mic_mute === "off") return "block";
-                    else return "none"; ]]]
-              hold:
-                - position: relative
-                - display: >-
-                    [[[ if
-                    (hass.states[variables.var_assistsat_entity].attributes.mode
-                    === "hold") return "block"; else return "none";
-                    ]]]                
-              dnd:
-                - position: relative
-                - display: >-
-                    [[[ if
-                    (hass.states[variables.var_assistsat_entity].attributes.do_not_disturb
-                    === true) return "block"; else return "none";
-                    ]]]                                
-          custom_fields:
-            mediaplayer:
-              card:
-                type: custom:button-card
-                icon: mdi:volume-off
-                show_name: false
-                color_type: card
-                styles:
-                  card:
-                    - background-color: transparent
-                    - border-width: 0px
-                  icon:
-                    - color: white
-                    - height: 90%
-                tap_action:
-                  action: call-service
-                  service: media_player.volume_mute
-                  service_data:
-                    entity_id: '[[[ return variables.var_mediaplayer_device ]]]'
-                    is_volume_muted: false
-            mic:
-              card:
-                type: custom:button-card
-                icon: mdi:microphone-off
-                show_name: false
-                color_type: card
-                styles:
-                  card:
-                    - background-color: transparent
-                    - border-width: 0px
-                  icon:
-                    - color: white
-                    - height: 90%
-                tap_action:
-                  action: call-service
-                  service: homeassistant.turn_on
-                  service_data:
-                    entity_id: '[[[ return variables.var_mic_device ]]]'
-            hold:
-              card:
-                type: custom:button-card
-                icon: mdi:hand-back-left
-                show_name: false
-                color_type: card
-                styles:
-                  card:
-                    - background-color: transparent
-                    - border-width: 0px
-                  icon:
-                    - color: white
-                    - height: 90%
-                tap_action:
-                  action: call-service
-                  service: python_script.set_state
-                  service_data:
-                    mode: normal
-                    entity_id: '[[[ return variables.var_assistsat_entity ]]]'
-            dnd:
-              card:
-                type: custom:button-card
-                icon: mdi:minus-circle
-                show_name: false
-                color_type: card
-                styles:
-                  card:
-                    - background-color: transparent
-                    - border-width: 0px
-                  icon:
-                    - color: white
-                    - height: 90%
-                tap_action:
-                  action: call-service
-                  service: python_script.set_state
-                  service_data:
-                    do_not_disturb: false
-                    entity_id: '[[[ return variables.var_assistsat_entity ]]]'
-views:
-  - title: Home
+              - display: >-
+                  [[[ if (variables.var_assisting == "true") return "block";
+                  else return "none"; ]]]  
+              - padding: 4vh
+              - padding-top: 2vh
+              - padding-bottom: 2vh
+              - background: white
+              - height: 15vh
+              - width: 45vw
+              - border-radius: 8vh
+            grid:
+              - grid-template-areas: '"i n"'
+              - grid-template-columns: 1fr 4fr
+              - grid-template-rows: 1fr
+            icon:
+              - color: rgb(3,169,244)
+              - width: 10vw
+            name:
+              - color: black
+              - text-align: start
+              - font-size: 5vh
+              - font-weight: bold
+  icon_template:
+    template: variable_template
+    aspect_ratio: 1/1
+    color_type: card
+    show_name: false
+    size: 100%
+    padding: 0px
+    styles:
+      card:
+        - background-color: transparent
+        - border-width: 0px
+      icon:
+        - color: white
+        - height: 100%
+  mediaplayer:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:volume-off
+    tap_action:
+      action: call-service
+      service: media_player.volume_mute
+      service_data:
+        entity_id: '[[[ return variables.var_mediaplayer_device ]]]'
+        is_volume_muted: false
+  mic:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:microphone-off
+    tap_action:
+      action: call-service
+      service: homeassistant.turn_on
+      service_data:
+        entity_id: '[[[ return variables.var_mic_switch ]]]'
+  hold:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:hand-back-left
+    tap_action:
+      action: call-service
+      service: python_script.set_state
+      service_data:
+        mode: normal
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+  dnd:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:minus-circle
+    tap_action:
+      action: call-service
+      service: python_script.set_state
+      service_data:
+        do_not_disturb: false
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+  weather:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:weather-sunny
+    tap_action:
+      action: navigate
+      navigation_path: weather

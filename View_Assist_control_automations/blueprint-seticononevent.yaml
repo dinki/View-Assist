@@ -1,0 +1,106 @@
+blueprint:
+  name: View Assist - Set Icon on Event 
+  description: This blueprint allows the user to define an event that will add an icon and optionally an even to remove the icon (View Assist seticononevent v 1.0.0) 
+  domain: automation
+  input:
+    satellite:
+      name: Satellite
+      description: The View Assist group or individual device entities to display the icon on (example group.viewassist_satellites or sensor.viewassist_living_room)
+      selector:
+        entity:
+          multiple: true
+          filter:
+            - domain: sensor
+    icon:
+      name: Display Icon
+      description: The icon name as defined in the dashboard to display (example washer) **Note that this MUST be defined in the dashboard to be usable**
+      default: ""
+
+    add_definitions:
+      name: Add Icon Definitions
+      description: These options are used for the variables needed for adding the icon
+      input:      
+        add_sensor:
+          name: Add Sensor
+          description: The sensor to monitor for changes for adding the icon (example binary_sensor.washer_notification)
+          default: ""
+        add_sensor_to:
+          name: Add Sensor TO condition
+          description: The monitored sensor value TO condition (example on)
+          default: 
+        add_sensor_from:
+          name: Add Sensor FROM condition (optional)
+          description: The monitored sensor value FROM condition (example off)
+          default: 
+    remove_definitions:
+      name: Remove Icon Definitions
+      description: These options are used for the variables needed for removing the icon
+      input:                        
+        remove_sensor:
+          name: Remove Sensor
+          description: The sensor to monitor for changes for removing the icon (example binary_sensor.washer_notification)
+          default:       
+        remove_sensor_to:
+          name: Remove Sensor TO condition
+          description: The monitored sensor value TO condition (example on)
+          default: 
+        remove_sensor_from:
+          name: Remove Sensor FROM condition (optional)
+          description: The monitored sensor value FROM condition (example off)
+          default:  
+triggers:
+  - trigger: state
+    entity_id: 
+    - !input add_sensor
+    from: !input add_sensor_from
+    to: !input add_sensor_to
+    id: addaction
+  - trigger: state
+    entity_id: 
+    - !input remove_sensor
+    from: "on"
+    to: "off"
+    id: removeaction
+conditions: []
+actions:
+  - variables:
+      icon: !input icon
+      satellite: !input satellite
+      expanded_satellites: >
+        {% set input_satellites = expand(states|selectattr('entity_id', 'in', satellite)) %}
+        {{ input_satellites | map(attribute='entity_id') | list }}
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: addaction
+        sequence:
+          - repeat:
+              for_each: "{{ expanded_satellites }}"
+              sequence:
+                - variables:
+                    current_satellite: "{{ repeat.item }}"
+                    icon_list: >
+                      {% set old_list = state_attr(current_satellite, 'status_icons') or [] %}
+                      {% set new_list = [icon] + old_list | unique | list %}
+                      {{ new_list }}
+                - service: python_script.set_state
+                  data:
+                    entity_id: "{{ current_satellite }}"
+                    status_icons: "{{ icon_list }}"
+      - conditions:
+          - condition: trigger
+            id: removeaction
+        sequence:
+          - repeat:
+              for_each: "{{ expanded_satellites }}"
+              sequence:
+                - variables:
+                    current_satellite: "{{ repeat.item }}"
+                    icon_list: >
+                      {% set old_list = state_attr(current_satellite, 'status_icons') or [] %}
+                      {% set new_list = old_list | reject('eq', icon) | list %}
+                      {{ new_list }}
+                - service: python_script.set_state
+                  data:
+                    entity_id: "{{ current_satellite }}"
+                    status_icons: "{{ icon_list }}"

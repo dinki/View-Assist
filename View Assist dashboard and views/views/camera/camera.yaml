@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  cameracardversion: 1.0.1
+  cameracardversion: 1.1.0
   var_camera: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.camera} catch {
@@ -10,23 +10,40 @@ template:
   - body_template
 styles:
   card:
-    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
+    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
     - background-size: cover
+  message:
+    - font-size: "[[[ return variables.var_font_size ]]]"
+    - align-self: center
+    - justify-self: center
+    - width: 100%
+    - height: 100%
+    - position: absolute
+    - justify-content: center
+    - text-align: start
 custom_fields:
   title: >-
     [[[ try {return hass.states[variables.var_camera].attributes.friendly_name}
-    catch {return ""}]]]
+    catch {return ""}]]]  
   message:
     card:
-      type: custom:frigate-card
-      menu:
-        style: none
-      cameras:
-        - camera_entity: >-
-            [[[ try {return
-            hass.states[variables.var_assistsat_entity].attributes.camera}
-            catch {return ""}]]]
-          live_provider: ha
-      dimensions:
-        max_height: 100vh
-        max_wdith: 100vw
+      type: custom:mod-card
+      card:
+        type: custom:frigate-card
+        menu:
+          style: none
+        cameras:
+          - camera_entity:"[[[ return variables.var_camera ]]]"
+            live_provider: ha
+        dimensions:
+          max_height: 100vh
+          max_wdith: 100vw
+      style: |
+        ha-card {
+          width: 100vw !important;
+          height: 100vh !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+          --paper-card-background-color: transparent !important;
+        }  

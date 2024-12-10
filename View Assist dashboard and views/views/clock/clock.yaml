@@ -1,6 +1,10 @@
 type: custom:button-card
 variables:
-  background: /local/viewassist/pinkbluesky.jpg
+  clockcardversion: 1.1.0
+  var_background: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.background} catch {
+    return ""}]]]  
 template:
   - variable_template
   - body_template
@@ -14,12 +18,14 @@ styles:
     - grid-template-rows: min-content min-content min-content min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
+    - background: >-
+        [[[ return `center / cover no-repeat url(${variables.var_background})`
+        ]]]
     - background-size: cover
   custom_fields:
     time:
       - justify-self: center
-      - z-index: 2
+      - z-index: 1
       - font-size: 55vh
       - font-weight: bold
       - position: absolute
@@ -27,7 +33,7 @@ styles:
     date:
       - justify-self: center
       - align-self: center
-      - z-index: 2
+      - z-index: 1
       - font-size: 15vh
       - width: max-content
       - position: absolute
@@ -39,27 +45,29 @@ styles:
       - backdrop-filter: brightness(5%)
       - overflow: hidden
       - display: >-
-          [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode
-          === "night") return "block"; else return "none"; ]]]      
-      - z-index: 3
+          [[[ try {if
+          (hass.states[variables.var_assistsat_entity].attributes.mode ===
+          "night") return "block"; else return "none";} catch { return  "none"}
+           ]]]      
+      - z-index: 2
 custom_fields:
   title:
     card:
       type: custom:button-card
-      icon: '[[[ return variables.var_weather_icon ]]]'
-      name: '[[[ return variables.var_weather_temperature ]]]'
+      icon: "[[[ return variables.var_weather_icon ]]]"
+      name: "[[[ return variables.var_weather_temperature ]]]"
       tap_action:
         action: navigate
-        navigation_path: /dashboard-viewassist/weather
+        navigation_path: weather
       styles:
         card:
           - background-color: transparent
           - border-width: 0px
           - width: 50%
           - margin-left: 5%
-          - margin-top: '-5%'
+          - margin-top: "-5%"
         grid:
-          - grid-template-areas: '"i n"'
+          - grid-template-areas: "\"i n\""
           - grid-template-rows: min-content min-content
         name:
           - font-size: 15vh
@@ -67,6 +75,6 @@ custom_fields:
         icon:
           - width: 25vw
           - color: white
-  time: '[[[ return variables.var_current_time ]]]'
-  date: '[[[ return variables.var_date_short ]]]'
+  time: "[[[ return variables.var_current_time ]]]"
+  date: "[[[ return variables.var_date_short ]]]"
   night: .
