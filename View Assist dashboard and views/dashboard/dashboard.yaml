@@ -67,45 +67,23 @@ button_card_templates:
           } catch { return  ""}
         ]]]        
       var_date_short: |
-        [[[    
-          const optionsUS = { weekday: "short", month: "short", day: "numeric" };
-          const optionsIntl = { weekday: "short", day: "numeric", month: "short" };
-
+        [[[
           // Automatically detect locale
           const userLocale = navigator.language || navigator.userLanguage; // Detect browser/system locale
-
-          // Determine if the locale uses US date format
-          const isUSFormat = userLocale.startsWith("en-US");
-
-          // Use US or Intl options based on detection
-          const options = isUSFormat ? optionsUS : optionsIntl;
-
+          const options = { datestyle: 'long', weekday: 'short', month: 'short', day: 'numeric' }
           try {
-            return new Date().toLocaleDateString([], options); // Use detected locale
-          } catch {
-            return "";
-          }  
+            return new Date().toLocaleString(userLocale, options);
+          } catch { return ""; }
         ]]]
       var_date_long: |
-        [[[    
-          const optionsUS = { weekday: "long", month: "long", day: "numeric", year: 'numeric' };
-          const optionsIntl = { weekday: "long", day: "numeric", month: "long", year: 'numeric' };
-
-          // Automatically detect locale
+        [[[
           const userLocale = navigator.language || navigator.userLanguage; // Detect browser/system locale
-
-          // Determine if the locale uses US date format
-          const isUSFormat = userLocale.startsWith("en-US");
-
-          // Use US or Intl options based on detection
-          const options = isUSFormat ? optionsUS : optionsIntl;
-
+          const options = { datestyle: 'long', weekday: 'long', month: 'long', day: 'numeric' }
           try {
-            return new Date().toLocaleDateString([], options); // Use detected locale
-          } catch {
-            return "";
-          }  
+            return new Date().toLocaleString(userLocale, options);
+          } catch { return ""; }          
         ]]]
+
       var_assistsat_entity: |-
         [[[
           try {
