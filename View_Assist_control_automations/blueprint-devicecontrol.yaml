@@ -290,6 +290,8 @@ trigger:
         {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
       {% elif mic_type == "HassMic" %}
         {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
+      {% elif mic_type == "Home Assistant Voice Satellite" %}
+          {% set target_device = target_device | replace('assist_satellite', 'switch') ~ '_mute' %}
       {% endif %}
     {{ not states(target_device) | bool }}
 - alias: Mic unmuted
@@ -301,6 +303,8 @@ trigger:
         {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
       {% elif mic_type == "HassMic" %}
         {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
+      {% elif mic_type == "Home Assistant Voice Satellite" %}
+          {% set target_device = target_device | replace('assist_satellite', 'switch') ~ '_mute' %}
       {% endif %}
     {{ states(target_device) | bool }}
 - platform: time_pattern
@@ -529,12 +533,22 @@ action:
               {% set target_device = target_device | replace('sensor', 'switch') | replace('_stt', '_mic') %}
             {% elif target_device and mic_type == "HassMic" %}
               {% set target_device = target_device | replace('sensor', 'switch') | replace('simple_state', 'microphone') %}
+            {% elif mic_type == "Home Assistant Voice Satellite" %}
+              {% set target_device = target_device | replace('assist_satellite', 'switch') ~ '_mute' %}
             {% endif %}    
-            {% if states(target_device) == 'on' %}
-              {% set new_list = old_list | reject('eq', 'mic') | list %}
-            {% elif states(target_device) == 'off' %}
-              {% set new_list = ['mic'] + old_list | unique | list %}
-            {% endif %}   
+            {% if mic_type == "Home Assistant Voice Satellite" %}
+              {% if states(target_device) == 'on' %}
+                {% set new_list = ['mic'] + old_list | unique | list %}
+              {% elif states(target_device) == 'off' %}
+                {% set new_list = old_list | reject('eq', 'mic') | list %}
+              {% endif %}
+            {% else %}
+              {% if states(target_device) == 'on' %}
+                {% set new_list = old_list | reject('eq', 'mic') | list %}
+              {% elif states(target_device) == 'off' %}
+                {% set new_list = ['mic'] + old_list | unique | list %}
+              {% endif %}
+            {% endif %}      
             {{ new_list }}
       - action: python_script.set_state
         data:
