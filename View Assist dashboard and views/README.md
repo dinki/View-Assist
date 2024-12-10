@@ -10,7 +10,8 @@ We have been hard at work making the frontend of View Assist look better.  It wa
 * Icon size and font style are now selectable through the blueprint.  This will allow for even more customization
 * We are introducing 'launch icons' which will act as shortcut buttons to your cutom tasks.  This can be to switch to camera views, turn on/off lights, etc.  These are tied to action calls and can be added as a persistent icon for these functions
 * Changes in CSS now allow for better placement of elements and better use of space.  The shifting of elements when icons appear/disappear has finally been resolved!
-* User now has an option to use either Stream Assist or HassMic inputs.  We will be adding other types in the future
+* User now has an option to use either Stream Assist, HassMic, or Home Assistant Voice Assistant inputs.  We will be adding other types in the future
+* Dates are now localized for our international users
 
 ## Instructions for installing the new dashboard for existing users:
 
