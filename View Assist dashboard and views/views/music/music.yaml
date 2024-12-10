@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  musiccardversion: 1.1.0
+  musiccardversion: 1.1.1
   var_musicplayer_device: |-
     [[[
       var assistbid = hass.states[variables.assist_group].attributes.entity_id
@@ -25,7 +25,7 @@ styles:
       - justify-content: center
       - text-align: start
 custom_fields:
-  title: ""
+  title: "[[[ return variables.var_current_time ]]]"
   message:
     card:
       type: custom:mod-card
