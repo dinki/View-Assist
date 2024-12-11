@@ -44,11 +44,41 @@ Detailed install video:
 https://youtu.be/Vrm4TCotEqA
   
 These are the configuration parameters needed for configuration:
+
+### Device Definitions
+
 * Satellite -The View Assist device entity to control (example sensor.viewassist_living_room)
+* Group Entity - The View Assist group that contains the list of satellites (example group.viewassist_satellites)
+* Weather Entity - The weather entity to display on this View Assist satellite(example weather.home)
 * Display Device - The browsermod display device used by View Assist (example sensor.browsermod_livingroom_browser_path)
-* Timer - The associated timer device entity for the satellite (example timer.viewassist_living_room)
+* Timer - The associated timer device entity for this satellite (example timer.viewassist_living_room)
+* Intent - The associated entity intent sensor for this satellite (example sensor.viewassist_living_room_intent)
+* Microphone Type - The microphone provider type (example HassMic)
+
+### Dashboard Definitions
+
 * Dashboard - The base dashboard for View Assist (default /dashboard-viewassist/)
 * Default Home screen - The screen to return to after timeout (default /dashboard-viewassist/clock)
+* Default Music View screen - The view to return to when in music mode (default /dashboard-viewassist/music)
+* Intent View Screen - The view to display for default HA actions for displaying those entities (default /dashboard-viewassist/intent)
+* Assist Prompt - The Assist prompt style to use for wake word and intent processing (default blur pop up)
+* Rotate Background - Allows for the background to be rotated at a timed interval set below. Note you must set either the rotation time in minutes or hours but not both. You also must set the background image directory devices (default off)
+* Rotate Background every XX minutes (Optional) - Select a time value to rotate background image every XX minutes (/5 rotates every 5 minutes). You must put the / character before the number. Valid values are 1-59 only.  Note you can either select to rotate by minute or hour but not both Leave option blank if not using.
+* Rotate Background every XX hours (Optional) - Select a time value to rotate background image every XX hours (/10 rotates every 10 hours). You must put the / character before the number.  Note you can either select to rotate by minute or hour but not both Leave option blank if not using.
+* Background Directory - The path to the directory containing the background images to randomly select for background image for this device. Only necessary if using timed rotation options above
+
+### Default Definitions
+
+* Default Mode - The default mode for this satellite device (default normal)
+* View Timeout - The default time out value for this satellite device in seconds before returning to default view (default 20)
+* Do Not Disturb - Default state for do not disturb mode (default off)
+* Launch Icons - Advanced option! List of custom launch icons to set on start up. Do not change this if you do not know what you are doing (default [])
+* Status Icons Size - Size of the icons in the status icon display (default Medium)
+* Font Style - The default font to use for this satellite device. Font name must match perfectly and be available (default Roboto)
+* Use 24 Hour Time - Sets clock display to 24 hour time when enabled (default off)
+
+### Stream Assist specific (Optional)
+
 * Unmute Mic - Unmute microphone on HA start/restart. This is helpful for Stream Assist devices which default to muted on HA start
 * Mic device - The microphone entity to unmute on HA start/restart. (example switch.viewassist_living_room_mic)  Only needed if Unmute Mic option is turned on
 
