@@ -156,4 +156,10 @@ Dashes in template sensor and device names will be replaced by underscores by Ho
 
 Here is the example configuration.  You can copy paste this into your configuration.yaml file, modify the values to those of your satellite sensors and timer, save the file and then restart Home Assistant for the configuration to be loaded.  You will repeat the sensor definition for any additional satellites.  Copy starting from `- sensor:` to the end of the attributes.  All View Assist satellites must be added to the View Assist Satellite group as described above.
 
+## Troubleshooting problems
+
+Know that Home Assistant (HA) doesn't like dashes in the actual entity names and converts them to underscores. It will, however, allow them in the display name so that makes things harder to catch.  Go into dev tools -> states and filter by the entity names from your VA config and make sure all are valid. If you have any HA entities that contain dashes then you will note a problem. The Browser Mod ID can have dashes.
+
+Be sure that your group is defined by YAML and check that your VA devices are listed
+
 [Example device configuration](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20device%20configuration/device_config_example.yaml)
