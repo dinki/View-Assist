@@ -32,9 +32,9 @@ blueprint:
 trigger:
   - platform: conversation
     command:
-      - Set an alarm for {time}
-      - set a timer for {when}
-      - set a {when} timer      
+      - Set [an] alarm for {time}
+      - set [a] timer for {when}
+      - set [a] {when} timer      
     id: setalarm
   - platform: conversation
     command:
@@ -45,7 +45,7 @@ trigger:
       - >-
         remind me to {reminder} in {when} | set a reminder to {reminder} in
         {when} | remind me in {when} to {reminder}
-      - (set|start) (a|an) {name} timer for {when}
+      - (set|start) [a|an] {name} timer for {when}
     id: setalarm
   - platform: conversation
     command:
