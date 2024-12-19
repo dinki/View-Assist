@@ -1,6 +1,6 @@
 ---
 title: M5Stack Atom Echo
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 ![Image](./m5stackecho.jpg)
