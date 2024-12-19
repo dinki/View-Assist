@@ -5,7 +5,7 @@ sidebar_position: 1
 
 ![Image](./havpe.png)
 
-The Home Assistant Voice Preview Edition ([Ameridroid](https://ameridroid.com/products/home-assistant-voice-preview-edition?_pos=2&_sid=1dc3c1367&_ss=r) is the first hardware device released for use with Home Assistant Assist voice assistant.  We are super excited to see this quality product released and supported by Home Assistant themselves!  We are even more excited to announce that these devices work well with other View Assist satellites and are fully compatible.
+The Home Assistant Voice Preview Edition ([Link](https://www.home-assistant.io/voice-pe) is the first hardware device released for use with Home Assistant Assist voice assistant.  We are super excited to see this quality product released and supported by Home Assistant themselves!  We are even more excited to announce that these devices work well with other View Assist satellites and are fully compatible.
 
 Home Assistant Voice Preview Edition is the open source, privacy-focused voice assistant built to seamlessly connect with Home Assistant, and preview the future of voice today. Its advanced audio processor and dual microphones allow it to hear your commands and control devices. Tactile controls, the injection-molded case and LED ring lend to its premium feel, allowing it to blend into the home. 
 
