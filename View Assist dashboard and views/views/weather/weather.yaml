@@ -43,7 +43,7 @@ custom_fields:
             }
             ha-card.type-weather-forecast>div.content {
               div {
-                padding-top: 0px;
+                padding-right: 10px;
               }
             }
             ha-card.type-weather-forecast>div.content {
