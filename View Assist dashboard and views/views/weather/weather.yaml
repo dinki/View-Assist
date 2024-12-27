@@ -2,7 +2,7 @@ type: custom:button-card
 variables:
   var_forecast_entity: weather.home
   var_forecast_type: daily
-  weathercardversion: 1.0.2
+  weathercardversion: 1.0.3
 template:
   - variable_template
   - body_template
