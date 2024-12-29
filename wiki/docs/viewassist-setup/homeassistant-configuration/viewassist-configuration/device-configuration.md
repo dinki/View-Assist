@@ -52,20 +52,11 @@ template:
       attributes:
         type: view_audio
         mic_device: "sensor.streamassist_livingroom_stt" 
-        mediaplayer_device: "media_player.browsermod_livingroom" 
+        mediaplayer_device: "media_player.browsermod_livingroom"
+        musicplayer_device:  "media_player.browsermod_livingroom"  
         display_device: "sensor.browsermod_livingroom_browser_path" 
         browser_id: "ViewAssist-livingroom"
         timer_device: "timer.viewassist-livingroom" 
-        view_timeout: "20"
-        mode: "normal"
-        title: ""
-        message: ""
-        message_font_size: "3vw"
-        image: ""
-        timer: ""
-        alarm: "idle"
-        cycle_view: ""
-        do_not_disturb: false
 ```
 
 ### Voice Only Satellites (audio_only) example:
@@ -76,21 +67,9 @@ template:
       state: ""
       attributes:
         type: audio_only
-        mic_device: "" 
-        mediaplayer_device: "" 
-        display_device: "" 
-        browser_id: ""
-        timer_device: "" 
-        view_timeout: "20"
-        mode: "normal"
-        title: ""
-        message: ""
-        message_font_size: "3vw"
-        image: ""
-        timer: ""
-        alarm: "idle"
-        cycle_view: ""
-        do_not_disturb: false
+        mic_device: "assist_satellite.assistsat_diningroom_assist_satellite"
+        mediaplayer_device: "media_player.assistsat_diningroom_media_player"
+        musicplayer_device: "media_player.assistsat_diningroom_media_player_2"
 ```
 
 ### View Assist Config Definitions:
@@ -107,27 +86,11 @@ template:
         - This will match the name you give the device in your Browsermod configuration. Capitalization matters!
     - **timer_device:** Used to assign the timer helper device used for screen time outs
     - **display_device:** Used to determine the correct Browser Mod instance to use for display
-    - **view_timeout:** Amount of time (seconds) before switching views as controlled by mode
-        - Default: 20
+
 </details>
 <details>
     <summary>Default values (do not change)</summary>
     - **state:** Required 
-    - **mode:** Used to control actions based on conditions
-        - Values: `normal`, `music`, `night`, `hold`, `cycle`
-        - Default: `normal`
-    - **title:** Text for displaying title of multiuse cards
-    - **message:** Blob text for displaying to informational views
-    - **message_font_size:** Text containing size of font to be used in message for informational views 
-        - Default: `3vw`
-    - **image:** Text containing image path for display on informational views
-    - **alarm:** Used to trigger alarm sound and display
-        - Values: `idle`, `alarming`
-        - Default: `idle`
-    - **cycle_view:** List containing view names to cycle through using view_timeout when in `cycle` mode
-        - must be in Python list format eg. `[ 'weather', 'frontcamera' ]`
-    - **dnd:** Do not disturb mode.  Do not broadcast or play sounds when in DND mode
-        - Default: `false`
 </details>
 
 ## View Assist Satellite Group
