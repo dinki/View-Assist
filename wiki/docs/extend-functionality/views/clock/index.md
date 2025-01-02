@@ -6,8 +6,8 @@
 ![](./clockaltview.png)
 * **Description**: Provides a view for presenting the time, data and weather conditions
 * **Default name**:  clock
-* **Current Version**: v1.1.0
-* **Code link**:  [Clock View Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/clock/clock.yaml) | [Clock View Alternative Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/clock/clockalt.yaml) | [Clock View With Web Slideshow Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/clock/clockwebpage.yaml)
+* **Current Version**: v1.0.0
+* **Code link**:  [Clock View Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/clock/clock.yaml) [Clock View Alternative Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/clock/clockalt.yaml)
 * **Special Requirements**: A background image will need to be upload to the HA server and the view code modified to use it
 
 ## Installation 
@@ -29,7 +29,6 @@ The background image will need to be uploaded to the web directory located withi
 
 Some example, free backgrounds are provided in the 'Sample_Backgrounds' directory.  These have all been downloaded using the free license from unsplash.com .  I encourage you to browse this site or any others and find an image that fits your needs and style.
 
-If using a webpage slideshow, ensure that you are using http|https that correspond to your home assistant url, otherwise the iframe will refuse to load.
 
 Sample background image credits:
 
@@ -59,6 +58,5 @@ https://unsplash.com/photos/a-pink-and-blue-sky-with-a-few-clouds-GLf7bAwCdYg
 | Version | Description |
 | ------- | ----------- |
 | v 1.0.0 | Initial release |
-| v 1.1.0 | Web Slideshow Clock |
 
 
