@@ -58,14 +58,14 @@ action:
               path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"        
-          - service: mass.search
+          - service: music_assistant.search
             data:
               limit: 1
               media_type:
                 - artist
               name: "{{ trigger.slots.artist  }}"
             response_variable: found_artist
-          - service: mass.play_media
+          - service: music_assistant.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
             data:
@@ -89,7 +89,7 @@ action:
               path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"        
-          - service: mass.play_media
+          - service: music_assistant.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
             data:
@@ -113,7 +113,7 @@ action:
               path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"        
-          - service: mass.search
+          - service: music_assistant.search
             data:
               limit: 1
               media_type:
@@ -121,7 +121,7 @@ action:
               name: "{{ trigger.slots.song  }}"
               artist: "{{ trigger.slots.artist  }}"
             response_variable: found_song
-          - service: mass.play_media
+          - service: music_assistant.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
             data:
@@ -145,7 +145,7 @@ action:
               path: "{{ view_path }}"
             target:
               device_id: "{{ target_display_device }}"        
-          - service: mass.search
+          - service: music_assistant.search
             data:
               limit: 1
               media_type:
@@ -153,7 +153,7 @@ action:
               name: "{{ trigger.slots.song  }}"
               artist: "{{ trigger.slots.artist  }}"
             response_variable: found_song
-          - service: mass.play_media
+          - service: music_assistant.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
             data:
