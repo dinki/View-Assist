@@ -38,7 +38,7 @@ action:
             id:
               - playtunein
         sequence:
-          - service: mass.play_media
+          - service: music_assistant.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
             data:
