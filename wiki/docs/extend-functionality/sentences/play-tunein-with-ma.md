@@ -22,4 +22,5 @@ Open Music Assistant and then go to the radio page (1).  Find the station you wa
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.1 | Update to use music_assistant action |
 | v 1.0.0 | Initial release |
