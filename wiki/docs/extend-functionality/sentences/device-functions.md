@@ -20,6 +20,7 @@ Requires View Assist Control automation v1.2.0 or greater
 * Add pause, rewind/fast forward XX seconds/minutes, next/previous/restart track
 * query what song/media is playing by voice
 * Allow for 'stop' only to end playing media
+* Add 'move to [area]' to move music playback from one satellite to another
 
 
 ## Changelog
