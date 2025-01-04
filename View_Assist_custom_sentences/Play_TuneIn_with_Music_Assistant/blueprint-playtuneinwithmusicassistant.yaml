@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play TuneIn with Music Assistant
-  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.0)
+  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.1)
   domain: automation
   input:
     command:
