@@ -612,7 +612,7 @@ action:
       - condition: template
         value_template: "{% if rotate_background %}true{% endif %}"          
     sequence:
-      - action: pyscript.select_random_image
+      - action: python_script.select_random_image
         data: 
           directory: "{{ background_directory }}"
         response_variable: random_image
