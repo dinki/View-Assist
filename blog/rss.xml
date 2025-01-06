@@ -4,10 +4,20 @@
         <title>View Assist Blog</title>
         <link>https://dinki.github.io/View-Assist/blog</link>
         <description>View Assist Blog</description>
-        <lastBuildDate>Fri, 22 Nov 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 06 Jan 2025 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[December 2024 Update]]></title>
+            <link>https://dinki.github.io/View-Assist/blog/december2024-update</link>
+            <guid>https://dinki.github.io/View-Assist/blog/december2024-update</guid>
+            <pubDate>Mon, 06 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[December came and went with a blur.  As expected, things did slow down due to holiday commitments and time off with family.  Despite this, we still managed to get some work done.  Most notably is the dashboard 2.0 release which really lays a great foundatation for things moving forward.  We also worked through a change made by the Home Assistant folks that caused our satellite devices to listen for a much shorter time.  The good news is that the HA folks are great and worked with us to get things back in order for the 2025.1 release.]]></description>
+            <content:encoded><![CDATA[<p>December came and went with a blur.  As expected, things did slow down due to holiday commitments and time off with family.  Despite this, we still managed to get some work done.  Most notably is the dashboard 2.0 release which really lays a great foundatation for things moving forward.  We also worked through a change made by the Home Assistant folks that caused our satellite devices to listen for a much shorter time.  The good news is that the HA folks are great and worked with us to get things back in order for the 2025.1 release.</p>
+<p>Recently we saw a dashboard commit by @minicom that allowed for Wyoming and ESPHome devices to interact with the dashboard.  I'm excited to see how incorporating these new satellite devices will broaden our options for satellite devices.</p>
+<p>January will hopefully be packed with the usual goodness and advances we have all come to enjoy.  Here's to kicking off 2025 with some additional functionality and coolness for View Assist!</p>]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[November 2024 Update]]></title>
             <link>https://dinki.github.io/View-Assist/blog/november2024-update</link>
