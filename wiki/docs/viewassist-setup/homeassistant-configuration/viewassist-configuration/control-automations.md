@@ -67,6 +67,8 @@ These are the configuration parameters needed for configuration:
 * Rotate Background every XX hours (Optional) - Select a time value to rotate background image every XX hours (/10 rotates every 10 hours). You must put the / character before the number.  Note you can either select to rotate by minute or hour but not both Leave option blank if not using.
 * Background Directory - The path to the directory containing the background images to randomly select for background image for this device. Only necessary if using timed rotation options above
 
+Note for rotating background you will need [Pyscript script installed](https://www.youtube.com/watch?v=jpJxZaisbGQ) and the [select_random_image.py script](https://github.com/dinki/View-Assist/blob/main/View_Assist_control_automations/viewassist-select_random_image.py) stored in your `pyscripts` directory
+
 ### Default Definitions
 
 * Default Mode - The default mode for this satellite device (default normal)
