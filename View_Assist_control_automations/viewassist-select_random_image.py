@@ -2,9 +2,10 @@ import os
 import random
 import requests
 import uuid
+import io
 
-# @service(supports_response="optional")
-def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", local:bool = True):
+@service(supports_response="optional")
+def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", local: bool = True):
     """yaml
     name: View Assist Select Random Image
     description: Selects a random image from the specified directory if local = True, or from unsplash.it is local = False
@@ -35,7 +36,7 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
     else:
         # source: https://unsplash.it/640/425?random
         # make temporary dir
-        temp_dir = f"{directory}/temp"
+        temp_dir = f"{directory}temp"
         if not os.path.exists(temp_dir):
             os.makedirs(temp_dir)
         else:
@@ -45,32 +46,37 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
                 os.remove(f"{temp_dir}/{f}")
         #store file in guid from source
         url = "https://unsplash.it/640/425?random"
-        response = requests.get(url)
+        
+        #response = requests.get(url)
+        response = task.executor(requests.get, url)
+        
         if response.status_code == 200:
             # Generate a random GUID
             random_guid = uuid.uuid4()
             filename = f"{temp_dir}/{random_guid}.jpg"
-            with open(filename, "wb") as file:
-                file.write(response.content)
-            print("Retrieved image, wrote as {0}".format(filename))
-            selected_image = filename
+            
+            #with open(filename, "wb") as file:
+            with task.executor(io.open,filename, "wb") as file:
+                task.executor(file.write, response.content)
+            #print("Retrieved image, wrote as {0}".format(filename))
+            selected_image = f"{random_guid}.jpg"
+            
         else:
-            print("Failed to retrieve the image. Status code:",
-                  response.status_code)
+            #print("Failed to retrieve the image. Status code:",
+            #      response.status_code)
             selected_image = ""
-
+    
     # Replace /config/www/ with /local/ for constructing the relative path
-        if filesystem_directory.startswith("/config/www/"):
-            relative_path = filesystem_directory.replace("/config/www/", "/local/")
-        else:
-            relative_path = directory
+    if filesystem_directory.startswith("/config/www/"):
+        relative_path = filesystem_directory.replace("/config/www/", "/local/")
+    else:
+        relative_path = directory
+    # Ensure trailing slash in the relative path
+    if not relative_path.endswith('/'):
+        relative_path += '/'
 
-        # Ensure trailing slash in the relative path
-        if not relative_path.endswith('/'):
-            relative_path += '/'
+    # Construct the image path
+    image_path = f"{relative_path}{selected_image}"
 
-        # Construct the image path
-        image_path = f"{relative_path}{selected_image}"
-
-        # Return the image path in a dictionary
-        return {"image_path": image_path}
+    # Return the image path in a dictionary
+    return {"image_path": image_path}
