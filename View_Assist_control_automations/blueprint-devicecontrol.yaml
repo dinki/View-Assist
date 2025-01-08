@@ -132,6 +132,8 @@ blueprint:
         local_backgrounds:
           name: Use local backgrounds?
           description: If true, use the local files in the background directory. If false, get random images from unsplash.it
+          selector:
+            boolean: {}
           default: true
     default_definitions:
       name: Default Definitions
