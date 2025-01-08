@@ -129,6 +129,10 @@ blueprint:
           name: Background Directory
           description: The path to the directory containing the background images to randomly select for background image for this device.  Only necessary if using timed rotation options above
           default: /local/viewassist/backgrounds/	
+        local_backgrounds:
+          name: Use local backgrounds?
+          description: If true, use the local files in the background directory. If false, get random images from unsplash.it
+          default: true
     default_definitions:
       name: Default Definitions
       icon: mdi:format-list-bulleted
@@ -615,6 +619,7 @@ action:
       - action: pyscript.select_random_image
         data: 
           directory: "{{ background_directory }}"
+          local: "{{ local_backgrounds }}"
         response_variable: random_image
       - data:
           entity_id: "{{ satellite }}"
