@@ -9,4 +9,5 @@ We encourage everyone to share their creations so that others might enjoy what y
 
 | Tip | Description | Author |
 | --- | ----------- | ------ |
+| [Immich Clock Background](./immich_clock_background.md) | Display a webpage slideshow as the background for the clock or any other view | janstadt |
 | Placeholder | Placeholder | dinki |

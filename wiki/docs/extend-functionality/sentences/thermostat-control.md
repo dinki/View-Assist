@@ -11,6 +11,11 @@ Control your thermostat device using voice.  User can say 'Raise temperature 2 d
 * Import [raw blueprint](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20custom%20sentences/Thermostat%20Control/blueprint-thermostatcontrol.yaml) and configure
 * Create [thermostat](../views/thermostat) view
 
+## To Do
+* Add ability to switch modes (heat/cool/auto)
+* Add ability to set fan mode
+* Add ability to run fan mode for set amount of time
+
 ## Changelog
 
 | Version | Description |

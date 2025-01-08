@@ -15,9 +15,12 @@ Open Music Assistant and then go to the radio page (1).  Find the station you wa
 
 ![image](https://github.com/user-attachments/assets/026e51e3-bd5c-440f-ba0e-e221a40e9f9a)
 
+## To do
+* Change name of blueprint from 'TuneIn' to 'radio' as this works with TuneIn and Radio Browser
 
 ## Changelog
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.1 | Update to use music_assistant action |
 | v 1.0.0 | Initial release |

@@ -21,6 +21,10 @@ Requirements:
 
 Thanks to vasqued2 for the great work on Team Tracker and Mr. Picc010 for his help with the voice response logic
 
+## To do
+* Plural state not working properly
+* Add more queries for things like next game
+
 ## Changelog
 
 | Version | Description |

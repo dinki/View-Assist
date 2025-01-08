@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
-  description: Use various methods to play individual songs, add to queue, and play artist from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.1)
+  description: Use various methods to play individual songs, add to queue, and play artist from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
   domain: automation
   input:
     group_entity:
@@ -14,6 +14,11 @@ blueprint:
             - group
           multiple: false
       default: group.viewassist_satellites
+    ma_instance:
+      name: Music Assistant Instance
+      description: Select the Music Assistant instance
+      selector:
+        config_entry:
     view_path:
       name: Dashboard Info view
       description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
@@ -61,6 +66,7 @@ action:
           - service: music_assistant.search
             data:
               limit: 1
+              config_entry_id: "{{ ma_instance }}"
               media_type:
                 - artist
               name: "{{ trigger.slots.artist  }}"
@@ -116,6 +122,7 @@ action:
           - service: music_assistant.search
             data:
               limit: 1
+              config_entry_id: "{{ ma_instance }}"
               media_type:
                 - track
               name: "{{ trigger.slots.song  }}"
@@ -148,6 +155,7 @@ action:
           - service: music_assistant.search
             data:
               limit: 1
+              config_entry_id: "{{ ma_instance }}"
               media_type:
                 - track
               name: "{{ trigger.slots.song  }}"
@@ -165,6 +173,7 @@ action:
 variables:
   view_path: !input view_path
   group_entity: !input group_entity
+  ma_instance: !input ma_instance
   target_satellite_device: |-
     {% for sat in expand(group_entity) %}
       {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
