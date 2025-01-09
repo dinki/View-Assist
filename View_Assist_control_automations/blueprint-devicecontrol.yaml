@@ -135,6 +135,10 @@ blueprint:
           selector:
             boolean: {}
           default: true
+        max_images:
+          name: Maximum downloaded background images to keep (only applies if you don't use local images)
+          description: Set the maximum number of downloaded background images to keep. Only applies if not using local backgrounds. Defaults to 10, should be at least 1
+          default: 10
     default_definitions:
       name: Default Definitions
       icon: mdi:format-list-bulleted

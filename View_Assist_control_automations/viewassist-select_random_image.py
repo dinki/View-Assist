@@ -6,7 +6,7 @@ import io
 import time
 
 @service(supports_response="optional")
-def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", local: bool = True):
+def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", local: bool = True, max_images: int = 10):
     """yaml
     name: View Assist Select Random Image
     description: Selects a random image from the specified directory if local = True, or from unsplash.it is local = False
@@ -28,17 +28,24 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
         if not os.path.exists(filesystem_directory):
             os.makedirs(filesystem_directory)
         
-        # delete all old downloaded files in temporary dir (one day old)
-        now = time.time()
-        cutoff = now - 86400 +1
+        # delete old downloaded files in temporary dir as configured by max_images
+        jpg_files = []
+        for filename in os.listdir(filesystem_directory):
+            if filename.lower().endswith('.jpg'):
+                file_path = os.path.join(filesystem_directory, filename)
+                if os.path.isfile(file_path):
+                    file_mtime = os.path.getmtime(file_path)
+                    jpg_files.append((file_path, file_mtime))
+        # Sort the list by modification time (oldest first)
+        jpg_files.sort(key=lambda x: x[1])
         
-        oldjpgs = [f for f in os.listdir(filesystem_directory) if f.lower().endswith(".jpg")]
-        for f in oldjpgs:
-            file_path = os.path.join(filesystem_directory, f)
-            if os.path.isfile(file_path):
-                file_mtime = os.path.getmtime(file_path)
-                if file_mtime < cutoff:
-                    os.remove(file_path)
+        # Delete the oldest files if there are more than max_images
+        if len(jpg_files) > max_images:
+            files_to_delete = len(jpg_files) +1 - max_images
+            for i in range(files_to_delete):
+                #print(f"Deleting {jpg_files[i][0]}")
+                task.executor(os.remove, jpg_files[i][0])
+        
         #store file in guid from source
         url = "https://unsplash.it/640/425?random"
         try:
