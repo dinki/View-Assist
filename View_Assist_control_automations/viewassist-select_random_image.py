@@ -27,7 +27,7 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
         
         if not os.path.exists(filesystem_directory):
             os.makedirs(filesystem_directory)
-        #disabling removal of jpgs for now, but this should be in the code to avoid flooding the disk
+        
         # delete all old downloaded files in temporary dir (one day old)
         now = time.time()
         cutoff = now - 86400 +1
