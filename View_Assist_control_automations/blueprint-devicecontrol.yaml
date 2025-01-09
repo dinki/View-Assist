@@ -471,7 +471,7 @@ action:
         entity_id: '{{ satellite }}'
         intent_entities: "{% set list = state_attr(intent,'intent_output')['response']['data']['success']
           | map(attribute='id') | list %}  {% set prefix = ('light', 'switch', 'cover',
-          'boolean', 'fan', 'scene') %}  {% set data = namespace(filtered_list=[]) %}  {% for item
+          'input_boolean', 'fan', 'scene') %}  {% set data = namespace(filtered_list=[]) %}  {% for item
           in list %}\n    {%- if item.startswith(prefix) %} \n        {% set data.filtered_list
           = data.filtered_list + [item] %}\n    {% endif -%}\n{% endfor %}  {% set
           list = data.filtered_list %} [ {% for e in list %}  {{ {'type': 'custom:button-card','entity':

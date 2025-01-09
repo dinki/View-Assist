@@ -2,7 +2,7 @@ type: custom:button-card
 variables:
   var_forecast_entity: weather.home
   var_forecast_type: daily
-  weathercardversion: 1.0.2
+  weathercardversion: 1.0.3
 template:
   - variable_template
   - body_template
@@ -43,7 +43,7 @@ custom_fields:
             }
             ha-card.type-weather-forecast>div.content {
               div {
-                padding-top: 0px;
+                padding-right: 10px;
               }
             }
             ha-card.type-weather-forecast>div.content {

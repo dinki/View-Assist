@@ -19,4 +19,13 @@ Notes:
 
 Required View: [locate view](../views/locate/index.md)
 
-All credit goes to @JimmyJamesBob and @colin715 for their collaboration on this cool blueprint
+All credit goes to @JimmyJamesBob and @colin715 for their collaboration on this cool 
+
+## To do
+* fix matching for case.  Right now everything needs to be lower case to work
+
+## Changelog
+
+| Version | Description |
+| ------- | ----------- |
+| v 1.0.0 | Initial release |
