@@ -38,7 +38,7 @@ action:
     data:
       query: "{{ trigger.sentence }}"
     response_variable: wolfram_answer
-  - set_conversation_response: "{{ wolfram_answer.response }} is eqivalent to {{ trigger.slots.source }}."
+  - set_conversation_response: "{{ wolfram_answer.response }} is equivalent to {{ trigger.slots.source }}."
   - service: python_script.set_state
     data:
       entity_id: "{{ target_satellite_device }}"
@@ -46,7 +46,7 @@ action:
       message_font_size: 4vw
       message: >-
         <b>Request</b>: <br /\> {{ trigger.sentence | capitalize}}<br /\><br /\> <b>Answer:</b> <br
-        /\> {{ wolfram_answer.response }} is eqivalent to {{ trigger.slots.source }}.
+        /\> {{ wolfram_answer.response }} is equivalent to {{ trigger.slots.source }}.
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
