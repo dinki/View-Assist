@@ -19,50 +19,49 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
     # Verify the directory exists
     if not os.path.isdir(filesystem_directory):
         return {"error": f"The directory '{filesystem_directory}' does not exist."}
-    
-    if local:
-        valid_extensions = ('.jpeg', '.jpg', '.tif', '.png')
-
-        # List only image files with the valid extensions
-        images = [f for f in os.listdir(filesystem_directory) if f.lower().endswith(valid_extensions)]
-
-        # Check if any images were found
-        if not images:
-            return {"error": f"No images found in the directory '{filesystem_directory}'."}
-
-        # Select a random image
-        selected_image = random.choice(images)
-
-    else:
+    if not local:
         # source: https://unsplash.it/640/425?random
         # make temporary dir
-        temp_dir = f"{directory}temp"
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
-        else:
+        filesystem_directory = f"{filesystem_directory}temp"
+        
+        if not os.path.exists(filesystem_directory):
+            os.makedirs(filesystem_directory)
+        #disabling removal of jpgs for now, but this should be in the code to avoid flooding the disk
+        #else:
             # delete all files in temporary dir
-            jpgs = [f for f in os.listdir(temp_dir) if f.lower().endswith(".jpg")]
-            for f in jpgs:
-                os.remove(f"{temp_dir}/{f}")
+        #    jpgs = [f for f in os.listdir(filesystem_directory) if f.lower().endswith(".jpg")]
+        #    for f in jpgs:
+        #        os.remove(f"{filesystem_directory}/{f}")
         #store file in guid from source
         url = "https://unsplash.it/640/425?random"
-        
-        #response = requests.get(url)
         try:
             response = task.executor(requests.get, url)
             if response.status_code == 200:
                 # Generate a random GUID
                 random_guid = uuid.uuid4()
-                filename = f"{temp_dir}/{random_guid}.jpg"
+                filename = f"{filesystem_directory}/{random_guid}.jpg"
                 with task.executor(io.open,filename, "wb") as file:
                     task.executor(file.write, response.content)
-                selected_image = f"temp/{random_guid}.jpg"
+                #selected_image = f"temp/{random_guid}.jpg"
             else:
                 return {"error": f"Failed to retrieve an image from unsplash. Status code: {response.status_code}"}
-                selected_image = ""
+                #selected_image = ""
         except Exception as e:
-            return {"error": f"Failed to retrieve an image from unsplash. Exception: {e}"}
-    
+            #return {"error": f"Failed to retrieve an image from unsplash. Exception: {e}"}
+            pass
+            
+    valid_extensions = ('.jpeg', '.jpg', '.tif', '.png')
+
+    # List only image files with the valid extensions
+    images = [f for f in os.listdir(filesystem_directory) if f.lower().endswith(valid_extensions)]
+
+    # Check if any images were found
+    if not images:
+        return {"error": f"No images found in the directory '{filesystem_directory}'."}
+
+    # Select a random image
+    selected_image = random.choice(images)
+
     # Replace /config/www/ with /local/ for constructing the relative path
     if filesystem_directory.startswith("/config/www/"):
         relative_path = filesystem_directory.replace("/config/www/", "/local/")
