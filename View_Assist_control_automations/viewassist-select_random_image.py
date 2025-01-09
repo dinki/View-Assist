@@ -48,23 +48,20 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
         url = "https://unsplash.it/640/425?random"
         
         #response = requests.get(url)
-        response = task.executor(requests.get, url)
-        
-        if response.status_code == 200:
-            # Generate a random GUID
-            random_guid = uuid.uuid4()
-            filename = f"{temp_dir}/{random_guid}.jpg"
-            
-            #with open(filename, "wb") as file:
-            with task.executor(io.open,filename, "wb") as file:
-                task.executor(file.write, response.content)
-            #print("Retrieved image, wrote as {0}".format(filename))
-            selected_image = f"{random_guid}.jpg"
-            
-        else:
-            #print("Failed to retrieve the image. Status code:",
-            #      response.status_code)
-            selected_image = ""
+        try:
+            response = task.executor(requests.get, url)
+            if response.status_code == 200:
+                # Generate a random GUID
+                random_guid = uuid.uuid4()
+                filename = f"{temp_dir}/{random_guid}.jpg"
+                with task.executor(io.open,filename, "wb") as file:
+                    task.executor(file.write, response.content)
+                selected_image = f"temp/{random_guid}.jpg"
+            else:
+                return {"error": f"Failed to retrieve an image from unsplash. Status code: {response.status_code}"}
+                selected_image = ""
+        except Exception as e:
+            return {"error": f"Failed to retrieve an image from unsplash. Exception: {e}"}
     
     # Replace /config/www/ with /local/ for constructing the relative path
     if filesystem_directory.startswith("/config/www/"):
