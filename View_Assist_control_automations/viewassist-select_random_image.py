@@ -3,6 +3,7 @@ import random
 import requests
 import uuid
 import io
+import time
 
 @service(supports_response="optional")
 def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", local: bool = True):
@@ -27,11 +28,17 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
         if not os.path.exists(filesystem_directory):
             os.makedirs(filesystem_directory)
         #disabling removal of jpgs for now, but this should be in the code to avoid flooding the disk
-        #else:
-            # delete all files in temporary dir
-        #    jpgs = [f for f in os.listdir(filesystem_directory) if f.lower().endswith(".jpg")]
-        #    for f in jpgs:
-        #        os.remove(f"{filesystem_directory}/{f}")
+        # delete all old downloaded files in temporary dir (one day old)
+        now = time.time()
+        cutoff = now - 86400 +1
+        
+        oldjpgs = [f for f in os.listdir(filesystem_directory) if f.lower().endswith(".jpg")]
+        for f in oldjpgs:
+            file_path = os.path.join(filesystem_directory, f)
+            if os.path.isfile(file_path):
+                file_mtime = os.path.getmtime(file_path)
+                if file_mtime < cutoff:
+                    os.remove(file_path)
         #store file in guid from source
         url = "https://unsplash.it/640/425?random"
         try:
