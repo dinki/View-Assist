@@ -626,6 +626,7 @@ action:
         data: 
           directory: "{{ background_directory }}"
           local: "{{ local_backgrounds }}"
+          max_images: "{{ max_images }}"
         response_variable: random_image
       - data:
           entity_id: "{{ satellite }}"
