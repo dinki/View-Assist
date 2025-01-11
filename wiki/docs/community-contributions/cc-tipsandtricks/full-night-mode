@@ -5,7 +5,7 @@ sidebar_position: 2
 ​
 ​
 If you have a View Assist satellite on your nightstand, you might want it to turn off the screen fully. Here's a way to do that on Android:
-1. First, install and configure the Home Assistant companion app. You need this to enable sending notifications to your satellite. Make sure to enable the continuous connection to Home Assistant.
+1. First, install and configure the Home Assistant companion app. You need this to enable sending notifications to your satellite (or use webpanel to switch apps: https://wallpanel.xyz/docs/launch-external-apps). Make sure to enable the continuous connection to Home Assistant. We like using the companion app because it will continue to show the View Assist dashboard until the screen times out (see below).
 2. Optionally install any app you want to use during the night. For example, you might want to use a night clock app. If you just want the screen black you don't need to install an extra app.
 3. Configure your satellite Android's settings to turn off the screen after X time. Don't worry, webpanel will make sure your screen is still on during the day so you can continue to use View Assist normally.
 4. Write a "bedtime" script or automation or add steps similar to the examples below to what you already have.
