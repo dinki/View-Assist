@@ -1,7 +1,7 @@
 blueprint:
   name: View Assist - Broadcast
   description: Say broadcast and the message and View Assist will send message to
-    all devices not in do not disturb mode (View Assist Broadcast v 1.0.2)<br />Note
+    all devices not in do not disturb mode (View Assist Broadcast v 1.0.3)<br />Note
     Chime TTS is needed for this automation
   domain: automation
   input:
