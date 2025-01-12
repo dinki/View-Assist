@@ -40,6 +40,9 @@ trigger:
 condition: []
 action:
 - variables:
+    view_path: !input view_path
+    group_entity: !input group_entity
+    chime_path: !input chime_path
     target_satellite_device: "{% for sat in expand(group_entity)
       %}\n  {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or
       (device_id(sat.attributes.display_device)  == trigger.device_id) %}\n    {{
@@ -50,9 +53,6 @@ action:
       }}'
     target_satellite_device_type: '{{ state_attr(target_satellite_device, ''type'')
       }}'
-    view_path: !input view_path
-    group_entity: !input group_entity
-    chime_path: !input chime_path
   enabled: true
 - set_conversation_response: ''
 - repeat:
