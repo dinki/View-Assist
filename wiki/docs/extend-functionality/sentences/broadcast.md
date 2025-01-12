@@ -40,5 +40,7 @@ Note that you must have at least two View Assist devices configured and in your 
 
 | Version | Description |
 | ------- | ----------- |
-| v 1.0.0 | Initial release |
+| v 1.0.3 | Rearrange variable order |
+| v 1.0.2 | Not using group |
 | v 1.0.1 | Change condition to match boolean not string |
+| v 1.0.0 | Initial release |
