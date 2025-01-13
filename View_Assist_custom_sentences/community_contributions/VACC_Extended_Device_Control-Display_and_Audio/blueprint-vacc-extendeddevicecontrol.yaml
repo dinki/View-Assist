@@ -172,13 +172,15 @@ blueprint:
     extras_mediaplayers:
       name: __Extras__ - Dual Media Players
       icon: mdi:volume-high
-      description: Requires mediaplayer_device and musicplayer_device to use different
-        media players in View Assist device config.
+      description: Requires mediaplayer_device and musicplayer_device to use discrete
+        media players in View Assist device config. Some features work using HassMic, 
+        without the need for discrete media players (experimental).
       collapsed: false
       input:
         music_mode_auto_opt_in:
           name: Auto Music Mode Opt-in
-          description: Automatically enter music mode when musicplayer_device is playing.
+          description: Automatically enter music mode when musicplayer_device is playing. 
+            Works if Using HassMic without discrete media players (experimental).
           selector:
             boolean: {}
           default: false
@@ -186,7 +188,7 @@ blueprint:
           name: Music Mode Timeout Opt-in
           description: Automatically revert from music to normal mode and navigate
             to the default view when musicplayer_device is paused for Music Mode Timeout
-            Length.
+            Length. Works if Using HassMic without discrete media players (experimental).
           selector:
             boolean: {}
           default: false
