@@ -56,14 +56,19 @@ This blueprint enhances the control of View Assist device displays and audio pla
 
 ## Features Requiring Separate Media Players:
 For the following features, separate media players must be defined for `mediaplayer_device` and `musicplayer_device` in the config:
-- **Auto Music Mode:**
-    - Switches to music mode and navigates to the music view when `musicplayer_device` starts playing. This applies even when playback starts from any sources other than just voice commands.
-- **Music Mode Timeout:**
-    - Automatically returns to normal mode and the home page after a user-defined period of inactivity in music playback.
+- **Music Pause:**
+    - Pauses music when triggered by a wakeword or broadcast. Resumes music when TTS ends.
 - **Music Duck:**
     - Lowers the music volume (by a user-defined percentage of the current volume) when triggered by a wake word or broadcast, and restores the original volume when TTS ends.
     - **Volume Step:**
         - Gradually increase volume after ducking for a smoother experience. Step size and time between steps are both user selectable variables.
+
+## Features Requiring Separate Media Players or expirementally with HassMic:
+For the following features, separate media players must be defined for `mediaplayer_device` and `musicplayer_device` in the config. Works without using discrete media players if using HassMic:
+- **Auto Music Mode:**
+    - Switches to music mode and navigates to the music view when `musicplayer_device` starts playing. This applies even when playback starts from any sources other than just voice commands.
+- **Music Mode Timeout:**
+    - Automatically returns to normal mode and the home page after a user-defined period of inactivity in music playback.
 
 > [!IMPORTANT]  
 > These features require stable and reliable state changes between idle and playing for both `mediaplayer_device` and `musicplayer_device`. Ensure that the media players are consistently available.
@@ -124,6 +129,7 @@ soundplayer_device
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.3 | Initial HassMic Support & pause option instead of ducking |
 | v 1.0.2 | Updates to blueprint inputs & descriptions |
 | v 1.0.1 | Add option to gradually increase volume after ducking |
 | v 1.0.0 | Initial release |
