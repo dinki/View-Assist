@@ -1,0 +1,68 @@
+blueprint:
+  name: ViewAssist Continue Conversation
+  description: Automation for managing conversation flow in ViewAssist , with customizable entities for sensors and switches.
+  domain: automation
+  input:
+    trigger_sensor:
+      name: Trigger Sensor
+      description: Microphone entity sensor (e.g., sensor.viewassist_office_simple_state)
+      selector:
+        entity:
+          domain: sensor
+    microphone_switch:
+      name: Microphone Switch
+      description: The switch controlling the microphone
+      selector:
+        entity:
+          domain: switch
+    continue_conversation_switch:
+      name: Continue Conversation Switch
+      description: The switch to enable or disable continue conversation
+      selector:
+        entity:
+          domain: switch
+
+trigger:
+  - platform: state
+    entity_id: !input "trigger_sensor"
+    to: intent-processing
+
+condition: []
+
+action:
+  - service: switch.turn_on
+    target:
+      entity_id: !input "continue_conversation_switch"
+  - service: switch.turn_off
+    target:
+      entity_id: !input "microphone_switch"
+  - wait_for_trigger:
+      - platform: state
+        entity_id: !input "trigger_sensor"
+        to: tts-finished
+    timeout:
+      hours: 0
+      minutes: 0
+      seconds: 30
+    continue_on_timeout: true
+  - service: switch.turn_on
+    target:
+      entity_id: !input "microphone_switch"
+  - wait_for_trigger:
+      - platform: state
+        entity_id: !input "trigger_sensor"
+        to: stt-listening
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 5
+    timeout:
+      hours: 0
+      minutes: 0
+      seconds: 20
+    continue_on_timeout: false
+  - service: switch.turn_off
+    target:
+      entity_id: !input "continue_conversation_switch"
+
+mode: single
