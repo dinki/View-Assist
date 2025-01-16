@@ -2,6 +2,7 @@ button_card_templates:
   variable_template:
     variables:
       assist_group: group.viewassist_satellites
+      var_weather_entity: weather.openweathermap
       var_assistsat_entity_font_style: |
         [[[ 
           try 
@@ -43,7 +44,7 @@ button_card_templates:
             if (variables.var_assistsat_entity_use_24_hour_time) {
               var options = { hour: "2-digit", minute: "2-digit", hour12: false };
             } else {
-              var options = { hour: "numeric", minute: "2-digit" };      
+              var options = { hour: "2-digit", minute: "2-digit" };      
             }
             
             let time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
@@ -83,7 +84,6 @@ button_card_templates:
             return new Date().toLocaleString(userLocale, options);
           } catch { return ""; }          
         ]]]
-
       var_assistsat_entity: |-
         [[[
           try {
@@ -124,6 +124,52 @@ button_card_templates:
             }
             return `${assisting}`;
           } catch { return  ""}
+        ]]]
+      var_mic_device_state: |-
+        [[[ 
+          try {
+            // Identify the mic_device from the assist group entities
+            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
+              .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) 
+              ?? variables.default_satellite;
+            
+            // Retrieve the mic_device and its state
+            var micdevice = hass.states[assist_assistbid].attributes.mic_device;
+            var micstate = hass.states[micdevice].state;
+
+            // Determine the current state based on micstate
+            if (micstate.includes("wake_word-detected")) {
+              return "wake_word-detected"; // Wake word detected phase
+            } else if (micstate.includes("stt-listening") || micstate.includes("intent-processing")) {
+              return "stt-listening"; // Listening phase
+            } else if (micstate.includes("tts-speaking")) {
+              return "tts-speaking"; // Speaking phase
+            } else if (micstate.includes("tts-finished")) {
+              return "tts-finished"; // Finished phase
+            } else {
+              return "idle"; // Default state when no relevant phase is detected
+            }
+          } catch {
+            return "unknown"; // Return 'unknown' in case of any errors
+          }
+        ]]]
+      var_speech_gif: |-
+        [[[
+          try {
+            var speechGif = hass.states[variables.var_assistsat_entity]?.attributes.speech_gif;
+            return speechGif ? speechGif : null;
+          } catch {
+            return null;
+          }
+        ]]]
+      var_listen_gif: |-
+        [[[
+          try {
+            var listenGif = hass.states[variables.var_assistsat_entity]?.attributes.listen_gif;
+            return listenGif ? listenGif : null;
+          } catch {
+            return null;
+          }
         ]]]
       var_assisting_text: |-
         [[[
@@ -441,7 +487,66 @@ button_card_templates:
           - opacity: 0
           - animation: '[[[ return "growFromCenter .4s ease-in-out forwards" ]]]'
           - font-family: '"Roboto", sans-serif'
+        avatar:
+          - display: |-
+              [[[  
+                if (variables.var_assist_prompt == "avatar") {
+                  if (variables.var_mic_device_state == "wake_word-detected") {
+                    return "block"; // Show avatar during listening (with animation)
+                  } else if (variables.var_mic_device_state == "stt-listening") {
+                    return "block"; // Show avatar during speaking (no animation)
+                  } else if (variables.var_mic_device_state == "tts-speaking") {
+                    return "block"; // Show avatar during speaking (no animation)
+                  } else if (variables.var_mic_device_state == "tts-finished") {
+                    return "none"; // Hide avatar when finished
+                  } else {
+                    return "none"; // Default to hidden
+                  }
+                } else {
+                  return "none"; // Hide avatar by default
+                }
+              ]]]
+          - position: absolute
+          - top: 1%
+          - left: 50%
+          - width: 35vh
+          - height: 35vh
+          - background-image: |-
+              [[[  
+                if (variables.var_mic_device_state == "wake_word-detected") {
+                  return `url(${variables.var_speech_gif})`; // Direct return of speech_gif
+                } else if (variables.var_mic_device_state == "stt-listening") {
+                  return `url(${variables.var_listen_gif})`;
+                } else if (variables.var_mic_device_state == "tts-speaking") {
+                  return `url(${variables.var_speech_gif})`;
+                } else if (variables.var_mic_device_state == "tts-finished") {
+                  return "none";
+                } else {
+                  return "none";
+                }
+              ]]]
+          - background-size: cover
+          - background-position: center
+          - z-index: 5
+          - border-radius: 50%
+          - transform: translateX(-50%)
+          - animation: |-
+              [[[  
+                if (variables.var_mic_device_state == "wake_word-detected") {
+                  return "switchToListening 3s forwards"; // Animation only when switching from speech to listening
+                } else {
+                  return "none"; // No animation for speaking or finished states
+                }
+              ]]]
     extra_styles: |
+      @keyframes switchToListening {
+        0% {
+          background-image: url([[[ return variables.var_speech_gif ]]]);
+        }
+        100% {
+          background-image: url([[[ return variables.var_listen_gif ]]]);
+        }
+      }
       @keyframes pulse {
         0%, 100% {
           background-color: #f56a3f;
@@ -509,6 +614,20 @@ button_card_templates:
               - text-align: start
               - font-size: 5vh
               - font-weight: bold
+      avatar:
+        card:
+          type: custom:button-card
+          name: Avatar
+          show_icon: false
+          show_name: false
+          show_state: false
+          show_entity_picture: false
+          styles:
+            card:
+              - background: transparent
+              - box-shadow: none
+              - padding: 0
+              - margin: 0
   icon_template:
     template: variable_template
     aspect_ratio: 1/1
