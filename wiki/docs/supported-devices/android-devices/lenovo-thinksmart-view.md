@@ -114,12 +114,17 @@ Here's a video I created showing how to set up the software needed to use with V
 15. Settings > Display > Screen timeout > 30 minutes
 16. Done with this section, go back to the home screen.
 
-## Install Apps
+## Update WebView version
 1. Open the Play Store
 2. Search for WebView System Android
-3. Pick Android System WebView beta and Install
-4. Open the App, Change Provider, choose the 2nd option to allow it to use the new Webview installed instead of the stock application.
-5. Press the home button to go back to home.
+3. Pick Android System WebView and Update or chooce Android System WebView Beta and install that.
+5. Open the App, Change Provider, choose the 2nd option to allow it to use the new Webview installed instead of the stock application.
+6. Press the home button to go back to home.
+7. If this procedure doesn't work for you because you don't have the Play Store or if the Play Store does not allow you to install the updated version of WebView, download the APK from the [APKMirror](https://www.apkmirror.com/apk/google-inc/android-system-webview/android-system-webview-131-0-6778-260-release/) or any other place you prefer and trust. The version linked here is known to work. If downloading an APK be sure to:
+   * only download the APK from a source you trust
+   * select the correct architecture. You need the `armeabi-v7a` or `armv7` architecture version.
+8. Once the APK is downloaded, install it. You might have to allow installation from untrusted sources.
+9. Regardless which procedure you followed, once the WebView version was updated or installed, go to Settings > System > Advanced > Developer Options > WebView implementation and switch it from version 100.0.xyza.xyz to the newer version you have downloaded, confirming the version number matches with what you downloaded. 
 ------------------
 
 
