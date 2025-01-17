@@ -105,7 +105,24 @@ blueprint:
               custom_value: true
               options:
                 - flashing bar
-                - blur pop up         
+                - blur pop up
+                - avatar
+        speech_gif:
+          name: Avatar speech gif
+          description: Gif for simulating avatar speech
+          default: /local/viewassist/gifs/Jarvis_speech.gif
+          selector:
+            text: {}
+        listen_gif:
+          name: Avatar listen gif
+          description: Gif for simulating avatar listening
+          default: /local/viewassist/gifs/Jarvis_listen.gif
+          selector:
+            text: {}
+        custom_responses:
+          name: Custom random responses source
+          description: Avatar responses to wake word detection
+          default: media-source://tts/edge_tts?message={{ ['how can I help you', 'yes, i`m listening', 'how can assist you'] | random }}&language=en-US-ChristopherNeural
         background:
           name: Default background
           description: The path to the default background image for this device
@@ -337,6 +354,8 @@ variables:
   status_icons_size: !input status_icons_size
   font_style: !input font_style
   use_24_hour_time: !input use_24_hour_time
+  speech_gif: !input speech_gif
+  listen_gif: !input listen_gif  
 
 action:
 - choose:
@@ -443,7 +462,9 @@ action:
         status_icons_size: "{{ status_icons_size }}"
         font_style: "{{ font_style }}"
         use_24_hour_time: "{{ use_24_hour_time }}"    
-        group_entity: "{{ group_entity }}"        
+        group_entity: "{{ group_entity }}"
+        speech_gif: "{{ speech_gif }}"
+        listen_gif: "{{ listen_gif }}"
       enabled: true
   - conditions:
     - condition: trigger
