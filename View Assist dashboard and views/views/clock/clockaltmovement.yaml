@@ -30,7 +30,7 @@ styles:
       - position: absolute
       - top: 65%
       - animation:
-          - screensaver0 30.0s steps(1) infinite
+          - screensaver0 390.0s steps(1) infinite
     movement:
       randomize: true
       interval: 3
@@ -42,15 +42,15 @@ extra_styles: |
     0% { bottom: 70vh; left: 5vw; }
     5% { bottom: 115vh; left: 10vw; }  
     10% { bottom: 25vh; left: 20vw; }
-    15% { bottom: 110vh; left: 25vw; }  
+    15% { bottom: 90vh; left: 20vw; }  
     20% { bottom: 35vh; left: 15vw; }
-    25% { bottom: 65vh; left: 30vw; }
-    30% { bottom: 120vh; left: 25vw; }  
-    35% { bottom: 15vh; left: 30vw; }
-    50% { bottom: 15vh; left: 30vw; }
-    60% { bottom: 55vh; left: 30vw; }
+    25% { bottom: 65vh; left: 20vw; }
+    30% { bottom: 120vh; left: 20vw; }  
+    35% { bottom: 15vh; left: 20vw; }
+    50% { bottom: 80vh; left: 20vw; }
+    60% { bottom: 55vh; left: 20vw; }
     75% { bottom: 20vh; left: 10vw; }
-    85% { bottom: 40vh; left: 30vw; }
+    85% { bottom: 40vh; left: 20vw; }
     100% { bottom: 20vh; left: 5vw; }
   }
 custom_fields:
