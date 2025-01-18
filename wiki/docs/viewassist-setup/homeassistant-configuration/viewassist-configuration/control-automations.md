@@ -67,6 +67,7 @@ These are the configuration parameters needed for configuration:
 * Rotate Background every XX hours (Optional) - Select a time value to rotate background image every XX hours (/10 rotates every 10 hours). You must put the / character before the number.  Note you can either select to rotate by minute or hour but not both Leave option blank if not using.
 * Background Directory - The path to the directory containing the background images to randomly select for background image for this device. Only necessary if using timed rotation options above
 * Use local backgrounds? - By default we will load backgrounds from your background directory, but if you turn this off we will automatically get random backgrounds from unsplash.it.
+* Maximum downloaded background images to keep (only applies if you don't use local images) - Set the maximum number of downloaded background images to keep. Only applies if not using local backgrounds. Defaults to 10, should be at least 1.
 
 Note for rotating background you will need [Pyscript script installed](https://www.youtube.com/watch?v=jpJxZaisbGQ) and the [select_random_image.py script](https://github.com/dinki/View-Assist/blob/main/View_Assist_control_automations/viewassist-select_random_image.py) stored in your `pyscripts` directory
 
