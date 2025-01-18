@@ -347,7 +347,8 @@ variables:
   status_icons_size: !input status_icons_size
   font_style: !input font_style
   use_24_hour_time: !input use_24_hour_time
-
+  local_backgrounds: !input local_backgrounds
+  max_images: !input max_images
 action:
 - choose:
   - conditions:
