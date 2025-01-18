@@ -1,6 +1,6 @@
 ---
 title: "Wishlist / Requests"
-sidebar_position: 7
+sidebar_position: 8
 ---
 This page will serve as a wishlist for add on features.  Feel free to add to the [discussion for items you might like to add](https://github.com/dinki/View-Assist/discussions/19) to the list.  Feel free to use this for ideas where you can help.  Once you have something please create an issue and post your work for review.  I will be turning on the ability to make PRs soon.
 
