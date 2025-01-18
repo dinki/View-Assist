@@ -30,7 +30,7 @@ def select_random_image(directory: str = "/config/www/viewassist/backgrounds/", 
         
         # delete old downloaded files in temporary dir as configured by max_images
         jpg_files = []
-        for filename in os.listdir(filesystem_directory):
+        for filename in task.executor(os.listdir,filesystem_directory):
             if filename.lower().endswith('.jpg'):
                 file_path = os.path.join(filesystem_directory, filename)
                 if os.path.isfile(file_path):
