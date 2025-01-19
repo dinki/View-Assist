@@ -11,7 +11,7 @@ View Assist (VA) is a framework for Home Assistant (HA) Assist satellites.  Some
 - VA provides preconfigured views and custom sentence automations to extend the HA Assist capabilities
 - VA provides device control automations which support a variety of display related functionality
 
-## What does a VA display look like
+## What does a VA automation flow look like
 
 A normal VA custom sentence is handled like this:
 
@@ -130,5 +130,22 @@ variables:
     hass.states[variables.var_assistsat_entity].attributes.camera} catch {
     return  ""}]]]
 ```
+then later these can be used in the view.  Here the camera device stored in the variable is being used to show the name of the camera in the `title` section of the VA view:
 
+```
+custom_fields:
+  title: >-
+    [[[ try {return hass.states[variables.var_camera].attributes.friendly_name}
+    catch {return ""}]]]
+```
 In the above example, the `camera` attribute is being set using the `var_assistsat_entity` value that is set by the variable template of the dashboard.  This allows for reusing the same view for any camera entity. This adds great flexibility for VA views
+
+## What are the sections of a 'standard' VA view
+
+The VA view format has several sections by default.  These should be adhered to where possible when creating views so that a consistent look and feel can be achived.  Here are the default areas and their use:
+
+- Title - Top left portion of the screen.  This is typically used to define the name of the view or provide other data
+- Status - Top right port of the screen.  This is used to display status and launch icons
+- Message - This is the main focus of the view.  It covers the entire view with the Title, Status, and Assist sections overlaying it at higher z-index levels
+- Assist - The visual indicator that assist is in progress.  
+## 
