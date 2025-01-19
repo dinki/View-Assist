@@ -94,28 +94,28 @@ In the example, the `entity_id` is the VA device and the remaining are attribute
 
 VA dashboard sets variables for use in views as well as other display functions.  These are defined in the dashboard `variable_template`.  Some of these variables include:
 
-- var_assistsat_entity_font_style
-- var_assistsat_entity_weather_entity
-- var_assistsat_entity_status_icons_size
-- var_assistsat_entity_use_24_hour_time
-- default_satellite
-- var_current_time
-- var_current_time_alt
-- var_date_short
-- var_date_long
-- var_assistsat_entity
-- var_assisting
-- var_assisting_text
-- var_assist_prompt
-- var_mic_switch
-- var_mediaplayer_device
-- var_mediaplayer_mute
-- var_title
-- var_message
-- var_image
-- var_font_size
-- var_weather_temperature
-- var_weather_icon
+- var_assistsat_entity_font_style - font style for the VA device
+- var_assistsat_entity_weather_entity -  weather entity for the VA device
+- var_assistsat_entity_status_icons_size - size of icons in the status area 
+- var_assistsat_entity_use_24_hour_time - boolean for use 24 hour time or am/pm
+- default_satellite - this is set if the device cannot be determined.  This allows for dev work to be done on a nonVA device
+- var_current_time - current time
+- var_current_time_alt - current time in alternate format
+- var_date_short - current date in short format (Sun, Jan 19)
+- var_date_long - current date in long format (Sunday, January 19, 2025)
+- var_assistsat_entity - the VA device associated with this display device
+- var_assisting - boolean that is true when current device wake word detected and listening
+- var_assisting_text - Text to show when using blur pop up (example "How may I assist?")
+- var_assist_prompt - The style of assist prompt to show (example blur popup or flashing bar)
+- var_mic_switch - The device used to mute the microphone for this VA device
+- var_mediaplayer_device - The mediaplayer for this VA device
+- var_mediaplayer_mute - The status of microphone (true is muted false is not muted)
+- var_title - The text for the title to display in top left corner of view
+- var_message - The text for the main section of the view (example info view)
+- var_image - Image to be used for the view
+- var_font_size - Font size to use for text in the main section of the view
+- var_weather_temperature - current temperature
+- var_weather_icon - current weather condition
 
   
 ## How are VA attributes handled in views?
