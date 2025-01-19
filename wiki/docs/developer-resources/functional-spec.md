@@ -211,3 +211,6 @@ Lots of open questions, but here are a few:
 1. Should we provide a way to customize access sentences for built-in views? Should this be a setting on the [view specific settings page](#view-specific-settings?
 1. Is it indeed possible to listen to intent from `assistant` and have the integration act on it? This is a research item which we might have to discuss with HA devs.
 1. ...
+
+## Resources
+[Mockups](https://www.canva.com/design/DAGcqwHvQos/TSTw5EsiVYNmNJHg9JovzQ/edit?utm_content=DAGcqwHvQos&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) (this is a view link, reach out to Jay to get edit/comment access)
