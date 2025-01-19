@@ -16,13 +16,14 @@ VA integration consists of two components:
 ## Guiding principles
 These are the principles we follow to design the integration. These are principles, which means they can be ignored but only for good reasons which has to be discussed / agreed upon.
 
-1. Config should be as simple as possible and limit the amount of code editing required.
-2. More advanced scenarios and tweaks might require code editing.
-3. Satellites should be easy to set up and require minimal maintenace once set up.
-4. Panel should be configurable for all satellites at once while also allowing for satellite-specific configurations.
-5. Configuration that has to do with interacting with the satellite device itself is in the config flow. All other settings, including how things are displayed on the satellite's screen (if present),  are in the panel.
-6. Optional settings for satellites are in options flow.
-7. Settings that are set for multiple satellites should be in the panel.
+1. **Simplicity in Configuration**: Keep configuration as simple as possible to minimize code editing.
+2. **Advanced Scenarios**: Allow for code editing when necessary for more advanced scenarios and tweaks.
+3. **Ease of Setup**: Ensure satellites are easy to set up and require minimal maintenance once configured.
+4. **Panel Configuration**: Enable configuration for all satellites at once, while also allowing satellite-specific settings.
+5. **Config Flow**: Use the config flow for settings related to interacting with the satellite device itself.
+6. **Options Flow**: Use the options flow for optional satellite settings.
+7. **Panel Settings**: Place all other settings, including display configurations, in the panel.
+8. **Shared Settings**: Store settings that apply to multiple satellites in the panel.
 
 ## Satellite set up and configuration
 Setting up a satellite requires the following steps:
