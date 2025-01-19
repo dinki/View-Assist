@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap"><link rel="stylesheet" href="/View-Assist/assets/css/styles.820dfb8a.css">
-<script src="/View-Assist/assets/js/runtime~main.cd5a5e7e.js" defer="defer"></script>
+<script src="/View-Assist/assets/js/runtime~main.b05a7ebe.js" defer="defer"></script>
 <script src="/View-Assist/assets/js/main.5e291ed3.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -64,6 +64,75 @@
 <div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">  - service: python_script.set_state</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    data:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      entity_id: sensor.viewassist_office</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      title: Announcement</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      message_font_size: 4vw</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      message: &#x27;{{trigger.slots.message | capitalize}}&#x27;</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
 <p>In the example, the <code>entity_id</code> is the VA device and the remaining are attributes to set.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-variables-are-set-in-the-va-dashboard">What variables are set in the VA dashboard?<a class="hash-link" aria-label="Direct link to What variables are set in the VA dashboard?" title="Direct link to What variables are set in the VA dashboard?" href="/View-Assist/docs/developer-resources#what-variables-are-set-in-the-va-dashboard">​</a></h2>
+<p>VA dashboard sets variables for use in views as well as other display functions.  These are defined in the dashboard <code>variable_template</code>.  Some of these variables include:</p>
+<ul>
+<li>
+<p>var_assistsat_entity_font_style</p>
+</li>
+<li>
+<p>var_assistsat_entity_weather_entity</p>
+</li>
+<li>
+<p>var_assistsat_entity_status_icons_size</p>
+</li>
+<li>
+<p>var_assistsat_entity_use_24_hour_time</p>
+</li>
+<li>
+<p>default_satellite</p>
+</li>
+<li>
+<p>var_current_time</p>
+</li>
+<li>
+<p>var_current_time_alt</p>
+</li>
+<li>
+<p>var_date_short</p>
+</li>
+<li>
+<p>var_date_long</p>
+</li>
+<li>
+<p>var_assistsat_entity</p>
+</li>
+<li>
+<p>var_assisting</p>
+</li>
+<li>
+<p>var_assisting_text</p>
+</li>
+<li>
+<p>var_assist_prompt</p>
+</li>
+<li>
+<p>var_mic_switch</p>
+</li>
+<li>
+<p>var_mediaplayer_device</p>
+</li>
+<li>
+<p>var_mediaplayer_mute</p>
+</li>
+<li>
+<p>var_title</p>
+</li>
+<li>
+<p>var_message</p>
+</li>
+<li>
+<p>var_image</p>
+</li>
+<li>
+<p>var_font_size</p>
+</li>
+<li>
+<p>var_weather_temperature</p>
+</li>
+<li>
+<p>var_weather_icon</p>
+</li>
+</ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="how-are-va-attributes-handled-in-views">How are VA attributes handled in views?<a class="hash-link" aria-label="Direct link to How are VA attributes handled in views?" title="Direct link to How are VA attributes handled in views?" href="/View-Assist/docs/developer-resources#how-are-va-attributes-handled-in-views">​</a></h2>
 <p>VA uses views which are based on custom button card.  Custom button card uses javascript.  Here is an example of how VA attributes can be set in views:</p>
 <div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">variables:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  cameracardversion: 1.0.1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  var_camera: &gt;-</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    [[[ try {return</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    hass.states[variables.var_assistsat_entity].attributes.camera} catch {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    return  &quot;&quot;}]]]</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
