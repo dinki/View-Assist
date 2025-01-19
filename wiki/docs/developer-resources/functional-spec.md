@@ -76,7 +76,7 @@ Succesfully completing at least one config flow of the integration creates the f
 The integration provides the following services:
 
 1. **Broadcast service**. This sends a message to all satellites which is shown on the intent view.
-1. **Show view service** (for all satellites or specific satellites). This switches the view on the specified satellites.
+1. **Set view service** (for all satellites or specific satellites). This switches the view on the specified satellites.
 1. **Set mode service**  (for all satellites or specific satellites). This sets the mode on the specified satellites.
 1. **Set do not disturb** service (for all satellites or specific satellites). This sets the specified sattelites to do not disturb or turns off do not disturb.
 
