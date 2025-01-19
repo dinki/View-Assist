@@ -92,6 +92,32 @@ In the example, the `entity_id` is the VA device and the remaining are attribute
 
 ## What variables are set in the VA dashboard?
 
+VA dashboard sets variables for use in views as well as other display functions.  These are defined in the dashboard `variable_template`.  Some of these variables include:
+
+- var_assistsat_entity_font_style
+- var_assistsat_entity_weather_entity
+- var_assistsat_entity_status_icons_size
+- var_assistsat_entity_use_24_hour_time
+- default_satellite
+- var_current_time
+- var_current_time_alt
+- var_date_short
+- var_date_long
+- var_assistsat_entity
+- var_assisting
+- var_assisting_text
+- var_assist_prompt
+- var_mic_switch
+- var_mediaplayer_device
+- var_mediaplayer_mute
+- var_title
+- var_message
+- var_image
+- var_font_size
+- var_weather_temperature
+- var_weather_icon
+
+  
 ## How are VA attributes handled in views?
 
 VA uses views which are based on custom button card.  Custom button card uses javascript.  Here is an example of how VA attributes can be set in views:
