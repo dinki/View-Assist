@@ -32,6 +32,14 @@ VA modes control how VA acts and looks.  These modes can be extended.  Currently
 - Music - Music mode is set by automations using music playback.  No icon is shown to indicate it is active.  Behavior is described above
 - Hold - Hold mode is set by taping an open area on any view or by automation.  A hand icon is shown when it is active.  Hold mode prevents the timer expiring from changing the view.  This is useful when wanting to interact with a view for longer than the timeout.  An example would be calling for a security camera to be displayed and to leave it on the screen indefinitely.  Leaving hold mode can be done by taping the hand icon, use a voice command from the device functions blueprint to change modes, or by automation
 - Cycle - Cycle view is set by voice using device functions blueprint to change modes or by automation.  Icon shown is arrows in a circle.  Cycle mode will cycle through a list of views set in the device attributes cycle.  The automation will use the VA device's timer to control the time that each view is displayed.  The views will continue to loop until cycle mode is exited by clicking the icon to return to normal mode or by automation
+- Do not disturb (DND) - Do not disturb is set by voice using device functions blueprint to change modes or by automation.  Icon shown is circle with rectangle in the middle.  Do not disturb is not exactly a mode but serves the function of preventing broadcast messages from sounding.  DND is its own attribute so it can be used in conjunction with the modes listed above.  Leaving DND can be done by taping the icon, by voice command from the device functions blueprint, or by automation
+
+## What are some of the default actions for the VA dashboard?
+
+The VA dashboard is built on custom button card for most elements.  This allows for great flexibility in that these items as well as the view itself can be used to trigger action calls using single tap, double tap, and hold screen interactions.  Dashboard level default actions for all views include:
+
+- Single tap turns on `hold` mode
+- Long press mutes the VA device
 
 ## How does VA determine which VA device is requesting?
 
@@ -50,3 +58,19 @@ VA must determine which device is being used for a request.  This is done the sa
 ```
 
 target_satellite_device is set by looking through all members of the satellite group (normally group.view_assist) and looking for a match of the automation's trigger.device_id and the microphone attribute of each VA device in the group.  Once the target_satellite_device is set, other attributes like target_mediaplayer_device and target_satellite_device can be derived and set.
+
+## How are VA status and launch icons defined?
+
+VA provides a method for providing both status and launch icons in the top right side of the view area.  These icons are custom button elements that can be defined in the [icon template](https://github.com/dinki/View-Assist/blob/main/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L512) portion of the dashboard.  These custom button icons follow the same flexibility for adding actions based on single and double tape as well as long press.  Aside from the built in VA functionality, the user is free to create these to fire services based on the type of press.  Here is an example for creating a weather icon that when single pressed will change views to the `weather` view using the `navigate` service:
+
+```
+  weather:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:weather-sunny
+    tap_action:
+      action: navigate
+      navigation_path: weather
+```
+
+The user has multiple ways to use this icon.  The first is through automation where the icon is added to the `status_icons` attribute.  The other is to set this as a launch icon.  Launch icons are always shown as they are permanent members of the `status_icons` attribute as a list element.  This is set in the control automation for each device.  An example configuraton for the weather example would be `['weather']` .  Additional launch icons can be set using the list separating using commas as per the standard Python list format.
