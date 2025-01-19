@@ -74,3 +74,35 @@ VA provides a method for providing both status and launch icons in the top right
 ```
 
 The user has multiple ways to use this icon.  The first is through automation where the icon is added to the `status_icons` attribute.  The other is to set this as a launch icon.  Launch icons are always shown as they are permanent members of the `status_icons` attribute as a list element.  This is set in the control automation for each device.  An example configuraton for the weather example would be `['weather']` .  Additional launch icons can be set using the list separating using commas as per the standard Python list format.
+
+## How are VA device attributes set
+
+VA is not yet an integration so something is needed to set and create attributes.  The [set_state.py](https://dinki.github.io/View-Assist/docs/viewassist-setup/homeassistant-configuration/viewassist-configuration/control-automations#view-assist-device-control-through-python-set_state) Python script is used for setting these attributes.  This script will either update attribute values or create and set attribute values if the attribute does not exist already.  An example of use:
+
+```
+  - service: python_script.set_state
+    data:
+      entity_id: sensor.viewassist_office
+      title: Announcement
+      message_font_size: 4vw
+      message: '{{trigger.slots.message | capitalize}}'
+```
+
+In the example, the `entity_id` is the VA device and the remaining are attributes to set.
+
+## What variables are set in the VA dashboard?
+
+## How are VA attributes handled in views?
+
+VA uses views which are based on custom button card.  Custom button card uses javascript.  Here is an example of how VA attributes can be set in views:
+
+```
+variables:
+  cameracardversion: 1.0.1
+  var_camera: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.camera} catch {
+    return  ""}]]]
+```
+
+In the above example, the `camera` attribute is being set using the `var_assistsat_entity` value that is set by the variable template of the dashboard.  This allows for reusing the same view for any camera entity. This adds great flexibility for VA views
