@@ -14,12 +14,13 @@ VA integration consists of two components:
 - services
 
 ## Guiding principles
+These are the principles we follow to design the integration. These are principles, which means they can be ignored but only for good reasons which has to be discussed / agreed upon.
 
 1. Config should be as simple as possible and limit the amount of code editing required.
 2. More advanced scenarios and tweaks might require code editing.
 3. Satellites should be easy to set up and require minimal maintenace once set up.
 4. Panel should be configurable for all satellites at once while also allowing for satellite-specific configurations.
-5. Configuration that has to do with interacting with the satellite device itself is in the config flow. All other settings are in the panel, including how things are displayed on the satellite's screen (if present).
+5. Configuration that has to do with interacting with the satellite device itself is in the config flow. All other settings, including how things are displayed on the satellite's screen (if present),  are in the panel.
 6. Optional settings for satellites are in options flow.
 7. Settings that are set for multiple satellites should be in the panel.
 
