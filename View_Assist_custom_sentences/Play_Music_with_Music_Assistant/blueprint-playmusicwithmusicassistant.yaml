@@ -45,35 +45,8 @@ triggers:
       - cue {song} by {artist}
     id: cuetrack
     trigger: conversation
-  - trigger: conversation
-    command:
-      - turn up the volume
-      - turn up the music
-      - turn up the music volume
-      - increase the music volume
-    id: volume_up
-  - trigger: conversation
-    command:
-      - turn down the volume
-      - turn down the music
-      - turn down the music volume
-      - decrease the music volume
-    id: volume_down
-  - trigger: conversation
-    command:
-      - pause the music
-      - resume the music
-    id: pause
-  - trigger: conversation
-    command:
-      - next song
-      - skip this song
-      - skip to next song
-    id: next
 conditions: []
 actions:
-  - variables:
-      target_musicplayer_device: media_player.picoreplayer
   - choose:
       - conditions:
           - condition: trigger
@@ -84,7 +57,7 @@ actions:
               limit: 1
               config_entry_id: "{{ ma_instance }}"
               media_type:
-                - "{{trigger.id}}"
+                - artist
               name: "{{ trigger.slots.artist  }}"
             response_variable: found_artist
             action: music_assistant.search
@@ -108,7 +81,7 @@ actions:
               - target:
                   entity_id: "{{ target_musicplayer_device }}"
                 data:
-                  media_type: "{{trigger.id}}"
+                  media_type: artist
                   enqueue: replace
                   media_id: "{{ found_artist.artists.0.name }}"
                 action: music_assistant.play_media
@@ -127,7 +100,7 @@ actions:
               limit: 1
               config_entry_id: "{{ ma_instance }}"
               media_type:
-                - "{{trigger.id}}"
+                - playlist
               name: "{{ trigger.slots.playlist }}"
             response_variable: found_playlist
             action: music_assistant.search
@@ -151,7 +124,7 @@ actions:
               - target:
                   entity_id: "{{ target_musicplayer_device }}"
                 data:
-                  media_type: "{{trigger.id}}"
+                  media_type: playlist
                   enqueue: replace
                   media_id: "{{ trigger.slots.playlist }}"
                 action: music_assistant.play_media
@@ -173,7 +146,7 @@ actions:
               limit: 1
               config_entry_id: "{{ ma_instance }}"
               media_type:
-                - "{{trigger.id}}"
+                - track
               name: "{{ trigger.slots.song  }}"
               artist: "{{ trigger.slots.artist  }}"
             response_variable: found_track
@@ -233,56 +206,10 @@ actions:
               - set_conversation_response: >-
                   I was unable to find any song called {{trigger.slots.song}} by
                   {{ trigger.slots.artist }}
-      - conditions:
-          - condition: trigger
-            id:
-              - volume_up
-        sequence:
-          - action: media_player.volume_up
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-      - conditions:
-          - condition: trigger
-            id:
-              - volume_down
-        sequence:
-          - data: {}
-            action: media_player.volume_down
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-      - conditions:
-          - condition: trigger
-            id:
-              - next
-        sequence:
-          - action: media_player.media_next_track
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-      - conditions:
-          - condition: trigger
-            id:
-              - pause
-        sequence:
-          - variables:
-              music_player_state: "{{states(target_musicplayer_device)}}"
-          - choose:
-              - conditions:
-                  - condition: template
-                    value_template: "{{music_player_state=='playing'}}"
-                    alias: If the music_player_state set to playing?
-                sequence:
-                  - data: {}
-                    action: media_player.media_pause
-                    target:
-                      entity_id: "{{ target_musicplayer_device }}"
-            default:
-              - data: {}
-                action: media_player.media_play
-                target:
-                  entity_id: "{{ target_musicplayer_device }}"variables:
-  view_path: !input view_path
-  group_entity: !input group_entity
-  ma_instance: !input ma_instance
+variables:
+  view_path: /dashboard-viewassist/music
+  group_entity: group.viewassist_satellites
+  ma_instance: 01JEP4E44854TC3MJDK4SN13Q0
   target_satellite_device: |-
     {% for sat in expand(group_entity) %}
       {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
