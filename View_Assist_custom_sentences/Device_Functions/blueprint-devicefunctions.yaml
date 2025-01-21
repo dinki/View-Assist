@@ -54,7 +54,7 @@ blueprint:
     next_song:
       name: Music next song command
       description: The command to use to play the next song
-      default: "[[next | skip this | skip to next] song"
+      default: "[next | skip this | skip to next] song"
     modes:
       name: Modes
       description: The available modes (do not include do not disturb)
