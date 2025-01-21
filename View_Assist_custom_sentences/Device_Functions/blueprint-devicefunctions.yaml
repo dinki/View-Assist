@@ -38,7 +38,23 @@ blueprint:
     stop_music:
       name: Stop Music Command 
       description: The command to use to stop music playback
-      default: "stop [the] music"        
+      default: "stop [the] music"
+    music_volume_up:
+      name: Music volume up command
+      description: The command to use to turn up the music volume
+      default: "[turn up | increase] [the] music [volume]"
+    music_volume_down:
+      name: Music volume down command
+      description: The command to use to turn down the music volume
+      default: "[turn down | decrease] [the] music [volume]"             
+    pause_music:
+      name: Music pause resume command
+      description: The command to use to pause or resume the Music
+      default: "[pause | resume] [the] music"
+    next_song:
+      name: Music next song command
+      description: The command to use to play the next song
+      default: "[next | skip this | skip to next] song"
     modes:
       name: Modes
       description: The available modes (do not include do not disturb)
@@ -83,6 +99,18 @@ trigger:
   - platform: conversation
     command: !input stop_music
     id: stop_music
+  - platform: conversation
+    command: !input music_volume_up
+    id: music_volume_up
+  - platform: conversation
+    command: !input music_volume_down
+    id: music_volume_down
+   - platform: conversation
+    command: !input pause
+    id: pause_music
+   - platform: conversation
+    command: !input next_song
+    id: next_song
 condition: []
 action:
   - choose:
@@ -247,7 +275,54 @@ action:
                 target:
                   entity_id: "{{ target_timer_device }}"
                 data: {}            
-          - set_conversation_response: Music stopped          
+          - set_conversation_response: Music stopped
+      - conditions:
+          - condition: trigger
+            id:
+              - music_volume_up
+        sequence:
+          - action: media_player.volume_up
+            target:
+              entity_id: '{{ target_musicplayer_device }}'
+      - conditions:
+          - condition: trigger
+            id:
+              - music_volume_down
+        sequence:
+          - data: {}
+            action: media_player.volume_down
+            target:
+              entity_id: '{{ target_musicplayer_device }}'
+      - conditions:
+          - condition: trigger
+            id:
+              - next_song
+        sequence:
+          - action: media_player.media_next_track
+            target:
+               entity_id: '{{ target_musicplayer_device }}'
+      - conditions:
+          - condition: trigger
+            id:
+              - pause_music
+        sequence:
+          - variables:
+              music_player_state: '{{states(target_musicplayer_device)}}'
+          - choose:
+            - conditions:
+              - condition: template
+                value_template: '{{music_player_state==''playing''}}'
+                alias: If the music_player_state set to playing?
+              sequence:
+                - data: {}
+                  action: media_player.media_pause
+                  target:
+                    entity_id: '{{ target_musicplayer_device }}'
+            default:
+              - data: {}
+                action: media_player.media_play
+                target:
+                  entity_id: '{{ target_musicplayer_device }}'          
               
 variables:
   modes: !input modes
