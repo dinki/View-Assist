@@ -29,7 +29,7 @@ Requires View Assist Control automation v1.2.0 or greater
 
 | Version | Description |
 | ------- | ----------- |
-| v 1.3.0 | Add additional 
+| v 1.3.0 | Add additional functions pause, next, additional |
 | v 1.2.2 | Stop music stops music player device and expires timer to go back to home screen quicker |
 | v 1.2.1 | Add volume control and stop music (Thanks @jimmyjamesbob) |
 | v 1.2.0 | Add view functionality |
