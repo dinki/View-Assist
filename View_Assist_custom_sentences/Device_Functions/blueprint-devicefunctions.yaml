@@ -39,6 +39,11 @@ blueprint:
       name: Stop Music Command 
       description: The command to use to stop music playback
       default: "stop [the] music"
+    set_music_volume:
+      name: Set Music Volume Command
+      description: The command to use to set music player volume level directly
+      default:
+        "[set | turn | change] [the] music [volume | level] [to] {level}"
     music_volume_up:
       name: Music volume up command
       description: The command to use to turn up the music volume
@@ -99,6 +104,9 @@ trigger:
   - platform: conversation
     command: !input stop_music
     id: stop_music
+  - trigger: conversation
+    command: !input set_music_volume
+    id: set_music_volume
   - platform: conversation
     command: !input music_volume_up
     id: music_volume_up
@@ -276,6 +284,27 @@ action:
                   entity_id: "{{ target_timer_device }}"
                 data: {}            
           - set_conversation_response: Music stopped
+      - conditions:
+          - condition: trigger
+            id:
+              - set_music_volume
+          - condition: template
+            value_template: "{{target_musicplayer_device != target_mediaplayer_device}}"
+        sequence:
+          - action: media_player.volume_set
+            data:
+              volume_level: |-
+                {% if trigger.id == "set_music_volume" %} 
+                  {% if trigger.slots.level.endswith('%') %}
+                    {{ (trigger.slots.level |replace('%',' ') | int)/100 }}
+                  {% else %}
+                    {{ (trigger.slots.level | int)/10 }}
+                  {% endif %}
+                {% endif %}
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
+          - set_conversation_response: Volume set to {{ trigger.slots.level }}
+            enabled: true
       - conditions:
           - condition: trigger
             id:
