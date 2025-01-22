@@ -288,8 +288,6 @@ action:
           - condition: trigger
             id:
               - set_music_volume
-          - condition: template
-            value_template: "{{target_musicplayer_device != target_mediaplayer_device}}"
         sequence:
           - action: media_player.volume_set
             data:
