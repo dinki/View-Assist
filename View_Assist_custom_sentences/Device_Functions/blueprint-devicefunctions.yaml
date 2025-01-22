@@ -106,7 +106,7 @@ trigger:
     command: !input music_volume_down
     id: music_volume_down
   - platform: conversation
-    command: !input pause
+    command: !input pause_music
     id: pause_music
   - platform: conversation
     command: !input next_song
