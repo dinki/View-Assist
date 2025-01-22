@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Device Functions
-  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.3.0)
+  description: Various device functions for the View Assist Satellites (View Assist devicefunctions v 1.4.0)
   domain: automation
   input:
     repeat_command:
