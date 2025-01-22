@@ -51,7 +51,15 @@ blueprint:
     music_volume_down:
       name: Music volume down command
       description: The command to use to turn down the music volume
-      default: "[turn down | decrease | lower] [the] music [volume]"             
+      default: "[turn down | decrease | lower] [the] music [volume]" 
+    mute_music_volume:
+      name: Mute Volume Command
+      description: The command to use to mute the music player
+      default: mute [the] music [volume]
+    unmute_music_volume:
+      name: Unmute Volume Command
+      description: The command to use to unmute the music player
+      default: unmute [the] music [volume]
     pause_music:
       name: Music pause resume command
       description: The command to use to pause or resume the Music
@@ -113,6 +121,12 @@ trigger:
   - platform: conversation
     command: !input music_volume_down
     id: music_volume_down
+  - trigger: conversation
+    command: !input mute_music_volume
+    id: mute_music_volume
+  - trigger: conversation
+    command: !input unmute_music_volume
+    id: unmute_music_volume
   - platform: conversation
     command: !input pause_music
     id: pause_music
@@ -318,6 +332,26 @@ action:
             action: media_player.volume_down
             target:
               entity_id: '{{ target_musicplayer_device }}'
+      - conditions:
+          - condition: trigger
+            id:
+              - mute_music_volume
+        sequence:
+          - action: media_player.volume_mute
+            data:
+              is_volume_muted: true
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - unmute_music_volume
+        sequence:
+          - action: media_player.volume_mute
+            data:
+              is_volume_muted: false
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
       - conditions:
           - condition: trigger
             id:
