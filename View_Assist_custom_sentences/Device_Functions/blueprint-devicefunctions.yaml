@@ -18,7 +18,7 @@ blueprint:
     dnd_command:
       name: Do Not Disturb Command 
       description: The command to use to trigger turning off DND mode
-      default: "(set do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])"
+      default: "( do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])"
     set_volume:
       name: Set Volume Command 
       description: The command to use to set volume level directly
@@ -303,8 +303,6 @@ action:
                 {% endif %}
             target:
               entity_id: "{{ target_musicplayer_device }}"
-          - set_conversation_response: Volume set to {{ trigger.slots.level }}
-            enabled: true
       - conditions:
           - condition: trigger
             id:
