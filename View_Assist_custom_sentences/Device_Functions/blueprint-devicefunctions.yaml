@@ -42,11 +42,11 @@ blueprint:
     music_volume_up:
       name: Music volume up command
       description: The command to use to turn up the music volume
-      default: "[turn up | increase] [the] music [volume]"
+      default: "[turn up | increase | raise] [the] music [volume]"
     music_volume_down:
       name: Music volume down command
       description: The command to use to turn down the music volume
-      default: "[turn down | decrease] [the] music [volume]"             
+      default: "[turn down | decrease | lower] [the] music [volume]"             
     pause_music:
       name: Music pause resume command
       description: The command to use to pause or resume the Music
