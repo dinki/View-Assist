@@ -4,21 +4,79 @@ template:
   - body_template
 variables:
   clockaltcardversion: 1.0.0
-  var_background: >-
-    [[[ try {return
-    hass.states[variables.var_assistsat_entity].attributes.background} catch {
-    return  ""}]]]
+  var_enable_movement: true
+  var_stop_position:
+    top: 50%
+    left: 50%
+  var_background: |-
+    [[[ 
+      try {
+        return hass.states[variables.var_assistsat_entity].attributes.background || "";
+      } catch (e) {
+        return "";
+      } 
+    ]]]
+  var_random_opacity: "[[[ Math.random() > 0.5 ? '0.8' : '1' ]]]"
+  var_positions:
+    - top: "-100%"
+      left: 5%
+    - top: "-110%"
+      left: 25%
+    - top: "-110%"
+      left: 5%
+    - top: "-65%"
+      left: 35%
+    - top: "-85%"
+      left: 10%
+    - top: "-55%"
+      left: 35%
+    - top: "-65%"
+      left: 35%
+    - top: "-110%"
+      left: 35%
+    - top: "-85%"
+      left: 20%
+    - top: "-95%"
+      left: 35%
+  var_random_position: |-
+    [[[ 
+      if (variables.var_enable_movement) {
+        var positions = variables.var_positions;
+        if (!window.positionTimer) {
+          window.positionTimer = setInterval(function() {
+            var randomIndex = Math.floor(Math.random() * positions.length);
+            var randomPosition = positions[randomIndex];
+            window.randomPosition = 'translate(' + randomPosition.left + ', ' + randomPosition.top + ')';
+          }, 10000);
+        }
+        return window.randomPosition || 'translate(' + positions[0].left + ', ' + positions[0].top + ')';
+      } else {
+        var stopPosition = variables.var_stop_position || { top: "0%", left: "0%" };
+        return 'translate(' + stopPosition.left + ', ' + stopPosition.top + ')';
+      }
+    ]]]
 styles:
   card:
-    - background: >-
-        [[[ return `center / cover no-repeat url(${variables.var_background})`
+    - background: |-
+        [[[ 
+          return 'center / cover no-repeat url(' + variables.var_background + ')';
         ]]]
     - background-size: cover
+    - font-size: |-
+        [[[ 
+          var scale = window.innerWidth / 664;
+          return Math.max(16 * scale, 10) + 'px';
+        ]]]
+    - padding: |-
+        [[[ 
+          var scale = window.innerWidth / 664;
+          return Math.max(20 * scale, 8) + 'px';
+        ]]]
   grid:
     - grid-template-areas: |
-        "title status"  
+        "title status"
         "clock clock"
-        "assist assist"        
+        "assist assist"
     - grid-template-rows: min-content min-content min-content min-content
     - grid-template-columns: 1fr 1fr
   custom_fields:
@@ -29,30 +87,14 @@ styles:
       - width: max-content
       - position: absolute
       - top: 65%
-      - animation:
-          - screensaver0 390.0s steps(1) infinite
-    movement:
-      randomize: true
-      interval: 3
-      bounds:
-        x_margin: 50
-        y_margin: 50
-extra_styles: |
-  @keyframes screensaver0 {
-    0% { bottom: 70vh; left: 5vw; }
-    5% { bottom: 115vh; left: 10vw; }  
-    10% { bottom: 35vh; left: 20vw; }
-    15% { bottom: 90vh; left: 20vw; }  
-    20% { bottom: 35vh; left: 15vw; }
-    25% { bottom: 65vh; left: 20vw; }
-    30% { bottom: 120vh; left: 20vw; }  
-    35% { bottom: 45vh; left: 20vw; }
-    50% { bottom: 80vh; left: 20vw; }
-    60% { bottom: 55vh; left: 20vw; }
-    75% { bottom: 35vh; left: 10vw; }
-    85% { bottom: 40vh; left: 20vw; }
-    100% { bottom: 35vh; left: 5vw; }
-  }
+      - transition: none
+      - transform: "[[[ return variables.var_random_position ]]]"
+    weather:
+      - position: absolute
+      - font-size: 200%
+      - opacity: "[[[ return variables.var_random_opacity ]]]"
+      - transition: none
+      - transform: "[[[ return variables.var_random_position ]]]"
 custom_fields:
   title: ""
   clock:
@@ -98,9 +140,9 @@ custom_fields:
         - type: custom:button-card
           name: |
             [[[ 
-              const now = new Date();
+              var now = new Date();
               return now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-              ]]]
+            ]]]
           styles:
             name:
               - font-size: 300%
