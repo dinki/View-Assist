@@ -39,14 +39,27 @@ blueprint:
       name: Stop Music Command 
       description: The command to use to stop music playback
       default: "stop [the] music"
+    set_music_volume:
+      name: Set Music Volume Command
+      description: The command to use to set music player volume level directly
+      default:
+        "[set | turn | change] [the] music [volume | level] [to] {level}"
     music_volume_up:
       name: Music volume up command
       description: The command to use to turn up the music volume
-      default: "[turn up | increase] [the] music [volume]"
+      default: "[turn up | increase | raise] [the] music [volume]"
     music_volume_down:
       name: Music volume down command
       description: The command to use to turn down the music volume
-      default: "[turn down | decrease] [the] music [volume]"             
+      default: "[turn down | decrease | lower] [the] music [volume]" 
+    mute_music_volume:
+      name: Mute Volume Command
+      description: The command to use to mute the music player
+      default: mute [the] music [volume]
+    unmute_music_volume:
+      name: Unmute Volume Command
+      description: The command to use to unmute the music player
+      default: unmute [the] music [volume]
     pause_music:
       name: Music pause resume command
       description: The command to use to pause or resume the Music
@@ -99,12 +112,21 @@ trigger:
   - platform: conversation
     command: !input stop_music
     id: stop_music
+  - trigger: conversation
+    command: !input set_music_volume
+    id: set_music_volume
   - platform: conversation
     command: !input music_volume_up
     id: music_volume_up
   - platform: conversation
     command: !input music_volume_down
     id: music_volume_down
+  - trigger: conversation
+    command: !input mute_music_volume
+    id: mute_music_volume
+  - trigger: conversation
+    command: !input unmute_music_volume
+    id: unmute_music_volume
   - platform: conversation
     command: !input pause_music
     id: pause_music
@@ -279,6 +301,23 @@ action:
       - conditions:
           - condition: trigger
             id:
+              - set_music_volume
+        sequence:
+          - action: media_player.volume_set
+            data:
+              volume_level: |-
+                {% if trigger.id == "set_music_volume" %} 
+                  {% if trigger.slots.level.endswith('%') %}
+                    {{ (trigger.slots.level |replace('%',' ') | int)/100 }}
+                  {% else %}
+                    {{ (trigger.slots.level | int)/10 }}
+                  {% endif %}
+                {% endif %}
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
               - music_volume_up
         sequence:
           - action: media_player.volume_up
@@ -293,6 +332,26 @@ action:
             action: media_player.volume_down
             target:
               entity_id: '{{ target_musicplayer_device }}'
+      - conditions:
+          - condition: trigger
+            id:
+              - mute_music_volume
+        sequence:
+          - action: media_player.volume_mute
+            data:
+              is_volume_muted: true
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - unmute_music_volume
+        sequence:
+          - action: media_player.volume_mute
+            data:
+              is_volume_muted: false
+            target:
+              entity_id: "{{ target_musicplayer_device }}"
       - conditions:
           - condition: trigger
             id:
