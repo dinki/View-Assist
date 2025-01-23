@@ -25,26 +25,26 @@ blueprint:
       default: "/dashboard-viewassist/music"
 alias: View Assist - Play Music with Music Assistant
 description: "Play music using music assistant"
-triggers:
-  - command:
+trigger:
+  - platform: conversation
+    command:
       - play the artist {artist}
-      - play some {artist} music
-      - play some music by {artist}
+      - play some {artist} [music]
+      - play [some] [music | songs] by {artist}
     id: artist
-    trigger: conversation
-  - command:
+  - platform: conversation
+    command:
       - start [the] {playlist} playlist
     id: playlist
-    trigger: conversation
-  - command:
+  - platform: conversation
+    command:
       - play {song} by {artist}
     id: track
-    trigger: conversation
-  - command:
+  - platform: conversation
+    command:
       - queue {song} by {artist}
       - cue {song} by {artist}
     id: cuetrack
-    trigger: conversation
 conditions: []
 actions:
   - choose:
@@ -195,12 +195,12 @@ actions:
                 data:
                   media_type: "{{media_type}}"
                   enqueue: "{{enqueue_type}}"
-                  media_id: "{{ found_song.tracks.0.name }}"
+                  media_id: "{{ found_track.tracks.0.name }}"
                   artist: "{{ trigger.slots.artist  }}"
                 action: music_assistant.play_media
                 enabled: true
               - set_conversation_response: >-
-                  {{response_first_word}} the song {{found_song.tracks.0.name}}
+                  {{response_first_word}} the song {{found_track.tracks.0.name}}
                   by {{trigger.slots.artist}} now!
             else:
               - set_conversation_response: >-
