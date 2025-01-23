@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
-  description: Use various methods to control volume and playback and play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
+  description: Use various methods to play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
   domain: automation
   input:
     group_entity:
@@ -24,7 +24,7 @@ blueprint:
       description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
       default: "/dashboard-viewassist/music"
 alias: View Assist - Play Music with Music Assistant
-description: "Control volume, playback and play music using music assistant"
+description: "Play music using music assistant"
 triggers:
   - command:
       - play the artist {artist}
@@ -207,9 +207,9 @@ actions:
                   I was unable to find any song called {{trigger.slots.song}} by
                   {{ trigger.slots.artist }}
 variables:
-  view_path: /dashboard-viewassist/music
-  group_entity: group.viewassist_satellites
-  ma_instance: 01JEP4E44854TC3MJDK4SN13Q0
+  view_path: !input view_path
+  group_entity: !input group_entity
+  ma_instance: !input ma_instance
   target_satellite_device: |-
     {% for sat in expand(group_entity) %}
       {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
