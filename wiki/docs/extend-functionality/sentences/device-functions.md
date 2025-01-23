@@ -13,6 +13,9 @@ This blueprint will contain device specific functions.  Current functions includ
 * Stop music playback and return to normal mode
 * Pause playback
 * Next song
+* Adjust music volume by level
+* Adjust music volume by step
+* Mute/Unmute music
 
 Requires View Assist Control automation v1.2.0 or greater
 
@@ -29,6 +32,7 @@ Requires View Assist Control automation v1.2.0 or greater
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.4.0 | Add more music specific functions |
 | v 1.3.0 | Add additional functions pause, next, additional |
 | v 1.2.2 | Stop music stops music player device and expires timer to go back to home screen quicker |
 | v 1.2.1 | Add volume control and stop music (Thanks @jimmyjamesbob) |
