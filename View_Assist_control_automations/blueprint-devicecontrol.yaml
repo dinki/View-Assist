@@ -478,7 +478,7 @@ action:
           {% set list =
           state_attr(intent,'intent_output')['response']['data']['success']
           | map(attribute='id') | list %} {% set prefix = ('light',
-          'switch', 'cover','input_boolean', 'fan', 'scene', 'group',
+          'switch', 'cover','input_boolean', 'fan', 'scene',
           'sensor') %} {% set data = namespace(filtered_list=[]) %} {% for
           item in list %}
             {%- if item.startswith(prefix) %}
