@@ -31,7 +31,7 @@ trigger:
       - play the artist {artist}
       - play some {artist} [music]
       - play [some] [music | songs] by {artist}
-    id: artist
+    id: playartist
   - platform: conversation
     command:
       - start [the] {playlist} playlist
@@ -39,19 +39,18 @@ trigger:
   - platform: conversation
     command:
       - play {song} by {artist}
-    id: track
+    id: playsong
   - platform: conversation
     command:
-      - queue {song} by {artist}
-      - cue {song} by {artist}
-    id: cuetrack
+      - (queue | cue | Q) {song} by {artist}
+    id: cuesong
 conditions: []
 actions:
   - choose:
       - conditions:
           - condition: trigger
             id:
-              - artist
+              - playartist
         sequence:
           - data:
               limit: 1
@@ -86,11 +85,10 @@ actions:
                   media_id: "{{ found_artist.artists.0.name }}"
                 action: music_assistant.play_media
                 enabled: true
-              - set_conversation_response: "\"Playing {{ found_artist.artists.0.name }} music now!\""
+              - set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
             else:
               - set_conversation_response: >-
-                  "I was unable to find any music for {{ trigger.slots.artist 
-                  }}"
+                  "I was unable to find any music for {{ trigger.slots.artist }}"
       - conditions:
           - condition: trigger
             id:
@@ -139,8 +137,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - track
-              - cuetrack
+              - playsong
+              - cuesong
         sequence:
           - data:
               limit: 1
@@ -170,12 +168,12 @@ actions:
                 action: browser_mod.navigate
               - alias: >-
                   Set enqueue_type, media_type and response_first_word depending
-                  on cuetrack or track trigger
+                  on cuesong or playsong trigger
                 choose:
                   - conditions:
                       - condition: trigger
                         id:
-                          - cuetrack
+                          - cuesong
                     sequence:
                       - variables:
                           enqueue_type: next
@@ -184,7 +182,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - track
+                          - playsong
                     sequence:
                       - variables:
                           enqueue_type: play
