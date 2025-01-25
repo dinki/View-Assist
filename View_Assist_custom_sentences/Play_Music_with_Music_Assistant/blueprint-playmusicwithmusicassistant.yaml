@@ -87,11 +87,12 @@ actions:
                 enabled: true
               # Disabling this for now, will be put back in the future once control for it is added to the BP
               #- set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
+              - set_conversation_response: ""
             else:
               # Disabling this for now, will be put back in the future once control for it is added to the BP
               #- set_conversation_response: >-
               #    "I was unable to find any music for {{ trigger.slots.artist }}"
-            set_conversation_response: ""
+              - set_conversation_response: ""
       - conditions:
           - condition: trigger
             id:
@@ -134,13 +135,13 @@ actions:
               #- set_conversation_response: >-
               #    "Playing the playlist {{ found_playlist.playlists.0.name }}
               #    now!"
+              - set_conversation_response: ""
             else:
               # Disabling this for now, will be put back in the future once control for it is added to the BP
               #- set_conversation_response: >-
               #    "I was unable to find any playlist called {{
               #    trigger.slots.artist  }}"
-            - set_conversation_response: ""
-            
+              - set_conversation_response: ""
       - conditions:
           - condition: trigger
             id:
@@ -182,34 +183,41 @@ actions:
                         id:
                           - cuesong
                     sequence:
-                      - variables:
-                          enqueue_type: next
-                          media_type: track
-                          response_first_word: Queueing
+                      - target:
+                          entity_id: "{{ target_musicplayer_device }}"
+                        data:
+                          media_type: "track"
+                          enqueue: "next"
+                          media_id: "{{ found_track.tracks.0.name }}"
+                          artist: "{{ trigger.slots.artist  }}"
+                        action: music_assistant.play_media
+                        enabled: true
+                      # Disabling and setting to empty for now, will add later once control is provided in control BP  
+                      #- set_conversation_response: >-
+                      #    Queueing the song {{found_track.tracks.0.name}}
+                      #    by {{trigger.slots.artist}} now!
+                      - set_conversation_response: ""
                   - conditions:
                       - condition: trigger
                         id:
                           - playsong
                     sequence:
-                      - variables:
-                          enqueue_type: play
-                          media_type: track
-                          response_first_word: Playing
-              - target:
-                  entity_id: "{{ target_musicplayer_device }}"
-                data:
-                  media_type: "{{media_type}}"
-                  enqueue: "{{enqueue_type}}"
-                  media_id: "{{ found_track.tracks.0.name }}"
-                  artist: "{{ trigger.slots.artist  }}"
-                action: music_assistant.play_media
-                enabled: true
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-                #- set_conversation_response: >-
-              #    {{response_first_word}} the song {{found_track.tracks.0.name}}
-              #    by {{trigger.slots.artist}} now!
+                      - target:
+                          entity_id: "{{ target_musicplayer_device }}"
+                        data:
+                          media_type: "track"
+                          enqueue: "play"
+                          media_id: "{{ found_track.tracks.0.name }}"
+                          artist: "{{ trigger.slots.artist  }}"
+                        action: music_assistant.play_media
+                        enabled: true
+                      # Disabling and setting to empty for now, will add later once control is provided in control BP  
+                      #- set_conversation_response: >-
+                      #    Playing the song {{found_track.tracks.0.name}}
+                      #    by {{trigger.slots.artist}} now!
+                      - set_conversation_response: ""
             else:
-              #
+              # Disabling and setting to empty for now, will add later once control is provided in control BP
               #- set_conversation_response: >-
               #    I was unable to find any song called {{trigger.slots.song}} by
               #    {{ trigger.slots.artist }}
