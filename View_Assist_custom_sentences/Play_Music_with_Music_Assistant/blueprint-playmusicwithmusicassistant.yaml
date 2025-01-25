@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
-  description: Use various methods to play individual songs, add to queue, and play artist from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
+  description: Use various methods to play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
   domain: automation
   input:
     group_entity:
@@ -24,12 +24,13 @@ blueprint:
       description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
       default: "/dashboard-viewassist/music"
 alias: View Assist - Play Music with Music Assistant
-description: ""
+description: "Play music using music assistant"
 trigger:
   - platform: conversation
     command:
       - play the artist {artist}
-      - play some {artist}
+      - play some {artist} [music]
+      - play [some] [music | songs] by {artist}
     id: playartist
   - platform: conversation
     command:
@@ -41,135 +42,186 @@ trigger:
     id: playsong
   - platform: conversation
     command:
-      - queue {song} by {artist}
-      - cue {song} by {artist}
+      - (queue | cue | Q) {song} by {artist}
     id: cuesong
-condition: []
-action:
+conditions: []
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id:
               - playartist
         sequence:
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ target_satellite_device }}"
-              mode: music
-              title: ""
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: "{{ view_path }}"
-            target:
-              device_id: "{{ target_display_device }}"        
-          - service: music_assistant.search
-            data:
+          - data:
               limit: 1
               config_entry_id: "{{ ma_instance }}"
               media_type:
                 - artist
               name: "{{ trigger.slots.artist  }}"
             response_variable: found_artist
-          - service: music_assistant.play_media
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-            data:
-              media_type: artist
-              enqueue: replace
-              media_id: "{{ found_artist.artists.0.name }}"
-          - set_conversation_response: ""
+            action: music_assistant.search
+          - alias: Did we find an artist?
+            if:
+              - condition: template
+                value_template: "{{found_artist['artists'] | count>0}}"
+                alias: We found an artist!
+            then:
+              - data:
+                  entity_id: "{{ target_satellite_device }}"
+                  mode: music
+                  title: ""
+                action: python_script.set_state
+              - metadata: {}
+                data:
+                  path: "{{ view_path }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+                action: browser_mod.navigate
+              - target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data:
+                  media_type: artist
+                  enqueue: replace
+                  media_id: "{{ found_artist.artists.0.name }}"
+                action: music_assistant.play_media
+                enabled: true
+              # Disabling this for now, will be put back in the future once control for it is added to the BP
+              #- set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
+              - set_conversation_response: ""
+            else:
+              # Disabling this for now, will be put back in the future once control for it is added to the BP
+              #- set_conversation_response: >-
+              #    "I was unable to find any music for {{ trigger.slots.artist }}"
+              - set_conversation_response: ""
       - conditions:
           - condition: trigger
             id:
               - playlist
         sequence:
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ target_satellite_device }}"
-              mode: music
-              title: ""
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: "{{ view_path }}"
-            target:
-              device_id: "{{ target_display_device }}"        
-          - service: music_assistant.play_media
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-            data:
-              media_type: playlist
-              enqueue: replace
-              media_id: "{{ trigger.slots.playlist }}"
-          - set_conversation_response: ""
+          - data:
+              limit: 1
+              config_entry_id: "{{ ma_instance }}"
+              media_type:
+                - playlist
+              name: "{{ trigger.slots.playlist }}"
+            response_variable: found_playlist
+            action: music_assistant.search
+          - alias: Did we find a playlist?
+            if:
+              - condition: template
+                value_template: "{{found_playlist['playlists'] | count>0}}"
+                alias: We found a playlist!
+            then:
+              - data:
+                  entity_id: "{{ target_satellite_device }}"
+                  mode: music
+                  title: ""
+                action: python_script.set_state
+              - metadata: {}
+                data:
+                  path: "{{ view_path }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+                action: browser_mod.navigate
+              - target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data:
+                  media_type: playlist
+                  enqueue: replace
+                  media_id: "{{ trigger.slots.playlist }}"
+                action: music_assistant.play_media
+                enabled: true
+              # Disabling this for now, will be put back in the future once control for it is added to the BP
+              #- set_conversation_response: >-
+              #    "Playing the playlist {{ found_playlist.playlists.0.name }}
+              #    now!"
+              - set_conversation_response: ""
+            else:
+              # Disabling this for now, will be put back in the future once control for it is added to the BP
+              #- set_conversation_response: >-
+              #    "I was unable to find any playlist called {{
+              #    trigger.slots.artist  }}"
+              - set_conversation_response: ""
       - conditions:
           - condition: trigger
             id:
               - playsong
-        sequence:
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ target_satellite_device }}"
-              mode: music
-              title: ""
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: "{{ view_path }}"
-            target:
-              device_id: "{{ target_display_device }}"        
-          - service: music_assistant.search
-            data:
-              limit: 1
-              config_entry_id: "{{ ma_instance }}"
-              media_type:
-                - track
-              name: "{{ trigger.slots.song  }}"
-              artist: "{{ trigger.slots.artist  }}"
-            response_variable: found_song
-          - service: music_assistant.play_media
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-            data:
-              media_type: track
-              enqueue: play
-              media_id: "{{ found_song.tracks.0.name }}"
-          - set_conversation_response: ""            
-      - conditions:
-          - condition: trigger
-            id:
               - cuesong
         sequence:
-          - service: python_script.set_state
-            data:
-              entity_id: "{{ target_satellite_device }}"
-              mode: music
-              title: ""
-          - service: browser_mod.navigate
-            metadata: {}
-            data:
-              path: "{{ view_path }}"
-            target:
-              device_id: "{{ target_display_device }}"        
-          - service: music_assistant.search
-            data:
+          - data:
               limit: 1
               config_entry_id: "{{ ma_instance }}"
               media_type:
                 - track
               name: "{{ trigger.slots.song  }}"
               artist: "{{ trigger.slots.artist  }}"
-            response_variable: found_song
-          - service: music_assistant.play_media
-            target:
-              entity_id: "{{ target_musicplayer_device }}"
-            data:
-              media_type: track
-              enqueue: next
-              media_id: "{{ found_song.tracks.0.name }}"
-              artist: "{{ trigger.slots.artist  }}"
-          - set_conversation_response: ""
+            response_variable: found_track
+            action: music_assistant.search
+          - alias: Did we find a track?
+            if:
+              - condition: template
+                value_template: "{{found_track['tracks'] | count>0}}"
+                alias: We found a track!
+            then:
+              - data:
+                  entity_id: "{{ target_satellite_device }}"
+                  mode: music
+                  title: ""
+                action: python_script.set_state
+              - metadata: {}
+                data:
+                  path: "{{ view_path }}"
+                target:
+                  device_id: "{{ target_display_device }}"
+                action: browser_mod.navigate
+              - alias: >-
+                  Set enqueue_type, media_type and response_first_word depending
+                  on cuesong or playsong trigger
+                choose:
+                  - conditions:
+                      - condition: trigger
+                        id:
+                          - cuesong
+                    sequence:
+                      - target:
+                          entity_id: "{{ target_musicplayer_device }}"
+                        data:
+                          media_type: "track"
+                          enqueue: "next"
+                          media_id: "{{ found_track.tracks.0.name }}"
+                          artist: "{{ trigger.slots.artist  }}"
+                        action: music_assistant.play_media
+                        enabled: true
+                      # Disabling and setting to empty for now, will add later once control is provided in control BP  
+                      #- set_conversation_response: >-
+                      #    Queueing the song {{found_track.tracks.0.name}}
+                      #    by {{trigger.slots.artist}} now!
+                      - set_conversation_response: ""
+                  - conditions:
+                      - condition: trigger
+                        id:
+                          - playsong
+                    sequence:
+                      - target:
+                          entity_id: "{{ target_musicplayer_device }}"
+                        data:
+                          media_type: "track"
+                          enqueue: "play"
+                          media_id: "{{ found_track.tracks.0.name }}"
+                          artist: "{{ trigger.slots.artist  }}"
+                        action: music_assistant.play_media
+                        enabled: true
+                      # Disabling and setting to empty for now, will add later once control is provided in control BP  
+                      #- set_conversation_response: >-
+                      #    Playing the song {{found_track.tracks.0.name}}
+                      #    by {{trigger.slots.artist}} now!
+                      - set_conversation_response: ""
+            else:
+              # Disabling and setting to empty for now, will add later once control is provided in control BP
+              #- set_conversation_response: >-
+              #    I was unable to find any song called {{trigger.slots.song}} by
+              #    {{ trigger.slots.artist }}
+            - set_conversation_response: ""
 variables:
   view_path: !input view_path
   group_entity: !input group_entity
