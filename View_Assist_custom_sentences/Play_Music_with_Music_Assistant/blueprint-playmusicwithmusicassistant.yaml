@@ -175,31 +175,35 @@ actions:
                         id:
                           - cuesong
                     sequence:
-                      - variables:
-                          enqueue_type: next
-                          media_type: track
-                          response_first_word: Queueing
+                      - target:
+                          entity_id: "{{ target_musicplayer_device }}"
+                        data:
+                          media_type: "track"
+                          enqueue: "next"
+                          media_id: "{{ found_track.tracks.0.name }}"
+                          artist: "{{ trigger.slots.artist  }}"
+                        action: music_assistant.play_media
+                        enabled: true
+                      - set_conversation_response: >-
+                          Queueing the song {{found_track.tracks.0.name}}
+                          by {{trigger.slots.artist}} now!
                   - conditions:
                       - condition: trigger
                         id:
                           - playsong
                     sequence:
-                      - variables:
-                          enqueue_type: play
-                          media_type: track
-                          response_first_word: Playing
-              - target:
-                  entity_id: "{{ target_musicplayer_device }}"
-                data:
-                  media_type: "{{media_type}}"
-                  enqueue: "{{enqueue_type}}"
-                  media_id: "{{ found_track.tracks.0.name }}"
-                  artist: "{{ trigger.slots.artist  }}"
-                action: music_assistant.play_media
-                enabled: true
-              - set_conversation_response: >-
-                  {{response_first_word}} the song {{found_track.tracks.0.name}}
-                  by {{trigger.slots.artist}} now!
+                      - target:
+                          entity_id: "{{ target_musicplayer_device }}"
+                        data:
+                          media_type: "track"
+                          enqueue: "play"
+                          media_id: "{{ found_track.tracks.0.name }}"
+                          artist: "{{ trigger.slots.artist  }}"
+                        action: music_assistant.play_media
+                        enabled: true
+                      - set_conversation_response: >-
+                          Playing the song {{found_track.tracks.0.name}}
+                          by {{trigger.slots.artist}} now!
             else:
               - set_conversation_response: >-
                   I was unable to find any song called {{trigger.slots.song}} by
