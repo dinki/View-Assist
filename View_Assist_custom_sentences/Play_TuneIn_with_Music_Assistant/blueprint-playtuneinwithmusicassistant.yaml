@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play TuneIn with Music Assistant
-  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.1)
+  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.2)
   domain: automation
   input:
     command:
@@ -43,7 +43,13 @@ action:
               entity_id: "{{ target_musicplayer_device }}"
             data:
               media_id: "{{ station }}"
-          - set_conversation_response: ""
+          - if:
+              - condition: template
+                value_template: "{{ target_use_announce is not false }}"
+            then:                            
+              - set_conversation_response:  "Starting radio"
+            else:
+              - set_conversation_response: ""              
           - service: python_script.set_state
             data:
               entity_id: "{{ target_satellite_device }}"

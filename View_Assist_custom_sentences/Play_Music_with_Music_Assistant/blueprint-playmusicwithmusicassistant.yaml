@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
-  description: Use various methods to play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
+  description: Use various methods to play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.4)
   domain: automation
   input:
     group_entity:
@@ -85,14 +85,21 @@ actions:
                   media_id: "{{ found_artist.artists.0.name }}"
                 action: music_assistant.play_media
                 enabled: true
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Playing {{ found_artist.artists.0.name }} music"
+                else:
+                  - set_conversation_response: ""
             else:
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: >-
-              #    "I was unable to find any music for {{ trigger.slots.artist }}"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:                            
+                  - set_conversation_response:  "I was unable to find any music for {{ trigger.slots.artist }}"
+                else:
+                  - set_conversation_response: ""
       - conditions:
           - condition: trigger
             id:
@@ -131,17 +138,21 @@ actions:
                   media_id: "{{ trigger.slots.playlist }}"
                 action: music_assistant.play_media
                 enabled: true
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: >-
-              #    "Playing the playlist {{ found_playlist.playlists.0.name }}
-              #    now!"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Playing the {{ found_playlist.playlists.0.name }} playlist"
+                else:
+                  - set_conversation_response: ""                
             else:
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: >-
-              #    "I was unable to find any playlist called {{
-              #    trigger.slots.artist  }}"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Sorry, no playlist named {{ trigger.slots.artist  }} could be found"
+                else:
+                  - set_conversation_response: ""             
       - conditions:
           - condition: trigger
             id:
@@ -192,11 +203,13 @@ actions:
                           artist: "{{ trigger.slots.artist  }}"
                         action: music_assistant.play_media
                         enabled: true
-                      # Disabling and setting to empty for now, will add later once control is provided in control BP  
-                      #- set_conversation_response: >-
-                      #    Queueing the song {{found_track.tracks.0.name}}
-                      #    by {{trigger.slots.artist}} now!
-                      - set_conversation_response: ""
+                      - if:
+                          - condition: template
+                            value_template: "{{ target_use_announce is not false }}"
+                        then:              
+                          - set_conversation_response: "Queueing {{found_track.tracks.0.name}}"
+                        else:
+                          - set_conversation_response: ""                
                   - conditions:
                       - condition: trigger
                         id:
@@ -211,17 +224,21 @@ actions:
                           artist: "{{ trigger.slots.artist  }}"
                         action: music_assistant.play_media
                         enabled: true
-                      # Disabling and setting to empty for now, will add later once control is provided in control BP  
-                      #- set_conversation_response: >-
-                      #    Playing the song {{found_track.tracks.0.name}}
-                      #    by {{trigger.slots.artist}} now!
-                      - set_conversation_response: ""
+                      - if:
+                          - condition: template
+                            value_template: "{{ target_use_announce is not false }}"
+                        then:              
+                          - set_conversation_response: "Playing {{ found_track.tracks.0.name }} by {{ trigger.slots.artist }}"
+                        else:
+                          - set_conversation_response: ""                         
             else:
-              # Disabling and setting to empty for now, will add later once control is provided in control BP
-              #- set_conversation_response: >-
-              #    I was unable to find any song called {{trigger.slots.song}} by
-              #    {{ trigger.slots.artist }}
-            - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Sorry {{ trigger.slots.song }} by {{ trigger.slots.artist }} was not found"
+                else:
+                  - set_conversation_response: ""             
 variables:
   view_path: !input view_path
   group_entity: !input group_entity
@@ -236,3 +253,4 @@ variables:
   target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
   target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+  target_use_announce: "{{ state_attr(target_satellite_device, 'use_announce') }}"

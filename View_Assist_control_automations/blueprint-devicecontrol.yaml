@@ -1,7 +1,7 @@
 blueprint:
   name: View Assist - Control display template
   description: This is used as a base for setting up display control on a View Assist
-    Satellite (View Assist control v 1.3.0)
+    Satellite (View Assist control v 1.3.1)
   domain: automation
   input:
     device_definitions:
@@ -185,7 +185,13 @@ blueprint:
           description: Sets clock display to 24 hour time when enabled
           selector:
             boolean: {}
-          default: false                                 
+          default: false 
+        use_announce:
+          name: Use Home Assistant Announce
+          description: Some media player devices, like BrowserMod, cannot use the Home Assistant announce feature while media is playing.  This option allows for turning off announce messages if problems arise.  Default is on.
+          selector:
+            boolean: {}
+          default: true            
     streamassist_option:
       name: Optional.  Stream Assist specific
       description: These options set the dashboard options for displaying on this satellite device
@@ -347,6 +353,7 @@ variables:
   status_icons_size: !input status_icons_size
   font_style: !input font_style
   use_24_hour_time: !input use_24_hour_time
+  use_announce: !input use_announce
   local_backgrounds: !input local_backgrounds
   max_images: !input max_images
 action:
@@ -453,7 +460,8 @@ action:
         mic_type: "{{ mic_type }}"
         status_icons_size: "{{ status_icons_size }}"
         font_style: "{{ font_style }}"
-        use_24_hour_time: "{{ use_24_hour_time }}"    
+        use_24_hour_time: "{{ use_24_hour_time }}" 
+        use_announce: "{{ use_announce }}"
         group_entity: "{{ group_entity }}"        
       enabled: true
   - conditions:
