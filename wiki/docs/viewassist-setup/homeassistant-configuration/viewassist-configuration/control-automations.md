@@ -80,6 +80,7 @@ Note for rotating background you will need [Pyscript script installed](https://w
 * Status Icons Size - Size of the icons in the status icon display (default Medium)
 * Font Style - The default font to use for this satellite device. Font name must match perfectly and be available (default Roboto)
 * Use 24 Hour Time - Sets clock display to 24 hour time when enabled (default off)
+* Use Announce - Some media player devices like BrowserMod and Squeezelite cannot use the Home Assistant announce feature while media is playing. This option allows for turning off announce messages if problems arise. Default is on.
 
 ### Stream Assist specific (Optional)
 
