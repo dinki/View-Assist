@@ -50,7 +50,7 @@ action:
               - condition: template
                 value_template: "{{ target_use_announce is not false }}"
             then:                            
-              - set_conversation_response:  "Starting radio"
+              - set_conversation_response:  "{{ announce }}"
             else:
               - set_conversation_response: ""              
           - service: python_script.set_state
