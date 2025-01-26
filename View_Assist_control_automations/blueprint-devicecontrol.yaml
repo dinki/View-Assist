@@ -188,7 +188,7 @@ blueprint:
           default: false 
         use_announce:
           name: Use Home Assistant Announce
-          description: Some media player devices like BrowserMod and Squeezelite cannot use the Home Assistant announce feature while media is playing.  This option allows for turning off announce messages if problems arise.  Default is on.
+          description: Some media player devices, like BrowserMod, cannot use the Home Assistant announce feature while media is playing.  This option allows for turning off announce messages if problems arise.  Default is on.
           selector:
             boolean: {}
           default: true            
