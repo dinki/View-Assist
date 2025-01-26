@@ -11,6 +11,7 @@
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.0.4 | Add additional sentences, improvements and conditional responses |
 | v 1.0.3 | Add new MA instance requirement to BP inputs |
 | v 1.0.2 | Change action calls to use new music_assistant viariant |
 | v 1.0.1 | Move change view to beginning of sequences and change default view values to the correct one |
