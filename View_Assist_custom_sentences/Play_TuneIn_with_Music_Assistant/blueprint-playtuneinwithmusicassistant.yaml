@@ -1,11 +1,14 @@
 blueprint:
   name: View Assist - Play TuneIn with Music Assistant
-  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.2)
+  description: Play TuneIn radio stations from your Music Assistant server (View Assist Play TuneIn with Music Assistant v 1.0.3)
   domain: automation
   input:
     command:
       name: Command
       description: The phrase you want to start your station (example Big 102)
+    announce:
+      name: Announcement
+      description: The phrase you want to hear when you start your station (example Playing Big 102)      
     station:
       name: Station ID
       description: The TuneIn radio station to play.  This must be an exact match (example BIG 102.1 KYBG)      
@@ -65,6 +68,7 @@ variables:
   view_path: !input view_path
   group_entity: !input group_entity
   station: !input station
+  announce: !input announce
   target_satellite_device: |-
     {% for sat in expand(group_entity) %}
       {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
@@ -75,3 +79,4 @@ variables:
   target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
   target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+  target_use_announce: "{{ state_attr(target_satellite_device, 'use_announce') }}"
