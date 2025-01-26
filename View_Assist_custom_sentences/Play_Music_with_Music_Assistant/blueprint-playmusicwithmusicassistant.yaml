@@ -85,16 +85,14 @@ actions:
                   media_id: "{{ found_artist.artists.0.name }}"
                 action: music_assistant.play_media
                 enabled: true
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
               - if:
                   - condition: template
                     value_template: "{{ target_use_announce is not false }}"
                 then:              
-                  - set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
+                  - set_conversation_response: "Playing {{ found_artist.artists.0.name }} music"
                 else:
                   - set_conversation_response: ""
             else:
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
               - if:
                   - condition: template
                     value_template: "{{ target_use_announce is not false }}"
@@ -140,17 +138,21 @@ actions:
                   media_id: "{{ trigger.slots.playlist }}"
                 action: music_assistant.play_media
                 enabled: true
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: >-
-              #    "Playing the playlist {{ found_playlist.playlists.0.name }}
-              #    now!"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Playing the playlist {{ found_playlist.playlists.0.name }}"
+                else:
+                  - set_conversation_response: ""                
             else:
-              # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: >-
-              #    "I was unable to find any playlist called {{
-              #    trigger.slots.artist  }}"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Sorry, no playlist named {{ trigger.slots.artist  }} could be found"
+                else:
+                  - set_conversation_response: ""             
       - conditions:
           - condition: trigger
             id:
