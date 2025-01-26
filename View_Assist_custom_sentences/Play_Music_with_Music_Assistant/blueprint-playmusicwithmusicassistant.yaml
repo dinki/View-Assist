@@ -86,13 +86,22 @@ actions:
                 action: music_assistant.play_media
                 enabled: true
               # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:              
+                  - set_conversation_response: "Playing {{ found_artist.artists.0.name }} music now!"
+                else:
+                  - set_conversation_response: ""
             else:
               # Disabling this for now, will be put back in the future once control for it is added to the BP
-              #- set_conversation_response: >-
-              #    "I was unable to find any music for {{ trigger.slots.artist }}"
-              - set_conversation_response: ""
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:                            
+                  - set_conversation_response:  "I was unable to find any music for {{ trigger.slots.artist }}"
+                else:
+                  - set_conversation_response: ""
       - conditions:
           - condition: trigger
             id:
@@ -236,3 +245,4 @@ variables:
   target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
   target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
   target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+  target_use_announce: {{ state_atter(target_satellite_device, 'use_announce') }}"
