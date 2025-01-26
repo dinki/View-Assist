@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
-  description: Use various methods to play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.3)
+  description: Use various methods to play individual songs, add to queue, play artist and playlists from your Music Assistant server (View Assist Play Music with Music Assistant v 1.0.4)
   domain: automation
   input:
     group_entity:
