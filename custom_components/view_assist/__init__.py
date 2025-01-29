@@ -60,27 +60,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         handle_satellite_lookup,
         supports_response=SupportsResponse.ONLY,
     )
-#####
-# Working
-
-    # async def handle_get_members(call: ServiceCall) -> ServiceResponse:
-    #         """Handle a get members lookup call."""
-    #         entity_registry = er.async_get(hass)
-
-    #         entities = []
-
-    #         entry_ids = [entry.entry_id for entry in hass.config_entries.async_entries(DOMAIN)]
-
-    #         for entry_id in entry_ids:
-    #             integration_entities=er.async_entries_for_config_entry(entity_registry, entry_id)
-    #             entity_ids = [entity.entity_id for entity in integration_entities]
-    #             entities.extend(entity_ids)
-
-    #         return {"device_id_received": entities}
 
 
-    async def handle_get_members(call: ServiceCall) -> ServiceResponse:
-            """Handle a get members lookup call."""
+##################
+# Sample usage
+# action: view_assist.get_members
+# data:
+#   device_id: 4385828338e48103f63c9f91756321df
+
+
+    async def handle_get_target_satellite(call: ServiceCall) -> ServiceResponse:
+            """Handle a get target satellite lookup call."""
             device_id = call.data.get("device_id")
             entity_registry = er.async_get(hass)
 
@@ -95,27 +85,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
    
             # Fetch the 'mic_device' attribute for each entity
-            # then get the entity registry entry for the mic entity id to get device id
-            mic_devices = []
+            # compare the device_id of mic_device to the value passed in to the service
+            # return the match for the satellite that contains that mic_device
+            target_satellite_devices = []
             for entity_id in entities:
                 if state := hass.states.get(entity_id):
                     if mic_entity_id := state.attributes.get("mic_device"):
                         if mic_entity := entity_registry.async_get(mic_entity_id):
                             if mic_entity.device_id == device_id:
-                                mic_devices.append(entity_id)
+                                target_satellite_devices.append(entity_id)
 
 
-            # Return the list of mic_device attributes
-            return {"mic_devices": mic_devices}
+            # Return the list of target_satellite_devices
+            # This should match only one VA device
+            return {"target_satellite": target_satellite_devices}
 
     hass.services.async_register(
         DOMAIN,
-        "get_members",
-        handle_get_members,
+        "get_target_satellite",
+        handle_get_target_satellite,
         supports_response=SupportsResponse.ONLY,
     )
 
-#####
+#########
 
     return True
     
