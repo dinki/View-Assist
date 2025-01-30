@@ -17,5 +17,5 @@ These user contributions are supported by the contributors only as they are not 
 
 | View | Description | Github User | Discord User |
 | ---- | ----------- | ----------- | ------------ |
-| Clock with movement | Screensaver-like clock| jeroenterheerdt, randr | jeroenterheerdt,randr |
-| Weather Dynamic | Show background image based on current condition| EyeVisionsNL | EyeVisions |
+| [Clock with movement](clock-with-movement.md) | Screensaver-like clock| jeroenterheerdt, randr | jeroenterheerdt,randr |
+| [Weather Dynamic](weatherdynamic.md) | Show background image based on current condition| EyeVisionsNL | EyeVisions |
