@@ -1,0 +1,160 @@
+type: custom:button-card
+variables:
+  background: |
+    [[[ 
+      const weather = states['yourweatherentitiesdaily'].state;
+      const backgrounds = {
+        "clear-night": "/local/viewassist/backgrounds/weather/clear-night.jpg",
+        "cloudy": "/local/viewassist/backgrounds/weather/cloudy.jpg",
+        "fog": "/local/viewassist/backgrounds/weather/fog.jpg",
+        "hail": "/local/viewassist/backgrounds/weather/hail.jpg",
+        "lightning": "/local/viewassist/backgrounds/weather/lightning.jpg",
+        "lightning-rainy": "/local/viewassist/backgrounds/weather/lightning-rainy.jpg",
+        "partlycloudy": "/local/viewassist/backgrounds/weather/partly-cloudy.jpg",
+        "pouring": "/local/viewassist/backgrounds/weather/heavy-rain.jpg",
+        "rainy": "/local/viewassist/backgrounds/weather/rain.jpg",
+        "snowy": "/local/viewassist/backgrounds/weather/snow.jpg",
+        "snowy-rainy": "/local/viewassist/backgrounds/weather/snow-rain.jpg",
+        "sunny": "/local/viewassist/backgrounds/weather/sunny.jpg",
+        "windy": "/local/viewassist/backgrounds/weather/windy.jpg",
+        "windy-variant": "/local/viewassist/backgrounds/weather/windy-variant.jpg",
+        "exceptional": "/local/viewassist/backgrounds/weather/extreme.jpg"
+      };
+      return backgrounds[weather] || "/local/viewassist/backgrounds/weather/default.jpg";
+    ]]]
+  var_forecast_entity: yourweatherentitie daily
+  var_forecast_type: daily
+  weathercardversion: 1.0.3
+template:
+  - variable_template
+  - body_template
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"  
+        "message message"
+        "assist assist"        
+    - grid-template-rows: min-content max-content min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
+    - border-width: 0px
+    - border-radius: 0px
+  custom_fields:
+    message:
+      - position: relative
+      - height: 100vdh
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - padding: "-10%"
+custom_fields:
+  title:
+    card:
+      type: custom:button-card
+      icon: mdi:weather-windy
+      name: >
+        [[[ return
+        `${states['your.sensor.weather.windspeed']?.state ||
+        'N/A'} Bft`; ]]]
+      tap_action:
+        action: navigate
+        navigation_path: clock
+      hold_action:
+        action: navigate
+        navigation_path: whatyouwant
+      styles:
+        card:
+          - background-color: transparent
+          - border-width: 0px
+          - width: 100%
+          - padding: 0px
+          - color: black
+          - text-shadow: 1px 1px white
+        grid:
+          - grid-template-areas: "\"i n\""
+          - grid-template-columns: min-content min-content
+        name:
+          - font-size: 6vh
+          - color: white
+          - text-shadow: 2px 2px black
+        icon:
+          - width: 12vh
+          - color: white
+  card: ""
+  message:
+    card:
+      type: weather-forecast
+      entity: "[[[ return variables.var_forecast_entity ]]]"
+      forecast_type: "[[[ return variables.var_forecast_type ]]]"
+      card_mod:
+        style:
+          .: |
+            ha-card { background:  transparent}
+            ha-card.type-weather-forecast {
+              justify-content: start !important;
+            }
+            ha-card.type-weather-forecast>div.content {
+              div {
+                padding-right: 10px;
+              }
+            }
+            ha-card.type-weather-forecast>div.content {
+              display: flex;​
+            }
+          ha-card.type-weather-forecast>div.content: |
+            svg {
+              width: 15vw !important;
+              height: 15vh !important;
+              flex: unset !important;
+              text-shadow: 1px 1px white
+            }
+          ha-card.type-weather-forecast>div.forecast: |
+            div {
+              padding-top: 2vh;
+              font-size: 6vh;
+              color: #0f0f0f;
+              text-shadow: 1px 1px white
+              justify-content: space-evenly !important;
+            }
+          ha-card.type-weather-forecast>div.content>div.info:
+            .: |
+              div.name-state {
+                display: flex;
+                flex-direction: column;
+                text-shadow: 1px 1px white
+              }
+            div.name-state:
+              .: |
+                div.state {
+                  font-size: 10vh !important;
+                  color: #0f0f0f
+                  text-shadow: 1px 1px white
+                   }
+                div.name {
+                  display: none;
+                  max-height: 0px !important;
+                  text-shadow: 1px 1px white
+                }
+            div.temp-attribute: |
+              .temp {
+                font-size: 8vh !important;
+                padding-bottom: 0px;
+                text-shadow: 1px 1px white
+              }
+              .attribute {
+                font-size: 5vh !important;
+                color:  #0f0f0f !important;
+                text-shadow: 1px 1px white
+              }  
+              .temp span {
+                font-size: 7vh !important;
+                margin-left: -1vh;
+              }
+              .templow {
+                padding-top: 0px;
+                color: #0f0f0f !important;
+                text-shadow: 1px 1px white
+                text-align: right;
+              }
