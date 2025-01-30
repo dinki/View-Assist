@@ -22,49 +22,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # Request platform setup
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-
-    async def handle_get_id(call: ServiceCall) -> ServiceResponse:
-        """Handle a device lookup call."""
-        hass: HomeAssistantType = call.hass
-        entity_registry = er.async_get(hass)
-        entity_id = call.data.get('entity_id')
-        
-        entity_entry = entity_registry.async_get(entity_id)
-        if entity_entry and entity_entry.device_id:
-            device_id = entity_entry.device_id
-            return {"device_id": device_id}
-        
-        return {"error":  "Device ID not found"}
-
-        # entity_id = call.data.get('entity_id')
-        # state = hass.states.get(entity_id)
-        # mic_device = state.attributes.get('mic_device')
-        # display_device = state.attributes.get('display_device')
-        # return {"mic_device": mic_device, "display_device": display_device}
-
-    hass.services.async_register(
-        DOMAIN,
-        "get_id",
-        handle_get_id,
-        supports_response=SupportsResponse.ONLY,
-    )
-
-    async def handle_satellite_lookup(call: ServiceCall) -> ServiceResponse:
-        """Handle a satellite lookup call."""
-        device_id = call.data.get("device_id")
-        return {"device_id_received": device_id}
-
-    hass.services.async_register(
-        DOMAIN,
-        "get_satellite",
-        handle_satellite_lookup,
-        supports_response=SupportsResponse.ONLY,
-    )
-
-
 ##################
+# Get Target Satellite
+# Used to determine which VA satellite is being used based on its microphone device
+#
 # Sample usage
-# action: view_assist.get_members
+# action: view_assist.get_target_satellite
 # data:
 #   device_id: 4385828338e48103f63c9f91756321df
 
@@ -106,8 +69,42 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         handle_get_target_satellite,
         supports_response=SupportsResponse.ONLY,
     )
+#
+#########
+
 
 #########
+# Handle Navigation
+# Used to determine how to change the view on the VA device
+#
+# action: view_assist.navigate
+# data:
+#   target_display_device: sensor.viewassist_office_browser_path
+#   target_display_type: browsermod
+#   path: /dashboard-viewassist/weather
+#
+    async def handle_navigate(call: ServiceCall):
+            """Handle a navigate to view call."""
+            target_display_device = call.data.get('target_display_device')
+            target_display_type = call.data.get('target_display_type')
+            path = call.data.get('path')
+
+            if not target_display_device or not target_display_type or not path:
+                # Figure out how to write an error to the log
+                 return
+            
+            if target_display_type == "browsermod" :
+                await hass.services.async_call('browser_mod', 'navigate', {'entity_id': target_display_device, 'path': path})
+
+    hass.services.async_register(
+        DOMAIN,
+        "navigate",
+        handle_navigate
+    )
+
+#
+########
+
 
     return True
     
