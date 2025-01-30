@@ -18,4 +18,4 @@ These user contributions are supported by the contributors only as they are not 
 | View | Description | Github User | Discord User |
 | ---- | ----------- | ----------- | ------------ |
 | Clock with movement | Screensaver-like clock| jeroenterheerdt, randr | jeroenterheerdt,randr |
-| Placeholder | Placeholder | dinki | dinki |
+| Weather Dynamic | Show background image based on current condition| EyeVisionsNL | EyeVisions |
