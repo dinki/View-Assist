@@ -1,10 +1,14 @@
-The weatherdynamic dashboard will change the background based on the weather status.
+---
+title: Weather Dynamic
+---
+The Weather Dynamic view will change the background based on the weather status.
 
-you will need to create an additional folder in the backgrounds folder in the viewassist folder. 
-Call this folder "weather"
+## Installation
+You will need to create an additional folder in the backgrounds folder in the viewassist folder. Call this folder "weather"
 In this folder you place photos or images that correspond to the status of the weather, e.g. rainy.jpg, snowy.jpg, cloudy.jpg.
 
-Now sensibly create a new view-assist dashboard as you normally do. Copy weatherdynamic.yaml into it
+[Create or update a view with the yaml]([https://github.com/dinki/View-Assist/blob/main/View%20Assist%20dashboard%20and%20views/views/community_contributions/clockaltwithmovement.yaml](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/community_contributions/weatherdynamic.yaml))
+
 
 Enter the entities weather daily and weather windspeed (this can be the same)
 
@@ -17,3 +21,8 @@ So if you get a black background, the status does not match the name of the imag
 Rainy can be Rain ed.
 
 Have fun with the dashboard
+## Changelog
+
+| Version | Description     |
+| ------- | --------------- |
+| v 1.0.0 | Initial release |
