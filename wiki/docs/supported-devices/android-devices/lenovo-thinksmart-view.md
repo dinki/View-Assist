@@ -3,7 +3,7 @@ title: Lenovo Thinksmart View
 sidebar_position: 1
 ---
 
-The Lenovo Thinksmart device is a nice Android tablet with a nice sounding speaker at an unbelievably low price (~$40 USD).  https://amzn.to/4bRBnhk
+The Lenovo Thinksmart device is a nice Android tablet with a nice sounding speaker at an unbelievably low price (~$40 USD).  [https://amzn.to/4bRBnhk](https://amzn.to/3PYoER3)
 
 This set up is not for the faint at heart.  You have been warned. 
 
