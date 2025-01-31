@@ -569,3 +569,5 @@ button_card_templates:
     tap_action:
       action: navigate
       navigation_path: weather
+views:
+  - title: Home
