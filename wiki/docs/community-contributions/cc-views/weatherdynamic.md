@@ -1,6 +1,11 @@
 ---
 title: Weather Dynamic
 ---
+# Weather Dynamic
+
+![](./mist.png)
+
+
 The Weather Dynamic view will change the background based on the weather status.
 
 ## Installation
