@@ -25,6 +25,8 @@ So if you get a black background, the status does not match the name of the imag
 "Cloudy": "/local/viewassist/backgrounds/weather/cloudy.jpg",
 Rainy can be Rain ed.
 
+[Sample backgrounds can be found here](https://github.com/dinki/View-Assist/blob/main/View%20Assist%20dashboard%20and%20views/views/community_contributions/weather-pictures.zip)
+
 Have fun with the dashboard
 ## Changelog
 
