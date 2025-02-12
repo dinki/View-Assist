@@ -329,6 +329,24 @@ trigger:
 - platform: time_pattern
   hours: !input rotate_hour
   id: rotateimage
+- alias: Musicplayer playing
+  id: musicplayer_playing
+  value_template: >
+    {% set ent = state_attr(trigger_satellite, 'musicplayer_device') %} {{ ent is not none and is_state(ent, 'playing') }}
+  trigger: template
+  for:
+    hours: 0
+    minutes: 0
+    seconds: 30
+- alias: Musicplayer not playing
+  id: musicplayer_not_playing
+  value_template: >
+    {% set ent = state_attr(trigger_satellite, 'musicplayer_device') %} {{ ent is not none and not is_state(ent, 'playing') }}
+  trigger: template
+  for:
+    hours: 0
+    minutes: 0
+    seconds: 30
 variables:
   satellite: !input satellite
   group_entity: !input group_entity
@@ -654,4 +672,24 @@ action:
           entity_id: "{{ satellite }}"
           background: "{{ random_image['image_path'] }}"
         action: python_script.set_state
+  - conditions:
+      - condition: trigger
+        id:
+          - musicplayer_playing
+    sequence:
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ satellite }}"
+          mode: music
+          title: ""
+   - conditions:
+      - condition: trigger
+        id:
+          - musicplayer_not_playing
+    sequence:
+      - action: python_script.set_state
+        data:
+          entity_id: "{{ satellite }}"
+          mode: normal
+          title: ""
 mode: parallel
