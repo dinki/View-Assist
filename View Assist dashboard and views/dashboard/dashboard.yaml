@@ -539,7 +539,7 @@ button_card_templates:
     icon: mdi:microphone-off
     tap_action:
       action: call-service
-      service: homeassistant.turn_on
+      service: homeassistant.turn_off
       service_data:
         entity_id: '[[[ return variables.var_mic_switch ]]]'
   hold:
