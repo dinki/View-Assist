@@ -47,6 +47,7 @@ The blueprints include:
 - **Integrations:**
   - [SpotcastV5](https://github.com/fondberg/spotcast/tree/dev)
   - [ViewAssist](https://github.com/dinki/view_assist_integration)
+  - [ViewAssist- Music view](https://github.com/dinki/View-Assist/blob/main/View%20Assist%20dashboard%20and%20views/views/music/music.yaml)
 
 - **Entity Naming Convention:**  
   Your media player entity IDs must follow the format:  
