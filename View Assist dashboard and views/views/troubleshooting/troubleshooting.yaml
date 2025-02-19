@@ -110,6 +110,15 @@ variables:
         return `${micswitch}`;
       } catch { return  "";}
     ]]]        
+  var_musicplayer_device: |-
+    [[[
+      try {
+        var musicdevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var musicdevice = hass.states[musicdevice_assistbid].attributes.musicplayer_device;
+        return `${musicdevice}`;
+      } catch { return  "";}
+    ]]]   
   var_mediaplayer_device: |-
     [[[
       try {
@@ -129,6 +138,15 @@ variables:
         return `${mediaplayerstate}`;
       } catch { return  "";}
     ]]]
+  var_display_device: |-
+    [[[
+      try {
+        var displaydevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
+         .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+        var displaydevice = hass.states[displaydevice_assistbid].attributes.display_device;
+        return `${displaydevice}`;
+      } catch { return  "";}
+    ]]] 
   var_title: |-
     [[[ 
       try 
@@ -163,6 +181,7 @@ variables:
       return states[variables.var_assistsat_entity].attributes.data.intent_entities
     } catch { return "" } ]]]
 template:
+  - variable_template
   - body_template
 styles:
   grid:
@@ -188,29 +207,24 @@ styles:
 custom_fields:
   title: Troubleshooting
   message: >-
+
     [[[
 
-    return `assist_group: <b
-    style="font-weight:400;">${variables.assist_group}</b><br />
-    browsermod_bid:  <b
-    style="font-weight:400;">${variables.browser_mod_bid}</b><br />    
-    default_satellite: <b
-    style="font-weight:400;">${variables.default_satellite}</b><br />
-    var_assistsat_entity: <b
-    style="font-weight:400;">${variables.var_assistsat_entity}</b><br />
-    var_assisting: <b style="font-weight:400;">${variables.var_assisting}</b><br
-    /> var_mic_device: <b
-    style="font-weight:400;">${variables.var_mic_device}</b><br /> var_mic_mute:
-    <b style="font-weight:400;">${variables.var_mic_mute}</b><br />
-    var_mic_switch: <b
-    style="font-weight:400;">${variables.var_mic_switch}</b><br />
-    var_mediaplayer_device: <b
-    style="font-weight:400;">${variables.var_mediaplayer_device}</b><br />
-    var_mediaplayer_mute: <b
-    style="font-weight:400;">${variables.var_mediaplayer_mute}</b><br />
-    var_title: <b style="font-weight:400;">${variables.var_title}</b><br />
-    var_message: <b style="font-weight:400;">${variables.var_message}</b><br />
-    var_image: <b style="font-weight:400;">${variables.var_image}</b><br />
-    var_font_size: <b style="font-weight:400;">${variables.var_font_size}</b><br
-    /> var_intent_entities: <b
-    style="font-weight:400;">${variables.var_intent_entities}</b><br /> ` ]]]
+    return ` <br/><br/>entity: <br/><br/>assist_group:
+    <b>${variables.assist_group}</b><br /> browsermod_bid:
+    <b>${variables.browser_mod_bid}</b><br />     default_satellite:
+    <b>${variables.default_satellite}</b><br /> var_assistsat_entity:
+    <b>${variables.var_assistsat_entity}</b><br /> var_assisting:
+    <b>${variables.var_assisting}</b><br/> var_mic_device:
+    <b>${variables.var_mic_device}</b><br /> var_mic_mute:
+    <b>${variables.var_mic_mute}</b><br /> var_mic_switch:
+    <b>${variables.var_mic_switch}</b><br /> var_mediaplayer_device:
+    <b>${variables.var_mediaplayer_device}</b><br /> var_mediaplayer_mute:
+    <b>${variables.var_mediaplayer_mute}</b><br /> var_musicplayer_device:
+    <b>${variables.var_musicplayer_device}</b><br/> var_display_device:
+    <b>${variables.var_display_device}</b></br> var_title:
+    <b>${variables.var_title}</b><br /> var_message:
+    <b>${variables.var_message}</b><br /> var_image:
+    <b>${variables.var_image}</b><br /> var_font_size:
+    <b>${variables.var_font_size}</b><br/> var_intent_entities:
+    <b>${variables.var_intent_entities}</b><br /> ` ]]]
