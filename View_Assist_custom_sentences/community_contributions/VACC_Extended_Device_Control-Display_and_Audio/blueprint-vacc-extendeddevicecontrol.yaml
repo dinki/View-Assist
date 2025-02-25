@@ -82,7 +82,7 @@ blueprint:
           default:
         stt_sensor:
           name: STT Sensor
-          description: The STT sensor for the above View Assist device (e.g. sensor.viewassist_living_room_stt)
+          description: The STT sensor for the above View Assist device (e.g. sensor.viewassist_living_room_stt or sensor.hassmic_living_room_simple_state)
           selector:
             entity:
               filter:
