@@ -129,6 +129,7 @@ soundplayer_device
 
 | Version | Description |
 | ------- | ----------- |
+| v 1.1.1 | Music mode auto on/off fix |
 | v 1.1.0 | Further HassMic Support & input adjustments |
 | v 1.0.3 | Initial HassMic Support & pause option instead of ducking |
 | v 1.0.2 | Updates to blueprint inputs & descriptions |
