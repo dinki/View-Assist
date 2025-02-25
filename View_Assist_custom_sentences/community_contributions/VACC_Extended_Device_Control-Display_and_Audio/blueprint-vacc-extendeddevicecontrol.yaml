@@ -21,7 +21,7 @@ blueprint:
     yaml file.__
 
     (View Assist Community Contributions - Extended Device Control - Display & Audio
-    v 1.1.0)"
+    v 1.1.1)"
   domain: automation
   source_url: https://gist.github.com/Flight-Lab/6ddb640f756791d59b6fd9be93375eee
   author: Flab
