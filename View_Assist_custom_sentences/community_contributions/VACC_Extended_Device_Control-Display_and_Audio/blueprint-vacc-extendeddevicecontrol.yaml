@@ -21,7 +21,7 @@ blueprint:
     yaml file.__
 
     (View Assist Community Contributions - Extended Device Control - Display & Audio
-    v 1.1.0)"
+    v 1.1.1)"
   domain: automation
   source_url: https://gist.github.com/Flight-Lab/6ddb640f756791d59b6fd9be93375eee
   author: Flab
@@ -82,7 +82,7 @@ blueprint:
           default:
         stt_sensor:
           name: STT Sensor
-          description: The STT sensor for the above View Assist device (e.g. sensor.viewassist_living_room_stt)
+          description: The STT sensor for the above View Assist device (e.g. sensor.viewassist_living_room_stt or sensor.hassmic_living_room_simple_state)
           selector:
             entity:
               filter:
@@ -380,15 +380,16 @@ actions:
             attribute: mode
             state: normal
         sequence:
-          - action: browser_mod.navigate
-            data:
-              path: "{{ music }}"
-            target:
-              device_id: "{{device_id(display)}}"
-          - action: python_script.set_state
-            data:
-              entity_id: !input satellite
-              mode: music
+          - parallel:
+              - action: browser_mod.navigate
+                data:
+                  path: "{{ music }}"
+                target:
+                  device_id: "{{ state_attr(display, 'browserID') }}"
+              - action: python_script.set_state
+                data:
+                  entity_id: !input satellite
+                  mode: music
       - conditions:
           - condition: trigger
             id:
@@ -400,15 +401,16 @@ actions:
             attribute: mode
             state: music
         sequence:
-          - action: browser_mod.navigate
-            data:
-              path: "{{ home }}"
-            target:
-              device_id: "{{device_id(display)}}"
-          - action: python_script.set_state
-            data:
-              entity_id: !input satellite
-              mode: normal
+          - parallel:
+              - action: browser_mod.navigate
+                data:
+                  path: "{{ home }}"
+                target:
+                  device_id: "{{ state_attr(display, 'browserID') }}"
+              - action: python_script.set_state
+                data:
+                  entity_id: !input satellite
+                  mode: normal
       - conditions:
           - condition: or
             conditions:
