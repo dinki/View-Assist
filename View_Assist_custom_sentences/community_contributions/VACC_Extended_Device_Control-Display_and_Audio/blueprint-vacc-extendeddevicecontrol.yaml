@@ -384,7 +384,7 @@ actions:
             data:
               path: "{{ music }}"
             target:
-              device_id: "{{device_id(display)}}"
+              device_id: "{{ state_attr(display, 'browserID') }}"
           - action: python_script.set_state
             data:
               entity_id: !input satellite
@@ -404,7 +404,7 @@ actions:
             data:
               path: "{{ home }}"
             target:
-              device_id: "{{device_id(display)}}"
+              device_id: "{{ state_attr(display, 'browserID') }}"
           - action: python_script.set_state
             data:
               entity_id: !input satellite
