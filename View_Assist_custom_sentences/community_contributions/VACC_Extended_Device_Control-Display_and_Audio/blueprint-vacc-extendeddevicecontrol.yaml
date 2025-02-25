@@ -380,15 +380,16 @@ actions:
             attribute: mode
             state: normal
         sequence:
-          - action: browser_mod.navigate
-            data:
-              path: "{{ music }}"
-            target:
-              device_id: "{{ state_attr(display, 'browserID') }}"
-          - action: python_script.set_state
-            data:
-              entity_id: !input satellite
-              mode: music
+          - parallel:
+              - action: browser_mod.navigate
+                data:
+                  path: "{{ music }}"
+                target:
+                  device_id: "{{ state_attr(display, 'browserID') }}"
+              - action: python_script.set_state
+                data:
+                  entity_id: !input satellite
+                  mode: music
       - conditions:
           - condition: trigger
             id:
@@ -400,15 +401,16 @@ actions:
             attribute: mode
             state: music
         sequence:
-          - action: browser_mod.navigate
-            data:
-              path: "{{ home }}"
-            target:
-              device_id: "{{ state_attr(display, 'browserID') }}"
-          - action: python_script.set_state
-            data:
-              entity_id: !input satellite
-              mode: normal
+          - parallel:
+              - action: browser_mod.navigate
+                data:
+                  path: "{{ home }}"
+                target:
+                  device_id: "{{ state_attr(display, 'browserID') }}"
+              - action: python_script.set_state
+                data:
+                  entity_id: !input satellite
+                  mode: normal
       - conditions:
           - condition: or
             conditions:
