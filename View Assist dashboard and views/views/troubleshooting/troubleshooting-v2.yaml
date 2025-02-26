@@ -1,0 +1,37 @@
+type: custom:button-card
+variables:
+  var_group: group.viewassist_satellites
+name: Troubleshooting (v2)
+show_icon: false
+show_state: false
+show_name: true
+custom_fields:
+  default_satellite: |
+    [[[ 
+      try {
+        if (!states[variables.var_group]) {
+          return 'Error: ${variables.var_group} not found';
+        }
+        let assistGroup = states[variables.var_group].attributes.entity_id;
+        if (!assistGroup) {
+          return 'Error: assist_group entity_id not found';
+        }
+        let defaultSatellite = assistGroup.find(eid => states[eid].attributes.type === "view_audio");
+        let browserModId = localStorage.getItem("browser_mod-browser-id");
+        if (!browserModId) {
+          return 'Error: browser_mod-browser-id not found';
+        }
+        let satellite = assistGroup.find(eid => states[eid]?.attributes?.browser_id === browserModId) ?? defaultSatellite;
+        let attrs = Object.entries(states[satellite].attributes);
+        return `<div style="text-align: left;">satellite: ${satellite}<br/>` + 
+               attrs.map(([key, value]) => `${key}: ${value}`).join('<br>') + 
+               `</div>`;
+      } catch (e) { 
+        return 'Error: ' + e.message;
+      }
+    ]]]
+styles:
+  custom_fields:
+    default_satellite:
+      - padding: 10px
+      - text-align: left
