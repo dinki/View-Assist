@@ -1,6 +1,11 @@
 type: custom:button-card
 variables:
-  var_forecast_entity: weather.home
+  var_weather_entity: |-
+    [[[
+      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var weather_entity = hass.states[assistbid].attributes.weather_entity;
+      return `${weather_entity}`
+    ]]]    
   var_forecast_type: daily
   weathercardversion: 1.0.3
 template:
@@ -15,7 +20,7 @@ styles:
     - grid-template-rows: min-content max-content min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background-color: '#059bf1'
+    - background-color: "#059bf1"
     - border-width: 0px
     - border-radius: 0px
   custom_fields:
@@ -26,14 +31,14 @@ styles:
       - text-wrap: wrap
       - justify-content: center
       - align-self: center
-      - padding: '-10%'
+      - padding: "-10%"
 custom_fields:
-  title: ''
+  title: ""
   message:
     card:
       type: weather-forecast
-      entity: '[[[ return variables.var_forecast_entity ]]]'
-      forecast_type: '[[[ return variables.var_forecast_type ]]]'
+      entity: "[[[ return variables.var_weather_entity ]]]"
+      forecast_type: "[[[ return variables.var_forecast_type ]]]"
       card_mod:
         style:
           .: |
