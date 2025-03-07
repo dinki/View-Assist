@@ -57,8 +57,11 @@ custom_fields:
       icon: "[[[ return variables.var_weather_icon ]]]"
       name: "[[[ return variables.var_weather_temperature ]]]"
       tap_action:
-        action: navigate
-        navigation_path: weather
+        action: call-service
+        service: view_assist.navigate
+        service_data:
+          device: "[[[ return variables.var_assistsat_entity ]]]"
+          path: /view-assist/weather
       styles:
         card:
           - background-color: transparent
