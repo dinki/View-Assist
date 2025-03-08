@@ -16,25 +16,13 @@ blueprint:
     cameras:
       name: Camera Dictionary Text
       description: The dictionary of camera names and their associated Home Assistant camera entities
-      default: '{"front":"camera.front_camera","doorbell":"camera.mydoorbellcamera"}'
-    group_entity:
-      name: Group Entity
-      description:
-        The group that holds the list of View Assist satellites(example
-        group.viewassist_satellites)
-      selector:
-        entity:
-          filter:
-            - domain:
-                - group
-          multiple: false
-      default: group.viewassist_satellites
+      default: "{'front':'camera.front_camera','doorbell':'camera.mydoorbellcamera'}"
     view:
       name: Dashboard Camera view
       description:
         The View Assist dashboard view designed to show cameras (example
-        /dashboard-viewassist/camera)
-      default: /dashboard-viewassist/camera
+        /view-assist/camera)
+      default: /view-assist/camera
     hold_mode:
       name: Hold Mode
       description: Set on to keep the page from automatically switching after timeout
@@ -47,44 +35,34 @@ trigger:
 condition: []
 action:
   - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"  
       hold_mode: !input hold_mode
-      view: !input view
       response: !input response
-      group_entity: !input group_entity
       input_cameras: !input cameras
       cameras: "{{ input_cameras | from_json}}"
-      target_satellite_device:
-        "{% for sat in expand(group_entity) %}\n  {% if (device_id(sat.attributes.mic_device)
-        == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id)
-        %}    {{ sat.entity_id }}  {% endif %}{% endfor %}"
-      target_display_device:
-        "{{ device_id(state_attr(target_satellite_device, 'display_device'))}}"
-      target_mediaplayer_device:
-        "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
-      target_satellite_device_type:
-        "{{ state_attr(target_satellite_device, 'type')}}"
   - if:
       - condition: template
         value_template: "{% if hold_mode %}true{%endif%}"
     then:
-      - service: python_script.set_state
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"              
         data:
-          entity_id: "{{ target_satellite_device }}"
           mode: hold
-        enabled: true
   - if:
       - condition: template
         value_template: "{% if trigger.slots.camera in cameras %}true{%endif%}"
-    then:        
-      - service: python_script.set_state
-        data:
-          entity_id: "{{ target_satellite_device }}"
+    then:
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"              
+        data:    
           camera: "{{ cameras[trigger.slots.camera] }}"
-        enabled: true
-  - service: browser_mod.navigate
+  - action: view_assist.navigate
     data:
-      path: "{{ view }}"
-    target:
-      device_id: "{{ target_display_device }}"
+      device: "{{ target_satellite_device }}"
+      path: "{{ view }}"           
   - set_conversation_response: "{{ response }}"
 mode: single
