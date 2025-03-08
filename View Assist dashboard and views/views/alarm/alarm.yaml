@@ -1,64 +1,18 @@
 type: custom:button-card
 variables:
   alarmcardversion: 1.0.1
-  var_alarm_name: |-
+  var_display_timer_name: |-
     [[[
       var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-      var alarm_name = hass.states[assistbid].attributes.alarm_name;
+      var alarm_name = hass.states[assistbid].attributes.display_timer_name;
       try {return `${alarm_name}`;} catch { return  ""}
     ]]]
-  var_difference: >-
-    [[[ 
-      try {
-    var assistbid = localStorage.getItem("view_assist_sensor") ??
-    variables.default_satellite;
-
-    var expires = hass.states[assistbid].attributes.display_timer_expire;
-
-    const expireDate = new Date(expires);
-
-    const currentDate = new Date();
-
-    const diffMs =  expireDate - currentDate;
-
-
-    // Get absolute value for calculations and track if negative
-
-    const isNegative = diffMs < 0;
-
-    const absDiffMs = Math.abs(diffMs);
-
-
-    // Convert to seconds
-
-    const totalSeconds = Math.floor(absDiffMs / 1000);
-
-
-    // Calculate hours, minutes, seconds
-
-    const hours = Math.floor(totalSeconds / 3600);
-
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-    const seconds = totalSeconds % 60;
-
-
-    // Format with leading zeros
-
-    const formattedTime = [
-      String(hours).padStart(2, '0'),
-      String(minutes).padStart(2, '0'),
-      String(seconds).padStart(2, '0')
-    ].join(':');
-
-
-    // Add negative sign only at beginning if needed
-
-    return isNegative ? `-${formattedTime}` : formattedTime;
-
-    } catch { return "00:00:00" }
-
-    ]]]   
+  var_display_timer_expire: |-
+    [[[
+      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var alarm_name = hass.states[assistbid].attributes.display_timer_expire;
+      try {return `${alarm_name}`;} catch { return  ""}
+    ]]]
 template:
   - variable_template
   - body_template
@@ -66,7 +20,7 @@ styles:
   grid:
     - grid-template-areas: |
         "title status"
-        "alarm_name alarm_name"
+        "display_timer_name display_timer_name"
         "time time"
         "snooze dismiss"
         "assist assist"
@@ -76,7 +30,7 @@ styles:
     - background-size: cover
     - background-color: "#24292c"
   custom_fields:
-    alarm_name:
+    display_timer_name:
       - justify-self: center
       - z-index: 1
       - font-size: 10vh
@@ -86,7 +40,7 @@ styles:
     time:
       - justify-self: center
       - z-index: 1
-      - font-size: 45vh
+      - font-size: 35vh
       - font-weight: bold
       - position: grid
       - color: white
@@ -108,8 +62,11 @@ styles:
       - top: 70%
 custom_fields:
   title: " "
-  alarm_name: "[[[ return variables.var_difference ]]]"
-  time: "[[[ return variables.var_current_time ]]]"
+  display_timer_name: "[[[ return variables.var_display_timer_name ]]]"
+  time: |-
+    [[[ 
+      return `<viewassist-countdown expires='${variables.var_display_timer_expire}'></viewassist-countdown>` 
+    ]]]
   snooze:
     card:
       type: custom:button-card
