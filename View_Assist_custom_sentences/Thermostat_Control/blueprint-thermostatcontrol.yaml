@@ -30,15 +30,7 @@ blueprint:
     view:
       name: View
       description: The View Assist dashboard view to use for thermostat device
-      default: "/dashboard-viewassist/thermostat"
-    group_entity: 
-      name: Group Entity
-      description: The group entity that holds the list of ViewAssist devices
-      selector:
-        entity:
-          filter:
-            - domain: group
-      default: "group.viewassist_satellites" 
+      default: "/view-assist/thermostat"
 trigger:
   - platform: conversation
     command: !input increasetemperature
@@ -55,29 +47,22 @@ trigger:
 condition: []
 action:
   - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       amount: "{{ trigger.slots.amount }}"
       thermostat: !input thermostat
-      group_entity: !input group_entity
       view: !input view
-      target_satellite_device: |-
-        {% for sat in expand(group_entity) %}
-          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
-            {{ sat.entity_id }}
-          {% endif %}
-        {% endfor %}
-      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
-  - service: python_script.set_state
-    data:
-      entity_id: "{{ target_satellite_device }}"
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"              
+    data:        
       climate: "{{ thermostat }}"      
   - choose:
       - conditions:
           - condition: trigger
             id:
               - increasetemperature
-            enabled: true
         sequence:
           - if:
             - condition: template
@@ -86,13 +71,12 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   temperature: >-
                     {{ state_attr(thermostat,'temperature')+ amount }} 
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - if:
             - condition: template
               value_template: >-
@@ -100,13 +84,12 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   temperature: >-
                     {{ state_attr(thermostat,'temperature') + amount }} 
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - if:
             - condition: template
               value_template: >-
@@ -114,30 +97,27 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   target_temp_high: >-
                     {{ state_attr(thermostat,'target_temp_high') + amount }}
                   target_temp_low: >-
                     {{ state_attr(thermostat,'target_temp_low') + amount }}
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - set_conversation_response: Thermostat temperature raised {{ amount }} degree
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
-              - data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{target_display_device}}"
-                action: browser_mod.navigate          
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}"             
       - conditions:
           - condition: trigger
             id:
               - decreasetemperature
-            enabled: true
         sequence:
           - if:
             - condition: template
@@ -146,13 +126,12 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   temperature: >-
                     {{ state_attr(thermostat,'temperature') - amount }} 
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - if:
             - condition: template
               value_template: >-
@@ -160,45 +139,40 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   temperature: >-
                     {{ state_attr(thermostat,'temperature') - amount }} 
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - if:
             - condition: template
               value_template: >-
                 {% if states(thermostat) == 'heat_cool' %}
                 true
                 {% endif %}              
-
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   target_temp_high: >-
                     {{ state_attr(thermostat,'target_temp_high') - amount }}
                   target_temp_low: >-
                     {{ state_attr(thermostat,'target_temp_low') - amount }}
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - set_conversation_response: Thermostat temperature lowered {{ amount }} degree
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
-              - data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{target_display_device}}"
-                action: browser_mod.navigate          
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}"             
       - conditions:
           - condition: trigger
             id:
               - settemperature
-            enabled: true
         sequence:
           - if:
             - condition: template
@@ -207,12 +181,11 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   temperature: "{{ amount }}"
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - if:
             - condition: template
               value_template: >-
@@ -220,38 +193,34 @@ action:
                 true
                 {% endif %}              
             then:
-              - data:
+              - action: climate.set_temperature
+                data:
                   temperature: "{{ amount }}"
                 target:
                   entity_id: "{{ thermostat }}"
-                action: climate.set_temperature
-            enabled: true
           - set_conversation_response: Thermostat temperature set to {{ amount }} degrees
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
-              - data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{target_display_device}}"
-                action: browser_mod.navigate
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}"             
       - conditions:
           - condition: trigger
             id:
               - showthermostat
-            enabled: true
         sequence:
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
               - set_conversation_response: Showing thermostat
-              - data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{target_display_device}}"
-                action: browser_mod.navigate
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}"               
             else:
               - set_conversation_response: Sorry.  This device cannot display the thermostat                
     default: []
