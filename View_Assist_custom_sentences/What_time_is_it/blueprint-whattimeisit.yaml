@@ -20,7 +20,7 @@ blueprint:
     view:
       name: Dashboard view
       description: The View Assist dashboard view to use for displaying time and date (example /dashboard-viewassist/clock)
-      default: "/dashboard-viewassist/clock" 
+      default: "/view-assist/clock" 
 alias: View Assist  - What time is it
 description: ""
 trigger:
@@ -32,22 +32,16 @@ trigger:
     command:
       - !input command_prompt_date
     id: date
-    enabled: true
   - platform: conversation
     command:
       - !input command_prompt_dayofweek
     id: dayofweek
-variables:
-  view: !input view
-  target_satellite_device: |-
-    {% for sat in expand('group.viewassist_satellites') %}
-      {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
-        {{ sat.entity_id }}
-      {% endif %}
-    {% endfor %}
-  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
 action:
+  - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      view: !input view
   - choose:
       - conditions:
           - condition: trigger
@@ -60,12 +54,11 @@ action:
                 value_template: >-
                   {% if target_satellite_device_type != 'audio_only' %}true{% else
                   %}false{% endif %}
-            then:
-              - service: browser_mod.navigate
+            then: 
+              - action: view_assist.navigate
                 data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{ target_display_device }}"          
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}" 
       - conditions:
           - condition: trigger
             id:
@@ -78,11 +71,10 @@ action:
                   {% if target_satellite_device_type != 'audio_only' %}true{% else
                   %}false{% endif %}
             then:
-              - service: browser_mod.navigate
+              - action: view_assist.navigate
                 data:
+                  device: "{{ target_satellite_device }}"
                   path: "{{ view }}"
-                target:
-                  device_id: "{{ target_display_device }}" 
       - conditions:
           - condition: trigger
             id:
@@ -95,10 +87,8 @@ action:
                   {% if target_satellite_device_type != 'audio_only' %}true{% else
                   %}false{% endif %}
             then:
-              - service: browser_mod.navigate
+              - action: view_assist.navigate
                 data:
+                  device: "{{ target_satellite_device }}"
                   path: "{{ view }}"
-                target:
-                  device_id: "{{ target_display_device }}" 
-            enabled: true
-    enabled: true
+mode: single
