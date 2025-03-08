@@ -83,15 +83,10 @@ button_card_templates:
             return new Date().toLocaleString(userLocale, options);
           } catch { return ""; }          
         ]]]
-
       var_assistsat_entity: |-
         [[[
-          try {
-            return hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
-            } catch { return  ""}
-          
-        ]]]
+          return localStorage.getItem("view_assist_sensor")
+        ]]]        
       var_assisting: |-
         [[[
           try 
@@ -286,7 +281,7 @@ button_card_templates:
     triggers_update: all
     tap_action:
       action: call-service
-      service: python_script.set_state
+      service: view_assist.set_state
       service_data:
         entity_id: >-
           [[[ try { return variables.var_assistsat_entity } catch { return  ""
@@ -294,7 +289,7 @@ button_card_templates:
         mode: hold
     double_tap_action:
       action: call-service
-      service: python_script.set_state
+      service: view_assist.set_state
       service_data:
         entity_id: >-
           [[[ try { return variables.var_assistsat_entity } catch { return  "" }
@@ -391,7 +386,7 @@ button_card_templates:
                     }
                   }
 
-                  return buttonList;
+                  return buttonList.reverse();
                 }]]]
   assist_template:
     styles:
@@ -548,17 +543,27 @@ button_card_templates:
     icon: mdi:hand-back-left
     tap_action:
       action: call-service
-      service: python_script.set_state
+      service: view_assist.set_state
       service_data:
         mode: normal
         entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+  cycle:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:sync
+    tap_action:
+      action: call-service
+      service: view_assist.set_state
+      service_data:
+        mode: normal
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'        
   dnd:
     type: custom:button-card
     template: icon_template
     icon: mdi:minus-circle
     tap_action:
       action: call-service
-      service: python_script.set_state
+      service: view_assist.set_state
       service_data:
         do_not_disturb: false
         entity_id: '[[[ return variables.var_assistsat_entity ]]]'
@@ -567,7 +572,20 @@ button_card_templates:
     template: icon_template
     icon: mdi:weather-sunny
     tap_action:
-      action: navigate
-      navigation_path: weather
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: /view-assist/weather      
+  home:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:home
+    tap_action:
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: /view-assist/clock     
 views:
   - title: Home
