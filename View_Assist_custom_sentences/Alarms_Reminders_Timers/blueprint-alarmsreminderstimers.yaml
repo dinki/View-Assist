@@ -21,6 +21,10 @@ blueprint:
       name: View
       description: The View Assist dashboard view to use for displaying the notification and buttons to dismiss/snooze
       default: "/view-assist/alarm"
+    info:
+      name: Info
+      description: The View Assist dashboard view to use for displaying information about timers
+      default: "/view-assist/info"      
 trigger:
   - platform: conversation
     command:
@@ -76,12 +80,13 @@ trigger:
 condition: []
 action:
   - variables:
-      target_satellite_device: "{{ target_satellite.target_satellite[0] }}"
-      target_musicplayer_device: '{{ state_attr(target_satellite_device, ''musicplayer_device'')}}'
-      target_mediaplayer_device: '{{ state_attr(target_satellite_device, ''mediaplayer_device'')}}'
-      target_satellite_device_type: '{{ state_attr(target_satellite_device, ''type'')}}'
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device')}}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       alarmsound_path: !input alarmsound_path
       view: !input view
+      info: !input info
       snooze_time_input: !input snooze_time
       snooze_time: "{{ snooze_time_input | int }}"
       use_24hr: !input use_24hr
@@ -100,7 +105,21 @@ action:
               name: "{{ trigger.slots.name }}"
             response_variable: timer_result
           - set_conversation_response: >-
-              Timer set for {{ trigger.slots.when }}
+              {{ trigger.slots.name }} timer set for {{ trigger.slots.when }}
+          - if:
+            - condition: template
+              value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
+            then:            
+              - action: view_assist.set_state
+                target:
+                  entity_id: '{{ target_satellite_device }}'
+                data:
+                  display_timer_expire: "{{ timer_result.timer.expires }}"
+                  display_timer_name: "{{ timer_result.timer.name | capitalize }}"
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}"               
       - conditions:
           - condition: trigger
             id:
@@ -161,20 +180,16 @@ action:
             id:
               - timeremaining
         sequence:
-          - action: view_assist.get_target_satellite
-            data:
-              device_id: "{{ trigger.device_id }}"
-            response_variable: target_satellite
           - action: view_assist.get_timers
             data:
               device_id: "{{ trigger.device_id }}"
             response_variable: timer_info                    
           - variables:
               device_id: "{{ trigger.device_id }}"
-              target_satellite_device: "{{ target_satellite.target_satellite[0] }}"
+              target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
               target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
               timer_id: >-
-                {% set timers = state_attr(target_satellite_device, 'timers') %}
+                {% set timers = timer_info['result'] %}
                 {% set search_name = trigger.slots.name %}
                 {% for timer in timers %}
                   {% if search_name in timer.name or search_name in timer.extra_info.sentence %}
@@ -182,7 +197,7 @@ action:
                   {% endif %}
                 {% endfor %}
               timer: >-
-                {% set timers = state_attr(target_satellite_device, 'timers') %}
+                {% set timers = timer_info['result'] %}
                 {% set search_name = timer_id %}
                 {% set found_timer = {} %}
                 {% for timer in timers %}
@@ -194,30 +209,42 @@ action:
               time_left: "{{ (timer_info['result'] | selectattr('id', '==', timer_id) | list)[0].expiry.text }}"
               time_expires: "{{ (timer_info['result'] | selectattr('id', '==', timer_id) | list)[0].expires }}"
               timer_name: "{{ (timer_info['result'] | selectattr('id', '==', timer_id) | list)[0].name }}"
-          - set_conversation_response: >-
-              You have {{ time_left }} on your {{ trigger.slots.name }} timer
-          - action: view_assist.set_state
-            target:
-              entity_id: '{{ target_satellite_device }}'
-            data:
-              display_timer_expire: "{{ time_expires }}"
-              display_timer_name: "{{ timer_name }}"
-              message_font_size: 3vw 
-          - action: view_assist.navigate
-            data:
-              device: "{{ target_satellite_device }}"
-              path: "{{ view }}"               
-      - conditions:
+          - if:
+              - condition: template
+                value_template: >-
+                  {% if timer_id != '' %}true{% endif %}
+            then:              
+            - set_conversation_response: >-
+                You have {{ time_left }} on your {{ trigger.slots.name }} timer
+            - if:
+              - condition: template
+                value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
+              then:            
+                - action: view_assist.set_state
+                  target:
+                    entity_id: '{{ target_satellite_device }}'
+                  data:
+                    display_timer_expire: "{{ time_expires }}"
+                    display_timer_name: "{{ timer_name }}"
+                - action: view_assist.navigate
+                  data:
+                    device: "{{ target_satellite_device }}"
+                    path: "{{ view }}"               
+          - conditions:
           - condition: trigger
             id:
               - canceltimer
         sequence:
+          - action: view_assist.get_timers
+            data:
+              device_id: "{{ trigger.device_id }}"
+            response_variable: timer_info        
           - variables:
               device_id: "{{ trigger.device_id }}"
               target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"      
               target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
               timer_id: >-
-                {% set timers = state_attr(target_satellite_device, 'timers') %}
+                {% set timers = timer_info['result'] %}
                 {% set search_name = trigger.slots.name %}
                 {% for timer in timers %}
                   {% if search_name in timer.name or search_name in timer.extra_info.sentence %}
@@ -235,31 +262,43 @@ action:
                   timer_id: "{{ timer_id }}"
               - variables:
                   message: >-
-                    Your {{ trigger.slots.name }} timer has been canceled                                    
+                    Your {{ trigger.slots.name }} timer has been canceled
+              - if:
+                  - condition: template
+                    value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
+                then:
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: '{{ target_satellite_device }}'
+                    data:
+                      title: "Timers"
+                      message: "{{ message }}"
+                      message_font_size: 3vw 
+                  - action: view_assist.navigate
+                    data:
+                      device: "{{ target_satellite_device }}"
+                      path: "{{ info }}"                                                         
             else:
               - set_conversation_response: >-
                   I could not find an active timer called {{ trigger.slots.name }}
               - variables:
                   message: >-
-                    I could not find an active timer called {{ trigger.slots.name }}       
-          - if:
-              - condition: template
-                value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
-            then:
-
-            #######  Message is not showing up on the view ????
-
-              - action: view_assist.set_state
-                target:
-                  entity_id: '{{ target_satellite_device }}'
-                data:
-                  title: "Timers"
-                  message: "{{ message }}"
-                  message_font_size: 3vw 
-              - action: view_assist.navigate
-                data:
-                  device: "{{ target_satellite_device }}"
-                  path: "info"                
+                    I could not find an active timer called {{ trigger.slots.name }}
+              - if:
+                  - condition: template
+                    value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
+                then:
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: '{{ target_satellite_device }}'
+                    data:
+                      title: "Timers"
+                      message: "{{ message }}"
+                      message_font_size: 3vw 
+                  - action: view_assist.navigate
+                    data:
+                      device: "{{ target_satellite_device }}"
+                      path: "{{ info }}" 
       - conditions:
           - condition: trigger
             id:
@@ -289,8 +328,7 @@ action:
               {% endif %}
           - if:
             - condition: template
-              value_template: '{% if target_satellite_device_type != ''audio_only'' %}true{%
-                else %}false{% endif %}'
+              value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
             then:
             - variables:
                 message: >-
@@ -314,7 +352,7 @@ action:
             - action: view_assist.navigate
               data:
                 device: "{{ target_satellite_device }}"
-                path: "info"                
+                path: "{{ info }}"                
       - conditions:
           - condition: trigger
             id:
