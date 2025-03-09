@@ -386,7 +386,7 @@ action:
               - snoozealarm
         sequence:
           - variables:
-              new_time: "{{ (now() + timedelta(minutes=snooze_time)).strftime('%H:%M:%S') }}"
+              new_time: "{{ snooze_time }} minutes"
               display_timer_id: "{{ state_attr(target_satellite_device, 'display_timer_id')}}"
           - action: view_assist.set_state
             target:
@@ -399,6 +399,6 @@ action:
           - action: view_assist.snooze_timer
             data:
               timer_id: "{{ display_timer_id }}"
-              time: "{{ snooze_time }} minutes"
+              time: "{{ new_time }}"
           - set_conversation_response: ""
 mode: parallel
