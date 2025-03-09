@@ -88,7 +88,6 @@ condition: []
 action:
   - variables:
       target_satellite_device: "{{ trigger.event.data.entity_id if trigger.event.data.entity_id else view_assist_entity(trigger.device_id) }}"
-  - variables:
       target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device')}}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
@@ -152,12 +151,11 @@ action:
             target:
               entity_id: '{{ target_satellite_device }}'
             data:              
-              alarm: alarming
               mode: hold
               display_timer_name: "{{ alarm_name | capitalize }}"
               display_timer_expire: "{{ alarm_time }}"                          
-              alarm_type: "{{ alarm_type }}"
-              alarm_name: "{{ alarm_name }}"
+              display_timer_type: "{{ alarm_type }}"
+              display_timer_id: "{{ alarm_id }}"
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
@@ -176,19 +174,10 @@ action:
             id:
               - turnoffalarm
         sequence:
-          - variables:
-              target_satellite_device: '{{ trigger.event.data.entity_id }}'
-              target_display_device: >-
-                {{ device_id(state_attr(target_satellite_device,
-                'display_device')) }}
-              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
           - action: view_assist.set_state
             target:
               entity_id: '{{ target_satellite_device }}'
             data:
-              alarm: >-
-                {% if 'snooze' in trigger.event.data.extra_info.sentence|lower %}snooze{% else
-                %}idle{% endif %}
               mode: normal
           - action: view_assist.cancel_sound_alarm
             data:
@@ -397,26 +386,19 @@ action:
               - snoozealarm
         sequence:
           - variables:
-              target_satellite_device: "{{ trigger.event.data.entity_id }}"
-              target_display_device: >-
-                {{ device_id(state_attr(target_satellite_device, 'display_device')) }}
-              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
               new_time: "{{ (now() + timedelta(minutes=snooze_time)).strftime('%H:%M:%S') }}"
+              display_timer_id: "{{ state_attr(target_satellite_device, 'display_timer_id')}}"
           - action: view_assist.set_state
             target:
               entity_id: '{{ target_satellite_device }}'
             data:
-              alarm: rescheduled
               mode: normal
           - action: view_assist.cancel_sound_alarm
             data:
               entity_id: "{{ target_mediaplayer_device }}"
-          - action: view_assist.set_timer
+          - action: view_assist.snooze_timer
             data:
-              device_id: "{{ device_id(trigger.event.data.mic_device) }}"
-              type: "alarm"
-              time: "{{ new_time }}"
-              name: "Snoozed Alarm"
-            response_variable: timer_result               
+              timer_id: "{{ display_timer_id }}"
+              time: "{{ snooze_time }} minutes"
           - set_conversation_response: ""
 mode: parallel
