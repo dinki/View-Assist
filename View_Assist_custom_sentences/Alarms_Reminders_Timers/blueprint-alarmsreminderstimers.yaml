@@ -1,3 +1,6 @@
+# To do:
+# Fix time remaining for translation of '2 hours' to 'two hours' or some sort of correlation for matching
+# When asking to list timers show countdown if only one exists
 blueprint:
   name: View Assist - Alarms Reminders Timers
   description: Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers v 1.0.0)
@@ -28,7 +31,6 @@ blueprint:
 trigger:
   - platform: conversation
     command:
-      - Set [an] alarm for {time}
       - set [a] timer for {when}
       - set [a] {when} timer
       - (set|start) [a|an] {name} timer for {when}      
@@ -39,15 +41,20 @@ trigger:
     id: setalarm
   - platform: conversation
     command:
+      - Set [an] alarm for {when}
       - >-
-        remind me to {reminder} in {when} | set a reminder to {reminder} in
-        {when} | remind me in {when} to {reminder}
-    id: setalarm
+        remind me to {name} in {when} | set a reminder to {name} in
+        {when} | remind me in {when} to {name}
+    id: alarm
   - platform: conversation
     command:
       - (Turn off | cancel | stop | snooze) alarm
     id: turnoffalarm    
-  - event_type: va_timer_finished
+  - event_type: va_timer_warning
+    id: timerwarning
+    trigger: event
+    alias: When viewassist event warning expired fires
+  - event_type: va_timer_expired
     id: ringalarm
     trigger: event
     alias: When viewassist event timer expired fires
@@ -80,7 +87,8 @@ trigger:
 condition: []
 action:
   - variables:
-      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_satellite_device: "{{ trigger.event.data.entity_id if trigger.event.data.entity_id else view_assist_entity(trigger.device_id) }}"
+  - variables:
       target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device')}}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
@@ -95,17 +103,23 @@ action:
           - condition: trigger
             id:
               - timer
+              - alarm
         sequence:
-          - action: view_assist.set_timer
-            metadata: {}
-            data:
+          - variables:
               device_id: "{{ trigger.device_id }}"
               type: "{{ trigger.id }}"
               time: "{{ trigger.slots.when }}"
               name: "{{ trigger.slots.name }}"
+          - action: view_assist.set_timer
+            metadata: {}
+            data:
+              device_id: "{{ device_id }}"
+              type: "{{ type }}"
+              time: "{{ time }}"
+              name: "{{ name }}"
             response_variable: timer_result
           - set_conversation_response: >-
-              {{ trigger.slots.name }} timer set for {{ trigger.slots.when }}
+              {{ name }} {{ type }} set for {{ time }}
           - if:
             - condition: template
               value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
@@ -123,18 +137,16 @@ action:
       - conditions:
           - condition: trigger
             id:
+              - timerwarning
               - ringalarm
         sequence:
           - variables:
-              target_satellite_device: "{{ trigger.event.data.extra_info.view_assist_entity_id }}"
-              target_display_device: "{{ state_attr(target_satellite_device, 'display_device')}}"
-              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
               alarm_type: "{{ trigger.event.data.timer_class }}"
               alarm_name: |-
                 {% if trigger.event.data.name is defined %}
                   {{ trigger.event.data.name }}
                 {% endif %}
-              alarm_id: "{{ trigger.event.data.id }}"
+              alarm_id: "{{ trigger.event.data.timer_id }}"
               alarm_time: "{{ trigger.event.data.expires}}"
           - action: view_assist.set_state
             target:
@@ -142,16 +154,23 @@ action:
             data:              
               alarm: alarming
               mode: hold
+              display_timer_name: "{{ alarm_name | capitalize }}"
+              display_timer_expire: "{{ alarm_time }}"                          
               alarm_type: "{{ alarm_type }}"
               alarm_name: "{{ alarm_name }}"
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
-              path: "{{ view }}"            
-          - action: view_assist.sound_alarm
-            data:
-              entity_id: "{{ target_mediaplayer_device }}"
-              media_file: "{{ alarmsound_path }}"
+              path: "{{ view }}"
+          - if:
+            - condition: template
+              value_template: "{% if trigger.id == 'ringalarm' %}true{% else %}false{% endif %}"
+            then:                          
+              - action: view_assist.sound_alarm
+                data:
+                  entity_id: "{{ target_mediaplayer_device }}"
+                  media_file: "{{ alarmsound_path }}"
+                  max_repeats: 3
       - conditions:
           - condition: trigger
             id:
@@ -168,7 +187,7 @@ action:
               entity_id: '{{ target_satellite_device }}'
             data:
               alarm: >-
-                {% if 'snooze' in trigger.sentence|lower %}snooze{% else
+                {% if 'snooze' in trigger.event.data.extra_info.sentence|lower %}snooze{% else
                 %}idle{% endif %}
               mode: normal
           - action: view_assist.cancel_sound_alarm
@@ -206,9 +225,9 @@ action:
                     {{ found_timer | list }}
                   {% endif %}
                 {% endfor %}
-              time_left: "{{ (timer_info['result'] | selectattr('id', '==', timer_id) | list)[0].expiry.text }}"
-              time_expires: "{{ (timer_info['result'] | selectattr('id', '==', timer_id) | list)[0].expires }}"
-              timer_name: "{{ (timer_info['result'] | selectattr('id', '==', timer_id) | list)[0].name }}"
+              timer_name: "{% set timer_result = timer_info['result'] | selectattr('id', '==', timer_id) | list %}{% if timer_result %}{{ timer_result[0].name | capitalize }}{% else %}{% endif %}"              
+              time_left: "{% set timer_result = timer_info['result'] | selectattr('id', '==', timer_id) | list %}{% if timer_result %}{{ timer_result[0].expiry.text }}{% else %}{% endif %}"
+              time_expires: "{% set timer_result = timer_info['result'] | selectattr('id', '==', timer_id) | list %}{% if timer_result %}{{ timer_result[0].expires }}{% else %}{% endif %}"
           - if:
               - condition: template
                 value_template: >-
@@ -229,8 +248,27 @@ action:
                 - action: view_assist.navigate
                   data:
                     device: "{{ target_satellite_device }}"
-                    path: "{{ view }}"               
-          - conditions:
+                    path: "{{ view }}"  
+            else:
+            - set_conversation_response: No timer called {{ trigger.slots.name }} could be found
+            - if:
+              - condition: template
+                value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
+              then:
+              - variables:
+                  message: "No timer called '{{ trigger.slots.name | capitalize }}' could be found"
+              - action: view_assist.set_state
+                target:
+                  entity_id: '{{ target_satellite_device }}'
+                data:
+                  title: "Timers"
+                  message: "{{ message }}"
+                  message_font_size: 3vw 
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ info }}"                        
+      - conditions:
           - condition: trigger
             id:
               - canceltimer
@@ -321,9 +359,9 @@ action:
               {% if count == 0 %}
               There are no active timers.
               {% else %}
-              There {% if count == 1 %}is one active timer called {% else %}are {{ count }} active timers{% endif %}:
+              There {% if count == 1 %}is one active {{ timer['timer_class'] }} called {% else %}are {{ count }} active timers{% endif %}:
               {% for timer in active_timers %}
-                {{ timer['name'] if timer['name'] else timer['extra_info']['sentence'] }} timer with {{ timer['expiry']['text'] }} remaining,
+                {{ timer['name'] if timer['name'] else timer['extra_info']['sentence'] }} {{ timer['timer_class'] }} with {{ timer['expiry']['text'] }} remaining,
               {% endfor %}
               {% endif %}
           - if:
@@ -337,9 +375,9 @@ action:
                   {% if count == 0 %}
                   There are no active timers.
                   {% else %}
-                  There {% if count == 1 %}is one active timer called {% else %}are {{ count }} active timers{% endif %}:<br /\><br /\>
+                  There {% if count == 1 %}is one active {{ timer['timer_class'] }} called {% else %}are {{ count }} active timers{% endif %}:<br /\><br /\>
                   {% for timer in active_timers %}
-                    {{ timer['name'] | capitalize if timer['name'] else timer['extra_info']['sentence'] | capitalize }} timer with {{ timer['expiry']['text'] }} remaining<br /\><br /\>
+                    {{ timer['name'] | capitalize if timer['name'] else timer['extra_info']['sentence'] | capitalize }} {{ timer['timer_class'] }} with {{ timer['expiry']['text'] }} remaining<br /\><br /\>
                   {% endfor %}
                   {% endif %}                  
             - action: view_assist.set_state
