@@ -1,88 +1,12 @@
 button_card_templates:
   variable_template:
     variables:
-      assist_group: group.viewassist_satellites
-      var_assistsat_entity_font_style: |
-        [[[ 
-          try 
-          {
-            return states[variables.var_assistsat_entity].attributes.font_style;
-          } catch { return  "Roboto"} 
-        ]]]      
-      var_assistsat_entity_weather_entity: |
-        [[[ 
-          try 
-          {
-            return states[variables.var_assistsat_entity].attributes.weather_entity;
-          } catch { return  ""} 
-        ]]]      
-      var_assistsat_entity_status_icons_size: |
-        [[[ 
-          try 
-          {
-            return states[variables.var_assistsat_entity].attributes.status_icons_size;
-          } catch { return  "6vw"} 
-        ]]]
-      var_assistsat_entity_use_24_hour_time: |
-        [[[ 
-          try 
-          {
-            return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
-          } catch { return  false} 
-        ]]]
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.type === "view_audio");
           } catch { return  ""}
-        ]]]    
-      var_current_time: |
-        [[[
-          try
-          {
-            if (variables.var_assistsat_entity_use_24_hour_time) {
-              var options = { hour: "2-digit", minute: "2-digit", hour12: false };
-            } else {
-              var options = { hour: "numeric", minute: "2-digit" };      
-            }
-            
-            let time = new Date().toLocaleTimeString([], options).replace("AM","").replace("PM","").replace("am","").replace("pm","");
-            
-            if(variables.var_assistsat_entity_use_24_hour_time) {
-              time = time.replace("24:", "00:");
-            }
-            return time;
-          } catch { return  ""}
-        ]]]
-      var_current_time_alt: |
-        [[[
-          try
-          {
-            var options = { hour: "numeric", minute: "2-digit" };                 
-            let time = new Date().toLocaleTimeString([], options);
-            if(variables.var_assistsat_entity_use_24_hour_time) {
-              time = time.replace("24:", "00:");
-            }
-            return time;
-          } catch { return  ""}
-        ]]]        
-      var_date_short: |
-        [[[
-          // Automatically detect locale
-          const userLocale = navigator.language || navigator.userLanguage; // Detect browser/system locale
-          const options = { datestyle: 'long', weekday: 'short', month: 'short', day: 'numeric' }
-          try {
-            return new Date().toLocaleString(userLocale, options);
-          } catch { return ""; }
-        ]]]
-      var_date_long: |
-        [[[
-          const userLocale = navigator.language || navigator.userLanguage; // Detect browser/system locale
-          const options = { datestyle: 'long', weekday: 'long', month: 'long', day: 'numeric' }
-          try {
-            return new Date().toLocaleString(userLocale, options);
-          } catch { return ""; }          
-        ]]]
+        ]]]     
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -91,8 +15,7 @@ button_card_templates:
         [[[
           try 
           {
-            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var assist_assistbid = localStorage.getItem("view_assist_sensor");
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
             if (micdevice.includes("_stt")) 
@@ -124,8 +47,7 @@ button_card_templates:
         [[[
           try 
           {
-            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var assist_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
             var assisting_text = "How can I assist?";
@@ -140,8 +62,7 @@ button_card_templates:
       var_assist_prompt: |-
         [[[
           try {
-            var assist_assistbid = hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var assist_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
             return `${assist_prompt}`;
           } catch { return  "";}
@@ -150,8 +71,7 @@ button_card_templates:
         [[[
           try
           {
-            var micdevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
             var mictype = hass.states[micdevice_assistbid].attributes.mic_type;
             if (mictype == "Stream Assist")
@@ -172,8 +92,7 @@ button_card_templates:
       var_mediaplayer_device: |-
         [[[
           try {
-            var mediadevice_assistbid = hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
             return `${mediadevice}`;
           } catch { return  "";}
@@ -181,12 +100,59 @@ button_card_templates:
       var_mediaplayer_mute: |-
         [[[
           try {
-            var mediaplayer_assistbid = hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
             var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
             return `${mediaplayerstate}`;
           } catch { return  "";}
+        ]]]    
+      var_assistsat_time_format: |-
+        [[[ 
+          if (states[variables.var_assistsat_entity].attributes.use_24_hour_time) {
+            return '%H:%M';
+          } else {
+            return '%l:%M';
+          }
+        ]]]
+      var_current_time: |-
+        [[[ 
+          return html`<viewassist-clock server_time=true format='${variables.var_assistsat_time_format}'></viewassist-clock>`;
+        ]]]
+      var_date_short: |-
+        [[[ 
+          return html`<viewassist-clock server_time=true format='%a, %b %e'></viewassist-clock>`;
+        ]]]
+      var_date_long: |-
+        [[[ 
+          return html`<viewassist-clock server_time=true format='%A, %B %d, %Y'></viewassist-clock>`;
+        ]]]          
+      var_assistsat_entity_font_style: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.font_style;
+          } catch { return  "Roboto"} 
+        ]]]     
+      var_assistsat_entity_weather_entity: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.weather_entity;
+          } catch { return  ""} 
+        ]]]      
+      var_assistsat_entity_status_icons_size: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.status_icons_size;
+          } catch { return  "6vw"} 
+        ]]]
+      var_assistsat_entity_use_24_hour_time: |
+        [[[ 
+          try 
+          {
+            return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
+          } catch { return  false} 
         ]]]
       var_title: |-
         [[[ 
@@ -556,7 +522,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'        
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   dnd:
     type: custom:button-card
     template: icon_template
@@ -576,7 +542,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/weather      
+        path: /view-assist/weather
   home:
     type: custom:button-card
     template: icon_template
@@ -586,6 +552,6 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/clock     
+        path: /view-assist/clock
 views:
   - title: Home
