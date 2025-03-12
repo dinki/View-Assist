@@ -1,0 +1,79 @@
+blueprint:
+  name: "View Assist - Play Music with Spotcast - Script"
+  description: |
+
+    # Creates a script which will allow voice requests for Spotcast music playback
+
+    * No changes are required for any of the settings below for this script to work, but
+    your specific LLM integration may need some fine-tuning. To do that, adjust the
+    prompts sent to the LLM.
+    * **Important Requirements:**
+        * You must install the **ViewAssist playmusicwithspotcast** automation.
+        * **DO NOT CHANGE OR REMOVE THE DEFAULT ENGLISH TRIGGER SENTENCES OF AUTOMATION**.
+        * You can make other trigger sentences in automation alongside the default ones in English or another language keeping the structure of the default ones.
+        * You must install the **[SpotcastV5](https://github.com/fondberg/spotcast/tree/dev)** integration.
+
+    * **Make sure to expose the script to Assist after creating it.**  
+
+    * **Make sure to give the script a clear description.** An example can be found below.  
+
+    * It is possible to add additional actions to be performed after the Spotcast
+    play media action. There are several variables available which are described below.  
+
+    ## Example for script description
+
+    `This script controls music playback using natural language commands.
+    It works by constructing a voice command and sending it to the Home Assistant conversation agent
+    via the \`conversation.process\` action. This allows an LLM or Home Assistant to control music playback
+    in different areas of the home.
+
+    The tool takes the following arguments: \`music_type\`, \`music_query\`, and \`area\`.  
+    - \`music_type\` is required and must be one of: "recent", "search", or "transfer".  
+    - \`music_query\` is required for "search" and should contain the song, artist, or genre.  
+    - \`area\` is optional and defines where to play or move the music.  
+
+    Use this tool whenever the user requests to play or transfer music.`
+
+    ## On LLM prompt you can add a description like this adapted to name of your script
+
+    For play music use `script.view_assist_play_music_with_spotcast_script`
+
+    ## Available variables for additional actions
+
+    |Variable|Description|
+    |---|---|
+    |`music_type`|Defines the type of request: `"recent"` (play recent music), `"search"` (search for specific music), or `"transfer"` (move playback to another area).|
+    |`music_query`|The specific music query when `music_type` is "search". Could be a song, artist, or genre.|
+    |`area`|The area(s) where music should be played or transferred. If not defined, the last used area is used.|
+    |`music_request`|The final generated command text that is passed to `conversation.process`. It is dynamically structured based on the inputs.|
+
+    '
+  domain: script
+  input: {}
+
+alias: "View Assist - Play Music with Spotcast - script"
+mode: parallel
+icon: mdi:music
+max_exceeded: silent
+
+sequence:
+  - variables:
+      music_type: "{{ music_type | default('') }}"
+      music_query: "{{ music_query | default('') }}"
+      area: "{{ area | default('') }}"
+      music_request: >-
+        {% if area and music_type == 'recent' %}
+          I want to play music on {{ area }}
+        {% elif area and music_type == 'search' %}
+          play {{ music_query }} on {{ area }}
+        {% elif area and music_type == 'transfer' %}
+          move on {{ area }}
+        {% elif music_type == 'recent' %}
+          I want to play music
+        {% elif music_type == 'search' %}
+          play {{ music_query }}
+        {% endif %}
+  - action: conversation.process
+    data:
+      text: "{{ music_request }}"
+      agent_id: conversation.home_assistant
