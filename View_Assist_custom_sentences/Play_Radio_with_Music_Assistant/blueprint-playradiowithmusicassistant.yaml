@@ -1,6 +1,6 @@
 blueprint:
-  name: View Assist - Play TuneIn with Music Assistant
-  description: Play TuneIn radio stations from your Music Assistant server (View Assist
+  name: View Assist - Play Radio with Music Assistant
+  description: Play radio stations from your Music Assistant server (View Assist
     Play TuneIn with Music Assistant v 1.0.3)
   domain: automation
   input:
@@ -13,16 +13,13 @@ blueprint:
         Playing Big 102)
     station:
       name: Station ID
-      description: The TuneIn radio station to play.  This must be an exact match
+      description: The radio station to play.  This must be an exact match
         (example BIG 102.1 KYBG)
     view_path:
       name: Dashboard Music view
       description: The View Assist dashboard view to use for displaying music information
         (example /dashboard-viewassist/music)
       default: /view-assist/music
-  source_url: https://raw.githubusercontent.com/dinki/View-Assist/main/View_Assist_custom_sentences/Play_TuneIn_with_Music_Assistant/blueprint-playtuneinwithmusicassistant.yaml
-alias: View Assist - Play Music with Music Assistant
-description: ""
 trigger:
 - platform: conversation
   command: !input command
