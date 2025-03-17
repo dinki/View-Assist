@@ -87,7 +87,7 @@ trigger:
 condition: []
 action:
   - variables:
-      target_satellite_device: "{{ trigger.event.data.entity_id if trigger.event.data.entity_id else view_assist_entity(trigger.device_id) }}"
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) if trigger.platform == 'conversation' else trigger.event.data.entity_id }}"
       target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device')}}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
