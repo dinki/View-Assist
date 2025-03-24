@@ -267,7 +267,7 @@ button_card_templates:
       service_data:
         entity_id: '[[[ try { return variables.var_mic_switch } catch { return  "" } ]]]'
     aspect_ratio: 2/1
-    styles:
+    styles:    
       grid:
         - grid-template-areas: |
             "title status"  
@@ -296,7 +296,7 @@ button_card_templates:
             [[[
               return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
             ]]] 
-        - font-weight: 300
+        - font-weight: 300       
       custom_fields:
         title:
           - position: absolute
@@ -315,6 +315,12 @@ button_card_templates:
           - justify-content: right
           - margin-top: '-5%'
           - z-index: 1
+        shader:
+          - position: absolute
+          - top: 0
+          - height: 100%
+          - width: 100%
+          - background-color: rgba(100,100,100,0.2)           
     custom_fields:
       title: '[[[ return variables.var_title ]]]'
       status:
@@ -354,6 +360,7 @@ button_card_templates:
 
                   return buttonList.reverse();
                 }]]]
+      shader: ""                
   assist_template:
     styles:
       card: null
