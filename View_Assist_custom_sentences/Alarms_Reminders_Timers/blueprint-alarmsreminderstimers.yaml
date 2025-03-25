@@ -169,7 +169,6 @@ action:
                 data:
                   entity_id: "{{ target_mediaplayer_device }}"
                   media_file: "{{ alarmsound_path }}"
-                  max_repeats: 3
       - conditions:
           - condition: trigger
             id:
