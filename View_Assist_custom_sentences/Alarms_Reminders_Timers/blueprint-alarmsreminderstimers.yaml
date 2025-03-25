@@ -129,6 +129,7 @@ action:
                 data:
                   display_timer_expire: "{{ timer_result.timer.expires }}"
                   display_timer_name: "{{ timer_result.timer.name | capitalize }}"
+                  display_timer_type: "{{ type }}"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
