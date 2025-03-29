@@ -116,15 +116,15 @@ button_card_templates:
         ]]]
       var_current_time: |-
         [[[ 
-          return html`<viewassist-clock server_time=true format='${variables.var_assistsat_time_format}'></viewassist-clock>`;
+          return `<viewassist-clock server_time=true format='${variables.var_assistsat_time_format}'></viewassist-clock>`;
         ]]]
       var_date_short: |-
         [[[ 
-          return html`<viewassist-clock server_time=true format='%a, %b %e'></viewassist-clock>`;
+          return `<viewassist-clock server_time=true format='%a, %b %e'></viewassist-clock>`;
         ]]]
       var_date_long: |-
         [[[ 
-          return html`<viewassist-clock server_time=true format='%A, %B %d, %Y'></viewassist-clock>`;
+          return `<viewassist-clock server_time=true format='%A, %B %d, %Y'></viewassist-clock>`;
         ]]]          
       var_assistsat_entity_font_style: |
         [[[ 
