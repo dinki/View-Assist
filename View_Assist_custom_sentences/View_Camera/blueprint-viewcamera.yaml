@@ -1,4 +1,4 @@
-# View Assist - View Assist View Camera (v 1.0.0)
+# View Assist - View Assist View Camera (v 1.1.0)
 # Special thanks to Flab for their work on writing this blueprint
 blueprint:
   name: View Assist - View Camera
@@ -15,8 +15,14 @@ blueprint:
       default: Showing {{trigger.slots.camera}} camera
     cameras:
       name: Camera Dictionary Text
-      description: The dictionary of camera names and their associated Home Assistant camera entities
-      default: "{'front':'camera.front_camera','doorbell':'camera.mydoorbellcamera'}"
+      description:
+        The dictionary of camera names and their associated Home Assistant
+        camera entities
+      default:
+        front: camera.front_camera
+        doorbell: camera.mydoorbellcamera
+      selector:
+        object:
     view:
       name: Dashboard Camera view
       description:
@@ -37,18 +43,18 @@ action:
   - variables:
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
-      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"  
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       hold_mode: !input hold_mode
+      view: !input view
       response: !input response
-      input_cameras: !input cameras
-      cameras: "{{ input_cameras | from_json}}"
+      cameras: !input cameras
   - if:
       - condition: template
         value_template: "{% if hold_mode %}true{%endif%}"
     then:
       - action: view_assist.set_state
         target:
-          entity_id: "{{ target_satellite_device }}"              
+          entity_id: "{{ target_satellite_device }}"
         data:
           mode: hold
   - if:
@@ -57,12 +63,12 @@ action:
     then:
       - action: view_assist.set_state
         target:
-          entity_id: "{{ target_satellite_device }}"              
-        data:    
+          entity_id: "{{ target_satellite_device }}"
+        data:
           camera: "{{ cameras[trigger.slots.camera] }}"
   - action: view_assist.navigate
     data:
       device: "{{ target_satellite_device }}"
-      path: "{{ view }}"           
+      path: "{{ view }}"
   - set_conversation_response: "{{ response }}"
 mode: single
