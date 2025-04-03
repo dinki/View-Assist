@@ -35,9 +35,6 @@ blueprint:
       name: Todo List
       description: The Home Assistant todo list to use (example todo.shopping_list)
       default: todo.shopping_list
-  source_url: https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20custom%20sentences/List%20Management/blueprint-listmanagement.yaml
-alias: View Assist - List Management
-description: ""
 trigger:
 - platform: conversation
   command:
@@ -54,10 +51,6 @@ trigger:
   - !input command_show2
   id: list_list
 action:
-- action: view_assist.get_target_satellite
-  data:
-    device_id: "{{ trigger.device_id }}"
-  response_variable: target_satellite
 - variables:
     target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
     target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
@@ -128,12 +121,16 @@ action:
       - condition: template
         value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
       then:
-      - service: python_script.set_state
-        data:
+      - action: view_assist.set_state
+        target:
           entity_id: "{{ target_satellite_device }}"
+        data:
           title: "{{ state_attr(list_entity,'friendly_name') }}"
           message_font_size: 4vw
           list: "{{ list_entity }}"
+      - service: python_script.set_state
+        data:
+          entity_id: "{{ target_satellite_device }}"
       - action: view_assist.navigate    
         data:
           device: "{{ target_satellite_device }}"
