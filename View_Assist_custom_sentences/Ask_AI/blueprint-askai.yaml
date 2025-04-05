@@ -16,15 +16,7 @@ blueprint:
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
-      default: "/dashboard-viewassist/info"
-    group_entity: 
-      name: Group Entity
-      description: The group entity that holds the list of ViewAssist devices
-      selector:
-        entity:
-          filter:
-            - domain: group
-      default: "group.viewassist_satellites" 
+      default: "/view-assist/info"
 trigger:
   - platform: conversation
     command:
@@ -32,19 +24,12 @@ trigger:
 condition: []
 action:
   - variables:
-      group_entity: !input group_entity
       view: !input view
       agent: !input agent
-      target_satellite_device: |-
-        {% for sat in expand(group_entity) %}
-          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
-            {{ sat.entity_id }}
-          {% endif %}
-        {% endfor %}
-      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
-  - service: conversation.process
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+  - action: conversation.process
     metadata: {}
     data:
       agent_id: "{{ agent }}"
@@ -58,9 +43,10 @@ action:
         accurate to the minute. My question is:  {{ trigger.slots.question }} 
     response_variable: ai_answer
   - set_conversation_response: "{{ (ai_answer.response.speech.plain.speech | from_json)['answer'] }} "
-  - service: python_script.set_state
-    data:
-      entity_id: "{{ target_satellite_device }}"
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"              
+    data:     
       title: Ask AI
       message_font_size: 4vw
       message: >-
@@ -71,9 +57,8 @@ action:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
     then:
-      - service: browser_mod.navigate
-        data:
-          path: "{{ view }}"
-        target:
-          device_id: "{{target_display_device}}"
+    - action: view_assist.navigate
+      data:
+        device: "{{ target_satellite_device }}"
+        path: "{{ view }}"     
 mode: single

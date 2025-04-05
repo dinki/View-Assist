@@ -8,40 +8,25 @@ blueprint:
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
-      default: "[please] [how do you| can you] spell {word}"
-    group_entity: 
-      name: Group Entity
-      description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
-      selector:
-        entity:
-          filter:
-            - domain: group
-      default: "group.viewassist_satellites"                  
+      default: "[please] [how do you| can you] spell {word}"                 
     view:
       name: Dashboard view
       description: The View Assist dashboard view to use for displaying text (example /dashboard-viewassist/info)
-      default: "/dashboard-viewassist/info" 
+      default: "/view-assist/info" 
 alias: View Assist - Spell a Word
 description: "Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable"
-variables:
-  command_prompt: !input command_prompt
-  group_entity: !input group_entity
-  view: !input view
-  target_satellite_device: |-
-    {% for sat in expand(group_entity) %}
-      {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
-        {{ sat.entity_id }}
-      {% endif %}
-    {% endfor %}
-  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-  target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-  target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
 trigger:
   - platform: conversation
     command:
       - !input command_prompt
 condition: []
 action:
+  - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      command_prompt: !input command_prompt
+      view: !input view      
   - set_conversation_response: >-
       {{ trigger.slots.word }} is spelled  ... {% set spaced_text = '...
       '.join(trigger.slots.word) %}{{ spaced_text }}
@@ -51,15 +36,15 @@ action:
           {% if target_satellite_device_type != 'audio_only' %}true{% else
           %}false{% endif %}
     then:
-      - service: python_script.set_state
-        data:
+      - action: view_assist.set_state
+        target:
           entity_id: "{{ target_satellite_device }}"
+        data:
           title: ""
           message: <center>{{ trigger.slots.word |upper }}</center>
           message_font_size: 6vw
-      - service: browser_mod.navigate
+      - action: view_assist.navigate
         data:
+          device: "{{ target_satellite_device }}"
           path: "{{ view }}"
-        target:
-          device_id: "{{ target_display_device }}"
 mode: single

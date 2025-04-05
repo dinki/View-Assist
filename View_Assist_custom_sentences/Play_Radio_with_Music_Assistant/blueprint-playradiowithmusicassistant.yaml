@@ -1,0 +1,65 @@
+blueprint:
+  name: View Assist - Play Radio with Music Assistant
+  description: Play radio stations from your Music Assistant server (View Assist
+    Play TuneIn with Music Assistant v 1.0.3)
+  domain: automation
+  input:
+    command:
+      name: Command
+      description: The phrase you want to start your station (example Big 102)
+    announce:
+      name: Announcement
+      description: The phrase you want to hear when you start your station (example
+        Playing Big 102)
+    station:
+      name: Station ID
+      description: The radio station to play.  This must be an exact match
+        (example BIG 102.1 KYBG)
+    view_path:
+      name: Dashboard Music view
+      description: The View Assist dashboard view to use for displaying music information
+        (example /dashboard-viewassist/music)
+      default: /view-assist/music
+trigger:
+- platform: conversation
+  command: !input command
+  id: playtunein
+condition: []
+action:
+- variables:
+    target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+    target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+    target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+    target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
+    target_use_announce: "{{ state_attr(target_satellite_device, 'use_announce') }}"
+    view_path: !input view_path
+    station: !input station
+    announce: !input announce    
+- choose:
+  - conditions:
+    - condition: trigger
+      id:
+      - playtunein
+    sequence:
+    - service: music_assistant.play_media
+      target:
+        entity_id: "{{ target_musicplayer_device }}"
+      data:
+        media_id: "{{ station }}"
+    - if:
+      - condition: template
+        value_template: "{{ target_use_announce is not false }}"
+      then:
+      - set_conversation_response: "{{ announce }}"
+      else:
+      - set_conversation_response: ""
+    - action: view_assist.set_state
+      target:
+        entity_id: "{{ target_satellite_device }}"
+      data:
+        mode: music
+        title: ""
+    - action: view_assist.navigate
+      data:
+        device: "{{ target_satellite_device }}"
+        path: "{{ view_path }}"

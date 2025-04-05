@@ -6,11 +6,19 @@ title: Browser Display Software
 # Installing Browser Display Software
 In order to render your Home Assistant dashboards in full screen on your Android tablet, you'll need an application that will render in a full screen fashion and provides additional functionality to make interacting with the dashboards easier. 
 
-There are currently two applications supported:
-- [Wallpanel](#wallpanel) - Recommended. Free to Use.
+There are currently three applications supported:
+- [Remote Assist Display](#rad) - Recommended.  This project is meant to be an alternative to browser_mod for building dashboards controllable from Home Assistant, specifically for use with ViewAssist
+- [Wallpanel](#wallpanel) - Free to Use.
 - [Fully Kiosk](#fullykiosk) - $10 USD / 7.90 € per device for Plus features like remote management, capturing images from the webcam, etc.
 
 ---
+## Remote Assist Display] {#rad}
+
+This project is meant to be an alternative to browser_mod for building dashboards controllable from Home Assistant, specifically for use with ViewAssist.  As an added bonus, you can skip the BrowserMod installation making this a complete browser and frontend control system for View Assist.
+
+### Installation
+
+See the [install notes here](https://github.com/michelle-avery/remote-assist-display)
 
 ## Wallpanel {#wallpanel}
 Wallpanel is used for full screen display and is comparable to Fully Kiosk. The application is free to use and is the preferred app for View Assist use.

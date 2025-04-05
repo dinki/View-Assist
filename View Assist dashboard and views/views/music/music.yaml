@@ -3,8 +3,7 @@ variables:
   musiccardversion: 1.1.1
   var_musicplayer_device: |-
     [[[
-      var assistbid = hass.states[variables.assist_group].attributes.entity_id
-       .find((eid) => hass.states[eid].attributes.browser_id === localStorage.getItem("browser_mod-browser-id")) ?? variables.default_satellite;
+      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
       var musicdevice = hass.states[assistbid].attributes.musicplayer_device;
       return `${musicdevice}`
     ]]]   

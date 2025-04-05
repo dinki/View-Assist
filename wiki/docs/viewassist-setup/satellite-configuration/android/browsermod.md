@@ -1,9 +1,22 @@
 ---
-title: Browser Mod Integration
+title: Browser Control
 sidebar_position: 4
 ---
 
-# Browser Mod
+In order to control your Home Assistant dashboards you'll need an application that will allow for sending messages to make view changes.  You will want to pick one of the supported applications below:
+
+- [Remote Assist Display](#rad) - Recommended.  This project is meant to be an alternative to browser_mod for building dashboards controllable from Home Assistant, specifically for use with ViewAssist
+- [Browser Mod](#browsermod)
+
+# Remote Assist Display {#rad}
+
+This project is meant to be an alternative to browser_mod for building dashboards controllable from Home Assistant, specifically for use with ViewAssist.  This will allow for both display and control.  You do not need to install Browsermod if you choose to use RAD.
+
+### Installation
+
+See the [install notes here](https://github.com/michelle-avery/remote-assist-display)
+
+# Browser Mod {#browsermod}
 Browser Mod 2 custom integration provides several key pieces of functionality for an Android Tablet Satellite:
   - Provides media player entity for voice response
   - Hides Header and Sidebar from tablet display
