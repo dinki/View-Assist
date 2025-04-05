@@ -3,19 +3,19 @@ variables:
   alarmcardversion: 1.0.1
   var_display_timer_name: |-
     [[[
-      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var assistbid = localStorage.getItem("view_assist_sensor");
       var alarm_name = hass.states[assistbid].attributes.display_timer_name;
       try {return `${alarm_name}`;} catch { return  ""}
     ]]]
   var_display_timer_expire: |-
     [[[
-      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var assistbid = localStorage.getItem("view_assist_sensor");
       var alarm_name = hass.states[assistbid].attributes.display_timer_expire;
       try {return `${alarm_name}`;} catch { return  ""}
     ]]]
   var_display_timer_type: |-
     [[[
-      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var assistbid = localStorage.getItem("view_assist_sensor");
       var alarm_name = hass.states[assistbid].attributes.display_timer_type;
       try {return `${alarm_name}`;} catch { return  ""}
     ]]]
