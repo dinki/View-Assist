@@ -353,7 +353,7 @@ action:
               {% if count == 0 %}
               There are no active timers.
               {% else %}
-              There {% if count == 1 %}is one active {{ timer['timer_class'] }} called {% else %}are {{ count }} active timers{% endif %}:
+              There {% if count == 1 %}is one active {{ active_timers[0]['timer_class'] }} called {% else %}are {{ count }} active timers{% endif %}:
               {% for timer in active_timers %}
                 {{ timer['name'] if timer['name'] else timer['extra_info']['sentence'] }} {{ timer['timer_class'] }} with {{ timer['expiry']['text'] }} remaining,
               {% endfor %}
@@ -369,7 +369,7 @@ action:
                   {% if count == 0 %}
                   There are no active timers.
                   {% else %}
-                  There {% if count == 1 %}is one active {{ timer['timer_class'] }} called {% else %}are {{ count }} active timers{% endif %}:<br /\><br /\>
+                  There {% if count == 1 %}is one active {{ active_timers[0]['timer_class'] }} called {% else %}are {{ count }} active timers{% endif %}:<br /\><br /\>
                   {% for timer in active_timers %}
                     {{ timer['name'] | capitalize if timer['name'] else timer['extra_info']['sentence'] | capitalize }} {{ timer['timer_class'] }} with {{ timer['expiry']['text'] }} remaining<br /\><br /\>
                   {% endfor %}
