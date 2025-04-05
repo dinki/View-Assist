@@ -2,7 +2,7 @@ type: custom:button-card
 variables:
   var_weather_entity: |-
     [[[
-      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var assistbid = localStorage.getItem("view_assist_sensor");
       var weather_entity = hass.states[assistbid].attributes.weather_entity;
       return `${weather_entity}`
     ]]]    
