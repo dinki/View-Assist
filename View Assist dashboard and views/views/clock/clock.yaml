@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  clockcardversion: 1.1.0
+  clockcardversion: 1.2.0
   var_background: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.background} catch {
@@ -15,7 +15,7 @@ styles:
         "time time"
         "date date"
         "assist assist"
-    - grid-template-rows: min-content min-content min-content min-content
+    - grid-template-rows: 15vh 50vh 8vh 20vh
     - grid-template-columns: 1fr 1fr
   card:
     - background: >-
@@ -23,25 +23,27 @@ styles:
         ]]]
     - background-size: cover
   custom_fields:
+    title:
+      - display: grid
     time:
+      - display: grid
       - justify-self: center
       - z-index: 1
       - font-size: 55vh
       - font-weight: bold
-      - position: absolute
       - color: white
     date:
+      - display: grid
       - justify-self: center
       - align-self: center
       - z-index: 1
       - font-size: 15vh
       - width: max-content
-      - position: absolute
-      - top: 70%
     night:
       - position: absolute
-      - min-height: 200%
-      - width: 200%
+      - top: 0
+      - min-height: 100%
+      - width: 100%
       - backdrop-filter: brightness(5%)
       - overflow: hidden
       - display: >-
@@ -66,17 +68,16 @@ custom_fields:
         card:
           - background-color: transparent
           - border-width: 0px
-          - width: 50%
-          - margin-left: 5%
-          - margin-top: "-5%"
+          - width: 100%
+          - top: "-5%"
+          - left: 5%
         grid:
           - grid-template-areas: "\"i n\""
-          - grid-template-rows: min-content min-content
         name:
           - font-size: 15vh
           - color: white
         icon:
-          - width: 25vw
+          - width: 13vh
           - color: white
   time: "[[[ return variables.var_current_time ]]]"
   date: "[[[ return variables.var_date_short ]]]"
