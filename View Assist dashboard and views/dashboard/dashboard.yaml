@@ -1,6 +1,12 @@
 button_card_templates:
   variable_template:
     variables:
+      default_satellite: |-
+        [[[ try {
+          return hass.states[variables.assist_group].attributes.entity_id
+             .find((eid) => hass.states[eid].attributes.type === "view_audio");
+          } catch { return  ""}
+        ]]]     
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -12,28 +18,20 @@ button_card_templates:
             var assist_assistbid = localStorage.getItem("view_assist_sensor");
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
-            var assisting = false;
-            
             if (micdevice.includes("_stt")) 
             {
-              assisting = micstate.includes("start") || micstate.includes("vad");
+              var assisting = micstate.includes("start") || micstate.includes("vad")
             }
             else if (micdevice.includes("assist_satellite"))
             {
-              var assist_in_progress_sensor = micdevice;
-              var assist_in_progress = hass.states[assist_in_progress_sensor].state;
+              var assist_in_progress_sensor =  micdevice
+              var assist_in_progress = hass.states[assist_in_progress_sensor].state
               if (assist_in_progress === "listening" || assist_in_progress === "processing") {
                   assisting = true; 
+              } else {
+                  assisting = false;
               }              
             }
-            else
-            {
-              // HassMic detection from older version
-              assisting = micstate.includes("stt-listening") || 
-                         micstate.includes("intent-processing") || 
-                         micstate.includes("tts-speaking");
-            }
-            
             return `${assisting}`;
           } catch { return  ""}
         ]]]
@@ -41,7 +39,7 @@ button_card_templates:
         [[[
           try 
           {
-            var assist_assistbid = localStorage.getItem("view_assist_sensor");
+            var assist_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
             var assisting_text = "How can I assist?";
@@ -58,7 +56,7 @@ button_card_templates:
       var_assist_prompt: |-
         [[[
           try {
-            var assist_assistbid = localStorage.getItem("view_assist_sensor");
+            var assist_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
             return `${assist_prompt}`;
           } catch { return  "";}
@@ -67,7 +65,7 @@ button_card_templates:
         [[[
           try
           {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor");
+            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
             var mictype = hass.states[micdevice_assistbid].attributes.mic_type;
             if (mictype == "Stream Assist")
@@ -88,7 +86,7 @@ button_card_templates:
       var_mediaplayer_device: |-
         [[[
           try {
-            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor");
+            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
             return `${mediadevice}`;
           } catch { return  "";}
@@ -96,7 +94,7 @@ button_card_templates:
       var_mediaplayer_mute: |-
         [[[
           try {
-            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor");
+            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
             var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
             var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
             return `${mediaplayerstate}`;
@@ -104,7 +102,7 @@ button_card_templates:
         ]]]    
       var_assistsat_time_format: |-
         [[[ 
-          if (states[variables.var_assistsat_entity].attributes.use_24_hour_time) {
+          if (variables.var_assistsat_entity_use_24_hour_time) {
             return '%H:%M';
           } else {
             return '%l:%M';
@@ -269,7 +267,7 @@ button_card_templates:
             "title status"  
             "message message"
             "assist assist"        
-        - grid-template-rows: min-content 4fr min-content
+        - grid-template-rows: min-content 30vh min-content
         - grid-template-columns: 1fr 1fr
         - row-gap: .5rem
       card:
@@ -316,7 +314,7 @@ button_card_templates:
           - top: 0
           - height: 100%
           - width: 100%
-          - background-color: rgba(100,100,100,0.1)
+          - background-color: rgba(0,0,0,0.15)
     custom_fields:
       title: '[[[ return variables.var_title ]]]'
       status:
@@ -478,15 +476,15 @@ button_card_templates:
     aspect_ratio: 1/1
     color_type: card
     show_name: false
-    size: 100%
+    size: 90%
     padding: 0px
     styles:
       card:
         - background-color: transparent
         - border-width: 0px
       icon:
+        - display: grid
         - color: white
-        - height: 100%
   mediaplayer:
     type: custom:button-card
     template: icon_template
