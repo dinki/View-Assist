@@ -34,6 +34,3 @@ Download and install the app via the [Google Play Store](https://play.google.com
 
   * Turn on 'Enable Remote Administration'   This is needed to expose FK media player to Music Assistant addon
  
-### Browser Mod Requirement
-
-Using this display type does come with an additional requirement for device identification.  See the [Browser Mod installation page](./browser-mod.md) for more information.

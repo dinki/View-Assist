@@ -52,7 +52,3 @@ It may be useful to create a unique HA user for your WallPanel devices. This all
 :::
 
 Special thanks to @mngarchow for the written instructions and continued support
-
-### Browser Mod Requirement
-
-Using this display type does come with an additional requirement for device identification.  See the [Browser Mod installation page](./browser-mod.md) for more information.

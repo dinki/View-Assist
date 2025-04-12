@@ -7,9 +7,10 @@ title: "Step Three: Display Devices"
 In order to render your Home Assistant dashboards in full screen on your Android tablet, you'll need an application that will render in a full screen fashion and provides additional functionality to make interacting with the dashboards easier. 
 
 There are currently three applications supported.  **You need to pick ONE of the following:**
-- [Remote Assist Display](./remote-assist-display.md) - Recommended.  This project provides a full screen browser with its own ability to control the views shown.  This is control is an alternative to the Browser Mod control used on the other devices.  Browser Mod is NOT required when using Remote Assist Display
-- [Wallpanel + BrowserMod](./wallpanel.md) - A free Android app that provides a full screen browser and additional features.  **Requires BrowserMod**
-- [Fully Kiosk + BrowserMod](./fully-kiosk.md) - A full featured paid Android app that provides additional features not offered by Wallpanel. Features like remote management, capturing images from the webcam and more.  **Requires BrowserMod**
+
+- [Wallpanel](./wallpanel.md) - RECOMMENDED  A free Android app that provides a full screen browser and additional features.  
+- [Fully Kiosk](./fully-kiosk.md) - A full featured paid Android app that provides additional features not offered by Wallpanel. Features like remote management, capturing images from the webcam and more.  
+- [Remote Assist Display](./remote-assist-display.md) - This project provides a full screen browser with its own ability to control the views shown.  This is control is an alternative to the Browser Mod control used on the other devices.  Browser Mod is NOT required when using Remote Assist Display
 
 # Installing the Lovelace Prerequisites
 
