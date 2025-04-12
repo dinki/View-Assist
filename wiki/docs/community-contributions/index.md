@@ -1,6 +1,6 @@
 ---
 title: "Community Contributions"
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 View Assist was built with the goal of allowing custom expansion through custom automation, scripts and views.  We have been fortunate to be adopted by many users and those users have brought their creations to life and are willing to share those with others.  This section contains those contributions.

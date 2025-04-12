@@ -1,6 +1,6 @@
 ---
 title: "Wishlist / Requests"
-sidebar_position: 8
+sidebar_position: 9
 ---
 This page will serve as a wishlist for add on features.  Feel free to add to the [discussion for items you might like to add](https://github.com/dinki/View-Assist/discussions/19) to the list.  Feel free to use this for ideas where you can help.  Once you have something please create an issue and post your work for review.  I will be turning on the ability to make PRs soon.
 
@@ -39,12 +39,11 @@ Items with asterisks are either fully or partially written but have not been rel
 * Ability to put device in do not disturb mode and set other modes by voice : [Device Functions](extend-functionality/sentences/device-functions)
 * Dim screen for sleeping but make clock still visible : [Device Functions](extend-functionality/sentences/device-functions) set mode to night
 * Show [Viewname] : [Device Functions](extend-functionality/sentences/device-functions) set mode to night
-* Show devices that change when using built in HA commands : [Control Automation](viewassist-setup/homeassistant-configuration/viewassist-configuration/control-automations)
 * Show sports scores when asked  : [Get Sports Scores](extend-functionality/sentences/get-sports-scores)
 * Volume controls by voice : [Device Functions](extend-functionality/sentences/device-functions)
 * Show security cameras : [View Cameras](extend-functionality/sentences/view-camera)
 * Play Spotify (Music Assistant) : [Play Music with Music Assistant](extend-functionality/sentences/play-music-with-ma)
-* Play Tunein Radio stations (Music Assistant) : [Play TuneIn with Music Assistant](extend-functionality/sentences/play-tunein-with-ma)
+* Play Tunein Radio stations (Music Assistant) : [Play Radio with Music Assistant](extend-functionality/sentences/play-radio-with-ma.md)
 * Resume music playback after announcements : Use Snapcast or FullyKiosk media player as musicplayer device until BrowserMod is fixed to honor announce 
 * Show traffic conditions and travel time for commute : [Travel Times by Waze](extend-functionality/sentences/travel-times-by-waze)
 * Set thermostat by saying I'm cold/I'm hot  : [Thermostat Control](extend-functionality/sentences/thermostat-control)
@@ -54,5 +53,5 @@ Items with asterisks are either fully or partially written but have not been rel
 * Set alarm/reminders on individual devices : [Alarms Reminders Timers](extend-functionality/sentences/alarms-reminders-timers)
 * Timers TIMERS Timers!!! * : [Alarms Reminders Timers](extend-functionality/sentences/alarms-reminders-timers)
 * Sound machine for sleep/noise cancelling: [Sound Machine](extend-functionality/sentences/sound-machine.md)
-* Photo frame [photodash](https://github.com/apop880/photodash) [ha Google photos](https://github.com/Daanoz/ha-google-photos) [random](https://picsum.photos/) [ha slideshow](https://github.com/garthschoeddert/HASlideshow-lfix) [immich](https://github.com/outadoc/immich-home-assistant) [lovelace-wallpanel](https://github.com/j-a-n/lovelace-wallpanel) : [Control Automation](viewassist-setup/homeassistant-configuration/viewassist-configuration/control-automations) as part of rotating background
+
 
