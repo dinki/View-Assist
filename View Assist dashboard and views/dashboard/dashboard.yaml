@@ -233,6 +233,49 @@ button_card_templates:
             return `${weather_icon}`;
           } catch { return  ""} 
         ]]]
+      var_menu_enabled: |-
+        [[[
+          try {
+            return hass.states[variables.var_assistsat_entity].attributes.enable_menu;
+          } catch { return false; }
+        ]]]
+      var_menu_active: |-
+        [[[
+          try {
+            return hass.states[variables.var_assistsat_entity].attributes.menu_active;
+          } catch { return false; }
+        ]]]
+      var_menu_items: |-
+        [[[
+          try {
+            return hass.states[variables.var_assistsat_entity].attributes.menu_items;
+          } catch { return []; }
+        ]]]
+      var_current_path: |-
+        [[[
+          try {
+            // Get the current path - either from entity attribute or from URL
+            let currentPath = "";
+            if (hass.states[variables.var_assistsat_entity].attributes.current_path) {
+              currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
+            } else if (window.location.pathname) {
+              currentPath = window.location.pathname;
+            }
+            return currentPath;
+          } catch { return ""; }
+        ]]]
+      var_current_view: |-
+        [[[
+          try {
+            // Extract view name from path
+            const currentPath = variables.var_current_path;
+            const pathMatch = currentPath.match(/\/view-assist\/([^\/]+)/);
+            if (pathMatch && pathMatch[1]) {
+              return pathMatch[1];
+            }
+            return "";
+          } catch { return ""; }
+        ]]]
   body_template:
     template: assist_template
     show_state: false
@@ -335,25 +378,185 @@ button_card_templates:
                   ]]]                
               cards: |-
                 [[[{
+                  // Initialize an empty button list
                   const buttonList = [];
-                  let list;
-
+                  
                   try {
-                    list = hass.states[variables.var_assistsat_entity].attributes.status_icons;
-                  } catch (error) {
-                    list = ""; // Set list to an empty string if an error occurs
-                  }
-
-                  if (list) {
-                    for (let i = 0; i < list.length; i++) {
-                      buttonList.push({
-                        type: "custom:button-card",
-                        template: list[i]
+                    // Get current view for filtering
+                    const currentView = variables.var_current_view || "";
+                    
+                    // Get all available menu data
+                    const vaEntity = variables.var_assistsat_entity;
+                    const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
+                    const menuItems = hass.states[vaEntity].attributes.menu_items || [];
+                    const menuActive = hass.states[vaEntity].attributes.menu_active || false;
+                    
+                    // Create a map to track which items have been added
+                    // to prevent duplicates
+                    const addedItems = new Set();
+                    
+                    // Create a mapping between template names and their target views
+                    const templateViewMap = {
+                      "home": "clock", // Template "home" navigates to "clock" view
+                      // Add more mappings as needed
+                    };
+                    
+                    // Helper function to get a unique key for an item
+                    function getItemKey(item) {
+                      if (!item) return null;
+                      
+                      if (item.includes(':')) {
+                        const parts = item.split('|');
+                        const typeAndTarget = parts[0];
+                        return typeAndTarget; // e.g. "view:weather"
+                      }
+                      return item; // e.g. "weather"
+                    }
+                    
+                    // Helper function to check if an item navigates to the current view
+                    function navigatesToCurrentView(itemConfig) {
+                      // Skip current view check for system icons
+                      if (["menu", "mic", "mediaplayer", "dnd", "hold", "cycle"].includes(itemConfig.template)) {
+                        return false;
+                      }
+                      
+                      // For dynamic menu items
+                      if (itemConfig.variables?.menu_item) {
+                        const item = itemConfig.variables.menu_item;
+                        if (item.includes(':')) {
+                          const parts = item.split('|');
+                          const typeAndTarget = parts[0];
+                          const [type, target] = typeAndTarget.split(':');
+                          
+                          // Only check view type items
+                          if (type === 'view') {
+                            const viewName = target.includes('/') ? 
+                              target.split('/').pop() : target;
+                            return viewName === currentView;
+                          }
+                        }
+                        return false;
+                      }
+                      
+                      // For standard templates
+                      if (itemConfig.template) {
+                        // Direct match with current view
+                        if (itemConfig.template === currentView) {
+                          return true;
+                        }
+                        
+                        // Check template mapping if available
+                        if (templateViewMap[itemConfig.template] === currentView) {
+                          return true;
+                        }
+                      }
+                      
+                      return false;
+                    }
+                    
+                    // Helper function to add an item if not already added
+                    function addItemIfNotDuplicate(itemConfig) {
+                      // Skip if this navigates to the current view
+                      if (navigatesToCurrentView(itemConfig)) {
+                        return false;
+                      }
+                      
+                      const key = getItemKey(itemConfig.variables?.menu_item || itemConfig.template);
+                      if (!key || addedItems.has(key)) return false;
+                      
+                      addedItems.add(key);
+                      buttonList.push(itemConfig);
+                      return true;
+                    }
+                    
+                    // Process menu items and create appropriate buttons
+                    if (menuActive) {
+                      // Add dynamic navigation menu items first
+                      menuItems.forEach(item => {
+                        if (item.includes(':')) {
+                          // Parse the structured menu item format
+                          const parts = item.split('|');
+                          const typeAndTarget = parts[0];
+                          const [type, target] = typeAndTarget.split(':');
+                          
+                          // Skip items that point to current view
+                          if (type === 'view') {
+                            const viewName = target.includes('/') ? 
+                              target.split('/').pop() : target;
+                            if (viewName === currentView) {
+                              return;
+                            }
+                          }
+                          
+                          // Add the dynamic menu button
+                          addItemIfNotDuplicate({
+                            type: "custom:button-card",
+                            template: `dynamic_${type}_item`,
+                            variables: {
+                              menu_item: item,
+                              entity_id: vaEntity
+                            }
+                          });
+                        }
+                      });
+                      
+                      // Add standard navigation items (if not in visible icons)
+                      menuItems.forEach(item => {
+                        if (!item.includes(':')) {
+                          // Skip if it's the current view
+                          if (item === currentView) {
+                            return;
+                          }
+                          
+                          // Add standard template button
+                          addItemIfNotDuplicate({
+                            type: "custom:button-card",
+                            template: item
+                          });
+                        }
                       });
                     }
+                    
+                    // Add system/status icons
+                    statusIcons.forEach(icon => {
+                      // Check if this is a structured item
+                      if (icon.includes(':')) {
+                        // Parse the structured format
+                        const parts = icon.split('|');
+                        const typeAndTarget = parts[0];
+                        const [type, target] = typeAndTarget.split(':');
+                        
+                        // Add the dynamic menu button if not already added
+                        addItemIfNotDuplicate({
+                          type: "custom:button-card",
+                          template: `dynamic_${type}_item`,
+                          variables: {
+                            menu_item: icon,
+                            entity_id: vaEntity
+                          }
+                        });
+                      } else {
+                        // Standard template
+                        addItemIfNotDuplicate({
+                          type: "custom:button-card",
+                          template: icon
+                        });
+                      }
+                    });
+                    
+                    // Add menu button if enabled and show_menu_button is true
+                    if (hass.states[vaEntity].attributes.enable_menu && 
+                        hass.states[vaEntity].attributes.show_menu_button) {
+                      addItemIfNotDuplicate({
+                        type: "custom:button-card",
+                        template: "menu"
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Error processing status icons:", error);
                   }
-
-                  return buttonList.reverse();
+                  
+                  return buttonList;
                 }]]]
       shader: ''
   assist_template:
@@ -486,6 +689,65 @@ button_card_templates:
       icon:
         - display: grid
         - color: white
+  dynamic_view_item:
+    template: icon_template
+    icon: |-
+      [[[
+        // Extract icon from menu item string
+        const parts = variables.menu_item.split('|');
+        const icon = parts.length > 1 ? parts[1] : 'view-dashboard';
+        return `mdi:${icon}`;
+      ]]]
+    tap_action:
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.entity_id; ]]]'
+        path: |-
+          [[[
+            // Extract target from menu item string
+            const parts = variables.menu_item.split('|');
+            const typeAndTarget = parts[0];
+            const target = typeAndTarget.split(':')[1];
+            return target.startsWith('/') ? target : `/view-assist/${target}`;
+          ]]]
+  dynamic_entity_item:
+    template: icon_template
+    icon: |-
+      [[[
+        // Extract icon from menu item string
+        const parts = variables.menu_item.split('|');
+        const icon = parts.length > 1 ? parts[1] : 'toggle-switch';
+        return `mdi:${icon}`;
+      ]]]
+    tap_action:
+      action: toggle
+      entity: |-
+        [[[
+          // Extract target entity from menu item string
+          const parts = variables.menu_item.split('|');
+          const typeAndTarget = parts[0];
+          return typeAndTarget.split(':')[1];
+        ]]]
+  dynamic_service_item:
+    template: icon_template
+    icon: |-
+      [[[
+        // Extract icon from menu item string
+        const parts = variables.menu_item.split('|');
+        const icon = parts.length > 1 ? parts[1] : 'cog';
+        return `mdi:${icon}`;
+      ]]]
+    tap_action:
+      action: call-service
+      service: |-
+        [[[
+          // Extract service from menu item string
+          const parts = variables.menu_item.split('|');
+          const typeAndTarget = parts[0];
+          return typeAndTarget.split(':')[1];
+        ]]]
+      service_data: {}
   mediaplayer:
     type: custom:button-card
     template: icon_template
@@ -555,5 +817,17 @@ button_card_templates:
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
         path: /view-assist/clock
+  menu:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:menu
+    tap_action:
+      action: call-service
+      service: view_assist.toggle_menu
+      service_data:
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        show: >-
+          [[[ return
+          !states[variables.var_assistsat_entity].attributes.menu_active ]]]
 views:
   - title: Home
