@@ -305,9 +305,10 @@ button_card_templates:
         status:
           - position: absolute
           - justify-self: end
-          - align-self: start
+          - align-self: end
           - justify-content: right
-          - margin-top: '-5%'
+          - top: 0vh
+          - right: 0vw
           - z-index: 1
         shader:
           - position: absolute
