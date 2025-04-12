@@ -1,0 +1,321 @@
+---
+substitutions:
+  name: "m5stack-atom-echo"
+  friendlyname: "M5Stack Atom Echo"
+  api_key: "encryption key"
+  HA_mediaplayer: "media_player.bedroom"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendlyname}
+  min_version: 2024.9.0
+  name_add_mac_suffix: true
+
+esp32:
+  board: m5stack-atom
+  framework:
+    type: esp-idf
+
+logger:
+api:
+  encryption:
+    key: ${api_key}
+
+ota:
+  - platform: esphome
+    id: ota_esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 10.1.0.46
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 10.1.0.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+
+button:
+  - platform: safe_mode
+    id: button_safe_mode
+    name: Safe Mode Boot
+
+  - platform: factory_reset
+    id: factory_reset_btn
+    name: Factory reset
+
+i2s_audio:
+  - id: i2s_audio_bus
+    i2s_lrclk_pin: GPIO33
+    i2s_bclk_pin: GPIO19
+
+microphone:
+  - platform: i2s_audio
+    id: echo_microphone
+    i2s_din_pin: GPIO23
+    adc_type: external
+    pdm: true
+
+text_sensor:
+  - platform: template
+    name: STT
+    id: stt
+  - platform: template
+    name: Intent
+    id: intent
+    icon: "mdi:microphone"
+    update_interval: never
+
+voice_assistant:
+  id: va
+  microphone: echo_microphone
+  noise_suppression_level: 2
+  auto_gain: 31dBFS
+  volume_multiplier: 2.0
+  vad_threshold: 3
+  on_listening:
+    - text_sensor.template.publish:
+        id: stt
+        state: "start"
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        effect: "Slow Pulse"
+  on_stt_vad_end:
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        effect: "Fast Pulse"
+  on_stt_end:
+    - lambda: |-
+        id(intent).publish_state(x);
+  on_tts_start:
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        brightness: 100%
+        effect: none
+  on_tts_end:
+    - homeassistant.service:
+        service: media_player.play_media
+        data:
+          entity_id: ${HA_mediaplayer}
+          media_content_id: !lambda 'return x;'
+          media_content_type: music
+          announce: "true"
+  on_end:
+    - text_sensor.template.publish:
+        id: stt
+        state: "end"
+    - delay: 100ms
+    - script.execute: reset_led
+  on_error:
+    - light.turn_on:
+        id: led
+        red: 100%
+        green: 0%
+        blue: 0%
+        brightness: 100%
+        effect: none
+    - delay: 1s
+    - script.execute: reset_led
+  on_client_connected:
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - voice_assistant.start_continuous:
+          - script.execute: reset_led
+  on_client_disconnected:
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - voice_assistant.stop:
+          - light.turn_off: led
+  on_timer_finished:
+    - voice_assistant.stop:
+    - switch.turn_on: timer_ringing
+    - wait_until:
+        not:
+          microphone.is_capturing:
+    - light.turn_on:
+        id: led
+        red: 0%
+        green: 100%
+        blue: 0%
+        brightness: 100%
+        effect: "Fast Pulse"
+    - while:
+        condition:
+          switch.is_on: timer_ringing
+        then:
+          - delay: 1s
+    - light.turn_off: led
+    - switch.turn_off: timer_ringing
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - voice_assistant.start_continuous:
+          - script.execute: reset_led
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO39
+      inverted: true
+    name: Button
+    disabled_by_default: true
+    entity_category: diagnostic
+    id: echo_button
+    on_multi_click:
+      - timing:
+          - ON for at least 50ms
+          - OFF for at least 50ms
+        then:
+          - if:
+              condition:
+                switch.is_on: timer_ringing
+              then:
+                - switch.turn_off: timer_ringing
+              else:
+                - if:
+                    condition:
+                      switch.is_off: use_wake_word
+                    then:
+                      - if:
+                          condition: voice_assistant.is_running
+                          then:
+                            - voice_assistant.stop:
+                            - script.execute: reset_led
+                          else:
+                            - voice_assistant.start:
+                    else:
+                      - voice_assistant.stop
+                      - delay: 1s
+                      - script.execute: reset_led
+                      - script.wait: reset_led
+                      - voice_assistant.start_continuous:
+      - timing:
+          - ON for at least 10s
+        then:
+          - button.press: factory_reset_btn
+
+light:
+  - platform: esp32_rmt_led_strip
+    id: led
+    name: None
+    disabled_by_default: true
+    entity_category: config
+    pin: GPIO27
+    default_transition_length: 0s
+    chipset: SK6812
+    num_leds: 1
+    rgb_order: grb
+    rmt_channel: 0
+    effects:
+      - pulse:
+          name: "Slow Pulse"
+          transition_length: 250ms
+          update_interval: 250ms
+          min_brightness: 50%
+          max_brightness: 100%
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 100ms
+          update_interval: 100ms
+          min_brightness: 50%
+          max_brightness: 100%
+
+script:
+  - id: reset_led
+    then:
+      - if:
+          condition:
+            - switch.is_on: use_wake_word
+            - switch.is_on: use_listen_light
+          then:
+            - light.turn_on:
+                id: led
+                red: 100%
+                green: 89%
+                blue: 71%
+                brightness: 60%
+                effect: none
+          else:
+            - light.turn_off: led
+
+switch:
+  - platform: template
+    name: Use wake word
+    id: use_wake_word
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    on_turn_on:
+      - lambda: id(va).set_use_wake_word(true);
+      - if:
+          condition:
+            not:
+              - voice_assistant.is_running
+          then:
+            - voice_assistant.start_continuous
+      - script.execute: reset_led
+      - switch.turn_on: mic
+    on_turn_off:
+      - voice_assistant.stop
+      - lambda: id(va).set_use_wake_word(false);
+      - script.execute: reset_led
+      - switch.turn_off: mic
+  - platform: template
+    name: MIC
+    id: mic
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    on_turn_on:
+      - switch.turn_on: use_wake_word  # Sync with the main switch
+    on_turn_off:
+      - switch.turn_off: use_wake_word
+  - platform: template
+    name: Use listen light
+    id: use_listen_light
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    on_turn_on:
+      - script.execute: reset_led
+    on_turn_off:
+      - script.execute: reset_led
+  - platform: template
+    id: timer_ringing
+    optimistic: true
+    internal: true
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 15min
+      - switch.turn_off: timer_ringing
+
+external_components:
+  - source: github://pr#5230
+    components:
+      - esp_adf
+    refresh: 0s
+  - source: github://jesserockz/esphome-components
+    components: [file]
+    refresh: 0s
+
+esp_adf:
+
+file:
+  - id: timer_finished_wave_file
+    file: https://github.com/esphome/firmware/raw/main/voice-assistant/sounds/timer_finished.wav
