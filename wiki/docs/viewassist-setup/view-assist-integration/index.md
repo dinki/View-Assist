@@ -42,3 +42,9 @@ Restart Home Assistant
 ## Manual Install
 
 This integration can be installed by downloading the [view_assist](https://github.com/dinki/view_assist_integration/tree/main/custom_components) directory into your Home Assistant /config/custom_components directory and then restart Home Assistant.  We have plans to make this easier through HACS but are waiting for acceptance.
+
+## Master Configuration
+
+Once the View Assist integration is installed you will receive a notice that the 'Master Configuration' has been created.  Hit 'Submit' to proceed.
+
+![](./vaint1.png)
