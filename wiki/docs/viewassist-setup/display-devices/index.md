@@ -12,6 +12,8 @@ There are currently three applications supported.  **You need to pick ONE of the
 - [Fully Kiosk](./fully-kiosk.md) - A full featured paid Android app that provides additional features not offered by Wallpanel. Features like remote management, capturing images from the webcam and more.  
 - [Remote Assist Display](./remote-assist-display.md) - This project provides a full screen browser with its own ability to control the views shown.  This is control is an alternative to the Browser Mod control used on the other devices.  Browser Mod is NOT required when using Remote Assist Display
 
+**NOTE** If you were previously using BrowserMod for control and want to allow View Assist to control your device you will need to remove BrowserMod integration and remove it from resources otherwise conflicts will exist and View Assist will not register the browser
+
 # Installing the Lovelace Prerequisites
 
 The View Assist dashboard and views are built using several great frontend Lovelace cards and utilities.  These are easily installed via HACS.  **These must be installed**
