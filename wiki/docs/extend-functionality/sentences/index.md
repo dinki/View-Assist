@@ -18,7 +18,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 | [Locate a Person](sentences/locate-a-person) | Ask for the location of a family member and see it displayed on a map |
 | [List Management](sentences/list-management) | Add, remove, show items from your shopping or to do list |
 | [Play Music with Music Assistant](sentences/play-music-with-ma) | Play your music media using Music Assistant |
-| [Play TuneIn with Music Assistant](sentences/play-tunein-with-ma) | Play TuneIn radio using Music Assistant |
+| [Play Radio with Music Assistant](sentences/play-radio-with-ma) | Play TuneIn radio using Music Assistant |
 | [Search Wikipedia](sentences/search-wikipedia) | Search Wikipedia using voice and receive a response and image on view enabled devices |
 | [Show Webpage](sentences/show-webpage) | Show your favorite website on your view enabled device |
 | [Sound Machine](sentences/sound-machine) | Enables the user to play ambient sounds for relaxation or noise cancelation |
