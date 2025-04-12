@@ -3,18 +3,7 @@ sidebar_position: 5
 title: "Step Four: View Assist Integration"
 ---
 
-Welcome to the long awaited, much anticipated View Assist integration beta!  Some of the notable improvements include:
-
-* All configuration done within the integration.  The days of editing YAML files are over!
-* The View Assist dashboard is now autocreated when a View Assist device with visual output is configured.  This includes assets like default images and soundfiles to be downloaded and preconfigured for use
-* A new view_assist directory will be created in your config directory to hold VA dashboard and views along with an easy storage location for your images and sound files to use with View Assist
-* Views can now be updated through an action call
-* Users can create their own views as before and use a save view action that will store a local copy that will then be used when an autoregeneration of the dashboard action is called
-* Timers and alarms survive restarts!
-* The external python set_state.py and control blueprint per device are no longer needed
-* Some external pyscripts have now been integrated simplifying the install process
-* Full support for both BrowserMod and the new [Remote Assist Display](https://github.com/michelle-avery/remote-assist-display) has been added
-* Many quality of life improvements have been added on both the user and developer facing sides
+Welcome to the long awaited, much anticipated View Assist integration beta!  
 
 A HUGE thank you goes out to Mark Parker @msp1974 for his MASSIVE help with making this a reality.  Mark has written the majority of the integration with my guidance.  You should check out his [Home Assistant Integration Examples](https://github.com/msp1974/HAIntegrationExamples) Github if you are intestered in creating your own integration.  His work has propelled View Assist to first class in very short order.  We would not be where we are today without his continued efforts and the hours and hours he has put in to make View Assist better!  Thanks again Mark!
 
@@ -45,6 +34,13 @@ This integration can be installed by downloading the [view_assist](https://githu
 
 ## Master Configuration
 
+For new users, when adding the View Assist integration, it will force the adding of this master config instance. Subsequent adds will bring up the type selection and follow the previous config flow.
+
 Once the View Assist integration is installed you will receive a notice that the 'Master Configuration' has been created.  Hit 'Submit' to proceed.
 
 ![](./vaint1.png)
+
+
+If you are an existing user, upon HA reboot after upgrading, you will get a discovered entry in Devices & Services to add this master configuration instance. The message when adding requests another reboot after adding. This is to move the management of the above list of things the master configuration instance does to this new instance. Prior to creating this instance, these things are split between the first instance and the first display instance (they could be the same).
+
+At present, if you select configure on the master config instance, you will get a message that master config options will be added here in the future. This is a holding message as you cannot remove the configuration option on 1 instance. When we have defined 'global' options here, it will load that config form.

@@ -1,6 +1,6 @@
 ---
 title: Remote Assist Display Installation
-sidebar_position: 1
+sidebar_position: 3
 ---
 
 # Remote Assist Display Installation and configuration

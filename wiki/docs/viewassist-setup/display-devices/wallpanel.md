@@ -1,6 +1,6 @@
 ---
 title: Wallpanel Installation
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # Wallpanel Installation and Configuration
