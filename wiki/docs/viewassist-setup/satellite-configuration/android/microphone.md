@@ -1,12 +1,33 @@
 ---
 sidebar_position: 1
-title: Microphone Streaming Software
+title: Microphone Selection
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 # Installing Microphone Streaming Software
-In order to leverage your tablet as a voice assistant satellite, you'll need to have an application installed that will be responsible for streaming the audio from your microphone on your local network. We'll leverage Stream Assist running on your Home Assistant instance to access those streams and pass the audio into the voice pipeline. We'll cover setting up Stream Assist in a future section.
+In order to leverage your tablet as a voice assistant satellite, you'll need to have an application installed that will be responsible for streaming the audio from your microphone on your local network. 
+
+Several options exist for getting microphone data from your Android device to Home Assistant:
+
+* [HassMic](https://github.com/jeffc/hassmic/tree/2f6ac004296ec7ad99b7aa096395d1e9db239eb5) - Recommended.  HassMic is a standalone application and integration that works great with View Assist.  While not technically a part of the VA project, the author has worked hand in hand with the View Assist team to ensure full compatibility and provides information used by View Assist
+* [Wyoming Satellite on Android](https://github.com/pantherale0/wyoming-satellite-termux) - VA user pantherale0 provides a guide to get Wyoming satellite capabilities with on device wake word detection on Android.  This is fantastic but does have a more complicated install.  Definitely worth checking out if you are techinical enough to install
+* Stream Assist - This is the orignal method for getting microphone to Home Assistant.  While it does still work, it is more involved to set up and response time is slower than using either of the alternatives above.  We will, however, continue to support it but do encourage folks to try the alternatives.
+
+
+## Installation
+
+### HassMic
+
+See instructions on github page
+
+### Wyoming Satellite on Android
+
+See instructions on github page
+
+### Stream Assist
+
+We'll leverage Stream Assist running on your Home Assistant instance to access those streams and pass the audio into the voice pipeline. We'll cover setting up Stream Assist in a future section.
 
 The following Android applications have been tested and found to be working. The current recommendation is to use IP Webcam, however the choice is ultimately yours. You only need to install and configure ONE of the following applications.
 

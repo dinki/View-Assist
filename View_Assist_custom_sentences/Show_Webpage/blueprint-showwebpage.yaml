@@ -11,19 +11,11 @@ blueprint:
     response:
       name: Response Text
       description: The response to give when launching website
-      default: "Here comes Home Assistant"                
-    group_entity: 
-      name: Group Entity
-      description: The group that holds the list of View Assist satellites(example group.viewassist_satellites)
-      selector:
-        entity:
-          filter:
-            - domain: group
-      default: "group.viewassist_satellites"                  
+      default: "Here comes Home Assistant"                                 
     view:
       name: Dashboard Webpage view
-      description: The View Assist dashboard view designed to show the webpage (example /dashboard-viewassist/list)
-      default: "/dashboard-viewassist/webpage"      
+      description: The View Assist dashboard view designed to show the webpage (example /view-assist/webpage)
+      default: "/view-assist/webpage"      
     url:
       name: Webpage
       description:  The website url to display (example https://www.home-assistant.io/)
@@ -42,40 +34,32 @@ trigger:
 condition: []
 action:
   - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
       url: !input url
       hold_mode: !input hold_mode
       view: !input view
-      response: !input response
-      group_entity: !input group_entity
-      target_satellite_device: |-
-        {% for sat in expand(group_entity) %}
-          {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
-            {{ sat.entity_id }}
-          {% endif %}
-        {% endfor %}
-      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
-  - service: python_script.set_state
-    data:
+      response: !input response    
+  - action: view_assist.set_state
+    target:
       entity_id: "{{ target_satellite_device }}"
+    data:
+      url: "{{ url }}"
       title: ""
-      data:
-        url: "{{ url }}"
-    enabled: true
+  - action: view_assist.navigate
+    data:
+      device: "{{ target_satellite_device }}"
+      path: "{{ url }}"
   - if:
       - condition: template
         value_template: "{% if hold_mode %}true{%endif%}"
     then:
-      - service: python_script.set_state
-        data:
+      - action: view_assist.set_state
+        target:
           entity_id: "{{ target_satellite_device }}"
+        data:
           mode: hold
-        enabled: true
-  - service: browser_mod.navigate
-    data:
-      path: "{{ view }}"
-    target:
-      device_id: "{{ target_display_device }}"
   - set_conversation_response: "{{ response }}"
 mode: single

@@ -38,15 +38,7 @@ blueprint:
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
-      default: "/dashboard-viewassist/info"      
-    group_entity: 
-      name: Group Entity
-      description: The group entity that holds the list of ViewAssist devices
-      selector:
-        entity:
-          filter:
-            - domain: group
-      default: "group.viewassist_satellites" 
+      default: "/view-assist/info"      
 trigger:
   - platform: conversation
     command: !input travelfromhome
@@ -59,11 +51,13 @@ trigger:
 condition: []
 action:
   - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
       home: !input home
       region: !input region
       input_places: !input places
-      group_entity: !input group_entity
       places: "{{ input_places | from_json}}"
       origin: >-
         {% if trigger.slots.origin |lower in places
@@ -73,15 +67,6 @@ action:
         {% if trigger.slots.destination |lower in places
         %}{{places[trigger.slots.destination]}}{% else
         %}{{trigger.slots.destination}}{%endif%}
-      target_satellite_device: |-
-        {% for sat in expand(group_entity) %}
-          {% if device_id(sat.attributes.mic_device)  == trigger.device_id %}
-            {{ sat.entity_id }}
-          {% endif %}
-        {% endfor %}
-      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
-      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"        
   - choose:
       - conditions:
           - condition: trigger
@@ -101,10 +86,10 @@ action:
               hours }} hours and {{ minutes }} minutes{% else %}{{ time }}
               minutes{% endif %} to drive to {{ trigger.slots.destination |
               title }}
-            enabled: true
-          - service: python_script.set_state
+          - action: view_assist.set_state
+            target:
+              entity_id: '{{ target_satellite_device }}'              
             data:
-              entity_id: "{{ target_satellite_device }}"
               title: Travel Time
               message_font_size: 4vw
               message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive to {{ trigger.slots.destination | title }}"
@@ -112,11 +97,10 @@ action:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
-              - service: browser_mod.navigate
+              - action: view_assist.navigate
                 data:
-                  path: "{{ view }}"
-                target:
-                  device_id: "{{target_display_device}}"            
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}"            
       - conditions:
           - condition: trigger
             id:
@@ -135,10 +119,10 @@ action:
               hours }} hours and {{ minutes }} minutes{% else %}{{ time }}
               minutes{% endif %} to drive from {{ trigger.slots.origin | title
               }} to {{ trigger.slots.destination | title }}
-            enabled: true
-          - service: python_script.set_state
+          - action: view_assist.set_state
+            target:
+              entity_id: '{{ target_satellite_device }}'
             data:
-              entity_id: "{{ target_satellite_device }}"
               title: Travel Time
               message_font_size: 4vw
               message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{ hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive from {{ trigger.slots.origin | title }} to {{ trigger.slots.destination | title }}"
@@ -146,9 +130,8 @@ action:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
-              - service: browser_mod.navigate
+              - action: view_assist.navigate
                 data:
+                  device: "{{ target_satellite_device }}"
                   path: "{{ view }}"
-                target:
-                  device_id: "{{target_display_device}}"             
 mode: single

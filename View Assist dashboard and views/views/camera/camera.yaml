@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  cameracardversion: 1.1.0
+  cameracardversion: 1.2.0
   var_camera: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.camera} catch {
@@ -18,7 +18,7 @@ custom_fields:
     catch {return ""}]]]
   message:
     card:
-      type: custom:frigate-card
+      type: custom:advanced-camera-card
       menu:
         style: none
       cameras:

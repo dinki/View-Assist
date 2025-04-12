@@ -9,22 +9,11 @@ blueprint:
       name: Command Text
       description: The phrase you want to use to trigger the automation
       default: (announce | broadcast | tell everyone) {message}
-    group_entity:
-      name: Group Entity
-      description: The group that holds the list of View Assist satellites(example
-        group.viewassist_satellites)
-      selector:
-        entity:
-          filter:
-          - domain:
-            - group
-          multiple: false
-      default: group.viewassist_satellites
-    view_path:
+    view:
       name: Dashboard Info view
       description: The View Assist dashboard view to use for displaying text only
-        information (example /dashboard-viewassist/info)
-      default: /dashboard-viewassist/info
+        information (example /view-assist/info)
+      default: /view-assist/info
     chime_path:
       name: Chime path
       description: The path to a sound file to use as the attention device before
@@ -40,54 +29,38 @@ trigger:
 condition: []
 action:
 - variables:
-    view_path: !input view_path
-    group_entity: !input group_entity
+    target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+    target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+    target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+    view: !input view
     chime_path: !input chime_path
-    target_satellite_device: "{% for sat in expand(group_entity)
-      %}\n  {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or
-      (device_id(sat.attributes.display_device)  == trigger.device_id) %}\n    {{
-      sat.entity_id }}\n  {% endif %}\n{% endfor %}"
-    target_display_device: '{{ device_id(state_attr(target_satellite_device, ''display_device''))
-      }}'
-    target_mediaplayer_device: '{{ state_attr(target_satellite_device, ''mediaplayer_device'')
-      }}'
-    target_satellite_device_type: '{{ state_attr(target_satellite_device, ''type'')
-      }}'
-  enabled: true
-- set_conversation_response: ''
+- set_conversation_response: ""
 - repeat:
     sequence:
     - parallel:
       - if:
         - condition: template
-          value_template: '{{ (''view'' in state_attr(repeat.item, ''type'')) and
-            state_attr(repeat.item, ''mode'') != ''hold'' }}'
+          value_template: "{{ ('view' in state_attr(repeat.item, 'type')) and state_attr(repeat.item, 'mode') != 'hold' }}"
         then:
-        - service: python_script.set_state
-          data:
-            title: Announcement
-            entity_id: '{{ repeat.item }}'
-            message_font_size: 4vw
-            message: '{{trigger.slots.message | capitalize}}'
-        - service: browser_mod.navigate
-          metadata: {}
-          data:
-            path: '{{ view_path }}'
+        - action: view_assist.set_state
           target:
-            device_id: '{{ device_id(state_attr(repeat.item, ''display_device''))
-              }}'
-    for_each: '{{ state_attr(group_entity, ''entity_id'')| list }}'
-- service: chime_tts.say
+            entity_id: "{{ repeat.item }}"              
+          data:         
+            title: Announcement
+            message_font_size: 4vw
+            message: "{{ trigger.slots.message | capitalize }}"
+        - action: view_assist.navigate
+          data:
+            device: "{{ repeat.item }}"
+            path: "{{ view }}"            
+    for_each: "{{ view_assist_entities() }}"
+- action: chime_tts.say
   target:
-    entity_id: "{%- set ns = namespace(targets=[]) -%} {%- for satellite in expand(group_entity)
-      -%}\n  {%- if state_attr(satellite.entity_id,\"do_not_disturb\") != true
-      -%}\n    {%- set ns.targets = ns.targets + [state_attr(satellite.entity_id,\"mediaplayer_device\")]
-      -%}\n  {%- endif -%}\n{%- endfor -%} {{ns.targets}}"
+    entity_id: "{{ view_assist_entities(filter={'do_not_disturb': false}, attr='mediaplayer_device') }}"
   data:
-    chime_path: '{{ chime_path }}'
+    chime_path: "{{ chime_path }}"
     tts_playback_speed: 100
     volume_level: 1
-    message: '{{ trigger.slots.message }}'
+    message: "{{ trigger.slots.message }}"
     tts_platform: google_translate
-  enabled: true
 mode: single

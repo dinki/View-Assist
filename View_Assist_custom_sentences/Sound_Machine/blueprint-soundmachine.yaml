@@ -11,14 +11,6 @@ blueprint:
       default:
         thunder: http://192.168.0.25:8123/local/viewassist/soundmachine/rainandthunder.mp3
         ocean: http://192.168.0.25:8123/local/viewassist/soundmachine/oceanwaves.mp3
-    group_entity: 
-      name: Group Entity
-      description: The group entity that holds the list of ViewAssist devices
-      selector:
-        entity:
-          filter:
-            - domain: group
-      default: "group.viewassist_satellites" 
 triggers:
   - command:
       - (start|play) [the] {soundtype} sound machine
@@ -29,16 +21,17 @@ triggers:
       - (stop|turnoff) [the] sound machine
     id: stopsoundmachine
     trigger: conversation
-  - event_type: viewassist
+  - event_type: va_timer_command_expired
     id: stopsoundmachine
     trigger: event
     event_data:
-      command: stop sound machine
+      extra_info:
+        command: stop sound machine
 conditions: []
 actions:
   - variables:
-      group_entity: !input group_entity
-      soundmachine_dict: !input soundmachine_dict
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
   - choose:
       - conditions:
           - condition: trigger
@@ -46,16 +39,9 @@ actions:
               - startsoundmachine
         sequence:
           - variables:
-              target_satellite_device: |-
-                {% for sat in expand(group_entity) %}
-                  {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
-                    {{ sat.entity_id }}
-                  {% endif %}
-                {% endfor %}
-              target_display_device: >-
-                {{ device_id(state_attr(target_satellite_device, 'display_device')) }}
-              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-              target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"        
+              target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+              soundmachine_dict: !input soundmachine_dict
           - if:
               - condition: template
                 value_template: "{{ trigger.slots.soundtype in soundmachine_dict }}"
@@ -64,30 +50,18 @@ actions:
                   - condition: template
                     value_template: "{{ trigger.slots.when is defined}}"
                 then:
-                  - action: pyscript.convert_to_seconds
+                  - action: view_assist.set_timer
                     data:
-                      time_when: "{{ trigger.slots.when }}"
-                    response_variable: time_start
-                  - variables:
-                      total_seconds: "{{ time_start.total_seconds }}"
-                      stop_time: >-
-                        {{ (now() +
-                        timedelta(seconds=total_seconds)).strftime('%Y-%m-%d
-                        %H:%M:%S') }}
-                  - data:
-                      event_name: viewassist
-                      event_data:
-                        command: stop sound machine
-                        target_satellite_device: "{{ target_satellite_device }}"
-                      target_time: "{{ stop_time }}"
-                    action: pyscript.schedule_event_at_time
-          - action: script.turn_on
-            target:
-              entity_id: script.play_sound_on_media_player_repeat
+                      type: Command
+                      entity_id: "{{ target_satellite_device }}"
+                      time: "{{ trigger.slots.when }}"
+                      extra:
+                      - command: "stop sound machine"
+                    response_variable: timer
+          - action: view_assist.sound_alarm
             data:
-              variables:
-                media_player: "{{ target_mediaplayer_device }}"
-                sound_file: "{{ soundmachine_dict[trigger.slots.soundtype] }}"
+              entity_id: "{{ target_mediaplayer_device }}"
+              media_file: "{{ soundmachine_dict[trigger.slots.soundtype | lower] }}"
           - set_conversation_response: ""
       - conditions:
           - condition: trigger
@@ -96,28 +70,15 @@ actions:
         sequence:
           - variables:
               target_satellite_device: >-
-                {% if trigger.event is defined and trigger.event.data.target_satellite_device is defined %}
-                  {{ trigger.event.data.target_satellite_device }}
+                {% if trigger.event is defined and trigger.event.data.entity_id is defined %}
+                  {{ trigger.event.data.entity_id }}
                 {% else %}
-                  {% for sat in expand(group_entity) %}
-                    {% if (device_id(sat.attributes.mic_device)  == trigger.device_id) or (device_id(sat.attributes.display_device)  == trigger.device_id) %}
-                      {{ sat.entity_id }}
-                    {% endif %}
-                  {% endfor %}
+                  {{ target_satellite_device }}
                 {% endif %}
-              target_display_device: >-
-                {{ device_id(state_attr(target_satellite_device, 'display_device')) }}
-              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"        
-          - action: media_player.media_stop
-            metadata: {}
-            data: {}
-            target:
+              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}" 
+          - action: view_assist.cancel_sound_alarm
+            data:
               entity_id: "{{ target_mediaplayer_device }}"
-          - action: script.turn_off
-            metadata: {}
-            data: {}
-            target:
-              entity_id: script.play_sound_on_media_player_repeat
           - set_conversation_response: ""
     default:
       - set_conversation_response: Something went wrong
