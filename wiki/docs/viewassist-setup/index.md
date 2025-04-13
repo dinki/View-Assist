@@ -6,7 +6,7 @@ View Assist is a collection of devices, configurations, automations, extensions,
 
 Four steps are required to get things set up:
 
-* [Assist Pipeline](./assist-pipeline.md) - This is the actual configuration Home Assistant needs to configure and start using the Assist voice assistant
-* [Microphone Input Device](./microphone-devices) - This is the device that provides the voice input from the satellite device and sends it to Home Assistant for processing voice commands
-* [Display Output Device (optional)](./display-devices.md) - This is the device that shows visual information received from View Assist.  Note that View Assist can work with voice only devices if desired.
+* [Assist Pipeline](./assist-pipeline/index.md) - This is the actual configuration Home Assistant needs to configure and start using the Assist voice assistant
+* [Microphone Input Device](./microphone-devices/index.md) - This is the device that provides the voice input from the satellite device and sends it to Home Assistant for processing voice commands
+* [Display Output Device (optional)](./display-devices/index.md) - This is the device that shows visual information received from View Assist.  Note that View Assist can work with voice only devices if desired.
 * [View Assist Integration](./view-assist-integration.md) - The View Assist framework is established with a simple installation through HACS
