@@ -224,7 +224,7 @@ button_card_templates:
             if (states['sun.sun'] === 'above_horizon') {
               var weather_icon = weatherIconsDay[condition]; 
             } else {
-              var weather_icon = weatherIconsDay[condition]; 
+              var weather_icon = weatherIconsDay[condition];
             }
             
             if (typeof(weather_icon) === 'undefined') { 
@@ -251,27 +251,23 @@ button_card_templates:
             return hass.states[variables.var_assistsat_entity].attributes.menu_items;
           } catch { return []; }
         ]]]
-      var_current_path: |-
-        [[[
-          try {
-            // Get the current path - either from entity attribute or from URL
-            let currentPath = "";
-            if (hass.states[variables.var_assistsat_entity].attributes.current_path) {
-              currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
-            } else if (window.location.pathname) {
-              currentPath = window.location.pathname;
-            }
-            return currentPath;
-          } catch { return ""; }
-        ]]]
       var_current_view: |-
         [[[
           try {
-            // Extract view name from path
-            const currentPath = variables.var_current_path;
-            const pathMatch = currentPath.match(/\/view-assist\/([^\/]+)/);
-            if (pathMatch && pathMatch[1]) {
-              return pathMatch[1];
+            const pathname = window.location.pathname;
+            if (pathname) {
+              const match = pathname.match(/\/view-assist\/([^\/]+)/);
+              if (match && match[1]) {
+                return match[1];
+              }
+            }
+            
+            const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
+            if (currentPath) {
+              const match = currentPath.match(/\/view-assist\/([^\/]+)/);
+              if (match && match[1]) {
+                return match[1];
+              }
             }
             return "";
           } catch { return ""; }
@@ -378,182 +374,105 @@ button_card_templates:
                   ]]]                
               cards: |-
                 [[[{
-                  // Initialize an empty button list
                   const buttonList = [];
                   
                   try {
-                    // Get current view for filtering
-                    const currentView = variables.var_current_view || "";
-                    
-                    // Get all available menu data
                     const vaEntity = variables.var_assistsat_entity;
+                    if (!vaEntity || !hass.states[vaEntity]) {
+                      return [];
+                    }
+                    
                     const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
                     const menuItems = hass.states[vaEntity].attributes.menu_items || [];
                     const menuActive = hass.states[vaEntity].attributes.menu_active || false;
+                    const currentView = variables.var_current_view;
                     
-                    // Create a map to track which items have been added
-                    // to prevent duplicates
-                    const addedItems = new Set();
-                    
-                    // Create a mapping between template names and their target views
-                    const templateViewMap = {
-                      "home": "clock", // Template "home" navigates to "clock" view
-                      // Add more mappings as needed
-                    };
-                    
-                    // Helper function to get a unique key for an item
-                    function getItemKey(item) {
-                      if (!item) return null;
+                    function isCurrentView(item) {
+                      if (!currentView) return false;
                       
-                      if (item.includes(':')) {
+                      if (typeof item === 'string' && !item.includes(':')) {
+                        if (item === currentView) return true;
+                        const templateViewMap = {
+                          "home": "clock"
+                        };
+                        if (templateViewMap[item] === currentView) return true;
+                        return false;
+                      }
+                      
+                      if (typeof item === 'string' && item.includes(':')) {
                         const parts = item.split('|');
                         const typeAndTarget = parts[0];
-                        return typeAndTarget; // e.g. "view:weather"
-                      }
-                      return item; // e.g. "weather"
-                    }
-                    
-                    // Helper function to check if an item navigates to the current view
-                    function navigatesToCurrentView(itemConfig) {
-                      // Skip current view check for system icons
-                      if (["menu", "mic", "mediaplayer", "dnd", "hold", "cycle"].includes(itemConfig.template)) {
-                        return false;
-                      }
-                      
-                      // For dynamic menu items
-                      if (itemConfig.variables?.menu_item) {
-                        const item = itemConfig.variables.menu_item;
-                        if (item.includes(':')) {
-                          const parts = item.split('|');
-                          const typeAndTarget = parts[0];
-                          const [type, target] = typeAndTarget.split(':');
-                          
-                          // Only check view type items
-                          if (type === 'view') {
-                            const viewName = target.includes('/') ? 
-                              target.split('/').pop() : target;
-                            return viewName === currentView;
-                          }
-                        }
-                        return false;
-                      }
-                      
-                      // For standard templates
-                      if (itemConfig.template) {
-                        // Direct match with current view
-                        if (itemConfig.template === currentView) {
-                          return true;
-                        }
+                        const [type, target] = typeAndTarget.split(':');
                         
-                        // Check template mapping if available
-                        if (templateViewMap[itemConfig.template] === currentView) {
-                          return true;
+                        if (type === 'view') {
+                          const viewName = target.includes('/') ? 
+                            target.split('/').pop() : target;
+                          return viewName === currentView;
                         }
                       }
                       
                       return false;
                     }
                     
-                    // Helper function to add an item if not already added
-                    function addItemIfNotDuplicate(itemConfig) {
-                      // Skip if this navigates to the current view
-                      if (navigatesToCurrentView(itemConfig)) {
-                        return false;
+                    const addedItems = new Set();
+                    
+                    function addIconToList(icon, isDynamicItem = false) {
+                      if (menuActive && isCurrentView(icon)) {
+                        return;
                       }
                       
-                      const key = getItemKey(itemConfig.variables?.menu_item || itemConfig.template);
-                      if (!key || addedItems.has(key)) return false;
-                      
-                      addedItems.add(key);
-                      buttonList.push(itemConfig);
-                      return true;
-                    }
-                    
-                    // Process menu items and create appropriate buttons
-                    if (menuActive) {
-                      // Add dynamic navigation menu items first
-                      menuItems.forEach(item => {
-                        if (item.includes(':')) {
-                          // Parse the structured menu item format
-                          const parts = item.split('|');
-                          const typeAndTarget = parts[0];
-                          const [type, target] = typeAndTarget.split(':');
-                          
-                          // Skip items that point to current view
-                          if (type === 'view') {
-                            const viewName = target.includes('/') ? 
-                              target.split('/').pop() : target;
-                            if (viewName === currentView) {
-                              return;
-                            }
-                          }
-                          
-                          // Add the dynamic menu button
-                          addItemIfNotDuplicate({
-                            type: "custom:button-card",
-                            template: `dynamic_${type}_item`,
-                            variables: {
-                              menu_item: item,
-                              entity_id: vaEntity
-                            }
-                          });
-                        }
-                      });
-                      
-                      // Add standard navigation items (if not in visible icons)
-                      menuItems.forEach(item => {
-                        if (!item.includes(':')) {
-                          // Skip if it's the current view
-                          if (item === currentView) {
-                            return;
-                          }
-                          
-                          // Add standard template button
-                          addItemIfNotDuplicate({
-                            type: "custom:button-card",
-                            template: item
-                          });
-                        }
-                      });
-                    }
-                    
-                    // Add system/status icons
-                    statusIcons.forEach(icon => {
-                      // Check if this is a structured item
-                      if (icon.includes(':')) {
-                        // Parse the structured format
-                        const parts = icon.split('|');
-                        const typeAndTarget = parts[0];
-                        const [type, target] = typeAndTarget.split(':');
-                        
-                        // Add the dynamic menu button if not already added
-                        addItemIfNotDuplicate({
+                      let buttonConfig;
+                      if (isDynamicItem) {
+                        const type = icon.split(':')[0];
+                        buttonConfig = {
                           type: "custom:button-card",
                           template: `dynamic_${type}_item`,
                           variables: {
                             menu_item: icon,
                             entity_id: vaEntity
                           }
-                        });
+                        };
                       } else {
-                        // Standard template
-                        addItemIfNotDuplicate({
+                        buttonConfig = {
                           type: "custom:button-card",
                           template: icon
-                        });
+                        };
+                      }
+                      
+                      const key = icon;
+                      if (addedItems.has(key)) return;
+                      
+                      addedItems.add(key);
+                      buttonList.push(buttonConfig);
+                    }
+                    
+                    statusIcons.forEach(icon => {
+                      if (icon.includes(':')) {
+                        addIconToList(icon, true);
+                      } else {
+                        addIconToList(icon, false);
                       }
                     });
                     
-                    // Add menu button if enabled and show_menu_button is true
+                    if (menuActive) {
+                      menuItems.forEach(item => {
+                        if (item.includes(':')) {
+                          addIconToList(item, true);
+                        } else {
+                          addIconToList(item, false);
+                        }
+                      });
+                    }
+                    
                     if (hass.states[vaEntity].attributes.enable_menu && 
-                        hass.states[vaEntity].attributes.show_menu_button) {
-                      addItemIfNotDuplicate({
+                        hass.states[vaEntity].attributes.show_menu_button && 
+                        !addedItems.has("menu")) {
+                      buttonList.push({
                         type: "custom:button-card",
                         template: "menu"
                       });
                     }
                   } catch (error) {
-                    console.error("Error processing status icons:", error);
                   }
                   
                   return buttonList;
