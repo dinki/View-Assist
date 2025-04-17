@@ -7,7 +7,7 @@ sidebar_position: 2
 
 Wyoming is a crossplatform means of receiving audio and providing results to Home Assistant.  You can choose Wyoming as your microphone device on any of the supported platforms.
 
-A project exists for using [Wyoming with Termux](https://github.com/T-vK/wyoming-satellite-termux) on Android.  This has a level of difficulty that is much higher than your average app install.  This page will list the basic steps but support should be aimed at the project issues rather than View Assist support.
+A project exists for using [Wyoming with Termux](https://github.com/T-vK/wyoming-satellite-termux) on Android.  This has a level of difficulty that is much higher than your average app install.  This page will list the basic steps but support should be aimed at the project issues rather than View Assist support.  Feel free to provide updates to this page to make it easier for others to get this installed.
 
 ## Installation
 
