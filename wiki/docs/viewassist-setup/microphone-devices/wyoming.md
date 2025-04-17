@@ -20,3 +20,8 @@ A project exists for using [Wyoming with Termux](https://github.com/T-vK/wyoming
 * On the second run you may be asked about installing OpenWakeword again.  Say yes.
 * Once the second install is complete you will need to add a Wyoming device in Home Assistant by going to Devices & Services -> Add -> Wyoming.  Enter the IP address and keep the port as default
 * You can try the device and see if it recognizes and responds
+* Issue the command `cd ~; rm wyoming-satellite-android; ln -s .termux/boot/wyoming-satellite-android .; cp .termux/boot/wyoming-satellite-android wyoming-satellite-android.bak`
+* Edit the configuration file using `nano wyoming-satellite-android` .  You will want to at least change the name so that it is unique
+* Create a new file `nano ~/.bashrc` and add the line `bash ~/wyoming-satellite-android`
+* Force close Termux and clear cache
+* Reopen Termux and Wyoming should start with your changes
