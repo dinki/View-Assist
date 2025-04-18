@@ -60,7 +60,7 @@ button_card_templates:
             var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
             return `${assist_prompt}`;
           } catch { return  "";}
-        ]]]             
+        ]]]
       var_mic_switch: |-
         [[[
           try
@@ -82,7 +82,7 @@ button_card_templates:
               }
             return `${micdevice}`;
           } catch { return  ""}
-        ]]]   
+        ]]]                
       var_mediaplayer_device: |-
         [[[
           try {
@@ -310,12 +310,6 @@ button_card_templates:
           - top: 0vh
           - right: 0vw
           - z-index: 1
-        shader:
-          - position: absolute
-          - top: 0
-          - height: 100%
-          - width: 100%
-          - background-color: rgba(0,0,0,0.15)
     custom_fields:
       title: '[[[ return variables.var_title ]]]'
       status:
@@ -355,7 +349,6 @@ button_card_templates:
 
                   return buttonList.reverse();
                 }]]]
-      shader: ''
   assist_template:
     styles:
       card: null
