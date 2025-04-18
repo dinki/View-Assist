@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  clockcardversion: 1.2.0
+  clockcardversion: 1.2.1
   var_background: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.background} catch {
@@ -52,6 +52,12 @@ styles:
           "night") return "block"; else return "none";} catch { return  "none"}
            ]]]      
       - z-index: 2
+    shader:
+      - position: absolute
+      - top: 0
+      - height: 100%
+      - width: 100%
+      - background-color: rgba(0,0,0,0.15)
 custom_fields:
   title:
     card:
@@ -82,3 +88,4 @@ custom_fields:
   time: "[[[ return variables.var_current_time ]]]"
   date: "[[[ return variables.var_date_short ]]]"
   night: .
+  shader: ""
