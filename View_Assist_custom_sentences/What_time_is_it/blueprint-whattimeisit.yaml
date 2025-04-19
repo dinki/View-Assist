@@ -71,14 +71,6 @@ action:
             fri: Friday
             sat: Saturday
             sun: Sunday
-          weekdays_short:
-            mon: Mon
-            tue: Tue
-            wed: Wed
-            thu: Thu
-            fri: Fri
-            sat: Sat
-            sun: Sun
           months:
             jan: January
             feb: February
@@ -92,19 +84,6 @@ action:
             oct: October
             nov: November
             dec: December
-          months_short:
-            jan: Jan
-            feb: Feb
-            mar: Mar
-            apr: Apr
-            may: May
-            jun: Jun
-            jul: Jul
-            aug: Aug
-            sep: Sep
-            oct: Oct
-            nov: Nov
-            dec: Dec
         de:
           responses:
             time: "Es ist {time_24h}"
@@ -118,14 +97,6 @@ action:
             fri: Freitag
             sat: Samstag
             sun: Sonntag
-          weekdays_short:
-            mon: Mo.
-            tue: Di.
-            wed: Mi.
-            thu: Do.
-            fri: Fr.
-            sat: Sa.
-            sun: So.
           months:
             jan: Januar
             feb: Februar
@@ -139,19 +110,6 @@ action:
             oct: Oktober
             nov: November
             dec: Dezember
-          months_short:
-            jan: Jan.
-            feb: Feb.
-            mar: März
-            apr: Apr.
-            may: Mai
-            jun: Jun.
-            jul: Jul.
-            aug: Aug.
-            sep: Sept.
-            oct: Okt.
-            nov: Nov.
-            dec: Dez.
         es:
           responses:
             time: "Son las {time}"
