@@ -123,6 +123,11 @@ action:
       {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
       {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature') | string).replace("{condition}", translated_condition) }}          
 - set_conversation_response: "{{ conversation_response }}"
+- action: view_assist.set_state
+  target:
+    entity_id: "{{ target_satellite_device }}"              
+  data:     
+    last_said: "{{ conversation_response }}"
 - if:
   - condition: template
     value_template: '{% if target_satellite_device_type != ''audio_only'' %}true{%
