@@ -4,6 +4,10 @@ blueprint:
     and show the weather view (View Assist howstheweather v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language (en, es, de, or nl)
+      default: en
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -21,22 +25,33 @@ blueprint:
       name: Dashboard Weather view
       description: The View Assist dashboard view to use for weather (example /dashboard-viewassist/weather)
       default: /view-assist/weather
-  source_url: https://raw.githubusercontent.com/dinki/View-Assist/main/View_Assist_custom_sentences/Hows_the_weather/blueprint-howstheweather.yaml
-alias: View Assist - How's the weather
-description: Provides information on the current weather and forecast
 trigger:
 - platform: conversation
   command: !input command_prompt
 condition: []
 action:
 - variables:
+    language: !input language
     target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
     target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
     target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
     weather_entity: !input weather_entity
     view: !input view
-- set_conversation_response: Its {{ state_attr(weather_entity, 'temperature') }} degrees
-    and {{states[weather_entity].state}}
+    translations:
+      en:
+        responses:
+          temperature: "It's {temperature} degrees and {condition}"
+      es:
+        responses:
+          temperature: "Hace {temperature} grados y está {condition}"
+      nl:
+        responses:
+          temperature: "Het is {temperature} graden en {condition}"
+      de:
+        responses:
+          temperature: "Es sind {temperature} grad und {condition}"          
+- set_conversation_response: >-
+    {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature')| string).replace("{condition}", states[weather_entity].state) }}
 - if:
   - condition: template
     value_template: '{% if target_satellite_device_type != ''audio_only'' %}true{%
