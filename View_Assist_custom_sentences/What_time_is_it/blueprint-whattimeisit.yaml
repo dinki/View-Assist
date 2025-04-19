@@ -56,6 +56,31 @@ action:
             time: "It's { time } "
             day_of_week: "Today is { day_of_week }"
             date: "Today is { date }"
+        es:
+          responses:
+            time: "Son las { time }"
+            day_of_week: "Hoy es { day_of_week }"
+            date: "Hoy es { date }"
+        it:
+          responses:
+            time: "Sono le { time }"
+            day_of_week: "Oggi è { day_of_week }"
+            date: "Oggi è { date }"
+        nl:
+          responses:
+            time: "Het is { time }"
+            day_of_week: "Vandaag is { day_of_week }"
+            date: "Vandaag is { date }"
+        de:
+          responses:
+            time: "Es ist { time } Uhr"
+            day_of_week: "Heute ist { day_of_week }"
+            date: "Heute ist { date }"
+        fr:
+          responses:
+            time: "Il est { time }"
+            day_of_week: "Aujourd'hui, c'est { day_of_week }"
+            date: "Aujourd'hui, c'est { date }"            
   - choose:
       - conditions:
           - condition: trigger
