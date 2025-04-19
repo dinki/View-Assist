@@ -61,7 +61,7 @@ action:
       translations:
         en:
           responses:
-            time: "It's {time} "
+            time: "It's {time}"
             day_of_week: "Today is {day_of_week}"
             date: "Today is {date}"
           weekdays:
@@ -110,7 +110,7 @@ action:
           responses:
             time: "Es ist {time_24h}"
             day_of_week: "Heute ist {day_of_week}"
-            date: "Heute ist {date}"
+            date: "Heute ist {weekday}, der {day_of_month}. {month} {year}"
           weekdays:
             mon: Montag
             tue: Dienstag
@@ -230,7 +230,7 @@ action:
           - variables:
               month_short: "{{ now().strftime('%b').lower() }}"
               month_translated: "{{ translations[language]['months'][month_short] }}"
-              conversation_response: "{{ translations[language]['responses']['date'].replace('{date_of_month}', date_of_month).replace('{month}', month_translated).replace('{year}', year) }}"
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{day_of_month}', day_of_month).replace('{month}', month_translated).replace('{year}', year) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
