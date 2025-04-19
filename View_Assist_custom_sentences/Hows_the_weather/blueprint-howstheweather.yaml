@@ -6,7 +6,7 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language (en, es, de, or nl)
+      description: The desired spoken language (en, es, de, it, or nl)
       default: en
     command_prompt:
       name: Command Text
@@ -49,7 +49,10 @@ action:
           temperature: "Het is {temperature} graden en {condition}"
       de:
         responses:
-          temperature: "Es sind {temperature} grad und {condition}"          
+          temperature: "Es sind {temperature} grad und {condition}"  
+      it:
+        responses:
+          temperature: "Ci sono {temperature} gradi e {condition}"          
 - set_conversation_response: >-
     {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature')| string).replace("{condition}", states[weather_entity].state) }}
 - if:
