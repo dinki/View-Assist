@@ -5,6 +5,10 @@ blueprint:
   description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language (en, es, de, it, or nl)
+      default: en  
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -38,17 +42,30 @@ trigger:
     id: dayofweek
 action:
   - variables:
+      language: !input language  
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
+      time_now: "{{ now().strftime('%-I:%M %p') }}"
+      translations:
+        en:
+          responses:
+            time: "It's { time } "
   - choose:
       - conditions:
           - condition: trigger
             id:
               - time
         sequence:
-          - set_conversation_response: Its {{ now().strftime('%-I:%M %p')}}
+          - variables:
+              conversation_response: "{{ translations[language]['responses']['time'].replace("{time}", time_now }}"
+          - set_conversation_response: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"              
+            data:     
+              last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-
