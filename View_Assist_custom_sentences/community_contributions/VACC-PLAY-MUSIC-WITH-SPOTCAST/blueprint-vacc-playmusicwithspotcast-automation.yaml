@@ -1,0 +1,307 @@
+blueprint:
+  name: View Assist - Play Music with Spotcast
+  description: |
+    This automation is designed to be used with the [ViewAssist](https://github.com/dinki/view_assist_integration) integration for playing music from Spotify using the [SpotcastV5](https://github.com/fondberg/spotcast/tree/dev) integration.
+
+    It supports both premium and non-premium Spotify accounts.
+
+    **Features:**
+    - Plays music from Spotify using the context of your recently played songs (Play DJ mode).
+    - Plays music from Spotify based on search keywords (Play Search mode). Searches can be performed using album, artist, playlist, or track names.
+    - Plays music in a specified area. When an area is defined, the music is played on that specific media player, and the tablet from which the command is issued will display the player currently in use—even if it is not the default for that satellite. For this, musicplayer_device is overwritten in the sensor of the respective ViewAssist satellite.
+    - If no area is specified, it uses the last active media player on that satellite.
+    - Transfers playback from one player to another, continuing from where it left off. The display on the satellite from which the command is issued will show the active player if it has been changed via voice commands.
+    - The default trigger phrases and conversation responses can be translated into any language as long as their structure is maintained.
+    - **IMPORTANT:** If you wish to expose this automation as a tool for LLMs using a script, do not remove or modify the default trigger phrases. Instead, add additional phrases following the same model and structure in the same window, since the LLM exposure script will call this automation using the default trigger phrases via the `Conversation.process` service.
+    - **IMPORTANT:** Entity ID from media players must be of the form `media_player.area_speaker`, **area** being the room or area where the speaker is located.
+
+  domain: automation
+  # (Optional: add min_version: "2024.10.0" if needed)
+  input:
+    group_entity:
+      name: Group Entity
+      description: The group containing the list of View Assist satellites (e.g., group.viewassist_satellites)
+      selector:
+        entity:
+          filter:
+            - domain: group
+          multiple: false
+      default: group.viewassist_satellites
+    view_path:
+      name: Dashboard Info View
+      description: The View Assist dashboard view used to display music information (e.g., /dashboard-viewassist/music)
+      default: /dashboard-viewassist/music
+    navigation_app:
+      name: Display Navigation App
+      description: Choose the service used to navigate the display.
+      selector:
+        select:
+          options:
+            - browser_mod.navigate
+            - remote_assist_display.navigate
+      default: remote_assist_display.navigate
+
+    # Input for trigger phrases with default values (customizable as needed)
+
+    # Trigger phrases for Play DJ (Recently Played) mode.
+    # This mode calls Spotify to play songs based on your recently played tracks.
+    # If an area is specified using {area}, the music plays on that specific media player;
+    # if omitted, the default or last active media player is used.
+    trigger_play_dj:
+      name: Trigger Phrases for Play DJ (Recently Played)
+      description: List of phrases to invoke Play DJ mode. Use '{area}' to specify a media player area. If omitted, the default/last active media player is used.
+      default:
+        - "I want to play [my] [recent] ( music|songs) (on|in|to) [the] {area} [speaker]"
+        - "I want to play [my] [recent] (music|songs)"
+      selector:
+        object: {}
+
+    # Trigger phrases for Play Search (Music Search) mode.
+    # This mode asks Spotify to play music based on search keywords such as artist, song, album, or genre.
+    # If an area is specified using {area}, the music plays on that specific media player;
+    # if omitted, the default or last active media player is used.
+    trigger_play_search:
+      name: Trigger Phrases for Play Search (Music Search)
+      description: List of phrases to invoke Play Search mode. Use '{area}' to specify a media player area. If omitted, the default/last active media player is used.
+      default:
+        - "play  {music} (on|in|to) [the] {area} [speaker]"
+        - "play {music}"
+      selector:
+        object: {}
+
+    # Trigger phrases for transferring music playback to a specific area.
+    # Use these phrases to move the current playback to a designated media player area.
+    trigger_transfer_music:
+      name: Trigger Phrases for Transfer Music
+      description: List of phrases to transfer music playback to a specified area. Use '{area}' to indicate the target media player.
+      default:
+        - "move [the] [music] [song] (on|in|to) [the] {area} [speaker]"
+        - "transfer [the] [music] [song] (on|in|to) [the] {area} [speaker]"
+      selector:
+        object: {}
+
+    # Input for conversation responses with default values (customizable as needed)
+
+    # Response text for Play DJ mode when no area is specified.
+    response_play_dj_no_area:
+      name: Response for Play DJ (No Area)
+      description: Response text when invoking Play DJ mode without specifying an area.
+      default: "Playing your recent played songs"
+      selector:
+        text: {}
+
+    # Response text for Play DJ mode when an area is specified.
+    response_play_dj_area:
+      name: Response for Play DJ (With Area)
+      description: Response text when invoking Play DJ mode with a specified area.
+      default: "Playing your recent played songs to the {{ trigger.slots.area }}"
+      selector:
+        text: {}
+
+    # Response text for Play Search mode when no area is specified.
+    response_play_search_no_area:
+      name: Response for Play Search (No Area)
+      description: Response text when invoking Play Search mode without specifying an area.
+      default: "Playing {{ trigger.slots.music }}"
+      selector:
+        text: {}
+
+    # Response text for Play Search mode when an area is specified.
+    response_play_search_area:
+      name: Response for Play Search (With Area)
+      description: Response text when invoking Play Search mode with a specified area.
+      default: "Playing {{ trigger.slots.music }} in the {{ trigger.slots.area }}"
+      selector:
+        text: {}
+
+    # Response text for transferring music playback.
+    response_transfer_music:
+      name: Response for Transfer Music
+      description: Response text when transferring music playback to a specified area.
+      default: "I moved the music to {{ trigger.slots.area }}"
+      selector:
+        text: {}
+
+triggers:
+  - trigger: conversation
+    command: !input trigger_play_dj
+    id: play_dj
+    enabled: true
+  - trigger: conversation
+    command: !input trigger_play_search
+    id: play_search
+    enabled: true
+  - trigger: conversation
+    command: !input trigger_transfer_music
+    id: transfer_music
+
+conditions: []
+actions:
+  - choose:
+      # Condition for executing Play DJ without area specified (i.e., using the default or last active media player)
+      - conditions:
+          - condition: template
+            alias: "Condition for executing Play DJ without area specified"
+            value_template: "{{ trigger.id == 'play_dj' and (trigger.slots.area is not defined or trigger.slots.area == '') }}"
+        sequence:
+          - action: spotcast.play_dj
+            alias: "Play DJ without area specified"
+            data:
+              media_player:
+                device_id: "{{ target_musicplayer_device }}"
+          - action: "{{ navigation_app }}"
+            alias: "Navigate to music dashboard"
+            data:
+              path: "{{ view_path }}"
+            target:
+              device_id: "{{ target_display_device }}"
+          - action: python_script.set_state
+            alias: "Set satellite device state to music mode"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - set_conversation_response: !input response_play_dj_no_area
+
+      # Condition for executing Play DJ with a specified area
+      - conditions:
+          - condition: template
+            alias: "Condition for executing Play DJ with specified area"
+            value_template: "{{ trigger.id == 'play_dj' and trigger.slots.area is defined and trigger.slots.area != '' }}"
+        sequence:
+          - action: spotcast.play_dj
+            alias: "Play DJ in specified area"
+            data:
+              media_player:
+                entity_id: "media_player.{{ trigger.slots.area | replace('ă', 'a') |
+                  replace('î', 'i') | replace('ș', 's') | replace('ț', 't') |
+                  lower }}_speaker"
+          - action: python_script.set_state
+            alias: "Set satellite device state to music mode for specified area"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - action: python_script.set_state
+            alias: "Set satellite device music player for specified area"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              musicplayer_device: "media_player.{{ trigger.slots.area | replace('ă', 'a') |
+                  replace('î', 'i') | replace('ș', 's') | replace('ț', 't') |
+                  lower }}_speaker"
+              title: ""
+          - set_conversation_response: !input response_play_dj_area
+
+      # Condition for executing Play Search without area specified (i.e., using the default or last active media player)
+      - conditions:
+          - condition: template
+            alias: "Condition for executing Play Search without area specified"
+            value_template: "{{ trigger.id == 'play_search' and (trigger.slots.area is not defined or trigger.slots.area == '') }}"
+        sequence:
+          - action: spotcast.play_from_search
+            alias: "Play searched music without area specified"
+            data:
+              item_types:
+                - album
+                - artist
+                - playlist
+                - track
+              media_player:
+                device_id: "{{ target_musicplayer_device }}"
+              search_term: "{{ trigger.slots.music }}"
+          - action: "{{ navigation_app }}"
+            alias: "Navigate to music dashboard"
+            data:
+              path: "{{ view_path }}"
+            target:
+              device_id: "{{ target_display_device }}"
+          - action: python_script.set_state
+            alias: "Set satellite device state to music mode for search without area"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - set_conversation_response: !input response_play_search_no_area
+
+      # Condition for executing Play Search with a specified area
+      - conditions:
+          - condition: template
+            alias: "Condition for executing Play Search with specified area"
+            value_template: "{{ trigger.id == 'play_search' and trigger.slots.area is defined and trigger.slots.area != '' }}"
+        sequence:
+          - action: spotcast.play_from_search
+            alias: "Play searched music in specified area"
+            data:
+              item_types:
+                - album
+                - artist
+                - playlist
+                - track
+              media_player:
+                entity_id: "media_player.{{ trigger.slots.area | replace('ă', 'a') |
+                  replace('î', 'i') | replace('ș', 's') | replace('ț', 't') |
+                  lower }}_speaker"
+              search_term: "{{ trigger.slots.music }}"
+          - action: "{{ navigation_app }}"
+            alias: "Navigate to music dashboard"
+            data:
+              path: "{{ view_path }}"
+            target:
+              device_id: "{{ target_display_device }}"
+          - action: python_script.set_state
+            alias: "Set satellite device state to music mode for search with area"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - action: python_script.set_state
+            alias: "Set satellite device music player for search with specified area"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              musicplayer_device: "media_player.{{ trigger.slots.area | replace('ă', 'a') |
+                  replace('î', 'i') | replace('ș', 's') | replace('ț', 't') |
+                  lower }}_speaker"
+              title: ""
+          - set_conversation_response: !input response_play_search_area
+
+      # Condition for transferring music playback to a specified area
+      - conditions:
+          - condition: template
+            alias: "Condition for transferring music playback to specified area"
+            value_template: "{{ trigger.id == 'transfer_music' }}"
+        sequence:
+          - action: spotcast.transfer_playback
+            alias: "Transfer playback to specified area"
+            data:
+              media_player:
+                entity_id: "media_player.{{ trigger.slots.area | replace('ă', 'a') |
+                  replace('î', 'i') | replace('ș', 's') | replace('ț', 't') |
+                  lower }}_speaker"
+          - action: python_script.set_state
+            alias: "Set satellite device state to music mode for transfer"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              mode: music
+              title: ""
+          - action: python_script.set_state
+            alias: "Set satellite device music player for transfer"
+            data:
+              entity_id: "{{ target_satellite_device }}"
+              musicplayer_device: "media_player.{{ trigger.slots.area | replace('ă', 'a') |
+                  replace('î', 'i') | replace('ș', 's') | replace('ț', 't') |
+                  lower }}_speaker"
+              title: ""
+          - set_conversation_response: !input response_transfer_music
+mode: single
+variables:
+  view_path: !input view_path
+  group_entity: !input group_entity
+  navigation_app: !input navigation_app
+  target_satellite_device: >-
+    {% for sat in expand(group_entity) %}
+      {% if (device_id(sat.attributes.mic_device) == trigger.device_id) or (device_id(sat.attributes.display_device) == trigger.device_id) %}
+        {{ sat.entity_id }}
+      {% endif %}
+    {% endfor %}
+  target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+  target_musicplayer_device: "{{ device_id(state_attr(target_satellite_device, 'musicplayer_device')) }}"
