@@ -31,11 +31,11 @@ trigger:
 condition: []
 action:
 - variables:
-    language: !input language
     target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
     target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
     target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
     weather_entity: !input weather_entity
+    language: !input language
     view: !input view
     translations:
       en:

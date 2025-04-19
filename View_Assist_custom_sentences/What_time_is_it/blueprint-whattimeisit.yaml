@@ -42,11 +42,11 @@ trigger:
     id: dayofweek
 action:
   - variables:
-      language: !input language  
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
+      language: !input language  
       time: "{{ now().strftime('%-I:%M %p') }}"
       day_of_week: "{{ now().strftime('%A') }}"
       date: "{{ now().strftime('%A %B %-d') }}"
