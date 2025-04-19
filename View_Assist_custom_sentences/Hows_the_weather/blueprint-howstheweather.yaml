@@ -88,20 +88,20 @@ action:
           fog: "Mistig"
       de:
         responses:
-          temperature: "Es sind {temperature} Grad und {condition}"
+          temperature: "{condition} bei einer Temperatur von {temperature} Grad"
         weather_states:
-          sunny: "sonnig"
-          clear-night: "es ist ist sternenklarer Himmel"
-          cloudy: "bewölkt"
-          partlycloudy: "teilweise bewölkt"
-          rainy: "regnerisch"
-          pouring: "es regnet stark"
-          lightning: "es gewittert"
-          lightning-rainy: "es gibt Gewitter mit Regen"
-          snowy: "es schneit"
-          snowy-rainy: "es gibt Schneeregen"
-          windy: "windig"
-          fog: "nebelig"
+          sunny: "Es ist sonnig"
+          clear-night: "Es ist sternenklarer Himmel"
+          cloudy: "Es ist bewölkt"
+          partlycloudy: "Es ist teilweise bewölkt"
+          rainy: "Es ist regnerisch"
+          pouring: "Es regnet stark"
+          lightning: "Es gewittert"
+          lightning-rainy: "Es gibt Gewitter mit Regen"
+          snowy: "Es schneit"
+          snowy-rainy: "Es gibt Schneeregen"
+          windy: "Es ist windig"
+          fog: "Es ist nebelig"
       it:
         responses:
           temperature: "Ci sono {temperature} gradi e {condition}"
