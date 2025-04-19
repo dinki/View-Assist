@@ -19,15 +19,15 @@ blueprint:
     command_prompt_date:
       name: Command Prompt Date
       description: The phrase you want to use to trigger the request for date
-      default: "(What is the date | what day is it | what is today)" 
+      default: "(What is the date | what day is it | what is today)"
     command_prompt_dayofweek:
       name: Command Prompt Date
       description: The phrase you want to use to trigger the request for day of the week
-      default: "([What('s)] [is] [the] day of the week [is it] | What day of the week is it)"            
+      default: "([What('s)] [is] [the] day of the week [is it] | What day of the week is it)"
     view:
       name: Dashboard view
       description: The View Assist dashboard view to use for displaying time and date (example /dashboard-viewassist/clock)
-      default: "/view-assist/clock" 
+      default: "/view-assist/clock"
 alias: View Assist  - What time is it
 description: ""
 trigger:
@@ -45,25 +45,114 @@ trigger:
     id: dayofweek
 action:
   - variables:
+      language: !input language  
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
       language: !input language  
       time: "{{ now().strftime('%-I:%M %p') }}"
+      time_24h: "{{ now().strftime('%H:%M') }}"
       day_of_week: "{{ now().strftime('%A') }}"
       date: "{{ now().strftime('%A %B %-d') }}"
+      day_of_month: "{{ now().strftime('%-d') }}"
+      month: "{{ now().strftime('%B') }}"
+      year: "{{ now().strftime('%Y') }}"
       translations:
         en:
           responses:
             time: "It's {time} "
             day_of_week: "Today is {day_of_week}"
             date: "Today is {date}"
+          weekdays:
+            mon: Monday
+            tue: Tuesday
+            wed: Wednesday
+            thu: Thursday
+            fri: Friday
+            sat: Saturday
+            sun: Sunday
+          weekdays_short:
+            mon: Mon
+            tue: Tue
+            wed: Wed
+            thu: Thu
+            fri: Fri
+            sat: Sat
+            sun: Sun
+          months:
+            jan: January
+            feb: February
+            mar: March
+            apr: April
+            may: May
+            jun: June
+            jul: July
+            aug: August
+            sep: September
+            oct: October
+            nov: November
+            dec: December
+          months_short:
+            jan: Jan
+            feb: Feb
+            mar: Mar
+            apr: Apr
+            may: May
+            jun: Jun
+            jul: Jul
+            aug: Aug
+            sep: Sep
+            oct: Oct
+            nov: Nov
+            dec: Dec
         de:
           responses:
-            time: "Es ist {time} Uhr"
+            time: "Es ist {time_24h}"
             day_of_week: "Heute ist {day_of_week}"
-            date: "Heute ist {date}"            
+            date: "Heute ist {date}"
+          weekdays:
+            mon: Montag
+            tue: Dienstag
+            wed: Mittwoch
+            thu: Donnerstag
+            fri: Freitag
+            sat: Samstag
+            sun: Sonntag
+          weekdays_short:
+            mon: Mo.
+            tue: Di.
+            wed: Mi.
+            thu: Do.
+            fri: Fr.
+            sat: Sa.
+            sun: So.
+          months:
+            jan: Januar
+            feb: Februar
+            mar: März
+            apr: April
+            may: Mai
+            jun: Juni
+            jul: Juli
+            aug: August
+            sep: September
+            oct: Oktober
+            nov: November
+            dec: Dezember
+          months_short:
+            jan: Jan.
+            feb: Feb.
+            mar: März
+            apr: Apr.
+            may: Mai
+            jun: Jun.
+            jul: Jul.
+            aug: Aug.
+            sep: Sept.
+            oct: Okt.
+            nov: Nov.
+            dec: Dez.
         es:
           responses:
             time: "Son las {time}"
@@ -73,7 +162,7 @@ action:
           responses:
             time: "Il est {time}"
             day_of_week: "Aujourd'hui, c'est {day_of_week}"
-            date: "Aujourd'hui, c'est {date}"                        
+            date: "Aujourd'hui, c'est {date}"
         it:
           responses:
             time: "Sono le {time}"
@@ -95,31 +184,32 @@ action:
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
-              entity_id: "{{ target_satellite_device }}"              
-            data:     
+              entity_id: "{{ target_satellite_device }}"
+            data:
               last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-
                   {% if target_satellite_device_type != 'audio_only' %}true{% else
                   %}false{% endif %}
-            then: 
+            then:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
-                  path: "{{ view }}" 
+                  path: "{{ view }}"
       - conditions:
           - condition: trigger
             id:
               - dayofweek
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{day_of_week}', day_of_week) }}"
+              day_of_week_translated: "{{ translations[language][weekdays][now().strftime('%a')] }}"
+              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{day_of_week}', weekday_translated) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
-              entity_id: "{{ target_satellite_device }}"              
-            data:     
+              entity_id: "{{ target_satellite_device }}"
+            data:
               last_said: "{{ conversation_response }}"
           - if:
               - condition: template
@@ -137,12 +227,13 @@ action:
               - date
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['date'].replace('{date}', date) }}"
+              month_translated: "{{ translations[language][months][now().strftime('%b')] }}"
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{date_of_month}', date_of_month).replace('{month}', month_translated).replace('{year}', year) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
-              entity_id: "{{ target_satellite_device }}"              
-            data:     
+              entity_id: "{{ target_satellite_device }}"
+            data:
               last_said: "{{ conversation_response }}"
           - if:
               - condition: template
