@@ -203,8 +203,9 @@ action:
               - dayofweek
         sequence:
           - variables:
-              day_of_week_translated: "{{ translations[language][weekdays][now().strftime('%a').lower()] }}"
-              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{day_of_week}', weekday_translated) }}"
+              day_of_week_short: "{{ now().strftime('%a').lower() }}"
+              day_of_week_translated: "{{ translations[language]['weekdays'][day_of_week_short] }}"
+              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{day_of_week}', day_of_week_translated) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -227,7 +228,8 @@ action:
               - date
         sequence:
           - variables:
-              month_translated: "{{ translations[language][months][now().strftime('%b').lower()] }}"
+              month_short: "{{ now().strftime('%b').lower() }}"
+              month_translated: "{{ translations[language]['months'][month_short] }}"
               conversation_response: "{{ translations[language]['responses']['date'].replace('{date_of_month}', date_of_month).replace('{month}', month_translated).replace('{year}', year) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
