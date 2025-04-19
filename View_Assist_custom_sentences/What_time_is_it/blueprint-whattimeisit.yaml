@@ -180,7 +180,7 @@ action:
               - time
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['time'].replace('{time}', time) }}"
+              conversation_response: "{{ translations[language]['responses']['time'].replace('{time}', time).replace('{time_24h}', time_24h) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
