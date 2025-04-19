@@ -230,6 +230,7 @@ action:
           - variables:
               month_short: "{{ now().strftime('%b').lower() }}"
               month_translated: "{{ translations[language]['months'][month_short] }}"
+              day_of_week_short: "{{ now().strftime('%a').lower() }}"
               day_of_week_translated: "{{ translations[language]['weekdays'][day_of_week_short] }}"
               conversation_response: "{{ translations[language]['responses']['date'].replace('{day_of_week}', day_of_week_translated).replace('{day_of_month}', day_of_month|string).replace('{month}', month_translated).replace('{year}', year|string) }}"
           - set_conversation_response: "{{ conversation_response }}"
