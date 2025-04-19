@@ -10,7 +10,7 @@ button_card_templates:
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
-        ]]]        
+        ]]] 
       var_assisting: |-
         [[[
           try 
@@ -18,23 +18,30 @@ button_card_templates:
             var assist_assistbid = localStorage.getItem("view_assist_sensor");
             var micdevice = hass.states[assist_assistbid].attributes.mic_device;
             var micstate = hass.states[micdevice].state;
+            var assisting = false;
+            
             if (micdevice.includes("_stt")) 
             {
-              var assisting = micstate.includes("start") || micstate.includes("vad")
+              assisting = micstate.includes("start") || micstate.includes("vad");
             }
             else if (micdevice.includes("assist_satellite"))
             {
-              var assist_in_progress_sensor =  micdevice
-              var assist_in_progress = hass.states[assist_in_progress_sensor].state
+              var assist_in_progress_sensor = micdevice;
+              var assist_in_progress = hass.states[assist_in_progress_sensor].state;
               if (assist_in_progress === "listening" || assist_in_progress === "processing") {
                   assisting = true; 
-              } else {
-                  assisting = false;
               }              
             }
+            else if (micdevice.includes("hassmic") || micdevice.includes("simple_state"))
+            {
+              assisting = micstate.includes("stt-listening") || 
+                         micstate.includes("intent-processing") || 
+                         micstate.includes("tts-speaking");
+            }
+            
             return `${assisting}`;
           } catch { return  ""}
-        ]]]
+        ]]]        
       var_assisting_text: |-
         [[[
           try 
