@@ -118,10 +118,11 @@ action:
           snowy-rainy: "Nevischio"
           windy: "Ventoso"
           fog: "Nebbioso"
-- set_conversation_response: >-
-    {% set weather_state = states(weather_entity) %}
-    {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
-    {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature') | string).replace("{condition}", translated_condition) }}
+    conversation_response: >-
+      {% set weather_state = states(weather_entity) %}
+      {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
+      {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature') | string).replace("{condition}", translated_condition) }}          
+- set_conversation_response: "{{ conversation_response }}"
 - if:
   - condition: template
     value_template: '{% if target_satellite_device_type != ''audio_only'' %}true{%
