@@ -104,7 +104,7 @@ action:
       - repeat
     sequence:
       - variables:
-          conversation_response: "{{ translations[language]['responses']['repeat'].replace('{last_said}', last_said | replace(repeat_remove, '')) }}"
+          conversation_response: "{{ translations[language]['responses']['repeat'].replace('{last_said}', last_said | replace(translations[language]['responses']['repeat_remove'], '')) }}"
       - set_conversation_response: "{{ conversation_response }}"
       - action: view_assist.set_state
         target:
