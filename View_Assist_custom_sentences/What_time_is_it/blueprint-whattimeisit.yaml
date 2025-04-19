@@ -7,7 +7,7 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language (en, es, de, it, or nl)
+      description: The desired spoken language (de, en, es, fr, it, or nl)
       default: en  
     command_prompt_time:
       name: Command Prompt Time
@@ -53,34 +53,34 @@ action:
       translations:
         en:
           responses:
-            time: "It's { time } "
-            day_of_week: "Today is { day_of_week }"
-            date: "Today is { date }"
-        es:
-          responses:
-            time: "Son las { time }"
-            day_of_week: "Hoy es { day_of_week }"
-            date: "Hoy es { date }"
-        it:
-          responses:
-            time: "Sono le { time }"
-            day_of_week: "Oggi è { day_of_week }"
-            date: "Oggi è { date }"
-        nl:
-          responses:
-            time: "Het is { time }"
-            day_of_week: "Vandaag is { day_of_week }"
-            date: "Vandaag is { date }"
+            time: "It's {time} "
+            day_of_week: "Today is {day_of_week}"
+            date: "Today is {date}"
         de:
           responses:
-            time: "Es ist { time } Uhr"
-            day_of_week: "Heute ist { day_of_week }"
-            date: "Heute ist { date }"
+            time: "Es ist {time} Uhr"
+            day_of_week: "Heute ist {day_of_week}"
+            date: "Heute ist {date}"            
+        es:
+          responses:
+            time: "Son las {time}"
+            day_of_week: "Hoy es {day_of_week}"
+            date: "Hoy es {date}"
         fr:
           responses:
-            time: "Il est { time }"
-            day_of_week: "Aujourd'hui, c'est { day_of_week }"
-            date: "Aujourd'hui, c'est { date }"            
+            time: "Il est {time}"
+            day_of_week: "Aujourd'hui, c'est {day_of_week}"
+            date: "Aujourd'hui, c'est {date}"                        
+        it:
+          responses:
+            time: "Sono le {time}"
+            day_of_week: "Oggi è {day_of_week}"
+            date: "Oggi è {date}"
+        nl:
+          responses:
+            time: "Het is {time}"
+            day_of_week: "Vandaag is {day_of_week}"
+            date: "Vandaag is {date}"
   - choose:
       - conditions:
           - condition: trigger
@@ -88,7 +88,7 @@ action:
               - time
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['time'].replace('{ time }', time) }}"
+              conversation_response: "{{ translations[language]['responses']['time'].replace('{time}', time) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -111,7 +111,7 @@ action:
               - dayofweek
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{ day_of_week }', day_of_week) }}"
+              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{day_of_week}', day_of_week) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -134,7 +134,7 @@ action:
               - date
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['date'].replace('{ date }', date) }}"
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{date}', date) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:

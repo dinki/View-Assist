@@ -70,6 +70,22 @@ action:
           snowy-rainy: "Aguanieve"
           windy: "Ventoso"
           fog: "Nebuloso"
+      fr:
+        responses:
+          temperature: "Il fait {temperature} degrés et {condition}"
+        weather_states:
+          sunny: "Ensoleillé"
+          clear-night: "Nuit claire"
+          cloudy: "Nuageux"
+          partlycloudy: "Partiellement nuageux"
+          rainy: "Pluvieux"
+          pouring: "Fortes pluies"
+          lightning: "Orage"
+          lightning-rainy: "Orage avec pluie"
+          snowy: "Neigeux"
+          snowy-rainy: "Neige fondue"
+          windy: "Venteux"
+          fog: "Brumeux"          
       nl:
         responses:
           temperature: "Het is {temperature} graden en {condition}"
