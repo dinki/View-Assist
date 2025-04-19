@@ -230,7 +230,7 @@ action:
           - variables:
               month_short: "{{ now().strftime('%b').lower() }}"
               month_translated: "{{ translations[language]['months'][month_short] }}"
-              conversation_response: "{{ translations[language]['responses']['date'].replace('{day_of_month}', day_of_month).replace('{month}', month_translated).replace('{year}', year) }}"
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{day_of_month}', day_of_month|string).replace('{month}', month_translated).replace('{year}', year|string) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
