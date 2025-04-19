@@ -47,11 +47,15 @@ action:
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
-      time_now: "{{ now().strftime('%-I:%M %p') }}"
+      time: "{{ now().strftime('%-I:%M %p') }}"
+      day_of_week: "{{ now().strftime('%A') }}"
+      date: "{{ now().strftime('%A %B %-d') }}"
       translations:
         en:
           responses:
             time: "It's { time } "
+            day_of_week: "Today is { day_of_week }"
+            date: "Today is { date }"
   - choose:
       - conditions:
           - condition: trigger
@@ -59,7 +63,7 @@ action:
               - time
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['time'].replace('{ time }', time_now) }}"
+              conversation_response: "{{ translations[language]['responses']['time'].replace('{ time }', time) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -81,7 +85,14 @@ action:
             id:
               - dayofweek
         sequence:
-          - set_conversation_response: Today is {{ now().strftime('%A')}}
+          - variables:
+              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{ day_of_week }', day_of_week) }}"
+          - set_conversation_response: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"              
+            data:     
+              last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-
@@ -97,7 +108,14 @@ action:
             id:
               - date
         sequence:
-          - set_conversation_response: Today is {{ now().strftime('%A %B %-d')}}
+          - variables:
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{ date }', date) }}"
+          - set_conversation_response: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"              
+            data:     
+              last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-
