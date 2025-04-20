@@ -7,7 +7,7 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language (de, en, es, fr, it, or nl)
+      description: The desired spoken language (de, en, es, fr, it, nl and pt)
       default: en  
     command_prompt_time:
       name: Command Prompt Time
@@ -81,6 +81,11 @@ action:
             time: "Het is {time}"
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {date}"
+         pt:
+          responses:
+            time: "São {time} "
+            day_of_week: "Hoje é {day_of_week}"
+            date: "Hoje é {date}"
   - choose:
       - conditions:
           - condition: trigger
