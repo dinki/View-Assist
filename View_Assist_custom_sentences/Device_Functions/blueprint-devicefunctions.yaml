@@ -105,11 +105,6 @@ action:
           mode_failure_device: "Sorry.  {mode} is not a valid mode for this device"
           mode_failure_unrecognized: "Sorry.  {mode} is not a valid mode. Please try {{ modes }}."
       de:
-        commands:
-          repeat: "wiederholen"
-          mode: "modus"
-          view: "ansicht"
-          dndoff: "bitte nicht stören aus"
         responses:
           repeat: "Ich sagte {last_said}"
           repeat_remove: "Ich sagte"
