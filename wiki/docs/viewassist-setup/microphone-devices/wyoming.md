@@ -12,6 +12,7 @@ A project exists for using [Wyoming with Termux](https://github.com/T-vK/wyoming
 ## Installation
 
 * Install Termux on your Android device.  You may need to get this from Fdroid
+* Install Termux API on your Android device.  You may need to get this from Fdroid
 * Open the project page on the Android device and [copy the installation command](https://github.com/T-vK/wyoming-satellite-termux?tab=readme-ov-file#how-to-install)
 * Open Termux on the Android device and paste in the command
 * Watch for interactive prompts and answer defaults for all but do install OpenWakeword when prompted.  You may see popups for device permissions.  Allow all of them.
