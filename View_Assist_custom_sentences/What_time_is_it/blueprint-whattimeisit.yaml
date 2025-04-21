@@ -13,7 +13,6 @@ blueprint:
         language:
           languages: [de, en, es, fr, it, nl]
     command_prompt_time:
-    command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
       default: "[What] [whats] [is] [the] time [is it]"
@@ -89,6 +88,11 @@ action:
             time: "Het is {clock}"
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {date}"
+         pt:
+          responses:
+            time: "São {time} "
+            day_of_week: "Hoje é {day_of_week}"
+            date: "Hoje é {date}"
   - choose:
       - conditions:
           - condition: trigger
