@@ -16,26 +16,43 @@ blueprint:
       description: The View Assist dashboard view to use for displaying music information
         (example /view-assist/music)
       default: /view-assist/music
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, es, fr, it, nl]
+    play_artist_command:
+      name: Play Artist Command
+      description: The command to trigger the play artist action
+      default: (play the artist {artist} | play some {artist} [music] |play [some] [music | songs] by {artist})
+    play_playlist_command:
+      name: Play Playlist Command
+      description: The command to trigger the play playlist action
+      default: start [the] {playlist} playlist
+    play_song_command:
+      name: Play Song Command
+      description: The command to trigger the play song action
+      default: play {song} by {artist}
+    queue_song_command:
+      name: Queue Song Command
+      description: The command to trigger the queue song action
+      default: (queue | cue | Q) {song} by {artist}
 alias: View Assist - Play Music with Music Assistant
 description: Play music using music assistant
 trigger:
 - platform: conversation
-  command:
-  - play the artist {artist}
-  - play some {artist} [music]
-  - play [some] [music | songs] by {artist}
+  command: !input play_artist_command
   id: playartist
 - platform: conversation
-  command:
-  - start [the] {playlist} playlist
+  command: !input play_playlist_command
   id: playlist
 - platform: conversation
-  command:
-  - play {song} by {artist}
+  command: !input play_song_command
   id: playsong
 - platform: conversation
-  command:
-  - (queue | cue | Q) {song} by {artist}
+  command: !input queue_song_command
   id: cuesong
 conditions: []
 actions:
