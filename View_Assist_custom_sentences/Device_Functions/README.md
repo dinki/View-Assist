@@ -48,13 +48,3 @@ Temporary
 
 - en: `stop [the] music`
 - de: `Stoppe [die] Musik`
-
-## Modes
-
-- en: `"['normal', 'night', 'hold', 'cycle']"`
-- de: `['normal', 'nacht', 'halten', 'zyklus']`
-
-## Views
-
-- en: `"['clock', 'weather', 'info', 'infopic']"`
-- de: `['Uhr', 'Wetter', 'Info', 'Infobild']`
