@@ -7,7 +7,7 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language (de, en, es, fr, it, or nl)
+      description: The desired spoken language (de, en, es, fr, it, nl and pt)
       default: en  
     command_prompt_time:
       name: Command Prompt Time
@@ -46,8 +46,13 @@ action:
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
-      language: !input language  
-      time: "{{ now().strftime('%-I:%M %p') }}"
+      language: !input language
+      time: >-
+        {% if state_attr(target_satellite_device, 'use_24_hour_time') is defined and state_attr(target_satellite_device, 'use_24hr_time') == true %}
+          {{ now().strftime('%H:%M') }}
+        {% else %}
+          {{ now().strftime('%-I:%M %p') }}
+        {% endif %}      
       day_of_week: "{{ now().strftime('%A') }}"
       date: "{{ now().strftime('%A %B %-d') }}"
       translations:
@@ -81,6 +86,11 @@ action:
             time: "Het is {time}"
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {date}"
+         pt:
+          responses:
+            time: "São {time} "
+            day_of_week: "Hoje é {day_of_week}"
+            date: "Hoje é {date}"
   - choose:
       - conditions:
           - condition: trigger
