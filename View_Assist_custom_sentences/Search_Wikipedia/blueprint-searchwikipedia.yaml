@@ -48,8 +48,7 @@ action:
     - conditions:
       - condition: template
         value_template: >-
-          {% if wiki_response['thumbnail'] != None %}true{%
-          else %}false{% endif %}
+          {{ wiki_response.get('thumbnail') and not wiki_response.get('error') }}
       sequence:
         - action: view_assist.set_state
           target:
@@ -65,8 +64,7 @@ action:
     - conditions:
       - condition: template
         value_template: >-
-          {% if wiki_response['type'] != 'disambiguation' %}true{%
-          else %}false{% endif %}      
+          {{ wiki_response.get('type') != 'disambiguation' and not wiki_response.get('error') }}     
       sequence:
         - action: view_assist.set_state
           target:
