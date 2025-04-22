@@ -46,8 +46,13 @@ action:
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
-      language: !input language  
-      time: "{{ now().strftime('%-I:%M %p') }}"
+      language: !input language
+      time: >-
+        {% if state_attr(target_satellite_device, 'use_24_hour_time') is defined and state_attr(target_satellite_device, 'use_24hr_time') == true %}
+          {{ now().strftime('%H:%M') }}
+        {% else %}
+          {{ now().strftime('%-I:%M %p') }}
+        {% endif %}      
       day_of_week: "{{ now().strftime('%A') }}"
       date: "{{ now().strftime('%A %B %-d') }}"
       translations:
