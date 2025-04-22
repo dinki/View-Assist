@@ -6,7 +6,7 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language (en, es, de, it, or nl)
+      description: The desired spoken language (en, es, de, it, nl or pt)
       default: en
     command_prompt:
       name: Command Text
@@ -134,6 +134,22 @@ action:
           snowy-rainy: "Nevischio"
           windy: "Ventoso"
           fog: "Nebbioso"
+      pt:
+        responses:
+          temperature: "Faz {temperature} graus e está {condition}"
+        weather_states:
+          sunny: "Ensolarado"
+          clear-night: "Uma noite clara"
+          cloudy: "Nublado"
+          partlycloudy: "Parcialmente nublado"
+          rainy: "Chuvoso"
+          pouring: "Chovendo torrencialmente"
+          lightning: "Com trovoada"
+          lightning-rainy: "Chovendo com trovoada"
+          snowy: "Nevando"
+          snowy-rainy: "Chovendo com granizo"
+          windy: "Ventando"
+          fog: "Com nevoeiro"
     conversation_response: >-
       {% set weather_state = states(weather_entity) %}
       {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
