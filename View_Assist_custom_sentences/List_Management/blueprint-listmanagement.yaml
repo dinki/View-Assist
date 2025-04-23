@@ -35,6 +35,10 @@ blueprint:
       name: Todo List
       description: The Home Assistant todo list to use (example todo.shopping_list)
       default: todo.shopping_list
+    list_name_overwrite:
+      name: List Name Overwrite
+      description: Optional overwrite for list name. This name is spoken instead of the real name of the list. Can be helpful if HA list has long or weird nane.
+      default: ""
     language:
       name: Language
       description: Choose the language for voice responses
@@ -49,6 +53,11 @@ blueprint:
     max_items_readout:
       name: Maximum Items to Read Out
       description: Number of items to read out loud (0 = all)
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
       default: 0
 
 trigger:
@@ -70,53 +79,61 @@ trigger:
 action:
 - variables:
     lang: !input language
-    max_items_readout: !input max_items_readout
+    max_items_readout_str: !input max_items_readout
+    max_items_readout: "{{ max_items_readout_str | int }}"
     list_entity: !input list_entity
+    list_name_overwrite: !input list_name_overwrite
     view: !input view
     target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
     target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
     target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+    list_name: >-
+      {% if list_name_overwrite == "" %}
+        {{ state_attr(list_entity, 'friendly_name') }}
+      {% else %}
+        {{ list_name_overwrite }}
+      {% endif %}
     translations:
       added:
-        en: "{{item}} added to your {{list_name}}"
-        de: "{{item}} wurde zu deiner {{list_name}} hinzugefügt"
-        fr: "{{item}} a été ajouté à ta {{list_name}}"
-        es: "{{item}} se ha añadido a tu {{list_name}}"
+        en: "{item} added to your {list_name}"
+        de: "{item} wurde zu deiner {list_name} hinzugefügt"
+        fr: "{item} a été ajouté à ta {list_name}"
+        es: "{item} se ha añadido a tu {list_name}"
       already_in:
-        en: "{{item}} is already in your {{list_name}}"
-        de: "{{item}} ist bereits in deiner {{list_name}}"
-        fr: "{{item}} est déjà dans ta {{list_name}}"
-        es: "{{item}} ya está en tu {{list_name}}"
+        en: "{item} is already in your {list_name}"
+        de: "{item} ist bereits in deiner {list_name}"
+        fr: "{item} est déjà dans ta {list_name}"
+        es: "{item} ya está en tu {list_name}"
       removed:
-        en: "{{item}} removed from {{list_name}}"
-        de: "{{item}} wurde aus der {{list_name}} entfernt"
-        fr: "{{item}} a été retiré de ta {{list_name}}"
-        es: "{{item}} se ha eliminado de tu {{list_name}}"
+        en: "{item} removed from {list_name}"
+        de: "{item} wurde aus der {list_name} entfernt"
+        fr: "{item} a été retiré de ta {list_name}"
+        es: "{item} se ha eliminado de tu {list_name}"
       not_in:
-        en: "{{item}} is not in {{list_name}}"
-        de: "{{item}} ist nicht in der {{list_name}}"
-        fr: "{{item}} n’est pas dans ta {{list_name}}"
-        es: "{{item}} no está en tu {{list_name}}"
+        en: "{item} is not in {list_name}"
+        de: "{item} ist nicht in der {list_name}"
+        fr: "{item} n’est pas dans ta {list_name}"
+        es: "{item} no está en tu {list_name}"
       empty:
-        en: "There are no unchecked items on your {{list_name}}"
-        de: "Es gibt keine offenen Einträge auf deiner {{list_name}}"
-        fr: "Il n’y a aucun élément non coché sur ta {{list_name}}"
-        es: "No hay elementos pendientes en tu {{list_name}}"
+        en: "There are no unchecked items on your {list_name}"
+        de: "Es gibt keine offenen Einträge auf deiner {list_name}"
+        fr: "Il n’y a aucun élément non coché sur ta {list_name}"
+        es: "No hay elementos pendientes en tu {list_name}"
       one_item:
-        en: "There is 1 unchecked item on your {{list_name}}. It is {{items}}"
-        de: "Es gibt 1 offenen Eintrag auf deiner {{list_name}}. Er lautet {{items}}"
-        fr: "Il y a 1 élément non coché sur ta {{list_name}}. C’est {{items}}"
-        es: "Hay 1 elemento pendiente en tu {{list_name}}. Es {{items}}"
+        en: "There is 1 unchecked item on your {list_name}. It is {items}"
+        de: "Es gibt 1 offenen Eintrag auf deiner {list_name}. Er lautet {items}"
+        fr: "Il y a 1 élément non coché sur ta {list_name}. C’est {items}"
+        es: "Hay 1 elemento pendiente en tu {list_name}. Es {items}"
       multiple_items:
-        en: "There are {{count}} items on your {{list_name}}. They are {{items}}"
-        de: "Es gibt {{count}} Einträge auf deiner {{list_name}}. Sie lauten {{items}}"
-        fr: "Il y a {{count}} éléments sur ta {{list_name}}. Ils sont {{items}}"
-        es: "Hay {{count}} elementos en tu {{list_name}}. Son {{items}}"
+        en: "There are {count} items on your {list_name}. They are {items}"
+        de: "Es gibt {count} Einträge auf deiner {list_name}. Sie lauten {items}"
+        fr: "Il y a {count} éléments sur ta {list_name}. Ils sont {items}"
+        es: "Hay {count} elementos en tu {list_name}. Son {items}"
       multiple_items_limited:
-        en: "There are {{count}} items on your {{list_name}}. The first {{max}} are: {{items}}, and more."
-        de: "Es gibt {{count}} Einträge auf deiner {{list_name}}. Die ersten {{max}} lauten: {{items}}, und mehr."
-        fr: "Il y a {{count}} éléments sur ta {{list_name}}. Les {{max}} premiers sont : {{items}}, et plus encore."
-        es: "Hay {{count}} elementos en tu {{list_name}}. Los primeros {{max}} son: {{items}}, y más."
+        en: "There are {count} items on your {list_name}. The first {max_items} are: {items}, and more."
+        de: "Es gibt {count} Einträge auf deiner {list_name}. Die ersten {max_items} lauten: {items}, und mehr."
+        fr: "Il y a {count} éléments sur ta {list_name}. Les {max_items} premiers sont : {items}, et plus encore."
+        es: "Hay {count} elementos en tu {list_name}. Los primeros {max_items} son: {items}, y más."
 
 - choose:
   - conditions:
@@ -134,7 +151,7 @@ action:
       then:
         - set_conversation_response: >-
             {% set msg = translations['already_in'][lang] %}
-            {{ msg.replace('{{item}}', trigger.slots.item).replace('{{list_name}}', state_attr(list_entity, 'friendly_name')) }}
+            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
       else:
         - service: todo.add_item
           data:
@@ -143,7 +160,7 @@ action:
             entity_id: "{{ list_entity }}"
         - set_conversation_response: >-
             {% set msg = translations['added'][lang] %}
-            {{ msg.replace('{{item}}', trigger.slots.item).replace('{{list_name}}', state_attr(list_entity, 'friendly_name')) }}
+            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
     - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -154,8 +171,8 @@ action:
           data:
             title: "{{ state_attr(list_entity,'friendly_name') }}"
             message_font_size: 4vw
-            list: "{{ list_entity }}"  
-        - action: view_assist.navigate    
+            list: "{{ list_entity }}"
+        - action: view_assist.navigate
           data:
             device: "{{ target_satellite_device }}"
             path: "{{ view }}"
@@ -180,11 +197,11 @@ action:
             entity_id: "{{ list_entity }}"
         - set_conversation_response: >-
             {% set msg = translations['removed'][lang] %}
-            {{ msg.replace('{{item}}', trigger.slots.item).replace('{{list_name}}', state_attr(list_entity, 'friendly_name')) }}
+            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
       else:
         - set_conversation_response: >-
             {% set msg = translations['not_in'][lang] %}
-            {{ msg.replace('{{item}}', trigger.slots.item).replace('{{list_name}}', state_attr(list_entity, 'friendly_name')) }}
+            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
     - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -195,8 +212,8 @@ action:
           data:
             title: "{{ state_attr(list_entity,'friendly_name') }}"
             message_font_size: 4vw
-            list: "{{ list_entity }}"        
-        - action: view_assist.navigate    
+            list: "{{ list_entity }}"
+        - action: view_assist.navigate
           data:
             device: "{{ target_satellite_device }}"
             path: "{{ view }}"
@@ -218,22 +235,23 @@ action:
         {% endif %}
   - set_conversation_response: >-
       {% if count == 0 %}
-        {{ translations['empty'][lang].replace('{{list_name}}', state_attr(list_entity, 'friendly_name')) }}
+        {{ translations['empty'][lang].replace('{list_name}', list_name) }}
       {% elif count == 1 %}
         {{ translations['one_item'][lang]
-          .replace('{{list_name}}', state_attr(list_entity, 'friendly_name'))
-          .replace('{{items}}', limited_items[0]) }}
+          .replace('{list_name}', list_name)
+          .replace('{items}', limited_items[0]) }}
       {% elif max_items_readout > 0 and count > max_items_readout %}
         {{ translations['multiple_items_limited'][lang]
-          .replace('{{list_name}}', state_attr(list_entity, 'friendly_name'))
-          .replace('{{count}}', count|string)
-          .replace('{{max}}', max_items_readout|string)
-          .replace('{{items}}', limited_items | join(', ')) }}
+          .replace('{list_name}', list_name)
+          .replace('{count}', count | string)
+          .replace('{max_items}', max_items_readout | string)
+          .replace('{items}', limited_items | join(', ')) }}
       {% else %}
         {{ translations['multiple_items'][lang]
-          .replace('{{list_name}}', state_attr(list_entity, 'friendly_name'))
-          .replace('{{count}}', count|string)
-          .replace('{{items}}', limited_items | join(', ')) }}
+          .replace('{list_name}', list_name)
+          .replace('{count}', count|string)
+          .replace('{items}', limited_items | join(', ')) }}
+      {% endif %}
   - if:
     - condition: template
       value_template: "{{ target_satellite_device_type != 'audio_only' }}"
