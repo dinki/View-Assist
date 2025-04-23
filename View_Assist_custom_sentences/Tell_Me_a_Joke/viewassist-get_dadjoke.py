@@ -1,20 +1,20 @@
-import requests
-@service(supports_response="optional")
-def viewassist_get_dadjoke(return_response=True):
-    """yaml
-    name: Get Dad joke
-    description: Gets a random dad joke from api
-    """
-    url = "https://dad-jokes-by-api-ninjas.p.rapidapi.com/v1/dadjokes"
-    headers = {
-    'x-rapidapi-key': "get your api key at rapidapi",
-    'x-rapidapi-host': "dad-jokes-by-api-ninjas.p.rapidapi.com"
-    }
+import pyjokes
 
-    r = task.executor(requests.get, url, headers=headers)
-  
-    if r.status_code == requests.codes.ok:
-        response_variable = r.json()
-        return response_variable[0]
-    else:
-        response_variable = {"error": r.status_code, "data": r.json()}
+@service(supports_response="optional")
+def viewassist_get_joke(language="en", return_response=True):
+    """yaml
+        name: Get Random Joke
+        description: "Gets a random joke from pyjokes in the selected language"
+        fields:
+            language:
+                description: "Language code for the joke (supported: en, de, es, it, fr, gl, eu, ru)"
+                example: it
+                required: true
+                selector:
+                    text:
+    """
+    try:
+        joke = pyjokes.get_joke(language=language)
+        return {"joke": joke}
+    except Exception as e:
+        return {"error": str(e)}
