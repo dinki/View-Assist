@@ -72,4 +72,5 @@ command_show2: >-
 ```
 
 ## TODO
-- [ ] Extend View to allow for multiple rows to fit more items or allow scrolling
+- [X] Extend View to allow for scrolling
+- [ ] Extend View to allow for multiple columns to fit more items
