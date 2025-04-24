@@ -35,14 +35,6 @@ custom_fields:
               align-content: flex-start;
             }
 
-            ha-check-list-item {
-              color: white;
-              font-size: 3vw;
-              line-height: 1.6;
-              flex: 1 1 30%; /* Adjusts for 3 columns, changes on smaller screens */
-              margin-bottom: 1rem;
-            }
-
             ha-card.type-todo-list div.header,
             ha-card.type-todo-list .addRow,
             ha-card.type-todo-list div.divider,
