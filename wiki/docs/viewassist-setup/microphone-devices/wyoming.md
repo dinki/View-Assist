@@ -26,3 +26,4 @@ A project exists for using [Wyoming with Termux](https://github.com/T-vK/wyoming
 * Create a new file `nano ~/.bashrc` and add the line `bash ~/wyoming-satellite-android`
 * Force close Termux and clear cache
 * Reopen Termux and Wyoming should start with your changes
+* In Home Assistant, go to Devices & Services -> Add Service -> Wyoming -> enter IP address of the Wyoming satellite and port `10700` 
