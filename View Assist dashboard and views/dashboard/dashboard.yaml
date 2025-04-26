@@ -432,6 +432,8 @@ button_card_templates:
                     const addedItems = new Set();
                     
                     function addIconToList(icon, isDynamicItem = false) {
+                      if (icon === "menu") return;
+                      
                       if (menuActive && isCurrentView(icon)) {
                         return;
                       }
@@ -462,19 +464,23 @@ button_card_templates:
                     }
                     
                     statusIcons.forEach(icon => {
-                      if (icon.includes(':')) {
-                        addIconToList(icon, true);
-                      } else {
-                        addIconToList(icon, false);
+                      if (icon !== "menu") {
+                        if (icon.includes(':')) {
+                          addIconToList(icon, true);
+                        } else {
+                          addIconToList(icon, false);
+                        }
                       }
                     });
                     
                     if (menuActive) {
                       menuItems.forEach(item => {
-                        if (item.includes(':')) {
-                          addIconToList(item, true);
-                        } else {
-                          addIconToList(item, false);
+                        if (item !== "menu") {
+                          if (item.includes(':')) {
+                            addIconToList(item, true);
+                          } else {
+                            addIconToList(item, false);
+                          }
                         }
                       });
                     }
