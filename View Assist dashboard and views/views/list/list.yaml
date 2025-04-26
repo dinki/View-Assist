@@ -35,6 +35,12 @@ custom_fields:
               align-content: flex-start;
             }
 
+            ha-check-list-item {
+              color: white;
+              font-size: 3vw;
+              line-height: 1.6;
+            }
+
             ha-card.type-todo-list div.header,
             ha-card.type-todo-list .addRow,
             ha-card.type-todo-list div.divider,
