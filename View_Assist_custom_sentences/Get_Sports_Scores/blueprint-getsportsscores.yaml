@@ -15,6 +15,8 @@ blueprint:
           options:
             - label: English
               value: en
+            - label: Italian
+              value: it
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
@@ -246,6 +248,20 @@ action:
             error: "Sorry. I could not find any recent or upcoming games for the {team}"
             outcome_win: "won"
             outcome_lose: "lost"
+       it:
+          responses:
+            is_singular_true_post: "{team_name} ha giocato contro {opponent_name}."
+            is_singular_false_post: "La squadra {team_name} ha giocato contro {opponent_name}."
+            is_singular_true_pre: "{team_name} giocherà contro {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "La squadra {team_name} giocherà contro {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} sta giocando contro {opponent_name}."
+            is_singular_false_in: "La squadra {team_name} sta giocando contro {opponent_name}."
+            is_singular_true_not_found: "{team} non ha partite in programma per oggi."
+            is_singular_false_not_found: "La squadra {team} non ha partite in programma per oggi."
+            error: "Mi dispiace, non sono riuscito a trovare partite recenti o imminenti per {team}."
+            outcome_win: "ha vinto"
+            outcome_lose: "ha perso"
+
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
