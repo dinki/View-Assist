@@ -10,7 +10,7 @@ button_card_templates:
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
-        ]]] 
+        ]]]
       var_assisting: |-
         [[[
           try 
@@ -41,7 +41,7 @@ button_card_templates:
             
             return `${assisting}`;
           } catch { return  ""}
-        ]]]        
+        ]]]
       var_assisting_text: |-
         [[[
           try 
@@ -89,7 +89,7 @@ button_card_templates:
               }
             return `${micdevice}`;
           } catch { return  ""}
-        ]]]                
+        ]]]   
       var_mediaplayer_device: |-
         [[[
           try {
@@ -240,11 +240,11 @@ button_card_templates:
             return `${weather_icon}`;
           } catch { return  ""} 
         ]]]
-      var_menu_enabled: |-
+      var_menu_config: |-
         [[[
           try {
-            return hass.states[variables.var_assistsat_entity].attributes.enable_menu;
-          } catch { return false; }
+            return hass.states[variables.var_assistsat_entity].attributes.menu_config;
+          } catch { return "menu_disabled"; }
         ]]]
       var_menu_active: |-
         [[[
@@ -257,6 +257,18 @@ button_card_templates:
           try {
             return hass.states[variables.var_assistsat_entity].attributes.menu_items;
           } catch { return []; }
+        ]]]
+      var_current_path: |-
+        [[[
+          try {
+            const pathname = window.location.pathname;
+            if (pathname) {
+              return pathname;
+            }
+            
+            const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
+            return currentPath || "";
+          } catch { return ""; }
         ]]]
       var_current_view: |-
         [[[
@@ -386,6 +398,7 @@ button_card_templates:
                     const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
                     const menuItems = hass.states[vaEntity].attributes.menu_items || [];
                     const menuActive = hass.states[vaEntity].attributes.menu_active || false;
+                    
                     const currentView = variables.var_current_view;
                     
                     function isCurrentView(item) {
@@ -393,6 +406,7 @@ button_card_templates:
                       
                       if (typeof item === 'string' && !item.includes(':')) {
                         if (item === currentView) return true;
+                        
                         const templateViewMap = {
                           "home": "clock"
                         };
@@ -465,8 +479,7 @@ button_card_templates:
                       });
                     }
                     
-                    if (hass.states[vaEntity].attributes.enable_menu && 
-                        hass.states[vaEntity].attributes.show_menu_button && 
+                    if (hass.states[vaEntity].attributes.menu_config === "menu_enabled_button_visible" && 
                         !addedItems.has("menu")) {
                       buttonList.push({
                         type: "custom:button-card",
@@ -612,7 +625,6 @@ button_card_templates:
     template: icon_template
     icon: |-
       [[[
-        // Extract icon from menu item string
         const parts = variables.menu_item.split('|');
         const icon = parts.length > 1 ? parts[1] : 'view-dashboard';
         return `mdi:${icon}`;
@@ -624,7 +636,6 @@ button_card_templates:
         device: '[[[ return variables.entity_id; ]]]'
         path: |-
           [[[
-            // Extract target from menu item string
             const parts = variables.menu_item.split('|');
             const typeAndTarget = parts[0];
             const target = typeAndTarget.split(':')[1];
@@ -634,7 +645,6 @@ button_card_templates:
     template: icon_template
     icon: |-
       [[[
-        // Extract icon from menu item string
         const parts = variables.menu_item.split('|');
         const icon = parts.length > 1 ? parts[1] : 'toggle-switch';
         return `mdi:${icon}`;
@@ -643,7 +653,6 @@ button_card_templates:
       action: toggle
       entity: |-
         [[[
-          // Extract target entity from menu item string
           const parts = variables.menu_item.split('|');
           const typeAndTarget = parts[0];
           return typeAndTarget.split(':')[1];
@@ -652,7 +661,6 @@ button_card_templates:
     template: icon_template
     icon: |-
       [[[
-        // Extract icon from menu item string
         const parts = variables.menu_item.split('|');
         const icon = parts.length > 1 ? parts[1] : 'cog';
         return `mdi:${icon}`;
@@ -661,7 +669,6 @@ button_card_templates:
       action: call-service
       service: |-
         [[[
-          // Extract service from menu item string
           const parts = variables.menu_item.split('|');
           const typeAndTarget = parts[0];
           return typeAndTarget.split(':')[1];
