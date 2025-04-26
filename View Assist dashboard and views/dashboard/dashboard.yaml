@@ -657,6 +657,14 @@ button_card_templates:
           const typeAndTarget = parts[0];
           return typeAndTarget.split(':')[1];
         ]]]
+    hold_action:
+      action: more-info
+      entity: |-
+        [[[
+          const parts = variables.menu_item.split('|');
+          const typeAndTarget = parts[0];
+          return typeAndTarget.split(':')[1];
+        ]]]
   dynamic_service_item:
     template: icon_template
     icon: |-
