@@ -8,7 +8,7 @@
 ## Play Playlist Command
 
 - en: `start [the] {playlist} playlist`
-- de: `Starte [die] {playlist} Playlist`
+- de: `Spiele [die] Playlist {playlist}`
 
 ## Play Song Command
 
@@ -18,4 +18,4 @@
 ## Queue Song Command
 
 - en: `(queue | cue | Q) {song} by {artist}`
-- de: `Setze {song} von {artist} [in|auf] die Warteschlange`
+- de: `Setze [den Song|den Titel] {song} von {artist} [in|auf] die Warteschlange`
