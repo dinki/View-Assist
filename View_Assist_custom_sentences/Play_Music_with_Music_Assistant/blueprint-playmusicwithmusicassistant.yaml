@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Play Music with Music Assistant
   description: Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.0.4)
+    Assistant v 1.1.0)
   domain: automation
   input:
     ma_instance:
@@ -22,7 +22,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl]
+          languages: [de, en]
     play_artist_command:
       name: Play Artist Command
       description: The command to trigger the play artist action
