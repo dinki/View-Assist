@@ -4,6 +4,18 @@ blueprint:
   domain: automation
 
   input:
+    language:
+      name: Language
+      description: Language for voice responses
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - en
+            - de
+            - fr
+            - es
+      default: en
     command_add1:
       name: Command Text Add 1
       description: First phrase for adding to the list
@@ -36,17 +48,6 @@ blueprint:
       name: List Name Overwrite
       description: Optional name overwrite for list
       default: ""
-    language:
-      name: Language
-      description: Language for voice responses
-      selector:
-        select:
-          options:
-            - en
-            - de
-            - fr
-            - es
-      default: en
     max_items_readout:
       name: Maximum Items to Read Out
       description: Number of items to read out loud (0 = all)
