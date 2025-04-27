@@ -240,36 +240,6 @@ button_card_templates:
             return `${weather_icon}`;
           } catch { return  ""} 
         ]]]
-      var_menu_config: |-
-        [[[
-          try {
-            return hass.states[variables.var_assistsat_entity].attributes.menu_config;
-          } catch { return "menu_disabled"; }
-        ]]]
-      var_menu_active: |-
-        [[[
-          try {
-            return hass.states[variables.var_assistsat_entity].attributes.menu_active;
-          } catch { return false; }
-        ]]]
-      var_menu_items: |-
-        [[[
-          try {
-            return hass.states[variables.var_assistsat_entity].attributes.menu_items;
-          } catch { return []; }
-        ]]]
-      var_current_path: |-
-        [[[
-          try {
-            const pathname = window.location.pathname;
-            if (pathname) {
-              return pathname;
-            }
-            
-            const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
-            return currentPath || "";
-          } catch { return ""; }
-        ]]]
       var_current_view: |-
         [[[
           try {
