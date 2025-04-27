@@ -70,9 +70,10 @@ trigger_phrases:
 
 ## Changelog
 
-| Version | Description        |
-|---------|--------------------|
-| v 1.3.0 | Added translations |
-| v 1.0.0 | Initial release    |
+| Version | Description                                   |
+|---------|-----------------------------------------------|
+| v 1.3.0 | Added german, spanish and french translations |
+| v 1.2.0 | Added italien translation                     |
+| v 1.0.0 | Initial release                               |
 
 
