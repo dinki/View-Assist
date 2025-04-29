@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Get Sports Scores
   description:
     Get sports scores for your favorite teams (View Assist getsportsscores
-    v 1.2.0)
+    v 1.3.0)
   domain: automation
   input:
     language:
@@ -17,6 +17,22 @@ blueprint:
               value: en
             - label: Italian
               value: it
+            - label: German
+              value: de
+            - label: Spanish
+              value: es
+            - label: French
+              value: fr
+    trigger_phrases:
+      name: Trigger Phrases
+      description: The phrases to trigger the sports score conversation
+      default:
+        - how did [the] {team} do
+        - (what is | what's) the score of the {team} (game | match)
+        - how (is | are) [the] {team} doing
+        - how (is | are) [the] {team} (game | match) [going]
+      selector:
+        object: { }
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
@@ -48,12 +64,8 @@ blueprint:
         /view-assist/sports)
       default: /view-assist/sports
 trigger:
-  - platform: conversation
-    command:
-      - how did [the] {team} do
-      - (what is | what's) the score of the {team} (game | match)
-      - how (is | are) [the] {team} doing
-      - how (is | are) [the] {team} (game | match) [going]
+- platform: conversation
+  command: !input trigger_phrases
 condition: []
 action:
   - variables:
@@ -248,10 +260,10 @@ action:
             error: "Sorry. I could not find any recent or upcoming games for the {team}"
             outcome_win: "won"
             outcome_lose: "lost"
-       it:
+        it:
           responses:
-            is_singular_true_post: "{team_name} ha giocato contro {opponent_name}."
-            is_singular_false_post: "La squadra {team_name} ha giocato contro {opponent_name}."
+            is_singular_true_post: "{team_name} ha giocato contro {opponent_name} e"
+            is_singular_false_post: "La squadra {team_name} ha giocato contro {opponent_name} e"
             is_singular_true_pre: "{team_name} giocherà contro {opponent_name} {kickoff_in}."
             is_singular_false_pre: "La squadra {team_name} giocherà contro {opponent_name} {kickoff_in}."
             is_singular_true_in: "{team_name} sta giocando contro {opponent_name}."
@@ -261,6 +273,45 @@ action:
             error: "Mi dispiace, non sono riuscito a trovare partite recenti o imminenti per {team}."
             outcome_win: "ha vinto"
             outcome_lose: "ha perso"
+        de:
+          responses:
+            is_singular_true_post: "{team_name} hat gegen {opponent_name} gespielt und hat"
+            is_singular_false_post: "Das Team {team_name} hat gegen {opponent_name} gespielt und hat"
+            is_singular_true_pre: "{team_name} spielt gegen {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "Das Team {team_name} spielt gegen {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} spielt gerade gegen {opponent_name}."
+            is_singular_false_in: "Das Team {team_name} spielt gerade gegen {opponent_name}."
+            is_singular_true_not_found: "{team} hat heute keine Spiele im Zeitplan."
+            is_singular_false_not_found: "Das Team {team} hat heute keine Spiele im Zeitplan."
+            error: "Entschuldigung, ich konnte keine aktuellen oder bevorstehenden Spiele für {team} finden."
+            outcome_win: "gewonnen"
+            outcome_lose: "verloren"
+        es:
+          responses:
+            is_singular_true_post: "{team_name} jugó contra {opponent_name} y"
+            is_singular_false_post: "El equipo {team_name} jugó contra {opponent_name} y"
+            is_singular_true_pre: "{team_name} jugará contra {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "El equipo {team_name} jugará contra {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} está jugando contra {opponent_name}."
+            is_singular_false_in: "El equipo {team_name} está jugando contra {opponent_name}."
+            is_singular_true_not_found: "{team} no tiene juegos programados para hoy."
+            is_singular_false_not_found: "El equipo {team} no tiene juegos programados para hoy."
+            error: "Lo siento, no pude encontrar juegos recientes o próximos para {team}."
+            outcome_win: "ganó"
+            outcome_lose: "perdió"
+        fr:
+          responses:
+            is_singular_true_post: "{team_name} a joué contre {opponent_name} et"
+            is_singular_false_post: "L'équipe {team_name} a joué contre {opponent_name} et"
+            is_singular_true_pre: "{team_name} jouera contre {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "L'équipe {team_name} jouera contre {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} joue actuellement contre {opponent_name}."
+            is_singular_false_in: "L'équipe {team_name} joue actuellement contre {opponent_name}."
+            is_singular_true_not_found: "{team} n'a pas de matchs prévus aujourd'hui."
+            is_singular_false_not_found: "L'équipe {team} n'a pas de matchs prévus aujourd'hui."
+            error: "Désolé, je n'ai pas pu trouver de matchs récents ou à venir pour {team}."
+            outcome_win: "a gagné"
+            outcome_lose: "a perdu"
 
   - if:
       - condition: template
