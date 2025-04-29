@@ -128,9 +128,6 @@ action:
           title: "{{ state_attr(list_entity,'friendly_name') }}"
           message_font_size: 4vw
           list: "{{ list_entity }}"
-      - service: python_script.set_state
-        data:
-          entity_id: "{{ target_satellite_device }}"
       - action: view_assist.navigate    
         data:
           device: "{{ target_satellite_device }}"
