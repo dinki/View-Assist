@@ -7,11 +7,8 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language
-      default: en
-      selector:
-        language:
-          languages: [de, en, es, fr, it, nl]
+      description: The desired spoken language (de, en, es, fr, it, nl and pt)
+      default: en  
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -50,8 +47,12 @@ action:
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
       language: !input language
-      time: "{{ now().strftime('%-I:%M %p') }}"
-      time_24h: "{{ now().strftime('%H:%M') }}"
+      time: >-
+        {% if state_attr(target_satellite_device, 'use_24_hour_time') is defined and state_attr(target_satellite_device, 'use_24hr_time') == true %}
+          {{ now().strftime('%H:%M') }}
+        {% else %}
+          {{ now().strftime('%-I:%M %p') }}
+        {% endif %}      
       day_of_week: "{{ now().strftime('%A') }}"
       date: "{{ now().strftime('%A %B %-d') }}"
       day_of_month: "{{ now().strftime('%-d') }}"
@@ -130,6 +131,11 @@ action:
             time: "Het is {time}"
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {date}"
+         pt:
+          responses:
+            time: "São {time} "
+            day_of_week: "Hoje é {day_of_week}"
+            date: "Hoje é {date}"
   - choose:
       - conditions:
           - condition: trigger

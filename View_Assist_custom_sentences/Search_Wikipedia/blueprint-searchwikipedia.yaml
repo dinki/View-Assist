@@ -9,6 +9,10 @@ blueprint:
       name: Command
       description: The phrase you want to use to trigger searching Wikipedia
       default: "(Tell me about [the] {searchterm}| search [for] {searchterm})"
+    language:
+      name: Language
+      description: The language version of Wikipedia to search in
+      default: "en"
     dashboard_infopic:
       name: Dashboard Infopic
       description: The View Assist dashboard view to use for info and pic
@@ -33,6 +37,7 @@ action:
     response_variable: wiki_response
     data:
       searchterm: "{{ trigger.slots.searchterm }}"
+      language: "{{ language }}"
   - action: view_assist.set_state
     target:
       entity_id: "{{ target_satellite_device }}"              
@@ -43,8 +48,7 @@ action:
     - conditions:
       - condition: template
         value_template: >-
-          {% if wiki_response['thumbnail'] != None %}true{%
-          else %}false{% endif %}
+          {{ wiki_response.get('thumbnail') and not wiki_response.get('error') }}
       sequence:
         - action: view_assist.set_state
           target:
@@ -60,8 +64,7 @@ action:
     - conditions:
       - condition: template
         value_template: >-
-          {% if wiki_response['type'] != 'disambiguation' %}true{%
-          else %}false{% endif %}      
+          {{ wiki_response.get('type') != 'disambiguation' and not wiki_response.get('error') }}     
       sequence:
         - action: view_assist.set_state
           target:

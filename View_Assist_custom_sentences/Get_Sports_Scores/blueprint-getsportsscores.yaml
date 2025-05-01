@@ -1,9 +1,38 @@
 blueprint:
   name: View Assist - Get Sports Scores
-  description: Get sports scores for your favorite teams (View Assist getsportsscores
-    v 1.1.0)
+  description:
+    Get sports scores for your favorite teams (View Assist getsportsscores
+    v 1.3.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - label: English
+              value: en
+            - label: Italian
+              value: it
+            - label: German
+              value: de
+            - label: Spanish
+              value: es
+            - label: French
+              value: fr
+    trigger_phrases:
+      name: Trigger Phrases
+      description: The phrases to trigger the sports score conversation
+      default:
+        - how did [the] {team} do
+        - (what is | what's) the score of the {team} (game | match)
+        - how (is | are) [the] {team} doing
+        - how (is | are) [the] {team} (game | match) [going]
+      selector:
+        object: { }
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
@@ -11,366 +40,454 @@ blueprint:
       selector:
         entity:
           filter:
-          - domain:
-            - teamtracker
+            - domain:
+                - teamtracker
           multiple: false
     college_teams:
       name: College Teams
-      description: College Teams can be added but it is complicated.  You will need
+      description:
+        College Teams can be added but it is complicated.  You will need
         to know a few specifics for defining.  See Team Tracker docs here.
       default:
         college_teams:
           lsu football:
             team_id: LSU
-            conference_id: '8'
+            conference_id: "8"
             league_path: college-football
             sport_path: football
       selector:
         object: {}
     view:
       name: Dashboard Sports view
-      description: The View Assist dashboard view to use for sports scores (example
+      description:
+        The View Assist dashboard view to use for sports scores (example
         /view-assist/sports)
       default: /view-assist/sports
-  source_url: https://raw.githubusercontent.com/dinki/View-Assist/viewassist-getsportsscores/View%20Assist%20custom%20sentences/Get%20Sports%20Scores/blueprint-getsportsscores.yaml
 trigger:
 - platform: conversation
-  command:
-  - how did [the] {team} do
-  - (what is | what's) the score of the {team} (game | match)
-  - how (is | are) [the] {team} doing
-  - how (is | are) [the] {team} (game | match) [going]
+  command: !input trigger_phrases
 condition: []
 action:
-- variables:
-    target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
-    target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
-    target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
-    view: !input view
-    team_tracker: !input team_tracker
-    college_teams: !input college_teams
-    mlb_teams:
-      d backs: ari
-      braves: atl
-      orioles: bal
-      red sox: bos
-      cubs: chc
-      white sox: chw
-      reds: cin
-      guardians: cle
-      rockies: col
-      tigers: det
-      astros: hou
-      royals: kc
-      angels: laa
-      dodgers: lad
-      marlins: mia
-      brewers: mil
-      twins: min
-      mets: nym
-      yankees: nyy
-      athletics: oak
-      phillies: phi
-      pirates: pit
-      padres: sd
-      san francisco giants: sf
-      mariners: sea
-      saint louis cardinals: stl
-      rays: tb
-      texas rangers: tex
-      blue jays: tor
-      nationals: wsh
-    nfl_teams:
-      falcons: atl
-      ravens: bal
-      bills: buf
-      carolina panthers: car
-      bears: chi
-      bengals: cin
-      browns: cle
-      cowboys: dal
-      broncos: den
-      lions: det
-      packers: gb
-      texans: hou
-      colts: ind
-      jaguars: jax
-      chiefs: kc
-      raiders: lv
-      chargers: lac
-      rams: lar
-      dolphins: mia
-      vikings: min
-      patriots: ne
-      saints: 'no'
-      new york jets: nyj
-      eagles: phi
-      steelers: pit
-      49ers: sf
-      seahawks: sea
-      buccaneers: tb
-      titans: ten
-      commanders: was
-      new york giants: nyg
-      arizona cardinals: arz
-    nba_teams:
-      hawks: atl
-      celtics: bos
-      nets: bkn
-      hornets: cha
-      bulls: chi
-      cavaliers: cle
-      mavericks: dal
-      nuggets: den
-      pistons: det
-      warriors: gs
-      rockets: hou
-      pacers: ind
-      clippers: lac
-      lakers: lal
-      grizzlies: mem
-      heat: mia
-      bucks: mil
-      timberwolves: min
-      pelicans: 'no'
-      knicks: ny
-      thunder: okc
-      magic: orl
-      76ers: phi
-      suns: phx
-      trail blazers: por
-      sacramento kings: sac
-      spurs: sa
-      raptors: tor
-      jazz: uta
-      wizards: was
-    wnba_teams:
-      dream: atl
-      sky: chi
-      sun: conn
-      wings: dal
-      fever: ind
-      aces: lv
-      sparks: la
-      lynx: min
-      liberty: ny
-      mystics: was
-      mercury: phx
-      storm: sea
-    mls_teams:
-      atlanta united: atl
-      austin fc: atx
-      charlotte fc: clt
-      fire: chi
-      fc cincinnati: cin
-      rapids: col
-      crew: cbus
-      dc united: dc
-      fc dallas: dal
-      dynamo: hou
-      sporting: kc
-      galaxy: lag
-      los angeles fc: lafc
-      inter: mia
-      minnesota united: min
-      cf montreal: mtl
-      sc: nsh
-      revolution: ner
-      new york city fc: nyc
-      red bulls: nyrb
-      city: stl
-      union: phi
-      timbers: por
-      real: rsl
-      earthquakes: sj
-      sounders: sea
-      toronto fc: tor
-      whitecaps: van
-    nhl_teams:
-      bruins: bos
-      sabres: buf
-      flames: cal
-      hurricanes: car
-      blackhawks: chi
-      avalanche: col
-      blue jackets: cbj
-      stars: dal
-      red wings: det
-      oilers: edm
-      florida panthers: fla
-      los angeles kings: la
-      wild: min
-      canadiens: mtl
-      predators: nsh
-      devils: njd
-      islanders: nyi
-      new york rangers: nyr
-      senators: ott
-      flyers: phi
-      penguins: pit
-      sharks: sj
-      lightning: tb
-      maple leafs: tor
-      canucks: van
-      capitals: was
-      winnipeg jets: wpg
-      kraken: sea
-      blues: stl
-      golden knights: vgk
-      ducks: ana
-      clo: chi
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in mlb_teams }}'
-  then:
   - variables:
-      query_team: '{{ mlb_teams[(trigger.slots.team)|lower] }}'
-      sport_path: baseball
-      league_path: mlb
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data:
-      sport_path: '{{ sport_path }}'
-      team_id: '{{ query_team |lower}}'
-      league_path: '{{ league_path }}'
-      is_singular: false
-    enabled: true
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in nfl_teams }}'
-  then:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      language: !input language
+      view: !input view
+      team_tracker: !input team_tracker
+      college_teams: !input college_teams
+      mlb_teams:
+        d backs: ari
+        braves: atl
+        orioles: bal
+        red sox: bos
+        cubs: chc
+        white sox: chw
+        reds: cin
+        guardians: cle
+        rockies: col
+        tigers: det
+        astros: hou
+        royals: kc
+        angels: laa
+        dodgers: lad
+        marlins: mia
+        brewers: mil
+        twins: min
+        mets: nym
+        yankees: nyy
+        athletics: oak
+        phillies: phi
+        pirates: pit
+        padres: sd
+        san francisco giants: sf
+        mariners: sea
+        saint louis cardinals: stl
+        rays: tb
+        texas rangers: tex
+        blue jays: tor
+        nationals: wsh
+      nfl_teams:
+        falcons: atl
+        ravens: bal
+        bills: buf
+        carolina panthers: car
+        bears: chi
+        bengals: cin
+        browns: cle
+        cowboys: dal
+        broncos: den
+        lions: det
+        packers: gb
+        texans: hou
+        colts: ind
+        jaguars: jax
+        chiefs: kc
+        raiders: lv
+        chargers: lac
+        rams: lar
+        dolphins: mia
+        vikings: min
+        patriots: ne
+        saints: "no"
+        new york jets: nyj
+        eagles: phi
+        steelers: pit
+        49ers: sf
+        seahawks: sea
+        buccaneers: tb
+        titans: ten
+        commanders: was
+        new york giants: nyg
+        arizona cardinals: arz
+      nba_teams:
+        hawks: atl
+        celtics: bos
+        nets: bkn
+        hornets: cha
+        bulls: chi
+        cavaliers: cle
+        mavericks: dal
+        nuggets: den
+        pistons: det
+        warriors: gs
+        rockets: hou
+        pacers: ind
+        clippers: lac
+        lakers: lal
+        grizzlies: mem
+        heat: mia
+        bucks: mil
+        timberwolves: min
+        pelicans: "no"
+        knicks: ny
+        thunder: okc
+        magic: orl
+        76ers: phi
+        suns: phx
+        trail blazers: por
+        sacramento kings: sac
+        spurs: sa
+        raptors: tor
+        jazz: uta
+        wizards: was
+      wnba_teams:
+        dream: atl
+        sky: chi
+        sun: conn
+        wings: dal
+        fever: ind
+        aces: lv
+        sparks: la
+        lynx: min
+        liberty: ny
+        mystics: was
+        mercury: phx
+        storm: sea
+      mls_teams:
+        atlanta united: atl
+        austin fc: atx
+        charlotte fc: clt
+        fire: chi
+        fc cincinnati: cin
+        rapids: col
+        crew: cbus
+        dc united: dc
+        fc dallas: dal
+        dynamo: hou
+        sporting: kc
+        galaxy: lag
+        los angeles fc: lafc
+        inter: mia
+        minnesota united: min
+        cf montreal: mtl
+        sc: nsh
+        revolution: ner
+        new york city fc: nyc
+        red bulls: nyrb
+        city: stl
+        union: phi
+        timbers: por
+        real: rsl
+        earthquakes: sj
+        sounders: sea
+        toronto fc: tor
+        whitecaps: van
+      nhl_teams:
+        bruins: bos
+        sabres: buf
+        flames: cal
+        hurricanes: car
+        blackhawks: chi
+        avalanche: col
+        blue jackets: cbj
+        stars: dal
+        red wings: det
+        oilers: edm
+        florida panthers: fla
+        los angeles kings: la
+        wild: min
+        canadiens: mtl
+        predators: nsh
+        devils: njd
+        islanders: nyi
+        new york rangers: nyr
+        senators: ott
+        flyers: phi
+        penguins: pit
+        sharks: sj
+        lightning: tb
+        maple leafs: tor
+        canucks: van
+        capitals: was
+        winnipeg jets: wpg
+        kraken: sea
+        blues: stl
+        golden knights: vgk
+        ducks: ana
+        clo: chi
+      translations:
+        en:
+          responses:
+            is_singular_true_post: "{team_name} played {opponent_name} and"
+            is_singular_false_post: "The {team_name} played the {opponent_name} and"
+            is_singular_true_pre: "{team_name} plays {opponent_name} {kickoff_in}"
+            is_singular_false_pre: "The {team_name} play the {opponent_name} {kickoff_in}"
+            is_singular_true_in: "{team_name} is currently playing {opponent_name}."
+            is_singular_false_in: "The {team_name} are currently playing the {opponent_name}."
+            is_singular_true_not_found: "{team} has no games on today's schedule"
+            is_singular_false_not_found: "The {team} have no games on today's schedule"
+            error: "Sorry. I could not find any recent or upcoming games for the {team}"
+            outcome_win: "won"
+            outcome_lose: "lost"
+        it:
+          responses:
+            is_singular_true_post: "{team_name} ha giocato contro {opponent_name} e"
+            is_singular_false_post: "La squadra {team_name} ha giocato contro {opponent_name} e"
+            is_singular_true_pre: "{team_name} giocherà contro {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "La squadra {team_name} giocherà contro {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} sta giocando contro {opponent_name}."
+            is_singular_false_in: "La squadra {team_name} sta giocando contro {opponent_name}."
+            is_singular_true_not_found: "{team} non ha partite in programma per oggi."
+            is_singular_false_not_found: "La squadra {team} non ha partite in programma per oggi."
+            error: "Mi dispiace, non sono riuscito a trovare partite recenti o imminenti per {team}."
+            outcome_win: "ha vinto"
+            outcome_lose: "ha perso"
+        de:
+          responses:
+            is_singular_true_post: "{team_name} hat gegen {opponent_name} gespielt und hat"
+            is_singular_false_post: "Das Team {team_name} hat gegen {opponent_name} gespielt und hat"
+            is_singular_true_pre: "{team_name} spielt gegen {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "Das Team {team_name} spielt gegen {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} spielt gerade gegen {opponent_name}."
+            is_singular_false_in: "Das Team {team_name} spielt gerade gegen {opponent_name}."
+            is_singular_true_not_found: "{team} hat heute keine Spiele im Zeitplan."
+            is_singular_false_not_found: "Das Team {team} hat heute keine Spiele im Zeitplan."
+            error: "Entschuldigung, ich konnte keine aktuellen oder bevorstehenden Spiele für {team} finden."
+            outcome_win: "gewonnen"
+            outcome_lose: "verloren"
+        es:
+          responses:
+            is_singular_true_post: "{team_name} jugó contra {opponent_name} y"
+            is_singular_false_post: "El equipo {team_name} jugó contra {opponent_name} y"
+            is_singular_true_pre: "{team_name} jugará contra {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "El equipo {team_name} jugará contra {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} está jugando contra {opponent_name}."
+            is_singular_false_in: "El equipo {team_name} está jugando contra {opponent_name}."
+            is_singular_true_not_found: "{team} no tiene juegos programados para hoy."
+            is_singular_false_not_found: "El equipo {team} no tiene juegos programados para hoy."
+            error: "Lo siento, no pude encontrar juegos recientes o próximos para {team}."
+            outcome_win: "ganó"
+            outcome_lose: "perdió"
+        fr:
+          responses:
+            is_singular_true_post: "{team_name} a joué contre {opponent_name} et"
+            is_singular_false_post: "L'équipe {team_name} a joué contre {opponent_name} et"
+            is_singular_true_pre: "{team_name} jouera contre {opponent_name} {kickoff_in}."
+            is_singular_false_pre: "L'équipe {team_name} jouera contre {opponent_name} {kickoff_in}."
+            is_singular_true_in: "{team_name} joue actuellement contre {opponent_name}."
+            is_singular_false_in: "L'équipe {team_name} joue actuellement contre {opponent_name}."
+            is_singular_true_not_found: "{team} n'a pas de matchs prévus aujourd'hui."
+            is_singular_false_not_found: "L'équipe {team} n'a pas de matchs prévus aujourd'hui."
+            error: "Désolé, je n'ai pas pu trouver de matchs récents ou à venir pour {team}."
+            outcome_win: "a gagné"
+            outcome_lose: "a perdu"
+
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
+    then:
+      - variables:
+          query_team: "{{ mlb_teams[(trigger.slots.team)|lower] }}"
+          sport_path: baseball
+          league_path: mlb
+          is_singular: false
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in nfl_teams }}"
+    then:
+      - variables:
+          query_team: "{{ nfl_teams[(trigger.slots.team)|lower] }}"
+          sport_path: football
+          league_path: nfl
+          is_singular: false
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in nba_teams }}"
+    then:
+      - variables:
+          query_team: "{{ nba_teams[(trigger.slots.team)|lower] }}"
+          sport_path: basketball
+          league_path: nba
+          is_singular: false
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in wnba_teams }}"
+    then:
+      - variables:
+          query_team: "{{ wnba_teams[(trigger.slots.team)|lower] }}"
+          sport_path: basketball
+          league_path: wnba
+          is_singular: false
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in mls_teams }}"
+    then:
+      - variables:
+          query_team: "{{ mls_teams[(trigger.slots.team)|lower] }}"
+          sport_path: soccer
+          league_path: mls
+          is_singular: false
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in nhl_teams }}"
+    then:
+      - variables:
+          query_team: "{{ nhl_teams[(trigger.slots.team)|lower] }}"
+          sport_path: hockey
+          league_path: nhl
+          is_singular: false
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team |lower}}"
+          league_path: "{{ league_path }}"
+  - if:
+      - condition: template
+        value_template: "{{ (trigger.slots.team)|lower in college_teams }}"
+    then:
+      - variables:
+          query_team: "{{ college_teams[(trigger.slots.team)|lower]['team_id'] }}"
+          sport_path: "{{ college_teams[(trigger.slots.team)|lower]['sport_path'] }}"
+          league_path:
+            "{{ college_teams[(trigger.slots.team)|lower]['league_path']
+            }}"
+          conference_id:
+            "{{ college_teams[(trigger.slots.team)|lower]['conference_id']
+            }}"
+          is_singular: true
+      - service: teamtracker.call_api
+        target:
+          entity_id: "{{ team_tracker }}"
+        data: |
+          {
+            "sport_path": sport_path,
+            "team_id": query_team | lower,
+            "league_path": league_path,
+            "conference_id": conference_id | string
+          }
   - variables:
-      query_team: '{{ nfl_teams[(trigger.slots.team)|lower] }}'
-      sport_path: football
-      league_path: nfl
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data:
-      sport_path: '{{ sport_path }}'
-      team_id: '{{ query_team |lower}}'
-      league_path: '{{ league_path }}'
-      is_singular: false
-    enabled: true
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in nba_teams }}'
-  then:
-  - variables:
-      query_team: '{{ nba_teams[(trigger.slots.team)|lower] }}'
-      sport_path: basketball
-      league_path: nba
-      is_singular: false
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data:
-      sport_path: '{{ sport_path }}'
-      team_id: '{{ query_team |lower}}'
-      league_path: '{{ league_path }}'
-    enabled: true
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in wnba_teams }}'
-  then:
-  - variables:
-      query_team: '{{ wnba_teams[(trigger.slots.team)|lower] }}'
-      sport_path: basketball
-      league_path: wnba
-      is_singular: false
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data:
-      sport_path: '{{ sport_path }}'
-      team_id: '{{ query_team |lower}}'
-      league_path: '{{ league_path }}'
-    enabled: true
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in mls_teams }}'
-  then:
-  - variables:
-      query_team: '{{ mls_teams[(trigger.slots.team)|lower] }}'
-      sport_path: soccer
-      league_path: mls
-      is_singular: false
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data:
-      sport_path: '{{ sport_path }}'
-      team_id: '{{ query_team |lower}}'
-      league_path: '{{ league_path }}'
-    enabled: true
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in nhl_teams }}'
-  then:
-  - variables:
-      query_team: '{{ nhl_teams[(trigger.slots.team)|lower] }}'
-      sport_path: hockey
-      league_path: nhl
-      is_singular: false
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data:
-      sport_path: '{{ sport_path }}'
-      team_id: '{{ query_team |lower}}'
-      league_path: '{{ league_path }}'
-    enabled: true
-  enabled: true
-- if:
-  - condition: template
-    value_template: '{{ (trigger.slots.team)|lower in college_teams }}'
-  then:
-  - variables:
-      query_team: '{{ college_teams[(trigger.slots.team)|lower][''team_id''] }}'
-      sport_path: '{{ college_teams[(trigger.slots.team)|lower][''sport_path''] }}'
-      league_path: '{{ college_teams[(trigger.slots.team)|lower][''league_path'']
-        }}'
-      conference_id: '{{ college_teams[(trigger.slots.team)|lower][''conference_id'']
-        }}'
-      is_singular: true
-  - service: teamtracker.call_api
-    target:
-      entity_id: '{{ team_tracker }}'
-    data: "{{\n  {\n    \"sport_path\": sport_path,\n    \"team_id\": query_team |lower,\n
-      \   \"league_path\": league_path,\n     \"conference_id\": conference_id | string\n
-      \ }\n}}\n"
-    enabled: true
-- set_conversation_response: "{% if is_state(team_tracker, 'POST')%}\n  {% if is_singular
-    is false %}\n    The {{state_attr(team_tracker,'team_name')}} played the {{state_attr(team_tracker,'opponent_name')}}
-    and\n  {% else %}\n    {{state_attr(team_tracker,'team_name')}} played {{state_attr(team_tracker,'opponent_name')}}
-    and\n  {% endif %}  \n    {% if is_state_attr(team_tracker,'team_winner', false)
-    %}\n      lost\n    {% else %}\n      won\n    {% endif %} \n  {{state_attr(team_tracker,'team_score')}}
-    - {{state_attr(team_tracker,'opponent_score')}}  \n{% elif is_state(team_tracker,
-    'PRE') %} \n  {% if is_singular is false %}\n    The {{state_attr(team_tracker,'team_name')}}
-    play the {{state_attr(team_tracker,'opponent_name')}} {{state_attr(team_tracker,'kickoff_in')}}\n
-    \ {% else %}\n    {{state_attr(team_tracker,'team_name')}} plays {{state_attr(team_tracker,'opponent_name')}}
-    {{state_attr(team_tracker,'kickoff_in')}}\n  {% endif %}\n{% elif is_state(team_tracker,
-    'IN') %} \n  {% if is_singular is false %}\n    The {{state_attr(team_tracker,'team_name')}}
-    are currently playing the {{state_attr(team_tracker,'opponent_name')}}. \n  {%
-    else %}\n    {{state_attr(team_tracker,'team_name')}} is currently playing {{state_attr(team_tracker,'opponent_name')}}.
-    \n  {% endif %}\n  The score is {{state_attr(team_tracker,'team_name')}} {{state_attr(team_tracker,'team_score')}},
-    {{state_attr(team_tracker,'opponent_name')}}  {{state_attr(team_tracker,'opponent_score')}}
-    \n{% elif is_state(team_tracker, 'NOT_FOUND') %} \n  The {{ trigger.slots.team
-    }} have no games on today's schedule\n{% else %} \n  Sorry.  I could not find
-    any recent or upcoming games for the {{ trigger.slots.team }}\n{% endif %}"
-- if:
-  - condition: template
-    value_template: '{{ target_satellite_device_type != ''audio_only'' }}'
-  then:
+      conversation_response: >-
+        {% if is_state(team_tracker, 'POST') %}
+          {% if is_singular is false %}
+            {{ translations[language]['responses']['is_singular_false_post'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
+          {% else %}
+            {{ translations[language]['responses']['is_singular_true_post'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
+          {% endif %}
+            {% if is_state_attr(team_tracker, 'team_winner', false) %}
+              {{ translations[language]['responses']['outcome_lose'] }}
+            {% else %}
+              {{ translations[language]['responses']['outcome_win'] }}
+            {% endif %}
+            {{ state_attr(team_tracker, 'team_score') }} - {{ state_attr(team_tracker, 'opponent_score') }}
+        {% elif is_state(team_tracker, 'PRE') %}
+          {% if is_singular is false %}
+            {{ translations[language]['responses']['is_singular_false_pre'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')).replace("{kickoff_in}", state_attr(team_tracker, 'kickoff_in')) }}
+          {% else %}
+            {{ translations[language]['responses']['is_singular_true_pre'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')).replace("{kickoff_in}", state_attr(team_tracker, 'kickoff_in')) }}
+          {% endif %}
+        {% elif is_state(team_tracker, 'IN') %}
+          {% if is_singular is false %}
+            {{ translations[language]['responses']['is_singular_false_in'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
+          {% else %}
+            {{ translations[language]['responses']['is_singular_true_in'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
+          {% endif %}
+            The score is {{ state_attr(team_tracker, 'team_name') }} {{ state_attr(team_tracker, 'team_score') }},
+            {{ state_attr(team_tracker, 'opponent_name') }} {{ state_attr(team_tracker, 'opponent_score') }}
+        {% elif is_state(team_tracker, 'NOT_FOUND') %}
+          {% if is_singular is false %}
+            {{ translations[language]['responses']['is_singular_false_not_found'].replace("{team}", trigger.slots.team) }}
+          {% else %}
+            {{ translations[language]['responses']['is_singular_true_not_found'].replace("{team}", trigger.slots.team) }}
+          {% endif %}
+        {% else %}
+          {{ translations[language]['responses']['error'].replace("{team}", trigger.slots.team) }}
+        {% endif %}
+  - set_conversation_response: "{{ conversation_response }}"
   - action: view_assist.set_state
     target:
-      entity_id: '{{ target_satellite_device }}'
+      entity_id: "{{ target_satellite_device }}"
     data:
-      title: ''
-      team_tracker: '{{ team_tracker }}'
-  - data:
-      device: "{{ target_satellite_device }}"
-      path: '{{ view }}'
-    action: view_assist.navigate      
+      last_said: "{{ conversation_response }}"
+  - if:
+      - condition: template
+        value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+    then:
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          title: ""
+          team_tracker: "{{ team_tracker }}"
+      - data:
+          device: "{{ target_satellite_device }}"
+          path: "{{ view }}"
+        action: view_assist.navigate
 mode: single

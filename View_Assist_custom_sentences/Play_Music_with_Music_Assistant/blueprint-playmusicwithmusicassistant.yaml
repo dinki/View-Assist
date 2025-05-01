@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Play Music with Music Assistant
   description: Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.0.4)
+    Assistant v 1.1.0)
   domain: automation
   input:
     ma_instance:
@@ -16,26 +16,43 @@ blueprint:
       description: The View Assist dashboard view to use for displaying music information
         (example /view-assist/music)
       default: /view-assist/music
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en]
+    play_artist_command:
+      name: Play Artist Command
+      description: The command to trigger the play artist action
+      default: (play the artist {artist} | play some {artist} [music] |play [some] [music | songs] by {artist})
+    play_playlist_command:
+      name: Play Playlist Command
+      description: The command to trigger the play playlist action
+      default: start [the] {playlist} playlist
+    play_song_command:
+      name: Play Song Command
+      description: The command to trigger the play song action
+      default: play {song} by {artist}
+    queue_song_command:
+      name: Queue Song Command
+      description: The command to trigger the queue song action
+      default: (queue | cue | Q) {song} by {artist}
 alias: View Assist - Play Music with Music Assistant
 description: Play music using music assistant
 trigger:
-- platform: conversation
-  command:
-  - play the artist {artist}
-  - play some {artist} [music]
-  - play [some] [music | songs] by {artist}
+- trigger: conversation
+  command: !input play_artist_command
   id: playartist
-- platform: conversation
-  command:
-  - start [the] {playlist} playlist
+- trigger: conversation
+  command: !input play_playlist_command
   id: playlist
-- platform: conversation
-  command:
-  - play {song} by {artist}
+- trigger: conversation
+  command: !input play_song_command
   id: playsong
-- platform: conversation
-  command:
-  - (queue | cue | Q) {song} by {artist}
+- trigger: conversation
+  command: !input queue_song_command
   id: cuesong
 conditions: []
 actions:
@@ -46,7 +63,28 @@ actions:
     target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device') }}"
     target_use_announce: "{{ state_attr(target_satellite_device, 'use_announce') }}"
     view_path: !input view_path
-    ma_instance: !input ma_instance     
+    ma_instance: !input ma_instance
+    language: !input language
+    translations:
+      en:
+        responses:
+          playartist_found: Playing {artist} music
+          playartist_not_found: I was unable to find any music for {search_artist}
+          playlist_found: "Playing the {playlist} playlist"
+          playlist_not_found: "Sorry, no playlist named {search_playlist} could be found"
+          playsong_found: "Playing {song} by {artist}"
+          playsong_not_found: "Sorry {song} by {artist} was not found"
+          playsong_queue: "Queuing {song} by {artist}"
+      de:
+        responses:
+          playartist_found: "Spiele Musik von {artist}"
+          playartist_not_found: "Entschuldigung, ich konnte keine Musik von {search_artist} finden"
+          playlist_found: "Spiele die Playlist {playlist}"
+          playlist_not_found: "Entschuldigung, ich konnte keine Playlist mit dem Namen {search_playlist} finden"
+          playsong_found: "Spiele {song} von {artist}"
+          playsong_not_found: "Entschuldigung, ich konnte den Song {song} von {artist} nicht finden"
+          playsong_queue: "Füge {song} von {artist} zur Warteschlange hinzu"
+    
 - choose:
   - conditions:
     - condition: trigger
@@ -88,7 +126,8 @@ actions:
         - condition: template
           value_template: "{{ target_use_announce is not false }}"
         then:
-        - set_conversation_response: Playing {{ found_artist.artists.0.name }} music
+        - set_conversation_response: >-
+            {{ translations[language]['responses']['playartist_found'].replace("{artist}", found_artist.artists.0.name)}}
         else:
         - set_conversation_response: ""
       else:
@@ -96,7 +135,8 @@ actions:
         - condition: template
           value_template: "{{ target_use_announce is not false }}"
         then:
-        - set_conversation_response: I was unable to find any music for {{ trigger.slots.artist }}
+        - set_conversation_response: >-
+            {{ translations[language]['responses']['playartist_not_found'].replace("{search_artist}", trigger.slots.artist)}}
         else:
         - set_conversation_response: ""
   - conditions:
@@ -139,7 +179,8 @@ actions:
         - condition: template
           value_template: "{{ target_use_announce is not false }}"
         then:
-        - set_conversation_response: Playing the {{ found_playlist.playlists.0.name }} playlist
+        - set_conversation_response: >-
+            {{ translations[language]['responses']['playlist_found'].replace("{playlist}", found_playlist.playlists.0.name )}}
         else:
         - set_conversation_response: ""
       else:
@@ -147,7 +188,8 @@ actions:
         - condition: template
           value_template: "{{ target_use_announce is not false }}"
         then:
-        - set_conversation_response: Sorry, no playlist named {{ trigger.slots.artist }} could be found
+        - set_conversation_response: >-
+            {{ translations[language]['responses']['playlist_found'].replace("{search_playlist}", trigger.slots.artist )}}
         else:
         - set_conversation_response: ""
   - conditions:
@@ -202,6 +244,11 @@ actions:
               value_template: "{{ target_use_announce is not false }}"
             then:
             - set_conversation_response: Queueing {{found_track.tracks.0.name}}
+            - set_conversation_response: >-
+                {{ translations[language]['responses']['playsong_queue']
+                .replace("{artist}", trigger.slots.artist )
+                .replace("{song}", found_track.tracks.0.name )
+                }}
             else:
             - set_conversation_response: ""
         - conditions:
@@ -221,7 +268,11 @@ actions:
             - condition: template
               value_template: "{{ target_use_announce is not false }}"
             then:
-            - set_conversation_response: Playing {{ found_track.tracks.0.name }} by {{ trigger.slots.artist }}
+            - set_conversation_response: >-
+                {{ translations[language]['responses']['playsong_found']
+                .replace("{artist}", trigger.slots.artist )
+                .replace("{song}", found_track.tracks.0.name )
+                }}
             else:
             - set_conversation_response: ""
       else:
@@ -229,6 +280,11 @@ actions:
         - condition: template
           value_template: "{{ target_use_announce is not false }}"
         then:
-        - set_conversation_response: Sorry {{ trigger.slots.song }} by {{ trigger.slots.artist }} was not found
+        - set_conversation_response: 
+        - set_conversation_response: >-
+            {{ translations[language]['responses']['playsong_not_found']
+            .replace("{artist}", trigger.slots.artist )
+            .replace("{song}", trigger.slots.song )
+            }}
         else:
         - set_conversation_response: ""
