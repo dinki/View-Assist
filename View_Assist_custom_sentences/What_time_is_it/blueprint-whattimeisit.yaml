@@ -7,8 +7,11 @@ blueprint:
   input:
     language:
       name: Language
-      description: The desired spoken language (de, en, es, fr, it, nl and pt)
-      default: en  
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, es, fr, it, nl]
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -47,12 +50,7 @@ action:
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
       language: !input language
-      time: >-
-        {% if state_attr(target_satellite_device, 'use_24_hour_time') is defined and state_attr(target_satellite_device, 'use_24hr_time') == true %}
-          {{ now().strftime('%H:%M') }}
-        {% else %}
-          {{ now().strftime('%-I:%M %p') }}
-        {% endif %}      
+      time: "{{ now().strftime('%H:%M') if state_attr(target_satellite_device, 'use_24_hour_time') else now().strftime('%-I:%M %p') }}"
       day_of_week: "{{ now().strftime('%A') }}"
       date: "{{ now().strftime('%A %B %-d') }}"
       day_of_month: "{{ now().strftime('%-d') }}"
@@ -131,11 +129,6 @@ action:
             time: "Het is {time}"
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {date}"
-         pt:
-          responses:
-            time: "São {time} "
-            day_of_week: "Hoje é {day_of_week}"
-            date: "Hoje é {date}"
   - choose:
       - conditions:
           - condition: trigger
@@ -143,7 +136,7 @@ action:
               - time
         sequence:
           - variables:
-              conversation_response: "{{ translations[language]['responses']['time'].replace('{time}', time).replace('{time_24h}', time_24h) }}"
+              conversation_response: "{{ translations[language]['responses']['time'].replace('{time}', time) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -195,7 +188,7 @@ action:
               month_translated: "{{ translations[language]['months'][month_short] }}"
               day_of_week_short: "{{ now().strftime('%a').lower() }}"
               day_of_week_translated: "{{ translations[language]['weekdays'][day_of_week_short] }}"
-              conversation_response: "{{ translations[language]['responses']['date'].replace('{day_of_week}', day_of_week_translated).replace('{day_of_month}', day_of_month|string).replace('{month}', month_translated).replace('{year}', year|string) }}"
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{date}', date).replace('{day_of_week}', day_of_week_translated).replace('{day_of_month}', day_of_month|string).replace('{month}', month_translated).replace('{year}', year|string) }}"
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
