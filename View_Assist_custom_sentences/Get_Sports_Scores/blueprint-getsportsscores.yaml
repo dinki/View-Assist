@@ -10,19 +10,8 @@ blueprint:
       description: The desired spoken language
       default: en
       selector:
-        select:
-          mode: dropdown
-          options:
-            - label: English
-              value: en
-            - label: Italian
-              value: it
-            - label: German
-              value: de
-            - label: Spanish
-              value: es
-            - label: French
-              value: fr
+        language:
+          languages: [de, en, es, fr, it]              
     trigger_phrases:
       name: Trigger Phrases
       description: The phrases to trigger the sports score conversation
