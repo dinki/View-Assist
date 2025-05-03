@@ -42,7 +42,6 @@ action:
         en:
           responses:
             spell: "{word} is spelled ... {spaced_text}"
-
       conversation_response: >-
         {{ translations[language]['responses']['spell'].replace("{word}", trigger.slots.word).replace("{spaced_text}", spaced_text) }}
   - set_conversation_response: "{{ conversation_response }}"

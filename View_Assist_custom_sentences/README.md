@@ -16,9 +16,7 @@ Search_Wikipedia Supports languages for search but needs translations for error 
 
 ~~Spell_a_Word~~ en
 
-Thank_You
-
-Thermostat_Control
+~~Thermostat_Control~~ en
 
 ~~Travel_Times_by_Waze~~ en
 
@@ -33,3 +31,5 @@ Thermostat_Control
 ~~Sound_Machine~~ User enters their own response so no language variables needed
 
 ~~View_Camera~~ User enters their own response so no language variables needed
+
+~~Thank_You~~ User enters their own response so no language variables needed
