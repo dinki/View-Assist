@@ -1,18 +1,21 @@
-# View Assist - View Assist Search Wikipedia (v 1.0.0)
+# View Assist - View Assist Search Wikipedia (v 1.1.0)
 # Special thanks to Scratt for his work on this blueprint
 blueprint:
   name: View Assist - Search Wikipedia
   description: Search for a search term using Wikipedia (View Assist wikisearch v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [en]
     command:
       name: Command
       description: The phrase you want to use to trigger searching Wikipedia
       default: "(Tell me about [the] {searchterm}| search [for] {searchterm})"
-    language:
-      name: Language
-      description: The language version of Wikipedia to search in
-      default: "en"
     dashboard_infopic:
       name: Dashboard Infopic
       description: The View Assist dashboard view to use for info and pic
@@ -20,9 +23,7 @@ blueprint:
     dashboard_info:
       name: Dashboard Info Only
       description: The View Assist dashboard view to use for info only
-      default: "/view-assist/info"  
-alias: View Assist - Search Wikipedia
-description: Search for a search term using Wikipedia (View Assist wikisearch v 1.0.0)
+      default: "/view-assist/info"
 trigger:
   - platform: conversation
     command:
@@ -33,6 +34,12 @@ action:
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      language: !input language
+      translations:
+        en:
+          responses:
+            view_title: "Wikipedia Search"
+            search_error: "Sorry, I couldn't find anything on Wikipedia for that"
   - action: pyscript.search_wikipedia
     response_variable: wiki_response
     data:
@@ -40,47 +47,54 @@ action:
       language: "{{ language }}"
   - action: view_assist.set_state
     target:
-      entity_id: "{{ target_satellite_device }}"              
-    data:       
-      title: Wikipedia Search
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      title: "{{ translations[language]['responses']['view_title'] }}"
       message_font_size: 3vw
   - choose:
-    - conditions:
-      - condition: template
-        value_template: >-
-          {{ wiki_response.get('thumbnail') and not wiki_response.get('error') }}
-      sequence:
-        - action: view_assist.set_state
-          target:
-            entity_id: "{{ target_satellite_device }}"              
-          data:       
-            message: "{{ wiki_response['extract'] }}"
-            image: "{{ wiki_response['thumbnail'] }}"
-        - set_conversation_response: "{{ wiki_response['extract'] }}"
-        - action: view_assist.navigate
-          data:
-            device: "{{ target_satellite_device }}"
-            path: !input dashboard_infopic
-    - conditions:
-      - condition: template
-        value_template: >-
-          {{ wiki_response.get('type') != 'disambiguation' and not wiki_response.get('error') }}     
-      sequence:
-        - action: view_assist.set_state
-          target:
-            entity_id: "{{ target_satellite_device }}"              
-          data:       
-            message: "{{ wiki_response['extract'] }}"
-        - set_conversation_response: "{{ wiki_response['extract'] }}"
-        - if:
+      - conditions:
           - condition: template
             value_template: >-
-              {{ ('view' in state_attr(repeat.item, 'type')) }}
-          then:        
-            - action: view_assist.navigate
-              data:
-                device: "{{ target_satellite_device }}"
-                path: !input dashboard_info
+              {{ wiki_response.get('thumbnail') and not wiki_response.get('error') }}
+        sequence:
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              message: "{{ wiki_response['extract'] }}"
+              image: "{{ wiki_response['thumbnail'] }}"
+          - set_conversation_response: "{{ wiki_response['extract'] }}"
+          - action: view_assist.navigate
+            data:
+              device: "{{ target_satellite_device }}"
+              path: !input dashboard_infopic
+      - conditions:
+          - condition: template
+            value_template: >-
+              {{ wiki_response.get('type') != 'disambiguation' and not wiki_response.get('error') }}
+        sequence:
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              message: "{{ wiki_response['extract'] }}"
+          - set_conversation_response: "{{ wiki_response['extract'] }}"
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ ('view' in state_attr(repeat.item, 'type')) }}
+            then:
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: !input dashboard_info
     default:
-      - set_conversation_response: Sorry, I couldn't find anything on Wikipedia for that
+      - variables:
+          conversation_response: "{{ translations[language]['responses']['search_error'] }}"
+      - set_conversation_response: "{{ conversation_response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          last_said: "{{ conversation_response }}"
 mode: single
