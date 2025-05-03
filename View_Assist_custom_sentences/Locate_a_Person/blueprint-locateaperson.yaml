@@ -8,11 +8,8 @@ blueprint:
       description: The desired spoken language
       default: en
       selector:
-        select:
-          mode: dropdown
-          options:
-            - label: English
-              value: en
+        language:
+          languages: [en]              
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
