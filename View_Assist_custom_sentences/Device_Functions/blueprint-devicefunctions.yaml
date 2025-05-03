@@ -10,7 +10,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl]
+          languages: [de, en]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
