@@ -1,4 +1,4 @@
-# View Assist - Show Webpage (v 1.0.0)
+# View Assist - Show Webpage (v 1.1.0)
 blueprint:
   name: View Assist - Show Webpage
   description: Ask View Assist to show a website as defined by the blueprint (View Assist showwebpage v 1.0.0)
@@ -11,21 +11,21 @@ blueprint:
     response:
       name: Response Text
       description: The response to give when launching website
-      default: "Here comes Home Assistant"                                 
+      default: "Here comes Home Assistant"
     view:
       name: Dashboard Webpage view
       description: The View Assist dashboard view designed to show the webpage (example /view-assist/webpage)
-      default: "/view-assist/webpage"      
+      default: "/view-assist/webpage"
     url:
       name: Webpage
-      description:  The website url to display (example https://www.home-assistant.io/)
+      description: The website url to display (example https://www.home-assistant.io/)
       default: "https://www.home-assistant.io/"
     hold_mode:
       name: Hold Mode
       description: Set on to keep the page from automatically switching after timeout
       default: true
       selector:
-        boolean:      
+        boolean:
 alias: View Assist - Show website
 description: ""
 trigger:
@@ -41,7 +41,7 @@ action:
       url: !input url
       hold_mode: !input hold_mode
       view: !input view
-      response: !input response    
+      response: !input response
   - action: view_assist.set_state
     target:
       entity_id: "{{ target_satellite_device }}"
@@ -62,4 +62,9 @@ action:
         data:
           mode: hold
   - set_conversation_response: "{{ response }}"
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      last_said: "{{ response }}"
 mode: single

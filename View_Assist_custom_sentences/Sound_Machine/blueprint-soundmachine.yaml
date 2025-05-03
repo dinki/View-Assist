@@ -11,6 +11,10 @@ blueprint:
       default:
         thunder: http://192.168.0.25:8123/local/viewassist/soundmachine/rainandthunder.mp3
         ocean: http://192.168.0.25:8123/local/viewassist/soundmachine/oceanwaves.mp3
+    response:
+      name: Failure Response Text
+      description: The response to give when an error occurs
+      default: Something went wrong
 triggers:
   - command:
       - (start|play) [the] {soundtype} sound machine
@@ -56,7 +60,7 @@ actions:
                       entity_id: "{{ target_satellite_device }}"
                       time: "{{ trigger.slots.when }}"
                       extra:
-                      - command: "stop sound machine"
+                        - command: "stop sound machine"
                     response_variable: timer
           - action: view_assist.sound_alarm
             data:
@@ -75,11 +79,16 @@ actions:
                 {% else %}
                   {{ target_satellite_device }}
                 {% endif %}
-              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}" 
+              target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
           - action: view_assist.cancel_sound_alarm
             data:
               entity_id: "{{ target_mediaplayer_device }}"
           - set_conversation_response: ""
     default:
-      - set_conversation_response: Something went wrong
+      - set_conversation_response: "{{ response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          last_said: "{{ response }}"
 mode: parallel
