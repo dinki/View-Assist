@@ -3,6 +3,13 @@ blueprint:
   description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [en]
     travelfromhome:
       name: Travel from home
       description: The phrase used to get directions from home
@@ -28,45 +35,64 @@ blueprint:
       description: Your Waze region
       selector:
         select:
+          mode: dropdown
           options:
-            - us
-            - na
-            - eu
-            - il
-            - au    
-      default: us 
+            - label: United States
+              value: us
+            - label: North America
+              value: na
+            - label: European Union
+              value: eu
+            - label: Israel
+              value: il
+            - label: Australia
+              value: au
+      default: us
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
-      default: "/view-assist/info"      
+      default: "/view-assist/info"
 trigger:
   - platform: conversation
     command: !input travelfromhome
     id: travelfromhome
   - platform: conversation
-    command: 
+    command:
       - !input travelfromatob
       - !input traveltoafromb
-    id: travelfromatob    
+    id: travelfromatob
 condition: []
 action:
   - variables:
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      language: !input language
       view: !input view
       home: !input home
       region: !input region
       input_places: !input places
       places: "{{ input_places | from_json}}"
       origin: >-
-        {% if trigger.slots.origin |lower in places
-        %}{{places[trigger.slots.origin]}}{% else
-        %}{{trigger.slots.origin}}{%endif%}  
+        {% if trigger.slots.origin |lower in places %}
+          {{places[trigger.slots.origin]}}
+        {% else %}
+          {{trigger.slots.origin}}
+        {%endif%}
       destination: >-
-        {% if trigger.slots.destination |lower in places
-        %}{{places[trigger.slots.destination]}}{% else
-        %}{{trigger.slots.destination}}{%endif%}
+        {% if trigger.slots.destination |lower in places %}
+          {{places[trigger.slots.destination]}}
+        {% else %}
+          {{trigger.slots.destination}}
+        {%endif%}
+      translations:
+        en:
+          responses:
+            travelfromhome: "It will take about {time} to drive to {destination}"
+            travelfromatob: "It will take about {time} to drive from {origin} to {destination}"
+            hoursandminutes: "{hours} hours and {minutes} minutes"
+            minutesonly: "{minutes} minutes"
+            viewtitle: "Travel Time"
   - choose:
       - conditions:
           - condition: trigger
@@ -79,20 +105,39 @@ action:
               origin: "{{ home }}"
               destination: "{{ destination }}"
             response_variable: routes_response
-          - set_conversation_response: >
-              It will take about {% set time =
-              routes_response['routes'][0]['duration'] | round %}{% if time > 60
-              %}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{
-              hours }} hours and {{ minutes }} minutes{% else %}{{ time }}
-              minutes{% endif %} to drive to {{ trigger.slots.destination |
-              title }}
+          - variables:
+              time: "{{ routes_response['routes'][0]['duration'] | round }}"
+              hours: >-
+                {% if time > 60 %}
+                  {% set hours = time // 60 %}
+                  {{ hours }}
+                {% endif %}
+              minutes: >-
+                {% if time > 60 %}
+                  {% set minutes = time % 60 %}
+                    {{ minutes }}
+                  {% else %}
+                    {{ time }}
+                  {% endif %}
+              conversation_response: >-
+                {% if time > 60 %}
+                  {{ translations[language]['responses']['travelfromhome'].replace("{time}", translations[language]['responses']['hoursandminutes']).replace("{hours}", hours | string).replace("{minutes}", minutes | string).replace("{destination}", trigger.slots.destination | title) }}
+                {% else %}
+                  {{ translations[language]['responses']['travelfromhome'].replace("{time}", translations[language]['responses']['minutesonly']).replace("{minutes}", minutes | string).replace("{destination}", trigger.slots.destination | title) }}
+                {% endif %}
+          - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
-              entity_id: '{{ target_satellite_device }}'              
+              entity_id: "{{ target_satellite_device }}"
             data:
-              title: Travel Time
+              last_said: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              title: "{{ translations[language]['responses']['viewtitle'] }}"
               message_font_size: 4vw
-              message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive to {{ trigger.slots.destination | title }}"
+              message: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -100,7 +145,7 @@ action:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
-                  path: "{{ view }}"            
+                  path: "{{ view }}"
       - conditions:
           - condition: trigger
             id:
@@ -112,20 +157,39 @@ action:
               origin: "{{ origin }}"
               destination: "{{ destination }}"
             response_variable: routes_response
-          - set_conversation_response: >
-              It will take about {% set time =
-              routes_response['routes'][0]['duration'] | round %}{% if time > 60
-              %}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{
-              hours }} hours and {{ minutes }} minutes{% else %}{{ time }}
-              minutes{% endif %} to drive from {{ trigger.slots.origin | title
-              }} to {{ trigger.slots.destination | title }}
+          - variables:
+              time: "{{ routes_response['routes'][0]['duration'] | round }}"
+              hours: >-
+                {% if time > 60 %}
+                  {% set hours = time // 60 %}
+                  {{ hours }}
+                {% endif %}
+              minutes: >-
+                {% if time > 60 %}
+                  {% set minutes = time % 60 %}
+                    {{ minutes }}
+                  {% else %}
+                    {{ time }}
+                  {% endif %}
+              conversation_response: >-
+                {% if time > 60 %}
+                  {{ translations[language]['responses']['travelfromatob'].replace("{time}", translations[language]['responses']['hoursandminutes']).replace("{hours}", hours | string).replace("{minutes}", minutes | string).replace("{destination}", trigger.slots.destination | title).replace("{origin}", trigger.slots.origin | title) }}
+                {% else %}
+                  {{ translations[language]['responses']['travelfromatob'].replace("{time}", translations[language]['responses']['minutesonly']).replace("{minutes}", minutes | string).replace("{destination}", trigger.slots.destination | title).replace("{origin}", trigger.slots.origin | title) }}
+                {% endif %}
+          - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
-              entity_id: '{{ target_satellite_device }}'
+              entity_id: "{{ target_satellite_device }}"
             data:
-              title: Travel Time
+              last_said: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              title: "{{ translations[language]['responses']['viewtitle'] }}"
               message_font_size: 4vw
-              message: "It will take about {% set time = routes_response['routes'][0]['duration'] | round %} {% if time > 60%}{% set hours = time // 60 %}{% set minutes = time % 60 %}{{ hours }} hours and {{ minutes }} minutes{% else %}{{ time }} minutes{% endif %} to drive from {{ trigger.slots.origin | title }} to {{ trigger.slots.destination | title }}"
+              message: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
