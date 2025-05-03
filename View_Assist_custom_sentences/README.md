@@ -10,9 +10,9 @@ Language Conversion To do list:
 
 ~~Locate_a_Person~~ en
 
-Play_Music_with_Music_Assistant en, de (Check this one. Needs last_said added)
+~~Play_Music_with_Music_Assistant~~ en, de (Someone double check this is functioning for all)
 
-Search_Wikipedia Supports languages for search but needs translations for error response and last_said
+~~Search_Wikipedia~~ en (Supports languages for search script but needs translations for error response and view name)
 
 ~~Spell_a_Word~~ en
 
