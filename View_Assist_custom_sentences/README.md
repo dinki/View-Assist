@@ -14,13 +14,13 @@ Play_Music_with_Music_Assistant en, de (Check this one. Needs last_said added)
 
 Search_Wikipedia Supports languages for search but needs translations for error response and last_said
 
-Spell_a_Word
+~~Spell_a_Word~~ en
 
 Thank_You
 
 Thermostat_Control
 
-Travel_Times_by_Waze
+~~Travel_Times_by_Waze~~ en
 
 ~~What_time_is_it~~ de, en, es, fr, it, nl
 
