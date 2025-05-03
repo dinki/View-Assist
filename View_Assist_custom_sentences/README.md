@@ -30,4 +30,4 @@ Travel_Times_by_Waze
 
 View_Camera
 
-What_time_is_it de, en, es, fr, it, nl
+~~What_time_is_it~~ de, en, es, fr, it, nl
