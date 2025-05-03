@@ -1,6 +1,6 @@
 Language Conversion To do list:
 
-Device_Functions
+~~Device_Functions~~ de, en
 
 ~~Get_Sports_Scores~~  de, en, es, fr, it
 
