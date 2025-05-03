@@ -61,6 +61,12 @@ blueprint:
           max: 100
           step: 1
       default: 0
+    reverse_spoken_list:
+      name: Reverse Spoken List
+      description: Reverse the list order before speaking it during (speaks newest items first)
+      selector:
+        boolean:
+      default: false
 
 trigger:
 - platform: conversation
@@ -86,6 +92,7 @@ action:
     list_entity: !input list_entity
     list_name_overwrite: !input list_name_overwrite
     view: !input view
+    reverse_spoken_list: !input reverse_spoken_list
     target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
     target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
     target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
@@ -256,7 +263,12 @@ action:
       status: needs_action
     response_variable: list_items
   - variables:
-      items: "{{ list_items[list_entity]['items'] | map(attribute='summary') | list }}"
+      items: >-
+        {% if reverse_spoken_list %}
+          {{ list_items[list_entity]['items'] | map(attribute='summary') | list | reverse | list }}
+        {% else %}
+          {{ list_items[list_entity]['items'] | map(attribute='summary') | list }}
+        {% endif %}
       count: "{{ items | count }}"
       limited_items: >-
         {% if max_items_readout > 0 %}

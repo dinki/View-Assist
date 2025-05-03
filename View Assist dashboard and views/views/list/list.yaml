@@ -26,8 +26,9 @@ custom_fields:
               box-shadow: none;
               border: none;
               position: absolute;
-              top: 15vh;
+              top: 15vh; /* Play with this value to adjust top spacing */
               height: 80vh; /* Limit the vertical size to allow scrolling */
+              /* flex-direction: column-reverse;  <-- Enable this to auto scroll to the end of the list */
               overflow-y: auto;
               padding: 1rem;
               display: flex;
