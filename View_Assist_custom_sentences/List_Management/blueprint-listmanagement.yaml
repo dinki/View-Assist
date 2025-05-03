@@ -11,10 +11,14 @@ blueprint:
         select:
           mode: dropdown
           options:
-            - en
-            - de
-            - fr
-            - es
+            - label: English
+              value: en
+            - label: German
+              value: de
+            - label: French
+              value: fr
+            - label: Spanish
+              value: es
       default: en
     command_add1:
       name: Command Text Add 1
@@ -149,18 +153,26 @@ action:
         - condition: template
           value_template: "{{ (trigger.slots.item | upper) in list_items_upper }}"
       then:
-        - set_conversation_response: >-
-            {% set msg = translations[lang]['responses']['already_in'] %}
-            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
+        - variables:
+            conversation_response: >-
+              {% set msg = translations[lang]['responses']['already_in'] %}
+              {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
       else:
         - service: todo.add_item
           data:
             item: "{{ trigger.slots.item | title }}"
           target:
             entity_id: "{{ list_entity }}"
-        - set_conversation_response: >-
-            {% set msg = translations[lang]['responses']['added'] %}
-            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
+        - variables:
+            conversation_response: >-
+              {% set msg = translations[lang]['responses']['added'] %}
+              {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
+    - set_conversation_response: "{{ conversation_response }}"
+    - action: view_assist.set_state
+      target:
+        entity_id: "{{ target_satellite_device }}"
+      data:
+        last_said: "{{ conversation_response }}"
     - if:
         - condition: template
           value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -206,13 +218,21 @@ action:
                 | default('') }}
           target:
             entity_id: "{{ list_entity }}"
-        - set_conversation_response: >-
-            {% set msg = translations[lang]['responses']['removed'] %}
-            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
+        - variables:
+            conversation_response: >-
+              {% set msg = translations[lang]['responses']['removed'] %}
+              {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
       else:
-        - set_conversation_response: >-
-            {% set msg = translations[lang]['responses']['not_in'] %}
-            {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
+        - variables:
+            conversation_response: >-
+              {% set msg = translations[lang]['responses']['not_in'] %}
+              {{ msg.replace('{item}', trigger.slots.item).replace('{list_name}', list_name) }}
+    - set_conversation_response: "{{ conversation_response }}"
+    - action: view_assist.set_state
+      target:
+        entity_id: "{{ target_satellite_device }}"
+      data:
+        last_said: "{{ conversation_response }}"
     - if:
         - condition: template
           value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -244,25 +264,31 @@ action:
         {% else %}
           {{ items }}
         {% endif %}
-  - set_conversation_response: >-
-      {% if count == 0 %}
-        {{ translations[lang]['responses']['empty'].replace('{list_name}', list_name) }}
-      {% elif count == 1 %}
-        {{ translations[lang]['responses']['one_item']
-            .replace('{list_name}', list_name)
-            .replace('{items}', limited_items[0]) }}
-      {% elif max_items_readout > 0 and count > max_items_readout %}
-        {{ translations[lang]['responses']['multiple_items_limited']
-            .replace('{list_name}', list_name)
-            .replace('{count}', count | string)
-            .replace('{max_items}', max_items_readout | string)
-            .replace('{items}', limited_items | join(', ')) }}
-      {% else %}
-        {{ translations[lang]['responses']['multiple_items']
-            .replace('{list_name}', list_name)
-            .replace('{count}', count | string)
-            .replace('{items}', limited_items | join(', ')) }}
-      {% endif %}
+      conversation_response: >-
+        {% if count == 0 %}
+          {{ translations[lang]['responses']['empty'].replace('{list_name}', list_name) }}
+        {% elif count == 1 %}
+          {{ translations[lang]['responses']['one_item']
+              .replace('{list_name}', list_name)
+              .replace('{items}', limited_items[0]) }}
+        {% elif max_items_readout > 0 and count > max_items_readout %}
+          {{ translations[lang]['responses']['multiple_items_limited']
+              .replace('{list_name}', list_name)
+              .replace('{count}', count | string)
+              .replace('{max_items}', max_items_readout | string)
+              .replace('{items}', limited_items | join(', ')) }}
+        {% else %}
+          {{ translations[lang]['responses']['multiple_items']
+              .replace('{list_name}', list_name)
+              .replace('{count}', count | string)
+              .replace('{items}', limited_items | join(', ')) }}
+        {% endif %}
+  - set_conversation_response: "{{ conversation_response }}"
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      last_said: "{{ conversation_response }}"
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
