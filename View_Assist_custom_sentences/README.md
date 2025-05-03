@@ -8,7 +8,7 @@ Language Conversion To do list:
 
 ~~List_Management~~ en, de, fr, es
 
-Locate_a_Person
+~~Locate_a_Person~~ en
 
 Play_Music_with_Music_Assistant en, de  (Check this one.  Needs last_said added)
 
