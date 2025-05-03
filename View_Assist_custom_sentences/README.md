@@ -12,9 +12,9 @@ Language Conversion To do list:
 
 Play_Music_with_Music_Assistant en, de  (Check this one.  Needs last_said added)
 
-Play_Radio_with_Music_Assistant
+~~Play_Radio_with_Music_Assistant~~  User enters their own response so no language variables needed
 
-Search_Wikipedia
+Search_Wikipedia  Supports languages for search but needs translations for error response and last_said
 
 Show_Webpage
 
