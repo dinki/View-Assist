@@ -76,26 +76,25 @@ actions:
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
     then:
       - variables:
-          person_source: "{{ 'person.'+persons_name[trigger.slots.person] }}"
-          tracker_source:
-            "{{ state_attr('person.'+persons_name[trigger.slots.person],
-            'source') }}"
-          geocoded_source:
-            "{% set geocoded = 'sensor.' + tracker_source.split('.',
-            1)[1] + '_geocoded_location' %} {{ geocoded }}"
-          location_source: >-
+          person_source: "{{ 'person.' + persons_name[trigger.slots.person] }}"
+          tracker_source: "{{ state_attr(person_source, 'source') }}"
+          geocoded_source: >-
+            {% set geocoded = 'sensor.' + tracker_source.split('.', 1)[1] + '_geocoded_location' %} {{ geocoded }}
+          location_source: |-
             {% if states(person_source) != 'not_home' %}
-              {{ states(person_source)|capitalize }}
+              {{ state_translated(person_source)|capitalize }}
             {% elif not states(geocoded_source) in ['unknown'] %}
               {{ states(geocoded_source) }}
             {% else %}
               {{ 'Unknown Location' }}
             {% endif %}
-          conversation_response: >-
+          conversation_response: |-
             {% if states(person_source) == 'not_home' %}
               {{ translations[language]['responses']['person_away'].replace("{person}", persons_name[trigger.slots.person]) }}
             {% else %}
-              {{ translations[language]['responses']['person_location'].replace("{person}", persons_name[trigger.slots.person]).replace("{location}", states(person_source)) }}
+              {{ translations[language]['responses']['person_location']
+                .replace("{person}", persons_name[trigger.slots.person])
+                .replace("{location}", state_translated(person_source)) }}
             {% endif %}
       - set_conversation_response: "{{ conversation_response }}"
       - action: view_assist.set_state
