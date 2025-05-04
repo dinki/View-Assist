@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en]              
+          languages: [en, it]              
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -64,6 +64,12 @@ actions:
             person_away: "{person} is away."
             person_location: "{person} is at {location}"
             person_undefined: "{person} hasn't been defined"
+        it:
+          responses:
+            person_away: "{person} è fuori casa."
+            person_location: "{person} è nella zona {location}"
+            # Using "nella zona" ("in the zone") to avoid gender or article agreement issues with place names
+            person_undefined: "{person} non è definita"
   - if:
       - condition: template
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
@@ -113,22 +119,22 @@ actions:
           device: "{{ target_satellite_device }}"
           path: "{{ view_locate }}"
     else:
+      - variables:
+          response_undefined: >-
+            {{ translations[language]['responses']['person_undefined'].replace("{person}", trigger.slots.person) }}
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
           title: ""
-          message: "{{ trigger.slots.person |capitalize}} hasn't been defined"
+          message:  "{{ response_undefined }}"
           message_font_size: 6vw
-      - variables:
-          conversation_response: >-
-            {{ translations[language]['responses']['person_undefined'].replace("{person}", trigger.slots.person) }}
-      - set_conversation_response: "{{ conversation_response }}"
+      - set_conversation_response: "{{ response_undefined }}"
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          last_said: "{{ conversation_response }}"
+          last_said: "{{ response_undefined }}"
       - action: view_assist.navigate
         data:
           device: "{{ target_satellite_device }}"
