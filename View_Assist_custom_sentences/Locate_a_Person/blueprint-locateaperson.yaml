@@ -27,7 +27,8 @@ blueprint:
       description:
         This is the phonetic name followed by the Person's name as configured
         in the Home Assistant settings
-      default: "{"john":"jon","simon":"simon"}"
+      default: >-
+        {"john": "jon", "simon": "simon"}
     map_mode:
       name: Map Mode Theme
       description: This will change the map mode theme
