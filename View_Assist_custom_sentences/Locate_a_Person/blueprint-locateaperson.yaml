@@ -24,7 +24,7 @@ blueprint:
       default: /view-assist/info
     defined_names:
       name: Defined Names
-      description:
+      description: >
         This is the phonetic name followed by the Person's name as configured
         in the Home Assistant settings
       default: >-
