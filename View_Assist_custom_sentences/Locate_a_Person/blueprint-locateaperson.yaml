@@ -94,7 +94,7 @@ actions:
             {% if states(person_source) == 'not_home' %}
               {{ translations[language]['responses']['person_away'].replace("{person}", persons_name[trigger.slots.person]) }}
             {% else %}
-              {{ translations[language]['responses']['person_location'].replace("{person}", persons_name[trigger.slots.person]).replace("{locaction}", states(person_source)) }}
+              {{ translations[language]['responses']['person_location'].replace("{person}", persons_name[trigger.slots.person]).replace("{location}", states(person_source)) }}
             {% endif %}
       - set_conversation_response: "{{ conversation_response }}"
       - action: view_assist.set_state
