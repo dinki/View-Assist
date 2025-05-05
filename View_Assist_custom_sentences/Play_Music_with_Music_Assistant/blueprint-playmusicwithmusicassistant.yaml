@@ -24,7 +24,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en]
+          languages: [de, en, pt]
     play_artist_command:
       name: Play Artist Command
       description: The command to trigger the play artist action
@@ -86,6 +86,15 @@ actions:
             playsong_found: "Spiele {song} von {artist}"
             playsong_not_found: "Entschuldigung, ich konnte den Song {song} von {artist} nicht finden"
             playsong_queue: "Füge {song} von {artist} zur Warteschlange hinzu"
+        pt:
+          responses:
+            playartist_found: "Tocando música de {artist}"
+            playartist_not_found: "Não foi possível encontrar nenhuma música de {search_artist}"
+            playlist_found: "Tocando a Playlist {playlist}"
+            playlist_not_found: "Desculpe, nenhuma Playlist com o nome {search_playlist} pode ser encontrada"
+            playsong_found: "Tocando {song} por {artist}"
+            playsong_not_found: "Desculpe, a música {song} por {artist} não foi encontrada"
+            playsong_queue: "Incluindo a música {song} por {artist} na lista"
 
   - choose:
       - conditions:
