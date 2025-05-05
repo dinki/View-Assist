@@ -65,12 +65,23 @@ actions:
             person_away: "{person} is away."
             person_location: "{person} is at {location}"
             person_undefined: "{person} hasn't been defined"
+          last_update:
+            prefix: "Last updated"
+            now_label: "now"
+            minute_label: "minutes ago"
+            hour_label: "hours ago"
+            day_label: "days ago"
         it:
           responses:
             person_away: "{person} è fuori casa."
             person_location: "{person} è nella zona {location}"
-            # Using "nella zona" ("in the zone") to avoid gender or article agreement issues with place names
             person_undefined: "{person} non è definita"
+          last_update:
+            prefix: "Ultimo aggiornamento"
+            now_label: "ora"
+            minute_label: "minuti fa"
+            hour_label: "ore fa"
+            day_label: "giorni fa"
   - if:
       - condition: template
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
@@ -96,6 +107,23 @@ actions:
                 .replace("{person}", persons_name[trigger.slots.person])
                 .replace("{location}", state_translated(person_source)) }}
             {% endif %}
+          location_last_update_translated: |-
+            {% set last_changed = states[person_source].last_changed %}
+            {% set now = now() %}
+            {% set diff = (now - last_changed).total_seconds() %}
+            {% set minutes = (diff // 60) | int %}
+            {% set hours = (diff // 3600) | int %}
+            {% set days = (diff // 86400) | int %}
+
+            {% if minutes < 1 %}
+              {{ translations[language]['last_update']['prefix']}}: {{ translations[language]['last_update']['now_label']}}
+            {% elif minutes < 60 %}
+              {{ translations[language]['last_update']['prefix']}}: {{ minutes }} {{ translations[language]['last_update']['minute_label']}}
+            {% elif hours < 24 %}
+              {{ translations[language]['last_update']['prefix']}}: {{ hours }} {{ translations[language]['last_update']['hour_label']}}
+            {% else %}
+              {{ translations[language]['last_update']['prefix']}}: {{ days }} {{ translations[language]['last_update']['day_label']}}
+            {% endif %}
       - set_conversation_response: "{{ conversation_response }}"
       - action: view_assist.set_state
         target:
@@ -106,9 +134,11 @@ actions:
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          locate_data:
-            "{{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
-            geocoded_source, 'location_text': location_source, 'map_mode': map_mode} }}"
+         locate_data: >-
+            {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
+            geocoded_source, 'location_text': location_source,
+            'location_last_change': location_last_update_translated, 'map_mode':
+            map_mode} }}
       - if:
           - condition: template
             value_template: >-
