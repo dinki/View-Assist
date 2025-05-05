@@ -95,7 +95,7 @@ custom_fields:
             return `${var_location_text}`}
           catch { return ""}]]]           
         updated: |-
-           [[[ try {
+          [[[ try {
             var var_location_last_change = hass.states[variables.var_assistsat_entity].attributes.locate_data.location_last_change;
             return `${var_location_last_change}`}
           catch { return ""}]]]   
