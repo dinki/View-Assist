@@ -96,26 +96,9 @@ custom_fields:
           catch { return ""}]]]           
         updated: |-
           [[[ try {
-            var var_tracker = hass.states[variables.var_assistsat_entity].attributes.locate_data.person;                  
-            var var_last_changed = new Date(hass.states[var_tracker].last_changed);
-            const current_date = new Date();
-            const diff = current_date - var_last_changed;
-            const minutes = Math.floor(diff / (1000 * 60));
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-            let last_changed;
-            if (minutes < 1) {
-              last_changed = "now";          
-            } else if (minutes < 60) {                    
-              last_changed = rtf.format(-minutes, 'minute');  // e.g., "5 minutes ago"
-            } else if (hours < 24) {
-              last_changed = rtf.format(-hours, 'hour');  // e.g., "2 hours ago"
-            } else {
-              last_changed = rtf.format(-days, 'day');  // e.g., "3 days ago"
-            }
-            return `${"last changed "+last_changed}`}
-          catch { return ""}]]]          
+            var var_location_last_change = hass.states[variables.var_assistsat_entity].attributes.locate_data.location_last_change;
+            return `${var_location_last_change}`}
+          catch { return ""}]]]   
       show_icon: false
       show_name: false
       styles:

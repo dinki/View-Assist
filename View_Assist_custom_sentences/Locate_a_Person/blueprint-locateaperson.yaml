@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en]              
+          languages: [en, it]              
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -24,10 +24,11 @@ blueprint:
       default: /view-assist/info
     defined_names:
       name: Defined Names
-      description:
+      description: >
         This is the phonetic name followed by the Person's name as configured
         in the Home Assistant settings
-      default: "{'john':'jon','simon':'simon'}"
+      default: >-
+        {"john": "jon", "simon": "simon"}
     map_mode:
       name: Map Mode Theme
       description: This will change the map mode theme
@@ -64,31 +65,64 @@ actions:
             person_away: "{person} is away."
             person_location: "{person} is at {location}"
             person_undefined: "{person} hasn't been defined"
+          last_update:
+            prefix: "Last updated"
+            now_label: "now"
+            minute_label: "minutes ago"
+            hour_label: "hours ago"
+            day_label: "days ago"
+        it:
+          responses:
+            person_away: "{person} è fuori casa."
+            person_location: "{person} è nella zona {location}"
+            person_undefined: "{person} non è definita"
+          last_update:
+            prefix: "Ultimo aggiornamento"
+            now_label: "ora"
+            minute_label: "minuti fa"
+            hour_label: "ore fa"
+            day_label: "giorni fa"
   - if:
       - condition: template
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
     then:
       - variables:
-          person_source: "{{ 'person.'+persons_name[trigger.slots.person] }}"
-          tracker_source:
-            "{{ state_attr('person.'+persons_name[trigger.slots.person],
-            'source') }}"
-          geocoded_source:
-            "{% set geocoded = 'sensor.' + tracker_source.split('.',
-            1)[1] + '_geocoded_location' %} {{ geocoded }}"
-          location_source: >-
+          person_source: "{{ 'person.' + persons_name[trigger.slots.person] }}"
+          tracker_source: "{{ state_attr(person_source, 'source') }}"
+          geocoded_source: >-
+            {% set geocoded = 'sensor.' + tracker_source.split('.', 1)[1] + '_geocoded_location' %} {{ geocoded }}
+          location_source: |-
             {% if states(person_source) != 'not_home' %}
-              {{ states(person_source)|capitalize }}
+              {{ state_translated(person_source)|capitalize }}
             {% elif not states(geocoded_source) in ['unknown'] %}
               {{ states(geocoded_source) }}
             {% else %}
               {{ 'Unknown Location' }}
             {% endif %}
-          conversation_response: >-
+          conversation_response: |-
             {% if states(person_source) == 'not_home' %}
               {{ translations[language]['responses']['person_away'].replace("{person}", persons_name[trigger.slots.person]) }}
             {% else %}
-              {{ translations[language]['responses']['person_location'].replace("{person}", persons_name[trigger.slots.person]).replace("{locaction}", states(person_source)) }}
+              {{ translations[language]['responses']['person_location']
+                .replace("{person}", persons_name[trigger.slots.person])
+                .replace("{location}", state_translated(person_source)) }}
+            {% endif %}
+          location_last_update_translated: |-
+            {% set last_changed = states[person_source].last_changed %}
+            {% set now = now() %}
+            {% set diff = (now - last_changed).total_seconds() %}
+            {% set minutes = (diff // 60) | int %}
+            {% set hours = (diff // 3600) | int %}
+            {% set days = (diff // 86400) | int %}
+
+            {% if minutes < 1 %}
+              {{ translations[language]['last_update']['prefix']}}: {{ translations[language]['last_update']['now_label']}}
+            {% elif minutes < 60 %}
+              {{ translations[language]['last_update']['prefix']}}: {{ minutes }} {{ translations[language]['last_update']['minute_label']}}
+            {% elif hours < 24 %}
+              {{ translations[language]['last_update']['prefix']}}: {{ hours }} {{ translations[language]['last_update']['hour_label']}}
+            {% else %}
+              {{ translations[language]['last_update']['prefix']}}: {{ days }} {{ translations[language]['last_update']['day_label']}}
             {% endif %}
       - set_conversation_response: "{{ conversation_response }}"
       - action: view_assist.set_state
@@ -100,9 +134,11 @@ actions:
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          locate_data:
-            "{{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
-            geocoded_source, 'location_text': location_source, 'map_mode': map_mode} }}"
+         locate_data: >-
+            {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
+            geocoded_source, 'location_text': location_source,
+            'location_last_change': location_last_update_translated, 'map_mode':
+            map_mode} }}
       - if:
           - condition: template
             value_template: >-
@@ -113,22 +149,22 @@ actions:
           device: "{{ target_satellite_device }}"
           path: "{{ view_locate }}"
     else:
+      - variables:
+          response_undefined: >-
+            {{ translations[language]['responses']['person_undefined'].replace("{person}", trigger.slots.person) }}
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
           title: ""
-          message: "{{ trigger.slots.person |capitalize}} hasn't been defined"
+          message:  "{{ response_undefined }}"
           message_font_size: 6vw
-      - variables:
-          conversation_response: >-
-            {{ translations[language]['responses']['person_undefined'].replace("{person}", trigger.slots.person) }}
-      - set_conversation_response: "{{ conversation_response }}"
+      - set_conversation_response: "{{ response_undefined }}"
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          last_said: "{{ conversation_response }}"
+          last_said: "{{ response_undefined }}"
       - action: view_assist.navigate
         data:
           device: "{{ target_satellite_device }}"
