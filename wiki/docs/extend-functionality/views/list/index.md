@@ -23,22 +23,11 @@ The background image will need to be uploaded to the web directory located withi
 
 You can, of course, use any image you like.  I created this one using a public domain image that you can find [here](https://www.rawpixel.com/image/6293393/vector-background-flower-public-domain)
 
-In case you would like to in/descrease the font size of the list items, you can do so by changing the `font-size` in the following line:
-
-```
-  ha-check-list-item {
-      color: white;
-      font-size: 3vw;
-      line-height: 1.6;
-    }
-```
-
 ## Changelog
 
-| Version | Description                          |
-|---------|--------------------------------------|
-| v 1.0.2 | Added scrolling support              |
+| Version | Description |
+| ------- | ----------- |
 | v 1.0.1 | Move list variable out of dictionary |
-| v 1.0.0 | Initial release                      |
+| v 1.0.0 | Initial release |
 
 
