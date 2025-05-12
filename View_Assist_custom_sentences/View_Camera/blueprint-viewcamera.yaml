@@ -71,4 +71,9 @@ action:
       device: "{{ target_satellite_device }}"
       path: "{{ view }}"
   - set_conversation_response: "{{ response }}"
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      last_said: "{{ response }}"
 mode: single

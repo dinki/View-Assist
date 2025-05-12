@@ -5,6 +5,13 @@ blueprint:
   description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, es, fr, it, nl]
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -12,15 +19,15 @@ blueprint:
     command_prompt_date:
       name: Command Prompt Date
       description: The phrase you want to use to trigger the request for date
-      default: "(What is the date | what day is it | what is today)" 
+      default: "(What is the date | what day is it | what is today)"
     command_prompt_dayofweek:
       name: Command Prompt Date
       description: The phrase you want to use to trigger the request for day of the week
-      default: "([What('s)] [is] [the] day of the week [is it] | What day of the week is it)"            
+      default: "([What('s)] [is] [the] day of the week [is it] | What day of the week is it)"
     view:
       name: Dashboard view
       description: The View Assist dashboard view to use for displaying time and date (example /dashboard-viewassist/clock)
-      default: "/view-assist/clock" 
+      default: "/view-assist/clock"
 alias: View Assist  - What time is it
 description: ""
 trigger:
@@ -42,29 +49,125 @@ action:
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       view: !input view
+      language: !input language
+      time: "{{ now().strftime('%H:%M') if state_attr(target_satellite_device, 'use_24_hour_time') else now().strftime('%-I:%M %p') }}"
+      day_of_week: "{{ now().strftime('%A') }}"
+      date: "{{ now().strftime('%A %B %-d') }}"
+      day_of_month: "{{ now().strftime('%-d') }}"
+      month: "{{ now().strftime('%B') }}"
+      year: "{{ now().strftime('%Y') }}"
+      translations:
+        en:
+          responses:
+            time: "It's {time}"
+            day_of_week: "Today is {day_of_week}"
+            date: "Today is {date}"
+          weekdays:
+            mon: Monday
+            tue: Tuesday
+            wed: Wednesday
+            thu: Thursday
+            fri: Friday
+            sat: Saturday
+            sun: Sunday
+          months:
+            jan: January
+            feb: February
+            mar: March
+            apr: April
+            may: May
+            jun: June
+            jul: July
+            aug: August
+            sep: September
+            oct: October
+            nov: November
+            dec: December
+        de:
+          responses:
+            time: "Es ist {time_24h}"
+            day_of_week: "Heute ist {day_of_week}"
+            date: "Heute ist {day_of_week}, der {day_of_month}. {month} {year}"
+          weekdays:
+            mon: Montag
+            tue: Dienstag
+            wed: Mittwoch
+            thu: Donnerstag
+            fri: Freitag
+            sat: Samstag
+            sun: Sonntag
+          months:
+            jan: Januar
+            feb: Februar
+            mar: März
+            apr: April
+            may: Mai
+            jun: Juni
+            jul: Juli
+            aug: August
+            sep: September
+            oct: Oktober
+            nov: November
+            dec: Dezember
+        es:
+          responses:
+            time: "Son las {time}"
+            day_of_week: "Hoy es {day_of_week}"
+            date: "Hoy es {date}"
+        fr:
+          responses:
+            time: "Il est {time}"
+            day_of_week: "Aujourd'hui, c'est {day_of_week}"
+            date: "Aujourd'hui, c'est {date}"
+        it:
+          responses:
+            time: "Sono le {time}"
+            day_of_week: "Oggi è {day_of_week}"
+            date: "Oggi è {date}"
+        nl:
+          responses:
+            time: "Het is {time}"
+            day_of_week: "Vandaag is {day_of_week}"
+            date: "Vandaag is {date}"
   - choose:
       - conditions:
           - condition: trigger
             id:
               - time
         sequence:
-          - set_conversation_response: Its {{ now().strftime('%-I:%M %p')}}
+          - variables:
+              conversation_response: "{{ translations[language]['responses']['time'].replace('{time}', time) }}"
+          - set_conversation_response: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-
                   {% if target_satellite_device_type != 'audio_only' %}true{% else
                   %}false{% endif %}
-            then: 
+            then:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
-                  path: "{{ view }}" 
+                  path: "{{ view }}"
       - conditions:
           - condition: trigger
             id:
               - dayofweek
         sequence:
-          - set_conversation_response: Today is {{ now().strftime('%A')}}
+          - variables:
+              day_of_week_short: "{{ now().strftime('%a').lower() }}"
+              day_of_week_translated: "{{ translations[language]['weekdays'][day_of_week_short] }}"
+              conversation_response: "{{ translations[language]['responses']['day_of_week'].replace('{day_of_week}', day_of_week_translated) }}"
+          - set_conversation_response: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-
@@ -80,7 +183,18 @@ action:
             id:
               - date
         sequence:
-          - set_conversation_response: Today is {{ now().strftime('%A %B %-d')}}
+          - variables:
+              month_short: "{{ now().strftime('%b').lower() }}"
+              month_translated: "{{ translations[language]['months'][month_short] }}"
+              day_of_week_short: "{{ now().strftime('%a').lower() }}"
+              day_of_week_translated: "{{ translations[language]['weekdays'][day_of_week_short] }}"
+              conversation_response: "{{ translations[language]['responses']['date'].replace('{date}', date).replace('{day_of_week}', day_of_week_translated).replace('{day_of_month}', day_of_month|string).replace('{month}', month_translated).replace('{year}', year|string) }}"
+          - set_conversation_response: "{{ conversation_response }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              last_said: "{{ conversation_response }}"
           - if:
               - condition: template
                 value_template: >-

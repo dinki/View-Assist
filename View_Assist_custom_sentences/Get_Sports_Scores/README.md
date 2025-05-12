@@ -1,16 +1,10 @@
-# Sports View
+# Get Sports Scores
+This Home Assistant blueprint, **View Assist – Get Sports Scores**, allows users to retrieve sports scores for their favorite teams using voice commands.  
+It integrates with Home Assistant’s conversation platform and provides customizable sentences for seamless voice interactions.  
+The blueprint supports multiple sports leagues (e.g., NFL, NBA, MLB, NHL, MLS, WNBA, and college sports) and multiple languages (e.g., English, German, French, Spanish, Italian).  
+Some translations were automatically generated and may benefit from refinement — feel free to submit a PR for improvements!
 
-![](./sportsview.png)
-
-* **Description**: Shows matchup results, in game or upcoming information for various sports events
-* **Defaultname**:  sports
-* **Current Version**: v1.0.0
-* **Code link**:  [Webpage View Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/sports/sports.yaml)
-* **Special Requirements**: Requires ha-teamtracker-card
-
-## Installation 
-
-This card can be added by copy pasting the raw code into a new view.   The [ha-teamtracker-card](https://github.com/vasqued2/ha-teamtracker-card) must be installed to use this view. This can be installed via HACS.
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fviewassist-integrationprep%2FView_Assist_custom_sentences%2FGet_Sports_Scores%2Fblueprint-getsportsscores.yaml)
 
 ## Example Sentences
 - "How did the Lakers do?"
@@ -67,13 +61,3 @@ trigger_phrases:
   - Come sta andando il {team}
   - Come sta andando la partita del {team}
 ```
-
-## Changelog
-
-| Version | Description                                   |
-|---------|-----------------------------------------------|
-| v 1.3.0 | Added german, spanish and french translations |
-| v 1.2.0 | Added italien translation                     |
-| v 1.0.0 | Initial release                               |
-
-
