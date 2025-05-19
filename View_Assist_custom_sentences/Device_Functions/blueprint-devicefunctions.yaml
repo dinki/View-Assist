@@ -4,6 +4,13 @@ blueprint:
     devicefunctions v 1.2.3)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -20,8 +27,7 @@ blueprint:
     dnd_command:
       name: Do Not Disturb Command
       description: The command to use to trigger turning off DND mode
-      default: (set do not disturb [mode] [to] off | turn off do not disturb [mode]
-        | end do not disturb [mode] | cancel do not disturb [mode])
+      default: (set do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])
     set_volume:
       name: Set Volume Command
       description: The command to use to set volume level directly
@@ -85,16 +91,41 @@ action:
     target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
     target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device')}}"
     target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+    language: !input language
     modes: !input modes
     views: !input views
+    last_said: "{{ state_attr(target_satellite_device, 'last_said') | default('', true) }}"
+    translations:
+      en:
+        responses:
+          repeat: "I said {last_said}"
+          repeat_remove: "I said"
+          do_not_disturb_off: "Do not disturb mode is now off"
+          mode_success: "Setting mode to {mode}"
+          mode_failure_device: "Sorry.  {mode} is not a valid mode for this device"
+          mode_failure_unrecognized: "Sorry.  {mode} is not a valid mode. Please try {{ modes }}."
+      de:
+        responses:
+          repeat: "Ich sagte {last_said}"
+          repeat_remove: "Ich sagte"
+          do_not_disturb_off: "Der Bitte nicht stören Modus ist jetzt aus"
+          mode_success: "Setze Modus auf {mode}"
+          mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
+          mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
 - choose:
   - conditions:
     - condition: trigger
       id:
       - repeat
     sequence:
-    - set_conversation_response: I said {{ state_attr(target_satellite_device, 'last_said')|
-        replace("I said ", "")}}
+      - variables:
+          conversation_response: "{{ translations[language]['responses']['repeat'].replace('{last_said}', last_said | replace(translations[language]['responses']['repeat_remove'], '')) }}"
+      - set_conversation_response: "{{ conversation_response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"              
+        data:     
+          last_said: "{{ conversation_response }}"    
   - conditions:
     - condition: trigger
       id:
@@ -104,8 +135,15 @@ action:
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          do_not_disturb: false         
-      - set_conversation_response: Do not disturb mode is now off
+          do_not_disturb: false
+      - variables:
+          conversation_response: "{{ translations[language]['responses']['do_not_disturb_off'] }}"
+      - set_conversation_response: "{{ conversation_response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"              
+        data:     
+          last_said: "{{ conversation_response }}"                    
   - conditions:
     - condition: trigger
       id:
@@ -116,8 +154,14 @@ action:
         value_template: "{{ trigger.slots.mode|lower in modes or trigger.slots.mode|lower in ['do
           not disturb'] }}"
       then:
-      - set_conversation_response: Setting mode to {{ trigger.slots.mode }}
-        enabled: true
+      - variables:
+          conversation_response: "{{ translations[language]['responses']['mode_success'].replace('{mode}', trigger.slots.mode) }}"
+      - set_conversation_response: "{{ conversation_response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"              
+        data:     
+          last_said: "{{ conversation_response }}" 
       - choose:
         - conditions:
           - condition: template
@@ -128,8 +172,14 @@ action:
               value_template: "{% if target_satellite_device_type == 'audio_only'
                 %}true{% else %}false{% endif %}"
             then:
-            - set_conversation_response: Sorry.  {{ trigger.slots.mode }} is not a
-                valid mode for this device
+            - variables:
+                conversation_response: "{{ translations[language]['responses']['mode_failure_device'].replace('{mode}', trigger.slots.mode) }}"
+            - set_conversation_response: "{{ conversation_response }}"
+            - action: view_assist.set_state
+              target:
+                entity_id: "{{ target_satellite_device }}"              
+              data:     
+                last_said: "{{ conversation_response }}" 
             else:
             - action: view_assist.set_state
               target:
@@ -146,8 +196,14 @@ action:
               data:
                 do_not_disturb: true
       else:
-      - set_conversation_response: Sorry.  {{ trigger.slots.mode }} is not a valid
-          mode. Please try {{ modes }}.
+      - variables:
+          conversation_response: "{{ translations[language]['responses']['mode_failure_unrecognized'].replace('{mode}', trigger.slots.mode) }}"
+      - set_conversation_response: "{{ conversation_response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"              
+        data:     
+          last_said: "{{ conversation_response }}" 
   - conditions:
     - condition: trigger
       id:
@@ -231,4 +287,4 @@ action:
         entity_id: "{{ target_satellite_device }}"
       data:
         mode: normal               
-    - set_conversation_response: Music stopped
+    - set_conversation_response: ""

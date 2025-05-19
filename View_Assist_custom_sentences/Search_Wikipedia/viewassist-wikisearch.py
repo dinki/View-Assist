@@ -1,9 +1,9 @@
 import requests, re
 @service(supports_response="optional")
-def search_wikipedia(searchterm=None, return_response=True):
+def search_wikipedia(searchterm=None, language="en", return_response=True):
     """yaml
     name: View Assist Search Wikipedia
-    description: Search wikipedia using searchterm
+    description: Search Wikipedia using searchterm in the specified language
     fields:
         searchterm:
             description: What to search for?
@@ -11,10 +11,18 @@ def search_wikipedia(searchterm=None, return_response=True):
             required: true
             selector:
                 text:
-    """   
-    url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + searchterm.replace(" ","_") + "?redirect=true"
+        language:
+            description: Language code for the Wikipedia edition (e.g., 'en' for English, 'it' for Italian)
+            example: en
+            required: false
+            default: en
+            selector:
+                text:
+    """
+    # Construct the URL with the specified language
+    url = f"https://{language}.wikipedia.org/api/rest_v1/page/summary/{searchterm.replace(' ', '_')}?redirect=true"
     r = task.executor(requests.get, url)
-  
+
     if r.status_code == requests.codes.ok:
         wiki_data = r.json()
         type = wiki_data['type']
@@ -23,7 +31,7 @@ def search_wikipedia(searchterm=None, return_response=True):
             thumbnail = wiki_data['thumbnail']['source']
         except:
             thumbnail = ""
-        full_extract= wiki_data['extract']
+        full_extract = wiki_data['extract']
         sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', full_extract.strip())
 
         # Get the first two sentences
@@ -34,4 +42,3 @@ def search_wikipedia(searchterm=None, return_response=True):
     else:
         response_variable = {"error": r.status_code, "data": r.json()}
         return response_variable
-
