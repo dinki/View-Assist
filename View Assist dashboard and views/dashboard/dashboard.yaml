@@ -10,7 +10,7 @@ button_card_templates:
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
-        ]]] 
+        ]]]
       var_assisting: |-
         [[[
           try 
@@ -41,7 +41,7 @@ button_card_templates:
             
             return `${assisting}`;
           } catch { return  ""}
-        ]]]        
+        ]]]
       var_assisting_text: |-
         [[[
           try 
@@ -89,7 +89,7 @@ button_card_templates:
               }
             return `${micdevice}`;
           } catch { return  ""}
-        ]]]                
+        ]]]   
       var_mediaplayer_device: |-
         [[[
           try {
@@ -231,7 +231,7 @@ button_card_templates:
             if (states['sun.sun'] === 'above_horizon') {
               var weather_icon = weatherIconsDay[condition]; 
             } else {
-              var weather_icon = weatherIconsDay[condition]; 
+              var weather_icon = weatherIconsDay[condition];
             }
             
             if (typeof(weather_icon) === 'undefined') { 
@@ -239,6 +239,27 @@ button_card_templates:
             }   
             return `${weather_icon}`;
           } catch { return  ""} 
+        ]]]
+      var_current_view: |-
+        [[[
+          try {
+            const pathname = window.location.pathname;
+            if (pathname) {
+              const match = pathname.match(/\/view-assist\/([^\/]+)/);
+              if (match && match[1]) {
+                return match[1];
+              }
+            }
+            
+            const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
+            if (currentPath) {
+              const match = currentPath.match(/\/view-assist\/([^\/]+)/);
+              if (match && match[1]) {
+                return match[1];
+              }
+            }
+            return "";
+          } catch { return ""; }
         ]]]
   body_template:
     template: assist_template
@@ -337,24 +358,115 @@ button_card_templates:
               cards: |-
                 [[[{
                   const buttonList = [];
-                  let list;
 
                   try {
-                    list = hass.states[variables.var_assistsat_entity].attributes.status_icons;
-                  } catch (error) {
-                    list = ""; // Set list to an empty string if an error occurs
-                  }
+                    const vaEntity = variables.var_assistsat_entity;
+                    if (!vaEntity || !hass.states[vaEntity]) {
+                      return [];
+                    }
 
-                  if (list) {
-                    for (let i = 0; i < list.length; i++) {
-                      buttonList.push({
-                        type: "custom:button-card",
-                        template: list[i]
+                    const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
+                    const menuItems = hass.states[vaEntity].attributes.menu_items || [];
+                    const menuActive = hass.states[vaEntity].attributes.menu_active || false;
+
+                    const currentView = variables.var_current_view;
+
+                    function isCurrentView(item) {
+                      if (!currentView) return false;
+
+                      if (typeof item === 'string' && !item.includes(':')) {
+                        if (item === currentView) return true;
+
+                        const templateViewMap = {
+                          "home": "clock"
+                        };
+                        if (templateViewMap[item] === currentView) return true;
+                        return false;
+                      }
+
+                      if (typeof item === 'string' && item.includes(':')) {
+                        const parts = item.split('|');
+                        const typeAndTarget = parts[0];
+                        const [type, target] = typeAndTarget.split(':');
+
+                        if (type === 'view') {
+                          const viewName = target.includes('/') ? 
+                            target.split('/').pop() : target;
+                          return viewName === currentView;
+                        }
+                      }
+
+                      return false;
+                    }
+
+                    const addedItems = new Set();
+
+                    function addIconToList(icon, isDynamicItem = false) {
+                      if (icon === "menu") return;
+
+                      if (menuActive && isCurrentView(icon)) {
+                        return;
+                      }
+
+                      let buttonConfig;
+                      if (isDynamicItem) {
+                        const type = icon.split(':')[0];
+                        buttonConfig = {
+                          type: "custom:button-card",
+                          template: `dynamic_${type}_item`,
+                          variables: {
+                            menu_item: icon,
+                            entity_id: vaEntity
+                          }
+                        };
+                      } else {
+                        buttonConfig = {
+                          type: "custom:button-card",
+                          template: icon
+                        };
+                      }
+
+                      const key = icon;
+                      if (addedItems.has(key)) return;
+
+                      addedItems.add(key);
+                      buttonList.push(buttonConfig);
+                    }
+
+                    if (menuActive) {
+                      const reversedMenuItems = [...menuItems].reverse();
+                      reversedMenuItems.forEach(item => {
+                        if (item !== "menu") {
+                          if (item.includes(':')) {
+                            addIconToList(item, true);
+                          } else {
+                            addIconToList(item, false);
+                          }
+                        }
                       });
                     }
+
+                    statusIcons.forEach(icon => {
+                      if (icon !== "menu") {
+                        if (icon.includes(':')) {
+                          addIconToList(icon, true);
+                        } else {
+                          addIconToList(icon, false);
+                        }
+                      }
+                    });
+
+                    if (hass.states[vaEntity].attributes.menu_config === "menu_enabled_button_visible" && 
+                        !addedItems.has("menu")) {
+                      buttonList.push({
+                        type: "custom:button-card",
+                        template: "menu"
+                      });
+                    }
+                  } catch (error) {
                   }
 
-                  return buttonList.reverse();
+                  return buttonList;
                 }]]]
   assist_template:
     styles:
@@ -486,6 +598,87 @@ button_card_templates:
       icon:
         - display: grid
         - color: white
+  dynamic_view_item:
+    template: icon_template
+    icon: |-
+      [[[
+        const parts = variables.menu_item.split('|');
+        const icon = parts.length > 1 ? parts[1] : 'view-dashboard';
+        return `mdi:${icon}`;
+      ]]]
+    tap_action:
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.entity_id; ]]]'
+        path: |-
+          [[[
+            const parts = variables.menu_item.split('|');
+            const typeAndTarget = parts[0];
+            const target = typeAndTarget.split(':')[1];
+            return target.startsWith('/') ? target : `/view-assist/${target}`;
+          ]]]
+  dynamic_entity_item:
+    template: icon_template
+    state_display: none
+    entity: |-
+      [[[
+        const parts = variables.menu_item.split('|');
+        const typeAndTarget = parts[0];
+        return typeAndTarget.split(':')[1];
+      ]]]
+    icon: |-
+      [[[
+        const parts = variables.menu_item.split('|');
+        const typeAndTarget = parts[0];
+        const entityId = typeAndTarget.split(':')[1];
+        const iconOptions = parts.length > 1 ? parts[1].split(',') : ['help-circle'];
+
+        let icon = iconOptions[0];
+
+        if (iconOptions.length > 1 && hass.states[entityId]) {
+          const state = hass.states[entityId].state;
+
+          if (state === 'off' && iconOptions[1]) {
+            icon = iconOptions[1];
+          }
+        }
+
+        return `mdi:${icon}`;
+      ]]]
+    tap_action:
+      action: toggle
+      entity: |-
+        [[[
+          const parts = variables.menu_item.split('|');
+          const typeAndTarget = parts[0];
+          return typeAndTarget.split(':')[1];
+        ]]]
+    hold_action:
+      action: more-info
+      entity: |-
+        [[[
+          const parts = variables.menu_item.split('|');
+          const typeAndTarget = parts[0];
+          return typeAndTarget.split(':')[1];
+        ]]]
+  dynamic_service_item:
+    template: icon_template
+    icon: |-
+      [[[
+        const parts = variables.menu_item.split('|');
+        const icon = parts.length > 1 ? parts[1] : 'cog';
+        return `mdi:${icon}`;
+      ]]]
+    tap_action:
+      action: call-service
+      service: |-
+        [[[
+          const parts = variables.menu_item.split('|');
+          const typeAndTarget = parts[0];
+          return typeAndTarget.split(':')[1];
+        ]]]
+      service_data: {}
   mediaplayer:
     type: custom:button-card
     template: icon_template
@@ -555,5 +748,17 @@ button_card_templates:
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
         path: /view-assist/clock
+  menu:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:menu
+    tap_action:
+      action: call-service
+      service: view_assist.toggle_menu
+      service_data:
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        show: >-
+          [[[ return
+          !states[variables.var_assistsat_entity].attributes.menu_active ]]]
 views:
   - title: Home
