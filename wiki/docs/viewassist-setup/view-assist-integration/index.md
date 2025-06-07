@@ -14,7 +14,7 @@ A HUGE thank you goes out to Mark Parker @msp1974 for his MASSIVE help with maki
 [![Image](https://img.youtube.com/vi/cYqGGknf4C8/mqdefault.jpg)](https://www.youtube.com/watch?v=cYqGGknf4C8)
 
 
-Watch a Video of Assist Integration installation: https://www.youtube.com/watch?v=cYqGGknf4C8
+Watch Video: https://www.youtube.com/watch?v=cYqGGknf4C8
 
 
 ## Notes for existing VA users
