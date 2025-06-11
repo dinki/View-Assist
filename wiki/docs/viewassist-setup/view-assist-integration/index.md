@@ -11,6 +11,12 @@ A HUGE thank you goes out to Mark Parker @msp1974 for his MASSIVE help with maki
 
 # Installing the View Assist Integration
 
+[![Image](https://img.youtube.com/vi/cYqGGknf4C8/mqdefault.jpg)](https://www.youtube.com/watch?v=cYqGGknf4C8)
+
+
+Watch Video: https://www.youtube.com/watch?v=cYqGGknf4C8
+
+
 ## Notes for existing VA users
 
 **A BIG warning for folks who will be updating.  This is a major rewrite so you will be starting from scratch for the most part.  You will definitely want to do a backup of your current VA settings and views and possibly save a copy of your current dashboard to avoid from losing something you would like to keep!**
