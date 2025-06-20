@@ -41,6 +41,18 @@ blueprint:
         The View Assist dashboard view designed to show cameras
         (example: /view-assist/camera)
       default: /view-assist/camera
+    hold_timeout:
+      name: Hold Mode Timeout (seconds)
+      description: |
+        How long to stay in hold mode before returning to the device's default mode.
+        Set to 0 to disable timeout (infinite hold).
+      default: 120
+      selector:
+        number:
+          min: 0
+          max: 3600
+          step: 5
+          unit_of_measurement: seconds
     fallback_behavior:
       name: Fallback Behavior
       description: |
@@ -69,7 +81,9 @@ action:
       response_all: !input response_all
       cameras: !input cameras
       fallback_behavior: !input fallback_behavior
+      hold_timeout: !input hold_timeout
       requested_camera: "{{ trigger.slots.camera | default('') | lower }}"
+      timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
   - choose:
       - conditions:
           - condition: template
@@ -78,7 +92,7 @@ action:
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
-              path: "{{ view }}?show=all"
+              path: "{{ view }}?show=all{{ timeout_param }}"
           - set_conversation_response: "{{ response_all }}"
           - action: view_assist.set_state
             target:
@@ -109,7 +123,7 @@ action:
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
-              path: "{{ view }}?camera={{ camera_entity }}"
+              path: "{{ view }}?camera={{ camera_entity }}{{ timeout_param }}"
           - set_conversation_response: "{{ response_single }}"
           - action: view_assist.set_state
             target:
@@ -125,7 +139,7 @@ action:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
-                  path: "{{ view }}?show=all"
+                  path: "{{ view }}?show=all{{ timeout_param }}"
               - set_conversation_response: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
               - action: view_assist.set_state
                 target:
