@@ -6,11 +6,11 @@ variables:
       const urlParams = new URLSearchParams(window.location.search);
       const urlCamera = urlParams.get('camera');
       const showAll = urlParams.get('show');
-      
+
       if (showAll === 'all') {
         return "";
       }
-      
+
       if (urlCamera) {
         return urlCamera;
       }
@@ -60,18 +60,104 @@ variables:
       return window.innerWidth < 600 ? 1 : 
              window.innerWidth < 1200 ? 2 : 3;
     ]]]
-  var_set_hold_mode: |-
+  var_timeout_seconds: |-
+    [[[
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const timeout = urlParams.get('timeout');
+        return timeout ? parseInt(timeout, 10) : 0;
+      } catch (e) {
+        return 0;
+      }
+    ]]]
+  var_setup_camera_hold_mode: |-
     [[[
       if (variables.var_current_view === 'camera' && variables.var_assistsat_entity) {
-        if (!window.cameraHoldModeSet) {
-          window.cameraHoldModeSet = true;
-          hass.callService('view_assist', 'set_state', {
-            entity_id: variables.var_assistsat_entity,
-            mode: 'hold'
-          });
+        const currentPageKey = `${window.location.pathname}${window.location.search}`;
+        if (window.cameraPageKey === currentPageKey && window.cameraHoldTimeout) {
+          return '';
+        }
+
+        window.cameraPageKey = currentPageKey;
+
+        const entityId = variables.var_assistsat_entity;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const timeoutSeconds = urlParams.get('timeout') ? parseInt(urlParams.get('timeout'), 10) : 0;
+
+        hass.callService('view_assist', 'set_state', {
+          entity_id: entityId,
+          mode: 'hold'
+        });
+        window.cameraHoldModeSet = true;
+
+        if (window.cameraHoldTimeout) {
+          clearTimeout(window.cameraHoldTimeout);
+          window.cameraHoldTimeout = null;
+        }
+
+        if (timeoutSeconds && timeoutSeconds > 0 && !isNaN(timeoutSeconds)) {
+          window.cameraTimeoutStart = Date.now();
+
+          window.cameraRevertMode = function() {
+            try {
+              let hassInstance = null;
+              if (typeof hass !== 'undefined') {
+                hassInstance = hass;
+              } else if (window.hassConnection) {
+                hassInstance = window.hassConnection;
+              } else if (document.querySelector('home-assistant')) {
+                hassInstance = document.querySelector('home-assistant').hass;
+              } else if (window.parent && window.parent.hass) {
+                hassInstance = window.parent.hass;
+              }
+
+              if (hassInstance) {
+                let defaultMode = 'normal'; // Fallback if we can't read the entity
+
+                try {
+                  const entityState = hassInstance.states[entityId];
+                  if (entityState && entityState.attributes) {
+                    defaultMode = entityState.attributes.mode || 'normal';
+                  }
+                } catch (error) {
+                }
+
+                hassInstance.callService('view_assist', 'set_state', {
+                  entity_id: entityId,
+                  mode: defaultMode
+                });
+              }
+
+              window.cameraHoldTimeout = null;
+              window.cameraHoldModeSet = false;
+              window.cameraRevertMode = null;
+              window.cameraPageKey = null;
+              window.cameraTimeoutStart = null;
+
+            } catch (error) {
+              // Silent cleanup on error
+              window.cameraHoldTimeout = null;
+              window.cameraHoldModeSet = false;
+              window.cameraRevertMode = null;
+              window.cameraPageKey = null;
+              window.cameraTimeoutStart = null;
+            }
+          };
+
+          window.cameraHoldTimeout = setTimeout(window.cameraRevertMode, timeoutSeconds * 1000);
         }
       } else {
+        if (window.cameraHoldTimeout) {
+          clearTimeout(window.cameraHoldTimeout);
+          window.cameraHoldTimeout = null;
+        }
+        if (window.cameraRevertMode) {
+          window.cameraRevertMode = null;
+        }
         window.cameraHoldModeSet = false;
+        window.cameraPageKey = null;
+        window.cameraTimeoutStart = null;
       }
       return '';
     ]]]
@@ -118,7 +204,7 @@ styles:
       - top: 1rem
       - z-index: 1
 custom_fields:
-  _hold_mode_init: '[[[ return variables.var_set_hold_mode ]]]'
+  _hold_mode_init: '[[[ return variables.var_setup_camera_hold_mode ]]]'
   back_button:
     card:
       type: custom:button-card
@@ -187,6 +273,10 @@ custom_fields:
               }
             }];
           }
+          
+          // Pass timeout parameter when navigating to individual cameras
+          const timeoutParam = variables.var_timeout_seconds > 0 ? `&timeout=${variables.var_timeout_seconds}` : '';
+          
           return cameras.map(camera => ({
             type: "picture-entity",
             entity: camera.entity_id,
@@ -199,7 +289,7 @@ custom_fields:
               service: "view_assist.navigate",
               service_data: {
                 device: variables.var_assistsat_entity,
-                path: `/view-assist/camera?camera=${camera.entity_id}`
+                path: `/view-assist/camera?camera=${camera.entity_id}${timeoutParam}`
               }
             },
             card_mod: {
