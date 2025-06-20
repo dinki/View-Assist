@@ -1,32 +1,226 @@
 type: custom:button-card
 variables:
-  cameracardversion: 1.2.0
-  var_camera: >-
-    [[[ try {return
-    hass.states[variables.var_assistsat_entity].attributes.camera} catch {
-    return  ""}]]]
+  cameracardversion: 2.0.0
+  var_camera: |-
+    [[[
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlCamera = urlParams.get('camera');
+      const showAll = urlParams.get('show');
+      
+      if (showAll === 'all') {
+        return "";
+      }
+      
+      if (urlCamera) {
+        return urlCamera;
+      }
+
+      const availableCameras = [];
+      for (const entityId in hass.states) {
+        if (entityId.startsWith('camera.')) {
+          const cameraState = hass.states[entityId].state;
+          if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
+            availableCameras.push(entityId);
+          }
+        }
+      }
+
+      if (availableCameras.length === 1) {
+        return availableCameras[0];
+      }
+
+      return "";
+    ]]]
+  var_all_cameras: |-
+    [[[
+      const cameras = [];
+
+      try {
+        for (const entityId in hass.states) {
+          if (entityId.startsWith('camera.')) {
+            const cameraState = hass.states[entityId].state;
+            if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
+              cameras.push({
+                entity_id: entityId,
+                name: hass.states[entityId].attributes.friendly_name || entityId.replace('camera.', '')
+              });
+            }
+          }
+        }
+
+        cameras.sort((a, b) => a.name.localeCompare(b.name));
+
+        return cameras;
+      } catch (e) {
+        return [];
+      }
+    ]]]
+  var_responsive_columns: |-
+    [[[
+      return window.innerWidth < 600 ? 1 : 
+             window.innerWidth < 1200 ? 2 : 3;
+    ]]]
+  var_set_hold_mode: |-
+    [[[
+      if (variables.var_current_view === 'camera' && variables.var_assistsat_entity) {
+        if (!window.cameraHoldModeSet) {
+          window.cameraHoldModeSet = true;
+          hass.callService('view_assist', 'set_state', {
+            entity_id: variables.var_assistsat_entity,
+            mode: 'hold'
+          });
+        }
+      } else {
+        window.cameraHoldModeSet = false;
+      }
+      return '';
+    ]]]
 template:
   - variable_template
   - body_template
 styles:
+  grid:
+    - grid-template-areas: |-
+        [[[
+          return variables.var_camera ? 
+            `"status status"  
+             "camera camera"
+             "camera camera"` :
+            `"status status"
+             "camera_select camera_select"
+             "camera_select camera_select"`;
+        ]]]
+    - grid-template-columns: 1fr 1fr
+    - grid-template-rows: min-content 1fr 1fr
   card:
-    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
+    - background: >-
+        [[[ return `center / cover no-repeat
+        url(${variables.background})` ]]]
     - background-size: cover
+    - border-radius: 0px
+    - font-family: >-
+        [[[ return `'${variables.var_assistsat_entity_font_style}',
+        sans-serif`; ]]]
+  custom_fields:
+    camera:
+      - display: '[[[ return variables.var_camera ? ''block'' : ''none'' ]]]'
+      - height: 100%
+      - width: 100%
+    camera_select:
+      - display: '[[[ return variables.var_camera ? ''none'' : ''block'' ]]]'
+      - margin: 0.125rem
+      - overflow-y: auto
+      - max-height: 100vh
+    back_button:
+      - display: '[[[ return variables.var_camera ? ''block'' : ''none'' ]]]'
+      - position: absolute
+      - left: 1rem
+      - top: 1rem
+      - z-index: 1
 custom_fields:
-  title: >-
-    [[[ try {return hass.states[variables.var_camera].attributes.friendly_name}
-    catch {return ""}]]]
-  message:
+  _hold_mode_init: '[[[ return variables.var_set_hold_mode ]]]'
+  back_button:
     card:
-      type: custom:advanced-camera-card
-      menu:
-        style: none
-      cameras:
-        - camera_entity: >-
-            [[[ try {return
-            hass.states[variables.var_assistsat_entity].attributes.camera} catch
-            {return ""}]]]
-          live_provider: ha
-      dimensions:
-        max_height: 100vh
-        max_wdith: 100vw
+      type: custom:button-card
+      icon: mdi:arrow-left
+      show_name: false
+      styles:
+        card:
+          - background: rgba(0,0,0,0.6)
+          - border-radius: 50%
+          - width: 3rem
+          - height: 3rem
+          - padding: 0
+        icon:
+          - color: white
+          - width: 1.75rem
+          - height: 1.75rem
+      grid:
+        - grid-template-areas: i
+        - justify-items: center
+        - align-items: center
+      tap_action:
+        action: call-service
+        service: view_assist.navigate
+        service_data:
+          device: '[[[ return variables.var_assistsat_entity ]]]'
+          path: /view-assist/camera
+  camera:
+    card:
+      type: picture-entity
+      entity: '[[[ return variables.var_camera ]]]'
+      camera_view: live
+      show_name: false
+      show_state: false
+      tap_action:
+        action: more-info
+      card_mod:
+        style: |
+          ha-card {
+            height: 100%;
+            background: transparent;
+            border-radius: 0 !important;
+            box-shadow: none;
+          }
+  camera_select:
+    card:
+      type: grid
+      columns: '[[[ return variables.var_responsive_columns ]]]'
+      square: false
+      cards: |-
+        [[[
+          const cameras = variables.var_all_cameras;
+          if (!Array.isArray(cameras) || cameras.length === 0) {
+            return [{
+              type: "markdown",
+              content: "No cameras available",
+              card_mod: {
+                style: `
+                  ha-card {
+                    background: rgba(0,0,0,0.6);
+                    color: white;
+                    padding: 2rem;
+                    border-radius: 0.5rem;
+                    text-align: center;
+                  }
+                `
+              }
+            }];
+          }
+          return cameras.map(camera => ({
+            type: "picture-entity",
+            entity: camera.entity_id,
+            name: camera.name,
+            show_state: false,
+            show_name: true,
+            camera_view: "auto",
+            tap_action: {
+              action: "call-service",
+              service: "view_assist.navigate",
+              service_data: {
+                device: variables.var_assistsat_entity,
+                path: `/view-assist/camera?camera=${camera.entity_id}`
+              }
+            },
+            card_mod: {
+              style: `
+                ha-card {
+                  overflow: hidden;
+                  border-radius: 0.5rem;
+                  margin: 0;
+                }
+                .info {
+                  background: rgba(0,0,0,0.7) !important;
+                  padding: 0.5rem !important;
+                  color: white !important;
+                  font-size: clamp(0.875rem, 3vw, 1rem) !important;
+                }
+                img {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                }
+              `
+            }
+          }));
+        ]]]
