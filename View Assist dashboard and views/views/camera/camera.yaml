@@ -273,10 +273,9 @@ custom_fields:
               }
             }];
           }
-          
-          // Pass timeout parameter when navigating to individual cameras
+
           const timeoutParam = variables.var_timeout_seconds > 0 ? `&timeout=${variables.var_timeout_seconds}` : '';
-          
+
           return cameras.map(camera => ({
             type: "picture-entity",
             entity: camera.entity_id,
