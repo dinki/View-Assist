@@ -28,7 +28,7 @@ Watch Video: https://www.youtube.com/watch?v=cYqGGknf4C8
 
 ## Manual Install
 
-This integration can be installed by downloading the [view_assist](https://github.com/dinki/view_assist_integration/tree/main/custom_components) directory into your Home Assistant /config/custom_components directory and then restart Home Assistant.  We have plans to make this easier through HACS but are waiting for acceptance.
+This integration can be installed by downloading the [view_assist](https://github.com/dinki/view_assist_integration/tree/main/custom_components) directory into your Home Assistant /config/custom_components directory and then restart Home Assistant.
 
 ## Master Configuration
 
