@@ -7,6 +7,13 @@ sidebar_position: 1
 
 The View Assist master configuration contains the default values for all satellites. These settings make it easy to deploy many satellites without the need to modify each with the same values. These master configuration values can be overridden on each individual satellite's configuration page if the default is not to be used.
 
+[![Image](https://img.youtube.com/vi/X1RLB-oFtCY/mqdefault.jpg)](https://www.youtube.com/watch?v=cYqGGknf4C8)
+
+
+Watch Video: https://www.youtube.com/watch?v=X1RLB-oFtCY
+
+
+
 # Modifying the settings
 
 ![](./vaconfig0.png)

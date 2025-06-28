@@ -33,7 +33,7 @@ User @Tohur has come up with a clever way to use an M5Stack Atom Echo device as 
 
 @Tohur explains how to use his method here:
 
-Tohur here, this setup will require you to have already done the Andriod setup here https://dinki.github.io/View-Assist/docs/viewassist-setup/satellite-configuration/android skipping/ignoring any Stream Assist setup unless you require it for other View Assist satellites.
+Tohur here, this setup will require you to have already done the Andriod setup here https://dinki.github.io/View-Assist/docs/viewassist-setup skipping/ignoring any Stream Assist setup unless you require it for other View Assist satellites.
 
 Initially follow the setup above for your M5Stack Atom echo.
 
@@ -54,17 +54,18 @@ substitutions:
   name: "m5stack-atom-echo"
   friendlyname: "M5Stack Atom Echo"
   api_key: "encryption key"
+  # Home assistant media player entity 
   HA_mediaplayer: "media_player.bedroom"
+  # tts to use to bypass the onboard processing to prevent having to repeat yourself when the echo goes idle.
+  # Default is set to Nabu Casa, but can be google, piper, or any other TTS you have configured.
+  # Can go to Developer -> Actions and serach for tts to find the proper tts to use.
+  HA_tts: "tts.cloud_say"
 ```
 
-Replace name and friendlyname values with your device name and friendlyname and replace the api_key value with your encryption key aquired earlier. HA_mediaplayer should be the media player entitiy for your View Assist Android satellite as with the firmware you are only using the microphone of the M5Stack Atom echo and all audio is outputted over your View Assist Android satellite. Also make sure to  look the the cofig  in the wfi section and make sure you have an static ip set matching your network details.
+Replace name and friendlyname values with your device name and friendlyname and replace the api_key value with your encryption key aquired earlier. HA_mediaplayer should be the media player entitiy for your View Assist satellite as with the firmware you are only using the microphone of the M5Stack Atom echo and all audio is outputted over your View Assist satellite. Then find the tts service you use and set HA_tts to that service, This is needed to bypass the onboard TTS processing as when the echo goes idle you may have to repeat yourself to get an audio response, this bypasses that and lets HA  do 100% of the tts processing. Also make sure to look at the cofig in the wfi section and make sure you have an static ip set matching your network details.
 
 Once you have your config edited make sure to save before clicking Install. If wifi is already setup and ready to go you should be able to install using the wifi option other wise choose to install from the browser you are using and by plugging the Atom Echo directly into your HA Instances machine and install directly over USB.
 
+Once Install is complete You can assign the M5stack Atom echo as the mic device in your View Assist satilite config.
 
-
-Once Install is complete and your Atom echo is booted go to Settings -> Devices  & Services -> Entities and search for your devices entities and take note of the entitiy ids of the newly added STT sensor and MIC switch. The STT sensor will be your mic_device in your configuration.yaml from the View Assist setup and the MIC switch will be used as the mic device in the device control automation. From here after adding  your Atom echo to your already setup Android satellite replacing the the mic_device with the Atom  Echos SST sensor reboot your Home Assistant.
-
-
-
-Thank you and If you need any help I am in discord any contributions to this are welcomes as  the only thing not working is the intent view as we need to create a intent matching system and sensor for View Assist (there is already a place holder intent sensor).
+Thank you and If you need any help I am in discord any contributions to this are welcomed as the only thing not working is the intent view as we need to create a intent matching system and sensor for View Assist (there is already a place holder intent sensor).

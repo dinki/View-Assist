@@ -1,10 +1,17 @@
 type: custom:button-card
 variables:
-  clockcardversion: 1.2.1
+  clockcardversion: 1.4.0
   var_background: >-
-    [[[ try {return
-    hass.states[variables.var_assistsat_entity].attributes.background} catch {
-    return ""}]]]  
+    [[[ try {if (hass.states[variables.var_assistsat_entity].attributes.mode ===
+    "night") return ""; else return
+    hass.states[variables.var_assistsat_entity].attributes.background} catch
+    {return ""}]]]
+  var_font_color: >-
+    [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode ===
+    "night") return "red"; else return "white"; ]]] 
+  var_font_color_night: >-
+    [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode ===
+    "night") return "transparent"; else return "white"; ]]] 
 template:
   - variable_template
   - body_template
@@ -22,16 +29,21 @@ styles:
         [[[ return `center / cover no-repeat url(${variables.var_background})`
         ]]]
     - background-size: cover
+    - background-color: black
   custom_fields:
     title:
       - display: grid
+      - color: "[[[ return variables.var_font_color_night ]]]"
     time:
       - display: grid
       - justify-self: center
       - z-index: 1
       - font-size: 55vh
       - font-weight: bold
-      - color: white
+      - opacity: >-
+          [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode
+          === "night") return "35%"; else return "100%"; ]]] 
+      - color: "[[[ return variables.var_font_color ]]]"
     date:
       - display: grid
       - justify-self: center
@@ -39,12 +51,12 @@ styles:
       - z-index: 1
       - font-size: 15vh
       - width: max-content
+      - color: "[[[ return variables.var_font_color_night ]]]"
     night:
       - position: absolute
       - top: 0
       - min-height: 100%
       - width: 100%
-      - backdrop-filter: brightness(5%)
       - overflow: hidden
       - display: >-
           [[[ try {if
@@ -81,10 +93,10 @@ custom_fields:
           - grid-template-areas: "\"i n\""
         name:
           - font-size: 15vh
-          - color: white
+          - color: "[[[ return variables.var_font_color_night ]]]"
         icon:
           - width: 13vh
-          - color: white
+          - color: "[[[ return variables.var_font_color_night ]]]"
   time: "[[[ return variables.var_current_time ]]]"
   date: "[[[ return variables.var_date_short ]]]"
   night: .
