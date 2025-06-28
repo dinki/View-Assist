@@ -1,32 +1,33 @@
 # List Management
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2FList_Management%2Fblueprint-listmanagement.yaml)
-
 [![Image](https://img.youtube.com/vi/h6WmQ7LiO_0/mqdefault.jpg)](https://www.youtube.com/watch?v=h6WmQ7LiO_0)
 
 Detailed install video: https://youtu.be/h6WmQ7LiO_0
 
+Note that this video was recorded before the integration existed so you can skip the blueprint and view install as those are now automatically provided for you
+
 Required View: [list view](../views/list)
 
-Allows user to add and remove items from a shopping list.  User can also request to show the shopping list and it will be displayed on View Assist satellite devices with displays.
-
-
+Allows user to add and remove items from a shopping list. User can also request to show the shopping list and it will be displayed on View Assist satellite devices with displays.
 
 Special thanks to Elwing for her work on this automation and view
 
 ## Example Sentences
+
 - "Add milk to my shopping list."
 - "Remove eggs from the grocery list."
 - "What's on my shopping list?"
 - "Show me the grocery list."
 
 ## Reverse list order
+
 Since Home Assistant to-do lists show the newest items at the bottom, you may want to reverse the order of the list.
 The closest you can get to this is to use the `reverse_spoken_list` function in the blueprint to reverse the sequence in which items are spoken during requests to show the list.
 
-This will not change the order of the items shown on the dashboard, as this is controlled by the [to-do-list card](https://www.home-assistant.io/dashboards/todo-list/). 
+This will not change the order of the items shown on the dashboard, as this is controlled by the [to-do-list card](https://www.home-assistant.io/dashboards/todo-list/).
 As of Home Assistant 2025.4, the to-do-list card does not support reversing the order of items. An alternative is to use the `display_order` attribute which does not allow sorting based on creation date however.
 The closest you can get is to add the following line into the CSS Block of your list view. It will scroll the view to the bottom of the list, so the newest items are shown first.
+
 ```css
 ha-card {
   background-color: transparent;
@@ -45,9 +46,11 @@ ha-card {
 ```
 
 ## Translations
+
 This section gives some examples of how to use the custom sentences in different languages. The translations are not perfect and may need to be adjusted based on your specific use case.
 
 ### English
+
 ```yaml
 command_add1: >-
   (add|at) {item} to [my | the][grocery|shopping] list
@@ -60,6 +63,7 @@ command_show2: show [me] [my| the] [grocery|shopping] list
 ```
 
 ### German
+
 ```yaml
 command_add1: >-
   (Füge | Setze) {item} [auf] [meine | die | meiner]
@@ -75,6 +79,7 @@ command_show2: (Zeig [mir]) [meine | die] [Einkaufs|Einkaufsliste| Einkaufliste]
 ```
 
 ### Spanish
+
 ```yaml
 command_add1: >-
   (añade | agrega) {item} a [mi | la][lista de compras | lista de la compra]
@@ -89,6 +94,7 @@ command_show2: >-
 ```
 
 ### French
+
 ```yaml
 command_add1: >-
   (ajoute | ajoutez) {item} à [ma | la][liste de courses | liste d'achats]
@@ -104,10 +110,10 @@ command_show2: >-
 
 ## Changelog
 
-| Version | Description |
-| ------- | ----------- |
+| Version | Description                                                                               |
+| ------- | ----------------------------------------------------------------------------------------- |
 | v 1.2.0 | Added german, spanish and french translations and new options to fine tune spoken content |
-| v 1.1.2 | Add entity to VA config for all calls to ensure no errors show when not set |
-| v 1.1.1 | Move list view variable out of dictionary |
-| v 1.1.0 | Added function |
-| v 1.0.0 | Initial release |
+| v 1.1.2 | Add entity to VA config for all calls to ensure no errors show when not set               |
+| v 1.1.1 | Move list view variable out of dictionary                                                 |
+| v 1.1.0 | Added function                                                                            |
+| v 1.0.0 | Initial release                                                                           |
