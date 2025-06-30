@@ -1,11 +1,11 @@
 # Get Sports Scores
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2FGet_Sports_Scores%2Fblueprint-getsportsscores.yaml)
-
 [![Image](https://img.youtube.com/vi/Dv7Z_xJk6Ug/mqdefault.jpg)](https://www.youtube.com/watch?v=Dv7Z_xJk6Ug)
 
 Detailed install video:
 https://www.youtube.com/watch?v=Dv7Z_xJk6Ug
+
+Note that this video was recorded before the integration existed so you can skip the blueprint and view install as those are now automatically provided for you
 
 This blueprint allows the user to make a voice request for sports scores using the fantastic Team Tracker extension. The users asks for the team by using the team mascot
 name. Some teams like the Rangers and Cardinals have multiple teams using those mascots. User will need to specify the city and mascot for these. This can be changed in code
