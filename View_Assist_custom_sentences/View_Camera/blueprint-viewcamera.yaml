@@ -57,104 +57,158 @@ blueprint:
       name: Fallback Behavior
       description: |
         What to do when a requested camera name is not found in the dictionary
-      default: show_all
+      default: show_configured
       selector:
         select:
           options:
-            - label: Show all cameras
-              value: show_all
+            - label: Show all configured cameras
+              value: show_configured
             - label: Speak error message
               value: speak_error
             - label: Do nothing
               value: do_nothing
 trigger:
-  - platform: conversation
+  - trigger: conversation
     command: !input command
+    id: voice_command
+  - trigger: homeassistant
+    event: start
+    id: startup
 condition: []
 action:
   - variables:
-      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
-      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
-      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
-      view: !input view
-      response_single: !input response_single
-      response_all: !input response_all
       cameras: !input cameras
-      fallback_behavior: !input fallback_behavior
-      hold_timeout: !input hold_timeout
-      requested_camera: "{{ trigger.slots.camera | default('') | lower }}"
-      timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
-  - choose:
-      - conditions:
-          - condition: template
-            value_template: "{{ requested_camera == 'all' }}"
-        sequence:
-          - action: view_assist.navigate
-            data:
-              device: "{{ target_satellite_device }}"
-              path: "{{ view }}?show=all{{ timeout_param }}"
-          - set_conversation_response: "{{ response_all }}"
-          - action: view_assist.set_state
-            target:
-              entity_id: "{{ target_satellite_device }}"
-            data:
-              last_said: "{{ response_all }}"
-      - conditions:
-          - condition: template
-            value_template: >-
-              {% set found = namespace(camera=false) %}
-              {% for entity, names in cameras.items() %}
-                {% if requested_camera in names | map('lower') | list %}
-                  {% set found.camera = true %}
-                {% endif %}
-              {% endfor %}
-              {{ found.camera }}
-        sequence:
-          - variables:
-              camera_entity: >-
-                {% set found = namespace(entity='') %}
-                {% for entity, names in cameras.items() %}
-                  {% if requested_camera in names | map('lower') | list %}
-                    {% set found.entity = entity %}
-                    {% break %}
-                  {% endif %}
-                {% endfor %}
-                {{ found.entity }}
-          - action: view_assist.navigate
-            data:
-              device: "{{ target_satellite_device }}"
-              path: "{{ view }}?camera={{ camera_entity }}{{ timeout_param }}"
-          - set_conversation_response: "{{ response_single }}"
-          - action: view_assist.set_state
-            target:
-              entity_id: "{{ target_satellite_device }}"
-            data:
-              last_said: "{{ response_single }}"
-    default:
+  - if:
+      - condition: template
+        value_template: "{{ trigger.id == 'startup' }}"
+    then:
+      - repeat:
+          for_each: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
+          sequence:
+            - action: view_assist.set_state
+              target:
+                entity_id: "{{ repeat.item }}"
+              data:
+                camera_list: "{{ cameras.keys() | list }}"
+  - if:
+      - condition: template
+        value_template: "{{ trigger.id == 'voice_command' }}"
+    then:
+      - variables:
+          target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+          target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+          target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+          view: !input view
+          response_single: !input response_single
+          response_all: !input response_all
+          fallback_behavior: !input fallback_behavior
+          hold_timeout: !input hold_timeout
+          requested_camera: "{{ trigger.slots.camera | default('') | lower }}"
+          timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
+          camera_entities_list: >-
+            {% set camera_list = cameras.keys() | list %}
+            {{ camera_list | join(',') | urlencode }}
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          camera_list: "{{ cameras.keys() | list }}"
       - choose:
           - conditions:
               - condition: template
-                value_template: "{{ fallback_behavior == 'show_all' }}"
+                value_template: "{{ requested_camera == 'all' }}"
             sequence:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
-                  path: "{{ view }}?show=all{{ timeout_param }}"
-              - set_conversation_response: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
+                  path: "{{ view }}?show=configured&cameras={{ camera_entities_list }}{{ timeout_param }}"
+              - set_conversation_response: "{{ response_all }}"
               - action: view_assist.set_state
                 target:
                   entity_id: "{{ target_satellite_device }}"
                 data:
-                  last_said: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
+                  last_said: "{{ response_all }}"
           - conditions:
               - condition: template
-                value_template: "{{ fallback_behavior == 'speak_error' }}"
+                value_template: >-
+                  {% set found = namespace(camera=false) %}
+                  {% for entity, names in cameras.items() %}
+                    {% if requested_camera in names | map('lower') | list %}
+                      {% set found.camera = true %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ found.camera }}
             sequence:
-              - set_conversation_response: "Sorry, I couldn't find a camera named '{{ requested_camera }}'. Available cameras are: {% for entity, names in cameras.items() %}{{ names | join(', ') }}{% if not loop.last %}, {% endif %}{% endfor %}."
+              - variables:
+                  camera_entity: >-
+                    {% set found = namespace(entity='') %}
+                    {% for entity, names in cameras.items() %}
+                      {% if requested_camera in names | map('lower') | list %}
+                        {% set found.entity = entity %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+                    {{ found.entity }}
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view }}?camera={{ camera_entity }}{{ timeout_param }}"
+              - set_conversation_response: "{{ response_single }}"
               - action: view_assist.set_state
                 target:
                   entity_id: "{{ target_satellite_device }}"
                 data:
-                  last_said: "Camera '{{ requested_camera }}' not found."
-        default: []
+                  last_said: "{{ response_single }}"
+        default:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ fallback_behavior == 'show_configured' }}"
+                sequence:
+                  - action: view_assist.navigate
+                    data:
+                      device: "{{ target_satellite_device }}"
+                      path: "{{ view }}?show=configured&cameras={{ camera_entities_list }}{{ timeout_param }}"
+                  - set_conversation_response: "Camera '{{ requested_camera }}' not found. Showing configured cameras."
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      last_said: "Camera '{{ requested_camera }}' not found. Showing configured cameras."
+              - conditions:
+                  - condition: template
+                    value_template: "{{ fallback_behavior == 'speak_error' }}"
+                sequence:
+                  - set_conversation_response: "Sorry, I couldn't find a camera named '{{ requested_camera }}'. Available cameras are: {% for entity, names in cameras.items() %}{{ names | join(', ') }}{% if not loop.last %}, {% endif %}{% endfor %}."
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      last_said: "Camera '{{ requested_camera }}' not found."
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ fallback_behavior == 'show_all' }}"
+                sequence:
+                  - action: view_assist.navigate
+                    data:
+                      device: "{{ target_satellite_device }}"
+                      path: "{{ view }}?show=all{{ timeout_param }}"
+                  - set_conversation_response: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      last_said: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
+              - conditions:
+                  - condition: template
+                    value_template: "{{ fallback_behavior == 'speak_error' }}"
+                sequence:
+                  - set_conversation_response: "Sorry, I couldn't find a camera named '{{ requested_camera }}'. Available cameras are: {% for entity, names in cameras.items() %}{{ names | join(', ') }}{% if not loop.last %}, {% endif %}{% endfor %}."
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      last_said: "Camera '{{ requested_camera }}' not found."
+            default: []
 mode: single
