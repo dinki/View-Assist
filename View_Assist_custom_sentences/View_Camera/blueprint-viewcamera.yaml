@@ -118,6 +118,12 @@ action:
               - condition: template
                 value_template: "{{ requested_camera == 'all' }}"
             sequence:
+              # Clear title before navigation to camera view (temporary fix to be removed when stale title issue is resolved)
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  title: ""
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -149,6 +155,12 @@ action:
                       {% endif %}
                     {% endfor %}
                     {{ found.entity }}
+              # Clear title before navigation to camera view (temporary fix to be removed when stale title issue is resolved)
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  title: ""
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -165,6 +177,12 @@ action:
                   - condition: template
                     value_template: "{{ fallback_behavior == 'show_configured' }}"
                 sequence:
+                  # Clear title before navigation to camera view (temporary fix to be removed when stale title issue is resolved)
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      title: ""
                   - action: view_assist.navigate
                     data:
                       device: "{{ target_satellite_device }}"
