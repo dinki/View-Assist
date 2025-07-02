@@ -3,19 +3,22 @@ template:
   - variable_template
   - body_template
 variables:
-  clockaltcardversion: 1.0.0
+  clockaltcardversion: 1.1.0
   var_enable_movement: true
   var_stop_position:
     top: 50%
     left: 50%
-  var_background: |-
-    [[[ 
-      try {
-        return hass.states[variables.var_assistsat_entity].attributes.background || "";
-      } catch (e) {
-        return "";
-      } 
-    ]]]
+  var_background: >-
+    [[[ try {if (hass.states[variables.var_assistsat_entity].attributes.mode ===
+    "night") return ""; else return
+    hass.states[variables.var_assistsat_entity].attributes.background} catch
+    {return ""}]]]
+  var_font_color: >-
+    [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode ===
+    "night") return "red"; else return "white"; ]]] 
+  var_font_color_night: >-
+    [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode ===
+    "night") return "transparent"; else return "white"; ]]] 
   var_random_opacity: "[[[ Math.random() > 0.5 ? '0.8' : '1' ]]]"
   var_positions:
     - top: "-100%"
