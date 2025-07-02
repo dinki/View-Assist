@@ -7,7 +7,7 @@ variables:
       const urlCamera = urlParams.get('camera');
       const showAll = urlParams.get('show');
 
-      if (showAll === 'all') {
+      if (showAll === 'all' || showAll === 'configured') {
         return "";
       }
 
@@ -33,8 +33,78 @@ variables:
     ]]]
   var_all_cameras: |-
     [[[
+      const urlParams = new URLSearchParams(window.location.search);
+      const showType = urlParams.get('show');
+      const configuredCameras = urlParams.get('cameras');
+      
+      if (showType === 'configured' && configuredCameras) {
+        const cameras = [];
+        const cameraEntityList = decodeURIComponent(configuredCameras).split(',');
+        
+        for (const entityId of cameraEntityList) {
+          const trimmedId = entityId.trim();
+          if (hass.states[trimmedId]) {
+            const cameraState = hass.states[trimmedId].state;
+            if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
+              cameras.push({
+                entity_id: trimmedId,
+                name: hass.states[trimmedId].attributes.friendly_name || 
+                      trimmedId.replace('camera.', '').replace(/_/g, ' ')
+              });
+            }
+          }
+        }
+        return cameras;
+      }
+      
+      let viewAssistEntity = null;
+      
+      if (variables.var_assistsat_entity && hass.states[variables.var_assistsat_entity]) {
+        viewAssistEntity = variables.var_assistsat_entity;
+      }
+      
+      if (!viewAssistEntity) {
+        for (const entityId in hass.states) {
+          if (entityId.startsWith('sensor.')) {
+            const entity = hass.states[entityId];
+            if (entity.attributes && entity.attributes.camera_list) {
+              viewAssistEntity = entityId;
+              break;
+            }
+          }
+        }
+      }
+      
+      if (viewAssistEntity) {
+        const sensorAttributes = hass.states[viewAssistEntity].attributes;
+        
+        if (sensorAttributes.camera_list) {
+          try {
+            if (Array.isArray(sensorAttributes.camera_list)) {
+              const cameras = [];
+              for (const entityId of sensorAttributes.camera_list) {
+                if (hass.states[entityId]) {
+                  const cameraState = hass.states[entityId].state;
+                  if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
+                    cameras.push({
+                      entity_id: entityId,
+                      name: hass.states[entityId].attributes.friendly_name || 
+                            entityId.replace('camera.', '').replace(/_/g, ' ')
+                    });
+                  }
+                }
+              }
+              
+              if (cameras.length > 0) {
+                return cameras;
+              }
+            }
+          } catch (e) {
+          }
+        }
+      }
+      
       const cameras = [];
-
       try {
         for (const entityId in hass.states) {
           if (entityId.startsWith('camera.')) {
@@ -42,14 +112,13 @@ variables:
             if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
               cameras.push({
                 entity_id: entityId,
-                name: hass.states[entityId].attributes.friendly_name || entityId.replace('camera.', '')
+                name: hass.states[entityId].attributes.friendly_name || 
+                      entityId.replace('camera.', '').replace(/_/g, ' ')
               });
             }
           }
         }
-
         cameras.sort((a, b) => a.name.localeCompare(b.name));
-
         return cameras;
       } catch (e) {
         return [];
