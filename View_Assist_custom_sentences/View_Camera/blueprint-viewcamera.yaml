@@ -1,4 +1,4 @@
-# View Assist - View Assist View Camera (v 2.0.0)
+# View Assist - View Camera (v 2.0.0)
 blueprint:
   name: View Assist - View Camera
   description: |
@@ -20,7 +20,7 @@ blueprint:
     response_all:
       name: Response Text (All Cameras)
       description: The response to give when showing all cameras
-      default: Showing all available cameras
+      default: Showing all configured cameras
     cameras:
       name: Camera Configuration
       description: |
@@ -175,31 +175,6 @@ action:
                       entity_id: "{{ target_satellite_device }}"
                     data:
                       last_said: "Camera '{{ requested_camera }}' not found. Showing configured cameras."
-              - conditions:
-                  - condition: template
-                    value_template: "{{ fallback_behavior == 'speak_error' }}"
-                sequence:
-                  - set_conversation_response: "Sorry, I couldn't find a camera named '{{ requested_camera }}'. Available cameras are: {% for entity, names in cameras.items() %}{{ names | join(', ') }}{% if not loop.last %}, {% endif %}{% endfor %}."
-                  - action: view_assist.set_state
-                    target:
-                      entity_id: "{{ target_satellite_device }}"
-                    data:
-                      last_said: "Camera '{{ requested_camera }}' not found."
-          - choose:
-              - conditions:
-                  - condition: template
-                    value_template: "{{ fallback_behavior == 'show_all' }}"
-                sequence:
-                  - action: view_assist.navigate
-                    data:
-                      device: "{{ target_satellite_device }}"
-                      path: "{{ view }}?show=all{{ timeout_param }}"
-                  - set_conversation_response: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
-                  - action: view_assist.set_state
-                    target:
-                      entity_id: "{{ target_satellite_device }}"
-                    data:
-                      last_said: "Camera '{{ requested_camera }}' not found. Showing all available cameras."
               - conditions:
                   - condition: template
                     value_template: "{{ fallback_behavior == 'speak_error' }}"
