@@ -15,6 +15,7 @@ Detailed install video: https://www.youtube.com/watch?v=pFrCahUR2ZE
 ### Installation
 1. Download and install the apk [from Github](https://github.com/TheTimeWalker/wallpanel-android/releases)
 
+Note that the above is a stable release but a more updated version can be [found here](https://github.com/000-i/wallpanel-plus) 
 
 ### Configuration
 1. Open WallPanel
