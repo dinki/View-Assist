@@ -2,12 +2,12 @@ type: custom:button-card
 variables:
   var_weather_entity: |-
     [[[
-      var assistbid = localStorage.getItem("view_assist_sensor");
+      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
       var weather_entity = hass.states[assistbid].attributes.weather_entity;
       return `${weather_entity}`
     ]]]    
   var_forecast_type: daily
-  weathercardversion: 1.0.3
+  weathercardversion: 1.1.0
 template:
   - variable_template
   - body_template
@@ -64,6 +64,7 @@ custom_fields:
             div {
               padding-top: 2vh;
               font-size: 6vh;
+              color: white !important;
               justify-content: space-evenly !important;
             }
           ha-card.type-weather-forecast>div.content>div.info:
@@ -88,7 +89,6 @@ custom_fields:
               }
               .attribute {
                 font-size: 5vh !important;
-                color:  #e1e1e1 !important;
               }  
               .temp span {
                 font-size: 7vh !important;
@@ -96,6 +96,5 @@ custom_fields:
               }
               .templow {
                 padding-top: 0px;
-                color: #e1e1e1 !important;
                 text-align: right;
               }
