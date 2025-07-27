@@ -24,6 +24,7 @@ This card can be added by copy pasting. One variable in the configuration will n
 
 | Version | Description                                                                                         |
 | ------- | --------------------------------------------------------------------------------------------------- |
+| v 1.1.0 | Force text to white regardless of day/night mode setting of browser                                 |
 | v 1.0.1 | Add option to set forecast_type as daily is not available for all weather providers (credit elwing) |
 | v 1.0.1 | Fix possible bad title                                                                              |
 | v 1.0.0 | Initial release                                                                                     |
