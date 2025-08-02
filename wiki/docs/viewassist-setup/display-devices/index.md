@@ -8,6 +8,7 @@ In order to render your Home Assistant dashboards in full screen on your Android
 
 There are currently three applications supported.  **You need to pick ONE of the following:**
 
+- [View Assist Companion App](https://github.com/msp1974/ViewAssist_Companion_App/) - Recommended.  The View Assist Companion App (VACA) is an Android application and integration written by View Assist developer Mark Parker.  This combination provides a simple to install means of providing both microphone input and display output but also provides tons of additional functionality.  VACA creates an Home ASsistant Assist Satellite device providing even more HA native functions.  Click the link for installation instructions.
 - [Wallpanel](./wallpanel.md) - RECOMMENDED  A free Android app that provides a full screen browser and additional features.  
 - [Fully Kiosk](./fully-kiosk.md) - A full featured paid Android app that provides additional features not offered by Wallpanel. Features like remote management, capturing images from the webcam and more.  
 - [Remote Assist Display](./remote-assist-display.md) - This project provides a full screen browser with its own ability to control the views shown.  Available for Android and Linux.  RAD control is an alternative to the Browser Mod control used on the other devices.  Browser Mod is NOT required when using Remote Assist Display
