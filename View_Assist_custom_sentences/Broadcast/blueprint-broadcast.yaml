@@ -1,8 +1,9 @@
 blueprint:
   name: View Assist - Broadcast
-  description: Say broadcast and the message and View Assist will send message to
-    all devices not in do not disturb mode (View Assist Broadcast v 1.0.3)<br />Note
-    Chime TTS is needed for this automation
+  description:
+    Say broadcast and the message and View Assist will send message to
+    all devices not in do not disturb mode (View Assist Broadcast v 1.1.0)<br />Note
+    This blueprint only supports Home Assistant Assist Satellite compliant satellites (examples VACA and VPE)
   domain: automation
   input:
     command_prompt:
@@ -11,56 +12,47 @@ blueprint:
       default: (announce | broadcast | tell everyone) {message}
     view:
       name: Dashboard Info view
-      description: The View Assist dashboard view to use for displaying text only
+      description:
+        The View Assist dashboard view to use for displaying text only
         information (example /view-assist/info)
       default: /view-assist/info
-    chime_path:
-      name: Chime path
-      description: The path to a sound file to use as the attention device before
-        the message is spoken
-      default: www/viewassist/broadcast.mp3
-alias: View Assist - Broadcast
-description: Say broadcast and the message and VA will send to all devices not in
-  do not disturb mode (v1.0.0)
+    play_chime:
+      name: Play preannounce sound
+      description: Plays a bell sound before the announcement is made as an attention grabber
+      default: true
+      selector:
+        boolean: {}
 trigger:
-- platform: conversation
-  command:
-  - !input command_prompt
+  - platform: conversation
+    command:
+      - !input command_prompt
 condition: []
 action:
-- variables:
-    target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
-    target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
-    target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
-    view: !input view
-    chime_path: !input chime_path
-- set_conversation_response: ""
-- repeat:
-    sequence:
-    - parallel:
-      - if:
-        - condition: template
-          value_template: "{{ ('view' in state_attr(repeat.item, 'type')) and state_attr(repeat.item, 'mode') != 'hold' }}"
-        then:
+  - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      view: !input view
+      play_chime: !input play_chime
+  - set_conversation_response: ""
+  - repeat:
+      for_each: '{{ view_assist_entities(filter={"type":"view_audio"}, exclude={"mode":"hold"})}}'
+      sequence:
         - action: view_assist.set_state
           target:
-            entity_id: "{{ repeat.item }}"              
-          data:         
+            entity_id: "{{ repeat.item }}"
+          data:
             title: Announcement
             message_font_size: 4vw
             message: "{{ trigger.slots.message | capitalize }}"
         - action: view_assist.navigate
           data:
             device: "{{ repeat.item }}"
-            path: "{{ view }}"            
-    for_each: "{{ view_assist_entities() }}"
-- action: chime_tts.say
-  target:
-    entity_id: "{{ view_assist_entities(filter={'do_not_disturb': false}, attr='mediaplayer_device') }}"
-  data:
-    chime_path: "{{ chime_path }}"
-    tts_playback_speed: 100
-    volume_level: 1
-    message: "{{ trigger.slots.message }}"
-    tts_platform: google_translate
+            path: "{{ view }}"
+  - action: assist_satellite.announce
+    target:
+      entity_id: "{{ view_assist_entities(filter={'do_not_disturb': 'off'}, attr='mic_device') }}"
+    data:
+      message: "{{ trigger.slots.message }}"
+      preannounce: "{{ play_chime | default(false) | bool }}"
 mode: single
