@@ -4,7 +4,7 @@
 
 - **Description**: Provides a view showing devices turned on/off, open/closed and others when issuing voice commands
 - **Defaultname**: intent
-- **Current Version**: v1.0.0
+- **Current Version**: v1.0.1
 - **Code link**: [Intent View Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/intent/intent.yaml)
 - **Special Requirements**: Requires Custom layout card
 
