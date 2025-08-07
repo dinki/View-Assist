@@ -28,4 +28,5 @@ to 600 for best viewing experience. You will also need to close and restart your
 
 | Version | Description     |
 | ------- | --------------- |
+| v 1.0.1 | Update position |
 | v 1.0.0 | Initial release |
