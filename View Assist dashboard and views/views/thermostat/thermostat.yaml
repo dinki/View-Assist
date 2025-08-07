@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  thermostatversion: 1.0.1
+  thermostatcardversion: 1.0.2
   var_climate_device: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.climate} catch {
@@ -15,7 +15,7 @@ styles:
   custom_fields:
     message:
       - font-size: "[[[ return variables.var_font_size ]]]"
-      - position: relative
+      - position: absolute
       - padding: 10px
       - border-radius: 10px
       - width: 95%
