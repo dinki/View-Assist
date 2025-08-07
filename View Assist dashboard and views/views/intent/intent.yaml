@@ -1,4 +1,6 @@
 type: custom:button-card
+variables:
+  intentcardversion: 1.0.1
 template:
   - variable_template
   - body_template
@@ -9,7 +11,7 @@ styles:
     - border-radius: 0px
   custom_fields:
     message:
-      - position: relative
+      - position: absolute
       - width: 100%
       - align-self: middle
       - justify-self: center
