@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Broadcast
   description:
     Say broadcast and the message and View Assist will send message to
-    all devices not in do not disturb mode (View Assist Broadcast v 1.1.0)<br />Note
+    all devices not in do not disturb mode (View Assist Broadcast v 1.1.1)<br />Note
     This blueprint only supports Home Assistant Assist Satellite compliant satellites (examples VACA and VPE)
   domain: automation
   input:
@@ -56,3 +56,4 @@ action:
       message: "{{ trigger.slots.message }}"
       preannounce: "{{ play_chime | default(false) | bool }}"
 mode: single
+
