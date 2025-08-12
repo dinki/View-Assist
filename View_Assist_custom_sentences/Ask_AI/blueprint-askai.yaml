@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Ask AI
-  description: Ask a general knowledge question or other request to AI (View Assist askai v 1.0.0)
+  description: Ask a general knowledge question or other request to AI (View Assist askai v 1.0.1)
   domain: automation
   input:
     command:
@@ -62,3 +62,4 @@ action:
           from_json)['question'] |capitalize}}?<br /\><br /\> <b>Answer:</b> <br
           /\> {{ (ai_answer.response.speech.plain.speech | from_json)['answer'] }}
 mode: single
+
