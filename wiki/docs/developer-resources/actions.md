@@ -209,5 +209,93 @@ data:
   entity_id: media_player.android_viewassist_livingroom_wyoming
   media_file: mysound.mp3
   max_repeats: 2
-  ``` 
+  ```
+
+## View Assist: Add Status Item
+### Description
+
+Adds an icon to either the launch icons or menu items.
+
+| Parameter | Description |
+|-----------|-------------|
+| `entity_id` | The View Assist entity to update |
+| `status_item` | Single icon or list of icons to add |
+| `menu` | Whether to add to menu (`true`) or launch icons (`false`, default) |
+| `timeout` | Optional auto-removal timeout in seconds |
+
+### Examples
+```yaml
+# Add a single launch icon (always visible)
+action: view_assist.add_status_item
+data:
+  entity_id: sensor.view_assist_main
+  status_item: "entity:light.lamp|lightbulb-on,lightbulb-off"
+  menu: false
+
+# Add multiple launch icons
+action: view_assist.add_status_item
+data:
+  entity_id: sensor.view_assist_main
+  status_item:
+    - "entity:light.bedroom|lightbulb-on,lightbulb-off"
+    - "view:camera|security"
+    - "weather"
+  menu: false
+  
+# Add a menu item with auto-removal after 5 minutes
+action: view_assist.add_status_item
+data:
+  entity_id: sensor.view_assist_main
+  status_item: "action:script.good_night|sleep"
+  menu: true
+  timeout: 300
+```
+
+## View Assist: Remove Status Item
+### Description
+
+Removes an icon from either the launch icons or menu items.
+
+| Parameter | Description |
+|-----------|-------------|
+| `entity_id` | The View Assist entity to update |
+| `status_item` | Single icon or list of icons to remove |
+| `menu` | Whether to remove from menu (`true`) or launch icons (`false`, default) |
+
+### Examples
+```yaml
+# Remove a single launch icon
+action: view_assist.remove_status_item
+data:
+  entity_id: sensor.view_assist_main
+  status_item: "entity:light.bedroom|lightbulb"
+  menu: false
+
+# Remove multiple menu items
+action: view_assist.remove_status_item
+data:
+  entity_id: sensor.view_assist_main
+  status_item:
+    - "entity:switch.fan|fan"
+    - "weather"
+  menu: true
+```
+
+## View Assist: Toggle Menu
+### Description
+
+Toggles the status menu visibility.
+
+| Parameter | Description |
+|-----------|-------------|
+| `entity_id` | The View Assist entity to update |
+
+### Example
+
+```yaml
+# Toggle the status menu
+action: view_assist.toggle_menu
+data:
+  entity_id: sensor.view_assist_main
+```
 
