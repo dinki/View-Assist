@@ -43,16 +43,6 @@ action:
         accurate to the minute. My question is:  {{ trigger.slots.question }} 
     response_variable: ai_answer
   - set_conversation_response: "{{ (ai_answer.response.speech.plain.speech | from_json)['answer'] }} "
-  - action: view_assist.set_state
-    target:
-      entity_id: "{{ target_satellite_device }}"              
-    data:     
-      title: Ask AI
-      message_font_size: 4vw
-      message: >-
-        <b>Question</b>: <br /\> {{ (ai_answer.response.speech.plain.speech |
-        from_json)['question'] |capitalize}}?<br /\><br /\> <b>Answer:</b> <br
-        /\> {{ (ai_answer.response.speech.plain.speech | from_json)['answer'] }}
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
@@ -60,5 +50,15 @@ action:
     - action: view_assist.navigate
       data:
         device: "{{ target_satellite_device }}"
-        path: "{{ view }}"     
+        path: "{{ view }}"
+    - action: view_assist.set_state
+      target:
+        entity_id: "{{ target_satellite_device }}"              
+      data:     
+        title: Ask AI
+        message_font_size: 4vw
+        message: >-
+          <b>Question</b>: <br /\> {{ (ai_answer.response.speech.plain.speech |
+          from_json)['question'] |capitalize}}?<br /\><br /\> <b>Answer:</b> <br
+          /\> {{ (ai_answer.response.speech.plain.speech | from_json)['answer'] }}
 mode: single
