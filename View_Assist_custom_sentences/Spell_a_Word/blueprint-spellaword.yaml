@@ -1,8 +1,8 @@
-# View Assist - Spell a Word (v 1.0.0)
+# View Assist - Spell a Word (v 1.0.1)
 # Written by - Dinki
 blueprint:
   name: View Assist - Spell a Word
-  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.0)
+  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.1)
   domain: automation
   input:
     language:
@@ -77,3 +77,4 @@ action:
           device: "{{ target_satellite_device }}"
           path: "{{ view }}"
 mode: single
+
