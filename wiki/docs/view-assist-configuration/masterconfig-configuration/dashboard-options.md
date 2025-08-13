@@ -55,6 +55,7 @@ The dashboard options control different aspects of the View Assist display
     |----------|-------------|------|
     | `home` | Navigate to clock view | home |
     | `weather` | Navigate to weather view | weather-sunny |
+    | `camera` | Navigate to camera view | cctv |
     | `menu` | Toggle menu display | menu |
     
     ### Custom Templates
