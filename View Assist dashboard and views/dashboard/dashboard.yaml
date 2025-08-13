@@ -1,73 +1,16 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.0.0
+      dashboardversion: 1.1.0
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
              .find((eid) => hass.states[eid].attributes.type === "view_audio");
           } catch { return  ""}
-        ]]]     
+        ]]]
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
-        ]]]
-      var_assisting: |-
-        [[[
-          try 
-          {
-            var assist_assistbid = localStorage.getItem("view_assist_sensor");
-            var micdevice = hass.states[assist_assistbid].attributes.mic_device;
-            var micstate = hass.states[micdevice].state;
-            var assisting = false;
-            
-            if (micdevice.includes("_stt")) 
-            {
-              assisting = micstate.includes("start") || micstate.includes("vad");
-            }
-            else if (micdevice.includes("assist_satellite"))
-            {
-              var assist_in_progress_sensor = micdevice;
-              var assist_in_progress = hass.states[assist_in_progress_sensor].state;
-              if (assist_in_progress === "listening" || assist_in_progress === "processing") {
-                  assisting = true; 
-              }              
-            }
-            else if (micdevice.includes("hassmic") || micdevice.includes("simple_state"))
-            {
-              assisting = micstate.includes("stt-listening") || 
-                         micstate.includes("intent-processing") || 
-                         micstate.includes("tts-speaking");
-            }
-            
-            return `${assisting}`;
-          } catch { return  ""}
-        ]]]
-      var_assisting_text: |-
-        [[[
-          try 
-          {
-            var assist_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var micdevice = hass.states[assist_assistbid].attributes.mic_device;
-            var micstate = hass.states[micdevice].state;
-            var assisting_text = "How can I assist?";
-            if (micdevice.includes("_stt") && !micstate?.includes("start")) {
-              assisting_text = "Processing request";
-            } else if (micdevice.includes("_simple_state") && !micstate?.includes("stt-listening")) {
-              assisting_text = "Processing request";
-            } else if (micdevice.includes("assist_satellite") && micstate?.includes("processing")) {
-              assisting_text = "Processing request";              
-            } 
-            return `${assisting_text}`;
-          } catch { return  ""}
-        ]]]              
-      var_assist_prompt: |-
-        [[[
-          try {
-            var assist_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var assist_prompt = hass.states[assist_assistbid].attributes.assist_prompt;
-            return `${assist_prompt}`;
-          } catch { return  "";}
         ]]]
       var_mic_switch: |-
         [[[
@@ -78,22 +21,6 @@ button_card_templates:
             return `${micdevice}`;
           } catch { return  ""}
         ]]]
-      var_wake_switch: |-
-        [[[
-          try {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
-            if (micdevice.startsWith("assist_satellite.")) {
-              var wakebutton = micdevice.replace("assist_satellite.", "button.") + "_wake";
-              if (wakebutton in hass.states) {
-                return `${wakebutton}`;
-              }
-            }
-            return "";
-          } catch {
-            return "";
-          }
-        ]]] 
       var_mediaplayer_device: |-
         [[[
           try {
@@ -101,7 +28,7 @@ button_card_templates:
             var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
             return `${mediadevice}`;
           } catch { return  "";}
-        ]]]        
+        ]]]
       var_mediaplayer_mute: |-
         [[[
           try {
@@ -110,9 +37,9 @@ button_card_templates:
             var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
             return `${mediaplayerstate}`;
           } catch { return  "";}
-        ]]]    
+        ]]]
       var_assistsat_time_format: |-
-        [[[ 
+        [[[
           if (variables.var_assistsat_entity_use_24_hour_time) {
             return '%H:%M';
           } else {
@@ -120,99 +47,99 @@ button_card_templates:
           }
         ]]]
       var_current_time: |-
-        [[[ 
+        [[[
           return `<viewassist-clock server_time=true format='${variables.var_assistsat_time_format}'></viewassist-clock>`;
         ]]]
       var_date_short: |-
-        [[[ 
+        [[[
           return `<viewassist-clock server_time=true format='%a, %b %e'></viewassist-clock>`;
         ]]]
       var_date_long: |-
-        [[[ 
+        [[[
           return `<viewassist-clock server_time=true format='%A, %B %d, %Y'></viewassist-clock>`;
-        ]]]          
+        ]]]
       var_assistsat_entity_font_style: |
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.font_style;
-          } catch { return  "Roboto"} 
-        ]]]     
+          } catch { return  "Roboto"}
+        ]]]
       var_assistsat_entity_weather_entity: |
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.weather_entity;
-          } catch { return  ""} 
-        ]]]      
+          } catch { return  ""}
+        ]]]
       var_assistsat_entity_status_icons_size: |
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.status_icons_size;
-          } catch { return  "6vw"} 
+          } catch { return  "6vw"}
         ]]]
       var_assistsat_entity_use_24_hour_time: |
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
-          } catch { return  false} 
+          } catch { return  false}
         ]]]
       var_title: |-
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.title;
-          } catch { return  ""} 
+          } catch { return  ""}
         ]]]
       var_message: |-
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.message;
-          } catch { return  ""} 
+          } catch { return  ""}
         ]]]
       var_image: |-
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.image;
-          } catch { return  ""} 
+          } catch { return  ""}
         ]]]
       var_font_size: |-
-        [[[ 
-          try 
+        [[[
+          try
           {
             return states[variables.var_assistsat_entity].attributes.message_font_size;
           }
-          catch { return  ""} 
+          catch { return  ""}
         ]]]
       var_weather_temperature: |-
-        [[[ 
-          try 
+        [[[
+          try
           {
             return (states[variables. var_assistsat_entity_weather_entity].attributes.temperature  + '°');
           }
           catch { return  ""}
-        ]]]      
+        ]]]
       var_weather_icon: |-
         [[[
           const weatherIconsDay  = {
-            "clear-night": "mdi:weather-night", 
+            "clear-night": "mdi:weather-night",
             "cloudy": "mdi:weather-cloudy",
             "dust": "mdi:weather-dust",
             "fog": "mdi:weather-fog",
             "hail": "mdi:weather-hail",
-            "hazy": "mdi:weather-hazy", 
+            "hazy": "mdi:weather-hazy",
             "hurricane": "mdi:weather-hurricane",
             "lightning": "mdi:weather-lightning",
             "lightning-rainy": "mdi:weather-lightning-rainy",
             "partlycloudy": "mdi:weather-partly-cloudy",
-            "partly-lightning": "mdi:weather-partly-lightning", 
+            "partly-lightning": "mdi:weather-partly-lightning",
             "partly-rainy": "mdi:weather-partly-rainy",
-            "partly-snowy": "mdi:weather-partly-snowy", 
-            "partly-snowy-rainy": "mdi:weather-partly-snowy-rainy", 
+            "partly-snowy": "mdi:weather-partly-snowy",
+            "partly-snowy-rainy": "mdi:weather-partly-snowy-rainy",
             "pouring": "mdi:weather-pouring",
             "rainy": "mdi:weather-rainy",
             "snowy": "mdi:weather-snowy",
@@ -233,16 +160,16 @@ button_card_templates:
           {
             var condition = states[variables. var_assistsat_entity_weather_entity].state;
             if (states['sun.sun'] === 'above_horizon') {
-              var weather_icon = weatherIconsDay[condition]; 
+              var weather_icon = weatherIconsDay[condition];
             } else {
               var weather_icon = weatherIconsDay[condition];
             }
-            
-            if (typeof(weather_icon) === 'undefined') { 
-              var weather_icon = "mdi:help" 
-            }   
+
+            if (typeof(weather_icon) === 'undefined') {
+              var weather_icon = "mdi:help"
+            }
             return `${weather_icon}`;
-          } catch { return  ""} 
+          } catch { return  ""}
         ]]]
       var_current_view: |-
         [[[
@@ -254,7 +181,7 @@ button_card_templates:
                 return match[1];
               }
             }
-            
+
             const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
             if (currentPath) {
               const match = currentPath.match(/\/view-assist\/([^\/]+)/);
@@ -266,7 +193,6 @@ button_card_templates:
           } catch { return ""; }
         ]]]
   body_template:
-    template: assist_template
     show_state: false
     show_icon: false
     show_name: false
@@ -296,9 +222,9 @@ button_card_templates:
     styles:
       grid:
         - grid-template-areas: |
-            "title status"  
+            "title status"
             "message message"
-            "assist assist"        
+            "assist assist"
         - grid-template-rows: min-content 30vh min-content
         - grid-template-columns: 1fr 1fr
         - row-gap: .5rem
@@ -310,10 +236,10 @@ button_card_templates:
                 return `center / cover no-repeat url(${variables.background})`
               } else if (variables.var_background != null) {
                   return `center / cover no-repeat url(${variables.var_background})`
-              } else { 
+              } else {
                 return `center / cover no-repeat ${variables.background_color}`
               }
-            ]]]        
+            ]]]
         - background-size: cover
         - border-radius: 0px
         - overflow: hidden
@@ -321,7 +247,7 @@ button_card_templates:
         - font-family: |-
             [[[
               return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
-            ]]] 
+            ]]]
         - font-weight: 300
       custom_fields:
         title:
@@ -333,7 +259,7 @@ button_card_templates:
           - font-weight: 400
           - width: max-content
           - margin-left: 2%
-          - margin-top: '-4%'
+          - margin-top: "-4%"
         status:
           - position: absolute
           - justify-self: end
@@ -343,7 +269,7 @@ button_card_templates:
           - right: 0vw
           - z-index: 1
     custom_fields:
-      title: '[[[ return variables.var_title ]]]'
+      title: "[[[ return variables.var_title ]]]"
       status:
         card:
           type: custom:layout-card
@@ -358,7 +284,7 @@ button_card_templates:
                 grid-template-columns: |
                   [[[
                     return `repeat(auto-fit, minmax(max(${variables.var_assistsat_entity_status_icons_size}, ${variables.var_assistsat_entity_status_icons_size}), ${variables.var_assistsat_entity_status_icons_size}))`
-                  ]]]                
+                  ]]]
               cards: |-
                 [[[{
                   const buttonList = [];
@@ -394,7 +320,7 @@ button_card_templates:
                         const [type, target] = typeAndTarget.split(':');
 
                         if (type === 'view') {
-                          const viewName = target.includes('/') ? 
+                          const viewName = target.includes('/') ?
                             target.split('/').pop() : target;
                           return viewName === currentView;
                         }
@@ -460,7 +386,7 @@ button_card_templates:
                       }
                     });
 
-                    if (hass.states[vaEntity].attributes.menu_config === "menu_enabled_button_visible" && 
+                    if (hass.states[vaEntity].attributes.menu_config === "menu_enabled_button_visible" &&
                         !addedItems.has("menu")) {
                       buttonList.push({
                         type: "custom:button-card",
@@ -472,122 +398,6 @@ button_card_templates:
 
                   return buttonList;
                 }]]]
-  assist_template:
-    styles:
-      card: null
-      custom_fields:
-        assistbar:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "flashing bar" &
-              variables.var_assisting == "true") return "block"; else return
-              "none"; ]]]
-          - justify-self: center
-          - height: 10vh
-          - position: absolute
-          - width: 100%
-          - z-index: 1
-          - bottom: 0%
-          - animation: >-
-              [[[ if (variables.var_assisting_text.includes("How")) return
-              "pulse 2s infinite"; else return "pulse2 2s infinite"]]]        
-          - height: 10px
-        filterblur:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up" &
-              variables.var_assisting == "true") return "block"; else return
-              "none"; ]]]       
-          - top: 0px
-          - left: 0px
-          - position: absolute
-          - height: 150%
-          - width: 150%
-          - backdrop-filter: brightness(100%)
-          - overflow: hidden
-          - color: transparent
-          - z-index: 0
-          - animation: '[[[ return "brightness .1s ease-in-out forwards" ]]]      '
-        assistblur:
-          - display: >-
-              [[[ if (variables.var_assist_prompt == "blur pop up" &
-              variables.var_assisting == "true") return "block"; else return
-              "none"; ]]]           
-          - position: absolute
-          - vertical-align: middle
-          - justify-self: center
-          - justify-content: center
-          - align-self: center
-          - z-index: 10
-          - opacity: 0
-          - animation: '[[[ return "growFromCenter .4s ease-in-out forwards" ]]]'
-          - font-family: '"Roboto", sans-serif'
-    extra_styles: |
-      @keyframes pulse {
-        0%, 100% {
-          background-color: #f56a3f;
-        }
-        50% {
-          background-color: #9e42b0;
-        }
-      }
-      @keyframes pulse2 {
-        0%, 100% {
-          background-color: #03A9F4;
-        }
-        50% {
-          background-color: #cfe2f3;
-        }
-      }      
-      @keyframes growFromCenter {
-        75% {
-          transform: scale(0);
-          opacity: 0;
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      @keyframes brightness {
-        100% { backdrop-filter: brightness(50%) blur(10px); z-index:9; }
-      }    
-    custom_fields:
-      assistbar: .
-      filterblur: .
-      assistblur:
-        card:
-          type: custom:button-card
-          name: '[[[ return variables.var_assisting_text ]]]'
-          show_icon: true
-          icon: >-
-            [[[ if (variables.var_assisting_text.includes("How")) return
-            "mdi:comment-processing-outline"; else return "mdi:dots-horizontal";
-            ]]]  
-          tap_action:
-            action: none
-          styles:
-            card:
-              - display: >-
-                  [[[ if (variables.var_assisting == "true") return "block";
-                  else return "none"; ]]]  
-              - padding: 4vh
-              - padding-top: 2vh
-              - padding-bottom: 2vh
-              - background: white
-              - height: 15vh
-              - width: 45vw
-              - border-radius: 8vh
-            grid:
-              - grid-template-areas: '"i n"'
-              - grid-template-columns: 1fr 4fr
-              - grid-template-rows: 1fr
-            icon:
-              - color: rgb(3,169,244)
-              - width: 10vw
-            name:
-              - color: black
-              - text-align: start
-              - font-size: 5vh
-              - font-weight: bold
   icon_template:
     template: variable_template
     aspect_ratio: 1/1
@@ -614,7 +424,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: '[[[ return variables.entity_id; ]]]'
+        device: "[[[ return variables.entity_id; ]]]"
         path: |-
           [[[
             const parts = variables.menu_item.split('|');
@@ -691,7 +501,7 @@ button_card_templates:
       action: call-service
       service: media_player.volume_mute
       service_data:
-        entity_id: '[[[ return variables.var_mediaplayer_device ]]]'
+        entity_id: "[[[ return variables.var_mediaplayer_device ]]]"
         is_volume_muted: false
   mic:
     type: custom:button-card
@@ -701,7 +511,7 @@ button_card_templates:
       action: call-service
       service: homeassistant.turn_off
       service_data:
-        entity_id: '[[[ return variables.var_mic_switch ]]]'
+        entity_id: "[[[ return variables.var_mic_switch ]]]"
   hold:
     type: custom:button-card
     template: icon_template
@@ -711,7 +521,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
   cycle:
     type: custom:button-card
     template: icon_template
@@ -721,7 +531,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
   dnd:
     type: custom:button-card
     template: icon_template
@@ -731,7 +541,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         do_not_disturb: false
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
   weather:
     type: custom:button-card
     template: icon_template
@@ -740,7 +550,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: '[[[ return variables.var_assistsat_entity ]]]'
+        device: "[[[ return variables.var_assistsat_entity ]]]"
         path: /view-assist/weather
   home:
     type: custom:button-card
@@ -750,7 +560,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: '[[[ return variables.var_assistsat_entity ]]]'
+        device: "[[[ return variables.var_assistsat_entity ]]]"
         path: /view-assist/clock
   menu:
     type: custom:button-card
@@ -760,7 +570,7 @@ button_card_templates:
       action: call-service
       service: view_assist.toggle_menu
       service_data:
-        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
         show: >-
           [[[ return
           !states[variables.var_assistsat_entity].attributes.menu_active ]]]
@@ -772,6 +582,16 @@ button_card_templates:
       action: call-service
       service: button.press
       service_data:
-        entity_id: '[[[ return variables.var_wake_switch ]]]'          
+        entity_id: '[[[ return variables.var_wake_switch ]]]'
+  camera:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:cctv
+    tap_action:
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: /view-assist/camera
 views:
   - title: Home

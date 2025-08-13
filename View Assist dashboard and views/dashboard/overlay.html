@@ -1,0 +1,46 @@
+<!--
+HTML for View Assist Dashboard Overlays
+VERSION: 1.1.0
+
+Each overlay must have a div with an id that has the overlay name from the integration prefixed with view-assist- and display style set to none.
+For example, the id for the blur_pop_up overlay should be view-assist-blur_pop_up.
+
+Within that div must be 2 other divs.  One with id of listening and one with id of processing.
+
+On activation, the listening/processing divs will be tagged with display: none or block as appropriate and the top level div will be set to display:block.
+
+CSS styles should be defined in overlays.css and not here.
+
+-->
+<div id="blur_pop_up" data-name="Blurs the screen with pop up" style="display: none">
+    <div class="overlay">
+        <div class="container" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+            <div id="listening" class="pill">
+                <button id="button">
+                    <span class="icon mdi--comment-processing-outline"></span>
+                    How can I assist?
+                </button>
+            </div>
+            <div id="processing" class="pill">
+                <button id="button">
+                    <span class="icon mdi--dots-horizontal"></span>
+                    Processing...
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="flashing_bar" data-name="Flashing bar at the bottom" style="display: none">
+    <div id="listening">.</div>
+    <div id="processing">.</div>
+</div>
+
+<div id="kitt_bar" data-name="KITT sytle bar at the bottom" style="display: none">
+    <div id="listening" class="bar-line">
+        <div id="listening-bar" class="highlight">.</div>
+    </div>
+    <div id="processing" class="bar-line">
+        <div id="processing-bar" class="highlight">.</div>
+    </div>
+</div>
