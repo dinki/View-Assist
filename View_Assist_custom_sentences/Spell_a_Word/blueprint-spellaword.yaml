@@ -70,7 +70,6 @@ action:
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          title: ""
           message: <center>{{ trigger.slots.word |upper }}</center>
           message_font_size: 6vw
       - action: view_assist.navigate
