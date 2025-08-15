@@ -361,7 +361,10 @@ custom_fields:
           timeline:
             enabled: false
           mute:
-            enabled: false
+            enabled: true
+      live:
+        auto_unmute:
+          - visible
   camera_select:
     card:
       type: grid
