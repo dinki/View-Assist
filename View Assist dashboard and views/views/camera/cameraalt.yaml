@@ -360,11 +360,19 @@ custom_fields:
             enabled: false
           timeline:
             enabled: false
+          fullscreen:
+            enabled: true
           mute:
             enabled: true
       live:
         auto_unmute:
           - visible
+        display:
+          mode: single
+          grid_selected_position: default
+          grid_selected_width_factor: 1
+          grid_columns: 2
+          grid_max_columns: 3
   camera_select:
     card:
       type: grid
