@@ -419,20 +419,7 @@ custom_fields:
             card_mod: {
               style: `
                 ha-card {
-                  overflow: hidden;
                   border-radius: 0.5rem;
-                  margin: 0;
-                }
-                .info {
-                  background: rgba(0,0,0,0.7) !important;
-                  padding: 0.5rem !important;
-                  color: white !important;
-                  font-size: clamp(0.875rem, 3vw, 1rem) !important;
-                }
-                img {
-                  width: 100%;
-                  height: 100%;
-                  object-fit: cover;
                 }
               `
             }
