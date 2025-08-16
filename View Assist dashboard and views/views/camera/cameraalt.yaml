@@ -366,7 +366,7 @@ custom_fields:
             enabled: true
       live:
         auto_unmute:
-          - visible
+          - selected
         display:
           mode: single
           grid_selected_position: default
