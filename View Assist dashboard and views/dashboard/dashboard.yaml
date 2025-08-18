@@ -29,10 +29,10 @@ button_card_templates:
             if (micdevice.startsWith("assist_satellite.")) {
               var wakebutton = micdevice.replace("assist_satellite.", "button.") + "_wake";
               if (wakebutton in hass.states) {
-                return "";
+                return `${wakebutton}`;
               }
             }
-            return `${wakebutton}`;
+            return "";
           } catch {
             return "";
           }
