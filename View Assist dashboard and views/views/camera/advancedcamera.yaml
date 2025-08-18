@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  cameraaltcardversion: 1.0.0
+  advancedcameracardversion: 1.0.0
   var_camera: |-
     [[[
       const urlParams = new URLSearchParams(window.location.search);
