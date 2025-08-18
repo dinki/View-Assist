@@ -366,7 +366,7 @@ custom_fields:
             enabled: true
       live:
         auto_unmute:
-          - selected
+          - "[[[ return variables.var_camera ? 'selected' : 'never' ]]]"
         display:
           mode: single
           grid_selected_position: default
