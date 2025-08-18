@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.1.1
+      dashboardversion: 1.1.2
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
@@ -32,7 +32,7 @@ button_card_templates:
                 return "";
               }
             }
-            return `${micdevice_assistbid}`;
+            return `${wakebutton}`;
           } catch {
             return "";
           }
