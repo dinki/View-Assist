@@ -600,5 +600,14 @@ button_card_templates:
       service_data:
         device: "[[[ return variables.var_assistsat_entity ]]]"
         path: /view-assist/camera
+  wake:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:button-pointer
+    tap_action:
+      action: call-service
+      service: button.press
+      service_data:
+        entity_id: "[[[ return variables.var_wake_switch ]]]"
 views:
   - title: Home
