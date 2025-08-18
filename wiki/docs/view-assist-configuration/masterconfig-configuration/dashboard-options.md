@@ -60,7 +60,7 @@ The dashboard options control different aspects of the View Assist display
     
     ### Custom Templates
     
-    Create your own templates by adding them to `dashboard.yaml` emulating the custom templates [here](https://github.com/dinki/View-Assist/blob/b299657a96623f4e7fac25548550d34c9d8edae7/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L686-L775): <!-- Update line numbers when dashboard.yaml changes occur -->
+    Create your own templates by adding them to `dashboard.yaml` emulating the custom templates [here](https://github.com/dinki/View-Assist/blob/8ccf40ee4497b745e119a6b9eaee241ec973d5cc/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L496-L595): <!-- Update line numbers when dashboard.yaml changes occur -->
     
     ```yaml
     # Example custom template
@@ -133,7 +133,7 @@ The dashboard options control different aspects of the View Assist display
 
     ## Dynamic Management with Actions
     
-    For runtime management of status icons (adding, removing, or toggling menu), see the [Status Icons Actions](https://dinki.github.io/View-Assist/docs/developer-resources/actions) documentation. <!-- update link to direct path after merge -->
+    For runtime management of status icons (adding, removing, or toggling menu), see the [Status Icons Actions](https://dinki.github.io/View-Assist/docs/developer-resources/actions#view-assist-add-status-item) documentation.
     
     These actions allow you to:
     - Add icons temporarily with optional auto-removal timeout
