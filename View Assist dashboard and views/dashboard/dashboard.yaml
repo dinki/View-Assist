@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.1.0
+      dashboardversion: 1.1.1
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
@@ -20,6 +20,22 @@ button_card_templates:
             var micdevice = hass.states[micdevice_assistbid].attributes.mute_switch;
             return `${micdevice}`;
           } catch { return  ""}
+        ]]]
+      var_wake_switch: |-
+        [[[
+          try {
+            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+            var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
+            if (micdevice.startsWith("assist_satellite.")) {
+              var wakebutton = micdevice.replace("assist_satellite.", "button.") + "_wake";
+              if (wakebutton in hass.states) {
+                return "";
+              }
+            }
+            return `${micdevice_assistbid}`;
+          } catch {
+            return "";
+          }
         ]]]
       var_mediaplayer_device: |-
         [[[
@@ -574,15 +590,6 @@ button_card_templates:
         show: >-
           [[[ return
           !states[variables.var_assistsat_entity].attributes.menu_active ]]]
-  wake:
-    type: custom:button-card
-    template: icon_template
-    icon: mdi:button-pointer
-    tap_action:
-      action: call-service
-      service: button.press
-      service_data:
-        entity_id: '[[[ return variables.var_wake_switch ]]]'
   camera:
     type: custom:button-card
     template: icon_template
@@ -591,7 +598,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: '[[[ return variables.var_assistsat_entity ]]]'
+        device: "[[[ return variables.var_assistsat_entity ]]]"
         path: /view-assist/camera
 views:
   - title: Home
