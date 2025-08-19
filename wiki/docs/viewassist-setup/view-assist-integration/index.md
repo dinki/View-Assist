@@ -30,6 +30,16 @@ Watch Video: https://www.youtube.com/watch?v=cYqGGknf4C8
 
 This integration can be installed by downloading the [view_assist](https://github.com/dinki/view_assist_integration/tree/main/custom_components) directory into your Home Assistant /config/custom_components directory and then restart Home Assistant.
 
+
+## YAML Dashboards
+
+We provide a javascript resource as part of this integration which is normally installed automatically.  However, if your main dashboard is in YAML mode (ie you define your dashboard in yaml files in your config directory), you will need to add the below to your resources.  This does not apply to most installations and you will know if you have this type of setup
+
+```
+url: /view_assist/js/view_assist.js
+type: module
+```
+
 ## Master Configuration
 
 For new users, when adding the View Assist integration, it will force the adding of this master config instance. Subsequent adds will bring up the type selection and follow the previous config flow.
