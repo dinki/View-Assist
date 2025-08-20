@@ -158,7 +158,21 @@ variables:
         const entityId = variables.var_assistsat_entity;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const timeoutSeconds = urlParams.get('timeout') ? parseInt(urlParams.get('timeout'), 10) : 0;
+        const timeoutSeconds = urlParams.get('timeout') ? 
+          parseInt(urlParams.get('timeout'), 10) : 0;
+
+        let previousMode = 'normal';
+        try {
+          const entityState = hass.states[entityId];
+          if (entityState && entityState.attributes) {
+            const currentMode = entityState.attributes.mode || 'normal';
+            previousMode = (currentMode === 'hold') ? 'normal' : currentMode;
+          }
+        } catch (error) {
+          previousMode = 'normal';
+        }
+
+        window.cameraStoredPreviousMode = previousMode;
 
         hass.callService('view_assist', 'set_state', {
           entity_id: entityId,
@@ -188,19 +202,11 @@ variables:
               }
 
               if (hassInstance) {
-                let defaultMode = 'normal'; // Fallback if we can't read the entity
-
-                try {
-                  const entityState = hassInstance.states[entityId];
-                  if (entityState && entityState.attributes) {
-                    defaultMode = entityState.attributes.mode || 'normal';
-                  }
-                } catch (error) {
-                }
+                const revertMode = window.cameraStoredPreviousMode || 'normal';
 
                 hassInstance.callService('view_assist', 'set_state', {
                   entity_id: entityId,
-                  mode: defaultMode
+                  mode: revertMode
                 });
               }
 
@@ -209,14 +215,15 @@ variables:
               window.cameraRevertMode = null;
               window.cameraPageKey = null;
               window.cameraTimeoutStart = null;
+              window.cameraStoredPreviousMode = null;
 
             } catch (error) {
-              // Silent cleanup on error
               window.cameraHoldTimeout = null;
               window.cameraHoldModeSet = false;
               window.cameraRevertMode = null;
               window.cameraPageKey = null;
               window.cameraTimeoutStart = null;
+              window.cameraStoredPreviousMode = null;
             }
           };
 
@@ -233,6 +240,7 @@ variables:
         window.cameraHoldModeSet = false;
         window.cameraPageKey = null;
         window.cameraTimeoutStart = null;
+        window.cameraStoredPreviousMode = null;
       }
       return '';
     ]]]
