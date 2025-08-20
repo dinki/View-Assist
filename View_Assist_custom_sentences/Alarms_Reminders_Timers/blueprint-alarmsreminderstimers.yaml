@@ -251,6 +251,12 @@ action:
               then:
               - variables:
                   message: "No timer called '{{ trigger.slots.name | capitalize }}' could be found"
+              - action: view_assist.set_state
+                target:
+                  entity_id: '{{ target_satellite_device }}'
+                data:
+                  message: "{{ message }}"
+                  message_font_size: 3vw 
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -260,8 +266,6 @@ action:
                   entity_id: '{{ target_satellite_device }}'
                 data:
                   title: "Timers"
-                  message: "{{ message }}"
-                  message_font_size: 3vw 
       - conditions:
           - condition: trigger
             id:
@@ -299,6 +303,12 @@ action:
                   - condition: template
                     value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
                 then:
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: '{{ target_satellite_device }}'
+                    data:
+                      message: "{{ message }}"
+                      message_font_size: 3vw
                   - action: view_assist.navigate
                     data:
                       device: "{{ target_satellite_device }}"
@@ -308,8 +318,6 @@ action:
                       entity_id: '{{ target_satellite_device }}'
                     data:
                       title: "Timers"
-                      message: "{{ message }}"
-                      message_font_size: 3vw 
             else:
               - set_conversation_response: >-
                   I could not find an active timer called {{ trigger.slots.name }}
@@ -320,6 +328,12 @@ action:
                   - condition: template
                     value_template: "{% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}"
                 then:
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: '{{ target_satellite_device }}'
+                    data:
+                      message: "{{ message }}"
+                      message_font_size: 3vw
                   - action: view_assist.navigate
                     data:
                       device: "{{ target_satellite_device }}"
@@ -329,8 +343,6 @@ action:
                       entity_id: '{{ target_satellite_device }}'
                     data:
                       title: "Timers"
-                      message: "{{ message }}"
-                      message_font_size: 3vw
       - conditions:
           - condition: trigger
             id:
@@ -374,6 +386,12 @@ action:
                     {{ timer['name'] | capitalize if timer['name'] else timer['extra_info']['sentence'] | capitalize }} {{ timer['timer_class'] }} with {{ timer['expiry']['text'] }} remaining<br /\><br /\>
                   {% endfor %}
                   {% endif %}
+            - action: view_assist.set_state
+              target:
+                entity_id: '{{ target_satellite_device }}'
+              data:
+                message: "{{ message }}"
+                message_font_size: 3vw
             - action: view_assist.navigate
               data:
                 device: "{{ target_satellite_device }}"
@@ -383,8 +401,6 @@ action:
                 entity_id: '{{ target_satellite_device }}'
               data:
                 title: "Timers"
-                message: "{{ message }}"
-                message_font_size: 3vw
       - conditions:
           - condition: trigger
             id:
@@ -407,3 +423,4 @@ action:
               time: "{{ new_time }}"
           - set_conversation_response: ""
 mode: parallel
+
