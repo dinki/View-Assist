@@ -38,6 +38,12 @@ action:
   - repeat:
       for_each: '{{ view_assist_entities(filter={"type":"view_audio"}, exclude={"mode":"hold"})}}'
       sequence:
+        - action: view_assist.set_state
+          target:
+            entity_id: "{{ repeat.item }}"
+          data:
+            message_font_size: 4vw
+            message: "{{ trigger.slots.message | capitalize }}"
         - action: view_assist.navigate
           data:
             device: "{{ repeat.item }}"
@@ -47,8 +53,6 @@ action:
             entity_id: "{{ repeat.item }}"
           data:
             title: Announcement
-            message_font_size: 4vw
-            message: "{{ trigger.slots.message | capitalize }}"
   - action: assist_satellite.announce
     target:
       entity_id: "{{ view_assist_entities(filter={'do_not_disturb': 'off'}, attr='mic_device') }}"
@@ -56,4 +60,5 @@ action:
       message: "{{ trigger.slots.message }}"
       preannounce: "{{ play_chime | default(false) | bool }}"
 mode: single
+
 
