@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  cameracardversion: 2.0.1
+  advancedcameracardversion: 1.0.0
   var_camera: |-
     [[[
       const urlParams = new URLSearchParams(window.location.search);
@@ -139,6 +139,12 @@ variables:
         return 0;
       }
     ]]]
+  var_camera_card_key: |-
+    [[[
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlCamera = urlParams.get('camera');
+      return urlCamera ? `camera-${urlCamera}` : 'camera-default';
+    ]]]
   var_setup_camera_hold_mode: |-
     [[[
       if (variables.var_current_view === 'camera' && variables.var_assistsat_entity) {
@@ -256,48 +262,51 @@ styles:
     - grid-template-columns: 1fr 1fr
     - grid-template-rows: min-content 1fr 1fr
   card:
-    - background: >-
-        [[[ return `center / cover no-repeat
-        url(${variables.background})` ]]]
+    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
     - background-size: cover
     - border-radius: 0px
     - font-family: >-
-        [[[ return `'${variables.var_assistsat_entity_font_style}',
-        sans-serif`; ]]]
+        [[[ return `'${variables.var_assistsat_entity_font_style}', sans-serif`;
+        ]]]
   custom_fields:
     camera:
-      - display: '[[[ return variables.var_camera ? ''block'' : ''none'' ]]]'
-      - height: 100%
-      - width: 100%
+      - display: "[[[ return variables.var_camera ? 'block' : 'none' ]]]"
+      - position: absolute
+      - top: 0
+      - left: 0
+      - right: 0
+      - bottom: 0
+      - z-index: 0
+      - margin: 0.125rem
     camera_select:
-      - display: '[[[ return variables.var_camera ? ''none'' : ''block'' ]]]'
+      - display: "[[[ return variables.var_camera ? 'none' : 'block' ]]]"
       - margin: 0.125rem
       - overflow-y: auto
       - max-height: 100vh
     back_button:
-      - display: '[[[ return variables.var_camera ? ''block'' : ''none'' ]]]'
+      - display: "[[[ return variables.var_camera ? 'block' : 'none' ]]]"
       - position: absolute
-      - left: 1rem
-      - top: 1rem
-      - z-index: 1
+      - left: .41rem
+      - top: .41rem
+      - z-index: 2
 custom_fields:
-  _hold_mode_init: '[[[ return variables.var_setup_camera_hold_mode ]]]'
+  _hold_mode_init: "[[[ return variables.var_setup_camera_hold_mode ]]]"
   back_button:
     card:
       type: custom:button-card
-      icon: mdi:arrow-left
+      icon: mdi:arrow-left-bold
       show_name: false
       styles:
         card:
           - background: rgba(0,0,0,0.6)
           - border-radius: 50%
-          - width: 3rem
-          - height: 3rem
+          - width: 2.75rem
+          - height: 2.75rem
           - padding: 0
         icon:
           - color: white
-          - width: 1.75rem
-          - height: 1.75rem
+          - width: 1.5rem
+          - height: 1.5rem
       grid:
         - grid-template-areas: i
         - justify-items: center
@@ -306,21 +315,76 @@ custom_fields:
         action: call-service
         service: view_assist.navigate
         service_data:
-          device: '[[[ return variables.var_assistsat_entity ]]]'
+          device: "[[[ return variables.var_assistsat_entity ]]]"
           path: /view-assist/camera
   camera:
     card:
-      type: picture-entity
-      entity: '[[[ return variables.var_camera ]]]'
-      camera_view: live
-      show_name: false
-      show_state: false
-      tap_action:
-        action: more-info
+      type: custom:advanced-camera-card
+      key: "[[[ return variables.var_camera_card_key ]]]"
+      cameras: |-
+        [[[
+          const allCameras = variables.var_all_cameras;
+          const currentCamera = variables.var_camera;
+          
+          if (!Array.isArray(allCameras) || allCameras.length === 0) {
+            return currentCamera ? [{ camera_entity: currentCamera }] : [];
+          }
+          
+          const cameraList = allCameras.map(camera => ({
+            camera_entity: camera.entity_id
+          }));
+          
+          if (currentCamera) {
+            const currentIndex = cameraList.findIndex(cam => cam.camera_entity === currentCamera);
+            if (currentIndex > 0) {
+              const currentCameraObj = cameraList.splice(currentIndex, 1)[0];
+              cameraList.unshift(currentCameraObj);
+            } else if (currentIndex === -1) {
+              cameraList.unshift({ camera_entity: currentCamera });
+            }
+          }
+          
+          return cameraList;
+        ]]]
+      menu:
+        style: outside
+        buttons:
+          iris:
+            enabled: true
+            icon: mdi:arrow-left-thin
+          live:
+            enabled: false
+          substreams:
+            enabled: false
+          clips:
+            enabled: false
+          snapshots:
+            enabled: false
+          download:
+            enabled: false
+          camera_ui:
+            enabled: false
+          expand:
+            enabled: false
+          timeline:
+            enabled: false
+          fullscreen:
+            enabled: true
+          mute:
+            enabled: true
+      live:
+        auto_unmute:
+          - "[[[ return variables.var_camera ? 'selected' : 'never' ]]]"
+        display:
+          mode: single
+          grid_selected_position: default
+          grid_selected_width_factor: 1
+          grid_columns: 2
+          grid_max_columns: 3
   camera_select:
     card:
       type: grid
-      columns: '[[[ return variables.var_responsive_columns ]]]'
+      columns: "[[[ return variables.var_responsive_columns ]]]"
       square: false
       cards: |-
         [[[
