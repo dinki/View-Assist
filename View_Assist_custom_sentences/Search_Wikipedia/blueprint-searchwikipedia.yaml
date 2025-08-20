@@ -51,6 +51,13 @@ action:
             value_template: >-
               {{ wiki_response.get('thumbnail') and not wiki_response.get('error') }}
         sequence:
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              message_font_size: 3vw
+              message: "{{ wiki_response['extract'] }}"
+              image: "{{ wiki_response['thumbnail'] }}"
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
@@ -60,9 +67,6 @@ action:
               entity_id: "{{ target_satellite_device }}"
             data:
               title: "{{ translations[language]['responses']['view_title'] }}"
-              message_font_size: 3vw
-              message: "{{ wiki_response['extract'] }}"
-              image: "{{ wiki_response['thumbnail'] }}"
           - set_conversation_response: "{{ wiki_response['extract'] }}"
       - conditions:
           - condition: template
@@ -96,3 +100,4 @@ action:
         data:
           last_said: "{{ conversation_response }}"
 mode: single
+
