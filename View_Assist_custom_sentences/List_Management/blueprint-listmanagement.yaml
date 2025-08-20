@@ -175,6 +175,12 @@ action:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  message_font_size: 4vw
+                  list: "{{ list_entity }}"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -184,8 +190,6 @@ action:
                   entity_id: "{{ target_satellite_device }}"
                 data:
                   title: "{{ state_attr(list_entity,'friendly_name') }}"
-                  message_font_size: 4vw
-                  list: "{{ list_entity }}"
 
       - conditions:
           - condition: trigger
@@ -235,6 +239,12 @@ action:
               - condition: template
                 value_template: "{{ target_satellite_device_type != 'audio_only' }}"
             then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  message_font_size: 4vw
+                  list: "{{ list_entity }}"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -244,8 +254,6 @@ action:
                   entity_id: "{{ target_satellite_device }}"
                 data:
                   title: "{{ state_attr(list_entity,'friendly_name') }}"
-                  message_font_size: 4vw
-                  list: "{{ list_entity }}"
 
     default:
       - service: todo.get_items
@@ -296,6 +304,13 @@ action:
           - condition: template
             value_template: "{{ target_satellite_device_type != 'audio_only' }}"
         then:
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              message_font_size: 4vw
+              list: "{{ list_entity }}"
+
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
@@ -305,7 +320,5 @@ action:
               entity_id: "{{ target_satellite_device }}"
             data:
               title: "{{ state_attr(list_entity,'friendly_name') }}"
-              message_font_size: 4vw
-              list: "{{ list_entity }}"
 
 mode: single
