@@ -145,7 +145,7 @@ custom_fields:
           - width: |-
               [[[
                 if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-                  return window.viewAssistResponsive.is_small_screen ? "6vh" : "8vh";
+                  return window.viewAssistResponsive.is_small_screen ? "7vh" : "9vh";
                 } else {
                   return "13vh";
                 }
