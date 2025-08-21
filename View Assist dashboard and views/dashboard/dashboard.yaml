@@ -217,7 +217,7 @@ button_card_templates:
           };
           try
           {
-            var condition = states[variables. var_assistsat_entity_weather_entity].state;
+            var condition = states[variables.var_assistsat_entity_weather_entity].state;
             if (states['sun.sun'] === 'above_horizon') {
               var weather_icon = weatherIconsDay[condition];
             } else {
@@ -403,7 +403,7 @@ button_card_templates:
                 grid-template-columns: |-
                   [[[
                     const baseIconSize = variables.var_assistsat_entity_responsive_status_icons_size;
-                    return `repeat(auto-fit, minmax(max(${baseIconSize}, ${baseIconSize}), ${baseIconSize}))`;
+                    return `repeat(auto-fit, minmax(${baseIconSize}, 1fr))`;
                   ]]]
               cards: |-
                 [[[{
