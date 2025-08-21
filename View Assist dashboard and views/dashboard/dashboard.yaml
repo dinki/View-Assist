@@ -178,9 +178,9 @@ button_card_templates:
         [[[
           try
           {
-            return (states[variables. var_assistsat_entity_weather_entity].attributes.temperature  + '°');
-            catch { return  ""}
+            return (states[variables.var_assistsat_entity_weather_entity].attributes.temperature  + '°');
           }
+          catch { return  ""}
         ]]]
       var_weather_icon: |-
         [[[
