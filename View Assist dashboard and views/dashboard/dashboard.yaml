@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.1.2
+      dashboardversion: 1.2.0
       default_satellite: |-
         [[[ try {
           return hass.states[variables.assist_group].attributes.entity_id
@@ -88,12 +88,19 @@ button_card_templates:
             return states[variables.var_assistsat_entity].attributes.weather_entity;
           } catch { return  ""}
         ]]]
-      var_assistsat_entity_status_icons_size: |
+      var_assistsat_entity_responsive_status_icons_size: |
         [[[
-          try
-          {
-            return states[variables.var_assistsat_entity].attributes.status_icons_size;
-          } catch { return  "6vw"}
+          try {
+            const baseSize = states[variables.var_assistsat_entity].attributes.status_icons_size || "6vw";
+
+            if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
+              return parseFloat(baseSize) * 1.3 + 'vw';
+            }
+
+            return baseSize;
+          } catch {
+            return window.viewAssistResponsive?.orientation === "portrait" ? "7.8vw" : "6vw";
+          }
         ]]]
       var_assistsat_entity_use_24_hour_time: |
         [[[
@@ -131,13 +138,30 @@ button_card_templates:
           }
           catch { return  ""}
         ]]]
+      var_responsive_font_scale: |-
+        [[[
+          try {
+            const responsive = window.viewAssistResponsive;
+            if (!responsive) return 1;
+
+            if (responsive.orientation === "portrait") {
+              if (responsive.is_small_screen) return 0.85;
+              if (responsive.is_tablet) return 1.1;
+              return 1.25;
+            } else {
+              if (responsive.is_small_screen) return 0.9;
+              if (responsive.is_tablet) return 1.0;
+              return 1.2;
+            }
+          } catch { return 1; }
+        ]]]
       var_weather_temperature: |-
         [[[
           try
           {
             return (states[variables. var_assistsat_entity_weather_entity].attributes.temperature  + '°');
+            catch { return  ""}
           }
-          catch { return  ""}
         ]]]
       var_weather_icon: |-
         [[[
@@ -208,7 +232,47 @@ button_card_templates:
             return "";
           } catch { return ""; }
         ]]]
-  body_template:
+  responsive_base:
+    variables:
+      var_orientation: |-
+        [[[
+          if (!window.viewAssistResponsive) {
+            window.viewAssistResponsive = {
+              orientation: window.innerHeight > window.innerWidth ? "portrait" : "landscape",
+              is_small_screen: window.innerWidth < 600,
+              is_tablet: window.innerWidth >= 600 && window.innerWidth < 1024
+            };
+
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+              clearTimeout(resizeTimeout);
+              resizeTimeout = setTimeout(() => {
+                const oldState = { ...window.viewAssistResponsive };
+
+                const newOrientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+                const newSmallScreen = window.innerWidth < 600;
+                const newTablet = window.innerWidth >= 600 && window.innerWidth < 1024;
+
+                if (oldState.orientation !== newOrientation ||
+                    oldState.is_small_screen !== newSmallScreen ||
+                    oldState.is_tablet !== newTablet) {
+
+                  window.viewAssistResponsive.orientation = newOrientation;
+                  window.viewAssistResponsive.is_small_screen = newSmallScreen;
+                  window.viewAssistResponsive.is_tablet = newTablet;
+
+                  const event = new CustomEvent('view-assist-responsive-change', {
+                    detail: window.viewAssistResponsive
+                  });
+                  window.dispatchEvent(event);
+                }
+              }, 150); // 150ms debounce
+            });
+          }
+
+          return window.viewAssistResponsive.orientation;
+        ]]]
+  body_template_base:
     show_state: false
     show_icon: false
     show_name: false
@@ -234,18 +298,15 @@ button_card_templates:
       service: switch.toggle
       service_data:
         entity_id: '[[[ try { return variables.var_mic_switch } catch { return  "" } ]]]'
-    aspect_ratio: 2/1
     styles:
       grid:
         - grid-template-areas: |
             "title status"
             "message message"
-            "assist assist"
-        - grid-template-rows: min-content 30vh min-content
+        - grid-template-rows: min-content 1fr
         - grid-template-columns: 1fr 1fr
         - row-gap: .5rem
       card:
-        - min-height: 100vh
         - background: |
             [[[
               if (variables.background != null) {
@@ -257,7 +318,6 @@ button_card_templates:
               }
             ]]]
         - background-size: cover
-        - border-radius: 0px
         - overflow: hidden
         - color: white
         - font-family: |-
@@ -265,27 +325,28 @@ button_card_templates:
               return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
             ]]]
         - font-weight: 300
+        - position: relative
+        - height: 100vh
+        - max-height: 100vh
+        - box-sizing: border-box
       custom_fields:
         title:
           - position: absolute
           - justify-self: start
           - align-self: start
-          - z-index: 1
-          - font-size: 200%
+          - z-index: 5
+          - font-size: |-
+              [[[
+                const baseSize = 200;
+                const scale = parseFloat(variables.var_responsive_font_scale);
+                return `${Math.round(baseSize * scale)}%`;
+              ]]]
           - font-weight: 400
           - width: max-content
           - margin-left: 2%
-          - margin-top: "-4%"
-        status:
-          - position: absolute
-          - justify-self: end
-          - align-self: end
-          - justify-content: right
-          - top: 0vh
-          - right: 0vw
-          - z-index: 1
+          - margin-top: -4%
     custom_fields:
-      title: "[[[ return variables.var_title ]]]"
+      title: '[[[ return variables.var_title ]]]'
       status:
         card:
           type: custom:layout-card
@@ -295,11 +356,15 @@ button_card_templates:
               layout_type: grid-layout
               layout:
                 margin: 0
-                card_margin: 0
-                place-content: end
-                grid-template-columns: |
+                card_margin: |-
                   [[[
-                    return `repeat(auto-fit, minmax(max(${variables.var_assistsat_entity_status_icons_size}, ${variables.var_assistsat_entity_status_icons_size}), ${variables.var_assistsat_entity_status_icons_size}))`
+                    return window.viewAssistResponsive?.orientation === "portrait" ? "0.5vh" : "0";
+                  ]]]
+                place-content: end
+                grid-template-columns: |-
+                  [[[
+                    const baseIconSize = variables.var_assistsat_entity_responsive_status_icons_size;
+                    minmax(max(${baseIconSize}, ${baseIconSize}), ${baseIconSize}))`;
                   ]]]
               cards: |-
                 [[[{
@@ -414,9 +479,37 @@ button_card_templates:
 
                   return buttonList;
                 }]]]
+  body_template:
+    template:
+      - variable_template
+      - body_template_base
+    styles:
+      card:
+        - min-height: 100vh
+        - max-height: 100vh
+        - border-radius: 0px
+        - overflow: hidden
+        - aspect-ratio: |-
+            [[[
+              if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
+                return window.viewAssistResponsive.is_small_screen ? "9 / 16" : "3 / 4";
+              } else {
+                return "16 / 9";
+              }
+            ]]]
+      grid:
+        - grid-template-rows: min-content 1fr
+      custom_fields:
+        status:
+          - position: absolute
+          - justify-self: end
+          - align-self: end
+          - justify-content: right
+          - top: 1vh
+          - right: 1vw
+          - z-index: 1
   icon_template:
     template: variable_template
-    aspect_ratio: 1/1
     color_type: card
     show_name: false
     size: 90%
@@ -425,6 +518,7 @@ button_card_templates:
       card:
         - background-color: transparent
         - border-width: 0px
+        - aspect-ratio: 1 / 1
       icon:
         - display: grid
         - color: white
@@ -440,7 +534,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.entity_id; ]]]"
+        device: '[[[ return variables.entity_id; ]]]'
         path: |-
           [[[
             const parts = variables.menu_item.split('|');
@@ -517,7 +611,7 @@ button_card_templates:
       action: call-service
       service: media_player.volume_mute
       service_data:
-        entity_id: "[[[ return variables.var_mediaplayer_device ]]]"
+        entity_id: '[[[ return variables.var_mediaplayer_device ]]]'
         is_volume_muted: false
   mic:
     type: custom:button-card
@@ -527,7 +621,7 @@ button_card_templates:
       action: call-service
       service: homeassistant.turn_off
       service_data:
-        entity_id: "[[[ return variables.var_mic_switch ]]]"
+        entity_id: '[[[ return variables.var_mic_switch ]]]'
   hold:
     type: custom:button-card
     template: icon_template
@@ -537,7 +631,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   cycle:
     type: custom:button-card
     template: icon_template
@@ -547,7 +641,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   dnd:
     type: custom:button-card
     template: icon_template
@@ -557,7 +651,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         do_not_disturb: false
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   weather:
     type: custom:button-card
     template: icon_template
@@ -566,7 +660,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.var_assistsat_entity ]]]"
+        device: '[[[ return variables.var_assistsat_entity ]]]'
         path: /view-assist/weather
   home:
     type: custom:button-card
@@ -576,7 +670,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.var_assistsat_entity ]]]"
+        device: '[[[ return variables.var_assistsat_entity ]]]'
         path: /view-assist/clock
   menu:
     type: custom:button-card
@@ -586,7 +680,7 @@ button_card_templates:
       action: call-service
       service: view_assist.toggle_menu
       service_data:
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
         show: >-
           [[[ return
           !states[variables.var_assistsat_entity].attributes.menu_active ]]]
@@ -598,7 +692,7 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.var_assistsat_entity ]]]"
+        device: '[[[ return variables.var_assistsat_entity ]]]'
         path: /view-assist/camera
   wake:
     type: custom:button-card
