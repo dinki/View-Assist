@@ -37,6 +37,25 @@ button_card_templates:
             return "";
           }
         ]]]
+      var_companion_orientation: |-
+        [[[
+          try {
+            var browser_id = localStorage.getItem("view_assist_browser_id");
+            if (!browser_id || !browser_id.startsWith("va-")) {
+              return "";
+            }
+            
+            var orientation_sensor = `sensor.${browser_id.replace(/[^a-zA-Z0-9]/g, '_')}_orientation`;
+            
+            if (orientation_sensor in hass.states) {
+              return hass.states[orientation_sensor].state;
+            }
+            
+            return "";
+          } catch {
+            return "";
+          }
+        ]]]
       var_mediaplayer_device: |-
         [[[
           try {
@@ -237,10 +256,15 @@ button_card_templates:
       var_orientation: |-
         [[[
           if (!window.viewAssistResponsive) {
+            const companionOrientation = variables.var_companion_orientation;
+            const initialOrientation = companionOrientation || 
+              (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
+            
             window.viewAssistResponsive = {
-              orientation: window.innerHeight > window.innerWidth ? "portrait" : "landscape",
+              orientation: initialOrientation,
               is_small_screen: window.innerWidth < 600,
-              is_tablet: window.innerWidth >= 600 && window.innerWidth < 1024
+              is_tablet: window.innerWidth >= 600 && window.innerWidth < 1024,
+              companion_available: !!companionOrientation
             };
 
             let resizeTimeout;
@@ -249,7 +273,9 @@ button_card_templates:
               resizeTimeout = setTimeout(() => {
                 const oldState = { ...window.viewAssistResponsive };
 
-                const newOrientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+                const companionOrientationNow = variables.var_companion_orientation;
+                const newOrientation = companionOrientationNow || 
+                  (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
                 const newSmallScreen = window.innerWidth < 600;
                 const newTablet = window.innerWidth >= 600 && window.innerWidth < 1024;
 
@@ -260,14 +286,27 @@ button_card_templates:
                   window.viewAssistResponsive.orientation = newOrientation;
                   window.viewAssistResponsive.is_small_screen = newSmallScreen;
                   window.viewAssistResponsive.is_tablet = newTablet;
+                  window.viewAssistResponsive.companion_available = !!companionOrientationNow;
 
                   const event = new CustomEvent('view-assist-responsive-change', {
                     detail: window.viewAssistResponsive
                   });
                   window.dispatchEvent(event);
                 }
-              }, 150); // 150ms debounce
+              }, 150);
             });
+          }
+
+          const companionOrientation = variables.var_companion_orientation;
+          if (companionOrientation && 
+              window.viewAssistResponsive.orientation !== companionOrientation) {
+            window.viewAssistResponsive.orientation = companionOrientation;
+            window.viewAssistResponsive.companion_available = true;
+            
+            const event = new CustomEvent('view-assist-responsive-change', {
+              detail: window.viewAssistResponsive
+            });
+            window.dispatchEvent(event);
           }
 
           return window.viewAssistResponsive.orientation;
