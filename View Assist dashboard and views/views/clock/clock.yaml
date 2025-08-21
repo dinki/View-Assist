@@ -2,16 +2,19 @@ type: custom:button-card
 variables:
   clockcardversion: 1.5.0
   var_background: >-
-    [[[ try {if (hass.states[variables.var_assistsat_entity].attributes.mode ===
-    "night") return ""; else return
-    hass.states[variables.var_assistsat_entity].attributes.background} catch
-    {return ""}]]]
+    [[[ try {if (hass.states[variables.var_assistsat_entity] && 
+    hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+    return ""; else return hass.states[variables.var_assistsat_entity] ? 
+    hass.states[variables.var_assistsat_entity].attributes.background : ""}
+    catch {return ""}]]]
   var_font_color: >-
-    [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode ===
-    "night") return "red"; else return "white"; ]]]
+    [[[ try {if (hass.states[variables.var_assistsat_entity] && 
+    hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+    return "red"; else return "white";} catch {return "white";} ]]]
   var_font_color_night: >-
-    [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode ===
-    "night") return "transparent"; else return "white"; ]]]
+    [[[ try {if (hass.states[variables.var_assistsat_entity] && 
+    hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+    return "transparent"; else return "white";} catch {return "white";} ]]]
 template:
   - variable_template
   - responsive_base
@@ -66,8 +69,10 @@ styles:
           ]]]
       - font-weight: bold
       - opacity: >-
-          [[[ if (hass.states[variables.var_assistsat_entity].attributes.mode
-          === "night") return "35%"; else return "100%"; ]]]
+          [[[ try {if (hass.states[variables.var_assistsat_entity] && 
+          hass.states[variables.var_assistsat_entity].attributes.mode ===
+          "night") return "35%"; else return "100%";} catch {return "100%";}
+          ]]] 
       - color: "[[[ return variables.var_font_color ]]]"
       - padding-top: 0
       - margin-top: 0
@@ -93,8 +98,8 @@ styles:
       - width: 100%
       - overflow: hidden
       - display: >-
-          [[[ try {if
-          (hass.states[variables.var_assistsat_entity].attributes.mode ===
+          [[[ try {if (hass.states[variables.var_assistsat_entity] &&
+          hass.states[variables.var_assistsat_entity].attributes.mode ===
           "night") return "block"; else return "none";} catch { return  "none"}
            ]]]
       - z-index: 2
