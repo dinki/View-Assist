@@ -62,9 +62,11 @@ api:
           then:
             - online_image.set_url:
                 id: weather_img
-                url: !lambda |-
-                  return "http://192.168.0.25:8123/local/" + icon + ".png";
+                # url: !lambda |-
+                #   return "http://192.168.0.25:8123/local/" + icon + ".png";
                 # url: "http://192.168.0.25:8123/local/rainy.png"
+                url: !lambda |-
+                  return "http://192.168.0.25:8123/view_assist/esphome/weather/" + icon + ".png";
             - script.execute: show_weather
       - if:
           condition:
