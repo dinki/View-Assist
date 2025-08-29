@@ -62,11 +62,12 @@ api:
           then:
             - online_image.set_url:
                 id: weather_img
-                # url: !lambda |-
-                #   return "http://192.168.0.25:8123/local/" + icon + ".png";
-                # url: "http://192.168.0.25:8123/local/rainy.png"
                 url: !lambda |-
                   return "http://192.168.0.25:8123/view_assist/esphome/weather/" + icon + ".png";
+            - lvgl.label.update:
+                id: temperature_label
+                text: !lambda |-
+                    return value + "°";
             - script.execute: show_weather
       - if:
           condition:
@@ -136,65 +137,66 @@ text:
            id: lbl_note
            text: !lambda return x.c_str();
 sensor:
-  - platform: adc
-    pin: GPIO1
-    id: battery_voltage
-    unit_of_measurement: "V"
-    accuracy_decimals: 1
-    device_class: "voltage"
-    entity_category: "diagnostic"
-    disabled_by_default: true
-    update_interval: 30s
-    attenuation: auto
-    filters:
-      - multiply: 2
+  ## 
+  # - platform: adc
+  #   pin: GPIO1
+  #   id: battery_voltage
+  #   unit_of_measurement: "V"
+  #   accuracy_decimals: 1
+  #   device_class: "voltage"
+  #   entity_category: "diagnostic"
+  #   disabled_by_default: true
+  #   update_interval: 30s
+  #   attenuation: auto
+  #   filters:
+  #     - multiply: 2
 
-  - platform: copy
-    id: battery_percent
-    source_id: battery_voltage
-    name: "Battery level"
-    unit_of_measurement: "%"
-    accuracy_decimals: 0
-    device_class: "battery"
-    entity_category: "diagnostic"
-    filters:
-      - lambda: return (x - 2.7) / (4.2 - 2.7) * 100;
-      - clamp:
-          min_value: 0
-          max_value: 100
-    on_value:
-      - lvgl.label.update:
-          id: lbl_battery_status
-          text: !lambda |-
-            static char buf[10];
-            std::string icon;
-            if (x == 100.0) {
-                icon = "\U000F0079"; // mdi-battery (full)
-            } else if (x > 90) {
-                icon = "\U000F0082"; // mdi-battery-90
-            } else if (x > 80) {
-                icon = "\U000F0081"; // mdi-battery-80
-            } else if (x > 70) {
-                icon = "\U000F0080"; // mdi-battery-70
-            } else if (x > 60) {
-                icon = "\U000F007F"; // mdi-battery-60
-            } else if (x > 50) {
-                icon = "\U000F007E"; // mdi-battery-50
-            } else if (x > 40) {
-                icon = "\U000F007D"; // mdi-battery-40
-            } else if (x > 30) {
-                icon = "\U000F007C"; // mdi-battery-30
-            } else if (x > 20) {
-                icon = "\U000F007B"; // mdi-battery-20
-            } else if (x > 10) {
-                icon = "\U000F007A"; // mdi-battery-10
-            } else if (x > 0) {
-                icon = "\U000F008E"; // mdi-battery-outline
-            } else {
-                icon = "\U000F06A5"; // mdi-power-plug
-            }
-            snprintf(buf, sizeof(buf), "%s", icon.c_str());
-            return buf;
+  # - platform: copy
+  #   id: battery_percent
+  #   source_id: battery_voltage
+  #   name: "Battery level"
+  #   unit_of_measurement: "%"
+  #   accuracy_decimals: 0
+  #   device_class: "battery"
+  #   entity_category: "diagnostic"
+  #   filters:
+  #     - lambda: return (x - 2.7) / (4.2 - 2.7) * 100;
+  #     - clamp:
+  #         min_value: 0
+  #         max_value: 100
+  #   on_value:
+  #     - lvgl.label.update:
+  #         id: lbl_battery_status
+  #         text: !lambda |-
+  #           static char buf[10];
+  #           std::string icon;
+  #           if (x == 100.0) {
+  #               icon = "\U000F0079"; // mdi-battery (full)
+  #           } else if (x > 90) {
+  #               icon = "\U000F0082"; // mdi-battery-90
+  #           } else if (x > 80) {
+  #               icon = "\U000F0081"; // mdi-battery-80
+  #           } else if (x > 70) {
+  #               icon = "\U000F0080"; // mdi-battery-70
+  #           } else if (x > 60) {
+  #               icon = "\U000F007F"; // mdi-battery-60
+  #           } else if (x > 50) {
+  #               icon = "\U000F007E"; // mdi-battery-50
+  #           } else if (x > 40) {
+  #               icon = "\U000F007D"; // mdi-battery-40
+  #           } else if (x > 30) {
+  #               icon = "\U000F007C"; // mdi-battery-30
+  #           } else if (x > 20) {
+  #               icon = "\U000F007B"; // mdi-battery-20
+  #           } else if (x > 10) {
+  #               icon = "\U000F007A"; // mdi-battery-10
+  #           } else if (x > 0) {
+  #               icon = "\U000F008E"; // mdi-battery-outline
+  #           } else {
+  #               icon = "\U000F06A5"; // mdi-power-plug
+  #           }
+  #           snprintf(buf, sizeof(buf), "%s", icon.c_str());
+  #           return buf;
   - platform: uptime
     id: up_sens
     on_value:
@@ -463,8 +465,8 @@ voice_assistant:
     - lvgl.label.update:
         id: voice_label
         text_font: roboto_icons_42
-        text: "\U000F01D8 Processing ..."
-        text_color: white
+        text: "\U000F01D8 Processing"
+        text_color: black
   on_tts_start:
     - script.execute: activate_stop_word_once
     - mixer_speaker.apply_ducking:
@@ -478,7 +480,7 @@ voice_assistant:
     - lvgl.label.update:
         id: voice_label
         text:  !lambda return id(previous_notification_text);
-        text_color: green
+        text_color: black
   on_end:
     - micro_wake_word.enable_model: stop
     - wait_until:
@@ -502,7 +504,7 @@ voice_assistant:
         id: voice_label
         text_font: roboto_icons_42
         text: "\U000F0185 How Can I Assist?"
-        text_color: white
+        text_color: black
     - script.execute: stop_wake_word
     - delay: 150ms
     - script.execute: start_wake_word
@@ -964,7 +966,7 @@ font:
       type: gfonts
       family: Roboto
     id: roboto_icons_42
-    size: 24
+    size: 20
     bpp: 4
     extras:
       - file: "https://github.com/BigBobbas/ESP32-S3-Box3-Custom-ESPHome/raw/main/fonts/materialdesignicons-webfont.ttf"
@@ -1116,7 +1118,7 @@ lvgl:
                   id: display_time_blank
                   text_font: roboto_big
                   text_align: CENTER
-                  text: "00:00"
+                  text: "0:00"
                   text_color: white
                   bg_opa: TRANSP
               - label:
@@ -1133,13 +1135,13 @@ lvgl:
                   text_color: white
                   text_font: roboto_small
                   text: "Loading"
-              - label:
-                  id: lbl_battery_status
-                  align: TOP_MID
-                  text_color: digi_shadow_light
-                  text_font: icon_font_28
-                  text: "\U000F1835"
-                  hidden: true
+              ## - label:
+              #     id: lbl_battery_status
+              #     align: TOP_MID
+              #     text_color: digi_shadow_light
+              #     text_font: icon_font_28
+              #     text: "\U000F1835"
+              #     hidden: true
               - arc:
                   width: 240
                   height: 240
@@ -1218,17 +1220,19 @@ lvgl:
             scrollable: false
             widgets:
               - image:
-                  align: CENTER
+                  align: TOP_MID
                   src: weather_img
                   id: weather_img_lvgl
-            on_click:
-              lvgl.page.show: idle_page
-            # - online_image:
-            #     url: "http://192.168.0.25:8123/view_assist/esphome/weather/rainy.png"
-            #     format: png
-            #     type: RGB
-            #     id: weather_image
-
+            # on_click:
+            #   lvgl.page.show: idle_page
+              - label:
+                  align: BOTTOM_MID
+                  id: temperature_label
+                  # y: 50
+                  text_font: roboto_big
+                  text: " "
+                  text_color: white
+                  bg_opa: TRANSP
     - id: voice_page
       widgets:
         - obj:
@@ -1236,13 +1240,29 @@ lvgl:
             scrollbar_mode: "OFF"
             scrollable: false
             widgets:
-              - label:
-                  id: voice_label
-                  text_font: roboto_icons_42
-                  text_align: CENTER
-                  text: "\U000F0185 How can I assist?"
-                  text_color: white
-                  bg_opa: TRANSP
+              # - label:
+              #     id: voice_label
+              #     text_font: roboto_icons_42
+              #     text_align: CENTER
+              #     text: "\U000F0185 How can I assist?"
+              #     text_color: white
+              #     bg_opa: TRANSP
+
+              - button:
+                  width: SIZE_CONTENT
+                  height: SIZE_CONTENT
+                  align: CENTER
+                  bg_color: white
+                  id: btn_id 
+                  # y: 45%
+                  widgets:             
+                    - label:
+                        id: voice_label
+                        text_font: roboto_icons_42
+                        text_align: CENTER
+                        text: "\U000F0185 How can I assist?"
+                        text_color: black
+                        bg_opa: TRANSP
 
               - label:
                   id: timer_finished_lvgl
