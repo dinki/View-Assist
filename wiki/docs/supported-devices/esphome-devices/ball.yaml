@@ -24,10 +24,6 @@ psram:
   mode: octal
   speed: 80MHz
 
-# http_request:
-#   useragent: "ESPHome"
-#   timeout: 10s
-
 http_request:
   buffer_size_rx: 1024
 
@@ -36,16 +32,16 @@ online_image:
     format: png
     type: RGB565
     transparency: alpha_channel
-    id: weather_img
+    id: viewassist_image
     on_download_finished:
       - lvgl.image.update:
-          id: weather_img_lvgl
-          src: weather_img
+          id: viewassist_image_lvgl
+          src: viewassist_image
       - lvgl.page.show:
           id: weather_page
       - delay: 20s
       - lvgl.page.show: idle_page
-      - online_image.release: weather_img
+      - online_image.release: viewassist_image
 
 api:
   actions:
@@ -61,7 +57,7 @@ api:
             lambda: 'return page == "weather";'
           then:
             - online_image.set_url:
-                id: weather_img
+                id: viewassist_image
                 url: !lambda |-
                   return "http://192.168.0.25:8123/view_assist/esphome/weather/" + icon + ".png";
             - lvgl.label.update:
@@ -116,113 +112,53 @@ button:
   - platform: restart
     id: reboot
     name: reboot
-text:
-  - platform: template
-    name: "Notification Text"
-    id: notification_text
-    mode: text
-    optimistic: true
-    on_value:
-      then:
-        - media_player.speaker.play_on_device_media_file:
-            media_file: timer_finished_sound
-            announcement: true
-        - lambda: |-
-            if (!id(notification_text).state.empty() &&
-                (id(previous_notification_text).empty() || id(notification_text).state != id(previous_notification_text))) {
-              id(previous_notification_text) = id(notification_text).state;
-              id(show_notification).execute();
-            }
-        - lvgl.label.update:
-           id: lbl_note
-           text: !lambda return x.c_str();
+# text:
+#   - platform: template
+#     name: "Notification Text"
+#     id: notification_text
+#     mode: text
+#     optimistic: true
+#     on_value:
+#       then:
+#         - media_player.speaker.play_on_device_media_file:
+#             media_file: timer_finished_sound
+#             announcement: true
+#         - lambda: |-
+#             if (!id(notification_text).state.empty() &&
+#                 (id(previous_notification_text).empty() || id(notification_text).state != id(previous_notification_text))) {
+#               id(previous_notification_text) = id(notification_text).state;
+#               id(show_notification).execute();
+#             }
+#         - lvgl.label.update:
+#            id: lbl_note
+#            text: !lambda return x.c_str();
 sensor:
-  ## 
-  # - platform: adc
-  #   pin: GPIO1
-  #   id: battery_voltage
-  #   unit_of_measurement: "V"
-  #   accuracy_decimals: 1
-  #   device_class: "voltage"
-  #   entity_category: "diagnostic"
-  #   disabled_by_default: true
+  # - platform: uptime
+  #   id: up_sens
+  #   on_value:
+  #     - lambda: |-
+  #         int seconds = id(up_sens).state;
+  #         int days = seconds / 86400;
+  #         int hours = seconds / 3600;
+  #         int minutes = (seconds % 3600) / 60;
+  #         seconds %= 60;
+  #         id(up_sens_text).publish_state(str_sprintf("%03d:%02d:%02d:%02d", days, hours, minutes, seconds));
   #   update_interval: 30s
-  #   attenuation: auto
-  #   filters:
-  #     - multiply: 2
+
+  # - platform: wifi_signal
+  #   name: "WiFi db"
+  #   id: wifi_signal_db
+  #   update_interval: 30s
 
   # - platform: copy
-  #   id: battery_percent
-  #   source_id: battery_voltage
-  #   name: "Battery level"
-  #   unit_of_measurement: "%"
-  #   accuracy_decimals: 0
-  #   device_class: "battery"
-  #   entity_category: "diagnostic"
+  #   source_id: wifi_signal_db
+  #   name: "WiFi Signal"
+  #   id: wifi_percent
   #   filters:
-  #     - lambda: return (x - 2.7) / (4.2 - 2.7) * 100;
-  #     - clamp:
-  #         min_value: 0
-  #         max_value: 100
-  #   on_value:
-  #     - lvgl.label.update:
-  #         id: lbl_battery_status
-  #         text: !lambda |-
-  #           static char buf[10];
-  #           std::string icon;
-  #           if (x == 100.0) {
-  #               icon = "\U000F0079"; // mdi-battery (full)
-  #           } else if (x > 90) {
-  #               icon = "\U000F0082"; // mdi-battery-90
-  #           } else if (x > 80) {
-  #               icon = "\U000F0081"; // mdi-battery-80
-  #           } else if (x > 70) {
-  #               icon = "\U000F0080"; // mdi-battery-70
-  #           } else if (x > 60) {
-  #               icon = "\U000F007F"; // mdi-battery-60
-  #           } else if (x > 50) {
-  #               icon = "\U000F007E"; // mdi-battery-50
-  #           } else if (x > 40) {
-  #               icon = "\U000F007D"; // mdi-battery-40
-  #           } else if (x > 30) {
-  #               icon = "\U000F007C"; // mdi-battery-30
-  #           } else if (x > 20) {
-  #               icon = "\U000F007B"; // mdi-battery-20
-  #           } else if (x > 10) {
-  #               icon = "\U000F007A"; // mdi-battery-10
-  #           } else if (x > 0) {
-  #               icon = "\U000F008E"; // mdi-battery-outline
-  #           } else {
-  #               icon = "\U000F06A5"; // mdi-power-plug
-  #           }
-  #           snprintf(buf, sizeof(buf), "%s", icon.c_str());
-  #           return buf;
-  - platform: uptime
-    id: up_sens
-    on_value:
-      - lambda: |-
-          int seconds = id(up_sens).state;
-          int days = seconds / 86400;
-          int hours = seconds / 3600;
-          int minutes = (seconds % 3600) / 60;
-          seconds %= 60;
-          id(up_sens_text).publish_state(str_sprintf("%03d:%02d:%02d:%02d", days, hours, minutes, seconds));
-    update_interval: 30s
-
-  - platform: wifi_signal
-    name: "WiFi db"
-    id: wifi_signal_db
-    update_interval: 30s
-
-  - platform: copy
-    source_id: wifi_signal_db
-    name: "WiFi Signal"
-    id: wifi_percent
-    filters:
-      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
-    unit_of_measurement: "%"
-    entity_category: "diagnostic"
-    device_class: ""
+  #     - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+  #   unit_of_measurement: "%"
+  #   entity_category: "diagnostic"
+  #   device_class: ""
 
 binary_sensor:
   - platform: gpio
@@ -459,6 +395,10 @@ voice_assistant:
   auto_gain: 31dBFS
   volume_multiplier: 2.0
   use_wake_word: false
+  # on_intent_end:
+  #   - text_sensor.template.publish:
+  #       id: intent_response_sensor
+  #       state: !lambda 'return x.speech;'
   on_stt_vad_end:
 ######### Dinki
 # This is shown before the on_tts_end
@@ -473,6 +413,9 @@ voice_assistant:
         id: media_mixing_input
         decibel_reduction: 20
         duration: 0.0s
+    - text_sensor.template.publish:
+        id: tts_response_sensor
+        state: !lambda 'return x;'
 
 #########  Dinki
 # This is  where the response happens.  I'm showing the variable being set in previous_notification_text
@@ -550,11 +493,11 @@ script:
 
 ######## Dinki  This is what I need to duplicate for sensor display
 
-  - id: show_notification
-    then:
-     - lvgl.page.show: notification_page
-     - delay: 30s
-     - lvgl.page.show: idle_page
+  # - id: show_notification
+  #   then:
+  #    - lvgl.page.show: notification_page
+  #    - delay: 30s
+  #    - lvgl.page.show: idle_page
 
   - id: show_intent
     then:
@@ -569,7 +512,7 @@ script:
       - delay: 20s
       - logger.log: "Switching to idle page"
       - lvgl.page.show: idle_page
-      - online_image.release: weather_img
+      - online_image.release: viewassist_image
 
 
   - id: fetch_first_active_timer
@@ -862,17 +805,6 @@ font:
       # - "\U000F01F7"#smile_poop
       # - "\U000F01F9"#smile_tongue
       # - "\U000F0513"#thumb
-      # - "\U000F0079"#battery 100%
-      # - "\U000F007A"#battery 10%
-      # - "\U000F007B"#battery 20%
-      # - "\U000F007C"#battery 30%
-      # - "\U000F007D"#battery 40%
-      # - "\U000F007E"#battery 50%
-      # - "\U000F007F"#battery 60%
-      # - "\U000F0080"#battery 70%
-      # - "\U000F0081"#battery 80%
-      # - "\U000F0082"#battery 90%
-      # - "\U000F1835"#battery sync
       - "\U000F009E"#bell
       - "\U000F0150"#clock
       # - "\U000F01AE"#gbp pound symbol
@@ -987,6 +919,15 @@ font:
 
 
 text_sensor:
+
+  - platform: template
+    id: intent_response_sensor
+    name: "Intent Response"
+
+  - platform: template
+    id: tts_response_sensor
+    name: "TTS Response"
+
   - platform: wifi_info
     ip_address:
       name: IP Address
@@ -1002,11 +943,11 @@ text_sensor:
       entity_category: "diagnostic"
     mac_address:
       id: device_mac
-  - platform: template
-    id: up_sens_text
-    name: Device uptime
-    entity_category: "diagnostic"
-    icon: mdi:clock
+  # - platform: template
+  #   id: up_sens_text
+  #   name: Device uptime
+  #   entity_category: "diagnostic"
+  #   icon: mdi:clock
 
 
   - id: text_request
@@ -1135,13 +1076,6 @@ lvgl:
                   text_color: white
                   text_font: roboto_small
                   text: "Loading"
-              ## - label:
-              #     id: lbl_battery_status
-              #     align: TOP_MID
-              #     text_color: digi_shadow_light
-              #     text_font: icon_font_28
-              #     text: "\U000F1835"
-              #     hidden: true
               - arc:
                   width: 240
                   height: 240
@@ -1221,8 +1155,8 @@ lvgl:
             widgets:
               - image:
                   align: TOP_MID
-                  src: weather_img
-                  id: weather_img_lvgl
+                  src: viewassist_image
+                  id: viewassist_image_lvgl
             # on_click:
             #   lvgl.page.show: idle_page
               - label:
@@ -1253,9 +1187,9 @@ lvgl:
                   height: SIZE_CONTENT
                   align: CENTER
                   bg_color: white
-                  id: btn_id 
+                  id: btn_id
                   # y: 45%
-                  widgets:             
+                  widgets:
                     - label:
                         id: voice_label
                         text_font: roboto_icons_42
