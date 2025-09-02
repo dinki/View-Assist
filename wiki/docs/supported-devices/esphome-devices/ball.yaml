@@ -31,19 +31,12 @@ online_image:
   - url: "http://192.168.0.25:8123/local/rainy.png"
     format: png
     type: RGB565
-    # resize: 120x120
     transparency: alpha_channel
     id: viewassist_image
     on_download_finished:
       - lvgl.image.update:
           id: viewassist_image_lvgl
           src: viewassist_image
-      #  This doesn't seem necessary    
-      # - lvgl.page.show:
-      #     id: weather_page
-      # - delay: 20s
-      # - lvgl.page.show: idle_page
-      # - online_image.release: viewassist_image
 
   - url: "http://192.168.0.25:8123/local/junk.jpeg"
     format: jpeg
@@ -408,8 +401,14 @@ voice_assistant:
     - lvgl.label.update:
         id: voice_label
         text_font: roboto_icons_42
-        text: "\U000F01D8 Processing"
+        text: "Processing"
         text_color: black
+    - lvgl.label.update:
+        id: voice_icon
+        text_font: roboto_icons_40
+        text: "\U000F01D8"
+        text_color: blue
+        
   on_tts_start:
     - script.execute: activate_stop_word_once
     - mixer_speaker.apply_ducking:
@@ -454,6 +453,11 @@ voice_assistant:
         text_font: roboto_icons_42
         text: "How can I assist?"
         text_color: black
+    - lvgl.label.update:
+        id: voice_icon
+        text_font: roboto_icons_40
+        text: "\U000F0185"
+        text_color: blue        
     - script.execute: stop_wake_word
     - delay: 150ms
     - script.execute: start_wake_word
@@ -860,21 +864,25 @@ text_sensor:
     attribute: entity_picture
     internal: true
     on_value:
-      then:
-        # - online_image.set_url:
-        #     id: viewassist_image
-        #     url: !lambda |-
-        #       return x;
-        # - lambda: |-
-        #     ESP_LOGI("main", "Returning x = %d", x);
-        #     return x;            
+      then:         
         - online_image.set_url:
             id: viewassist_music_image
             url: !lambda |-
               return id(music_image).state;
+        # This is for troubleshooting and can be removed      
         - lambda: |-
             ESP_LOGI("main", "Returning x = %s", id(music_image).state.c_str());
-        # - lvgl.page.show: music_page
+
+  - platform: homeassistant
+    id: vasatellite_mode
+    entity_id: sensor.viewassist_balltest
+    attribute: mode
+    internal: true
+    on_value:
+      then:         
+        # This is for troubleshooting and can be removed      
+        - lambda: |-
+            ESP_LOGI("main", "Returning VASatellite Mode = %s", id(vasatellite_mode).state.c_str());
 
   - platform: template
     id: intent_response_sensor
@@ -1149,30 +1157,12 @@ lvgl:
             scrollable: false
             # layout: ROW_MID  # Horizontal layout, vertical centering
             widgets:
-              # - button:
-                  # width: SIZE_CONTENT
-                  # height: SIZE_CONTENT
-                  # align: CENTER
-                  # bg_color: white
-                  # id: btn_id
-                  # widgets:
-                  #   - label:
-                  #       id: voice_label
-                  #       text_font: roboto_icons_42
-                  #       text_align: CENTER
-                  #       text: "\U000F0185 How can I assist?"
-                  #       text_color: black
-                  #       bg_opa: TRANSP
-
-
               - button:
                   id: btn_id
                   width: SIZE_CONTENT
                   height: SIZE_CONTENT
                   align: CENTER
                   bg_color: white
-                  
-                  # pad_column: 8     # Space between icon and text
                   widgets:
                     - label:
                         id: voice_icon
@@ -1190,8 +1180,6 @@ lvgl:
                         text: "How can I assist?"
                         text_color: black
                         bg_opa: TRANSP
-
-
               - label:
                   id: timer_finished_lvgl
                   text_font: roboto_icons_150
