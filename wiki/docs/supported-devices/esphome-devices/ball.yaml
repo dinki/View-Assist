@@ -47,7 +47,7 @@ online_image:
     on_download_finished:
       - lvgl.image.update:
           id: viewassist_music_image_lvgl
-          src: viewassist_music_image      
+          src: viewassist_music_image
 
 api:
   actions:
@@ -408,7 +408,7 @@ voice_assistant:
         text_font: roboto_icons_40
         text: "\U000F01D8"
         text_color: blue
-        
+
   on_tts_start:
     - script.execute: activate_stop_word_once
     - mixer_speaker.apply_ducking:
@@ -457,7 +457,7 @@ voice_assistant:
         id: voice_icon
         text_font: roboto_icons_40
         text: "\U000F0185"
-        text_color: blue        
+        text_color: blue
     - script.execute: stop_wake_word
     - delay: 150ms
     - script.execute: start_wake_word
@@ -501,6 +501,25 @@ voice_assistant:
 
 script:
   ######## Dinki  This is what I need to duplicate for sensor display
+
+  - id: handle_mode
+    # parameters:
+    #   mode: string
+    then:
+      - if:
+          condition:
+            lambda: 'return id(global_mode) == "music";'
+          then:
+            - online_image.set_url:
+                id: viewassist_music_image
+                url: !lambda |-
+                  return id(music_image).state;
+            - script.execute: show_music
+      - if:
+          condition:
+            lambda: 'return id(global_mode) == "normal";'
+          then:
+            - lvgl.page.show: idle_page
 
   - id: show_intent
     then:
@@ -803,6 +822,10 @@ globals:
   - id: previous_notification_text
     type: std::string
     initial_value: ""
+  - id: global_mode
+    type: std::string
+    restore_value: no
+    initial_value: '"unknown"'
 
 font:
   # - file: "https://github.com/BigBobbas/ESP32-S3-Box3-Custom-ESPHome/raw/main/fonts/materialdesignicons-webfont.ttf"
@@ -813,7 +836,9 @@ font:
   - file:
       type: gfonts
       family: Roboto
+      # weight: 700
     id: roboto_small
+
     size: 25
 
   - file:
@@ -825,9 +850,11 @@ font:
   - file:
       type: gfonts
       family: Roboto
+      weight: 700
     id: roboto_icons_42
     size: 20
-    bpp: 4
+    # bpp: 4
+    # weight: 900
     extras:
       - file: "https://github.com/BigBobbas/ESP32-S3-Box3-Custom-ESPHome/raw/main/fonts/materialdesignicons-webfont.ttf"
         glyphs: &mdi_icon_glyphs
@@ -864,12 +891,12 @@ text_sensor:
     attribute: entity_picture
     internal: true
     on_value:
-      then:         
+      then:
         - online_image.set_url:
             id: viewassist_music_image
             url: !lambda |-
               return id(music_image).state;
-        # This is for troubleshooting and can be removed      
+        # This is for troubleshooting and can be removed
         - lambda: |-
             ESP_LOGI("main", "Returning x = %s", id(music_image).state.c_str());
 
@@ -879,10 +906,16 @@ text_sensor:
     attribute: mode
     internal: true
     on_value:
-      then:         
-        # This is for troubleshooting and can be removed      
+      then:
+        # This is for troubleshooting and can be removed
         - lambda: |-
             ESP_LOGI("main", "Returning VASatellite Mode = %s", id(vasatellite_mode).state.c_str());
+        - lambda: |-
+            id(global_mode) = id(vasatellite_mode).state;
+            ESP_LOGI("main", "Updated global_mode to %s", id(global_mode).c_str());
+        - script.execute:
+            id: handle_mode
+            # mode: !lambda "return id(vasatellite_mode).state;"
 
   - platform: template
     id: intent_response_sensor
@@ -1009,7 +1042,7 @@ lvgl:
       border_width: 0
       scrollbar_mode: "OFF"
     - id: music_content
-      bg_color: 0x000000      
+      bg_color: 0x000000
       text_color: digi_shadow_light
       width: 100%
       height: 100%
@@ -1173,7 +1206,7 @@ lvgl:
                         bg_opa: TRANSP
                     - label:
                         id: voice_label
-                        text_font: roboto_small
+                        text_font: roboto_icons_42
                         align_to:
                           id: voice_icon
                           align: OUT_RIGHT_MID
