@@ -12,7 +12,7 @@ blueprint:
       description: |
         The command pattern to trigger the automation.
         Examples: "Show calendar", "Display John's calendar"
-      default: (Show | display) [the] ({calendar}) calendar
+      default: (Show | display) [the] [{calendar}] calendar
     response_single:
       name: Response Text (Single calendar)
       description: The response to give when showing a specific calendar
@@ -22,11 +22,11 @@ blueprint:
       description: The response to give when showing all calendars
       default: Showing all configured calendars
     calendars:
-      name: calendar Configuration
+      name: Calendar Configuration
       description: |
         Configuration for calendars with their entities and multiple name options.
         Each calendar entity is listed once with an array of possible names.
-        Special name "all" is reserved for showing all calendars.
+        Special name "all" is reserved for showing all calendars and MUST be defined.
       default:
         all:
           - calendar.mom
