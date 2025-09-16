@@ -1,0 +1,88 @@
+# View Assist - View Calendar (v 0.0.1)
+blueprint:
+  name: View Assist - View Calendar
+  description: |
+    Ask View Assist to show your calendars.
+    Supports showing individual calendars or all calendars at once.
+    You can use multiple names for the same calendar entity.
+  domain: automation
+  input:
+    command:
+      name: Command Text
+      description: |
+        The command pattern to trigger the automation.
+        Examples: "Show calendar", "Display John's calendar"
+      default: (Show | display) [the] ({calendar}) calendar
+    response_single:
+      name: Response Text (Single calendar)
+      description: The response to give when showing a specific calendar
+      default: Showing {{trigger.slots.calendar}} calendar
+    response_all:
+      name: Response Text (All calendars)
+      description: The response to give when showing all calendars
+      default: Showing all configured calendars
+    calendars:
+      name: calendar Configuration
+      description: |
+        Configuration for calendars with their entities and multiple name options.
+        Each calendar entity is listed once with an array of possible names.
+        Special name "all" is reserved for showing all calendars.
+      default:
+        all:
+          - calendar.mom
+          - calendar.dad
+          - calendar.kid1
+          - calendar.work
+        mom:
+          - calendar.mom
+        work:
+          - calendar.work
+      selector:
+        object:
+    view:
+      name: Dashboard Calendar View
+      description: |
+        The View Assist dashboard view designed to show calendars
+        (example: /view-assist/calendar)
+      default: /view-assist/calendar
+trigger:
+  - trigger: conversation
+    command: !input command
+    id: voice_command
+condition: []
+action:
+  - variables:
+      calendars: !input calendars
+  - if:
+      - condition: template
+        value_template: "{{ trigger.id == 'voice_command' }}"
+    then:
+      - variables:
+          target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+          target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
+          target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+          view: !input view
+          response_single: !input response_single
+          response_all: !input response_all
+          requested_calendar: '{{ trigger.slots.calendar | default('''') | lower | replace("''s", '''') }}'
+          calendar_definitions: >-
+            {% set calendar_list = calendars[requested_calendar] if requested_calendar in calendars else calendars['all'] %}
+            [{% for item in calendar_list %}{"entity": "{{ item }}"}{% if not loop.last %}, {% endif %}{% endfor %}]
+          showing_all: "{{ requested_calendar not in calendars }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          title: ""
+          calendar_list: "{{ calendar_definitions | list }}"
+      - action: view_assist.navigate
+        data:
+          device: "{{ target_satellite_device }}"
+          path: "{{ view }}"
+      - set_conversation_response: "{{ response_all if showing_all else response_single }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          last_said: "{{ response_all if showing_all else response_single }}"
+mode: single
