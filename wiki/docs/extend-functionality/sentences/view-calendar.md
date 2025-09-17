@@ -1,3 +1,4 @@
+
 # View Calendar
 
 This blueprint allows the user to display any calendar listed in the configuration by using the defined command text. The trickiest part of the install is defining the dictionary option though it is not hard once you understand it:
