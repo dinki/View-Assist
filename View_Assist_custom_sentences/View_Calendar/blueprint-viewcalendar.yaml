@@ -1,4 +1,4 @@
-# View Assist - View Calendar (v 0.0.1)
+# View Assist - View Calendar (v 0.0.2)
 blueprint:
   name: View Assist - View Calendar
   description: |
@@ -21,6 +21,10 @@ blueprint:
       name: Response Text (All calendars)
       description: The response to give when showing all calendars
       default: Showing all configured calendars
+    response_videoonly:
+      name: Response for Video Only
+      description: The response to give when trying to show on non video enabled satellites
+      default: Calendar only available on devices with video output
     calendars:
       name: Calendar Configuration
       description: |
@@ -64,25 +68,39 @@ action:
           view: !input view
           response_single: !input response_single
           response_all: !input response_all
+          response_videoonly: !input response_videoonly
           requested_calendar: '{{ trigger.slots.calendar | default('''') | lower | replace("''s", '''') }}'
           calendar_definitions: >-
             {% set calendar_list = calendars[requested_calendar] if requested_calendar in calendars else calendars['all'] %}
             [{% for item in calendar_list %}{"entity": "{{ item }}"}{% if not loop.last %}, {% endif %}{% endfor %}]
           showing_all: "{{ requested_calendar not in calendars }}"
-      - action: view_assist.set_state
-        target:
-          entity_id: "{{ target_satellite_device }}"
-        data:
-          title: ""
-          calendar_list: "{{ calendar_definitions | list }}"
-      - action: view_assist.navigate
-        data:
-          device: "{{ target_satellite_device }}"
-          path: "{{ view }}"
-      - set_conversation_response: "{{ response_all if showing_all else response_single }}"
-      - action: view_assist.set_state
-        target:
-          entity_id: "{{ target_satellite_device }}"
-        data:
-          last_said: "{{ response_all if showing_all else response_single }}"
+      - if:
+          - condition: template
+            value_template: >-
+              {% if target_satellite_device_type != 'audio_only' %}true{% else %}false{% endif %}
+        then:
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              title: ""
+              calendar_list: "{{ calendar_definitions | list }}"
+          - action: view_assist.navigate
+            data:
+              device: "{{ target_satellite_device }}"
+              path: "{{ view }}"
+          - set_conversation_response: "{{ response_all if showing_all else response_single }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              last_said: "{{ response_all if showing_all else response_single }}"
+        else:
+          - set_conversation_response: "{{ response_videoonly }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              last_said: "{{ response_videoonly }}"
+
 mode: single
