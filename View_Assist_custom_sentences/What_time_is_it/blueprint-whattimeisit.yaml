@@ -114,6 +114,27 @@ action:
             time: "Son las {time}"
             day_of_week: "Hoy es {day_of_week}"
             date: "Hoy es {date}"
+          weekdays:
+            mon: Lunes
+            tue: Martes
+            wed: Miércoles
+            thu: Jueves
+            fri: Viernes
+            sat: Sábado
+            sun: Domingo
+          months:
+            jan: Enero
+            feb: Febrero
+            mar: Marzo
+            apr: Abril
+            may: Mayo
+            jun: Junio
+            jul: Julio
+            aug: Agosto
+            sep: Septiembre
+            oct: Octubre
+            nov: Noviembre
+            dec: Diciembre
         fr:
           responses:
             time: "Il est {time}"
