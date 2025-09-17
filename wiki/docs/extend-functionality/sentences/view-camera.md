@@ -3,29 +3,24 @@
 This blueprint allows the user to display any camera listed in the configuration by asking assist to 'show \{cameraname\} camera'. The trickiest part of the install is defining the dictionary option though it is not hard once you understand it:
 
 ```
- {"front":"camera.front_camera","doorbell":"camera.mydoorbellcamera"}
+ camera.doorbell:
+  - doorbell
+  - door
+camera.driveway:
+  - driveway
 ```
 
-This is a dictionary. The format is "what you want to call the camera by voice":"the Home Assistant camera. device" . Additional cameras are separated by commas. You can have as many or as little as you like but you must have at least one. You can reuse the same camera with multiple ways to call it. For example:
+This is a dictionary. The format is the Home Assistant device name followed by the names associated with that camera . Additional cameras can be added in a similar fashion as the example. You can have as many or as little as you like but you must have at least one.
 
-```
- {"front":"camera.front_camera","driveway":"camera.front_camera","doorbell":"camera.mydoorbellcamera"}
-```
-
-Here the user could say 'show front camera' or 'show driveway camera' and camera.front_camera would be shown for both sentences. Note that double quotes are required for defining these dictionaries as single quotes will cause errors.
+Additionally, hold mode timeout is available. This will allow you to set a value for the return to home screen for a set time or indefinitely stay on the camera view screen by using a timeout of zero seconds
 
 ## Requirements
 
-- Install [camera view](../views/camera)
-
-## To do
-
-- Only set hold mode if device called is valid and device is video capable
-- Set default message for not found cameras
-- Add multicamera view when Frigate card dev changes released to main
+Nothing additional
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description                |
+| ------- | -------------------------- |
+| v 2.0.0 | Major improvements by Flab |
+| v 1.0.0 | Initial release            |
