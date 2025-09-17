@@ -1,10 +1,10 @@
-# View Assist - View Calendar (v 0.0.2)
 blueprint:
   name: View Assist - View Calendar
   description: |
     Ask View Assist to show your calendars.
     Supports showing individual calendars or all calendars at once.
-    You can use multiple names for the same calendar entity.
+    You can use multiple names for the same calendar entity. (View Assist howstheweather v 1.0.0)
+    *NOTE* You MUST install the [Calendar Card Pro](<https://github.com/alexpfau/calendar-card-pro>) via HACS for the view to work correctly
   domain: automation
   input:
     command:
