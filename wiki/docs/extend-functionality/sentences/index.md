@@ -26,5 +26,6 @@ We encourage everyone to share their creations so that others might enjoy what y
 | [Thank You](sentences/thank-you)                                | Show your gratitude and receive a kind reply                                          |
 | [Thermostat Control](sentences/thermostat-control)              | Control the temperature of your thermostat by voice                                   |
 | [Travel Times by Waze](sentences/travel-times-by-waze)          | Get realtime travel times using Waze                                                  |
+| [View Calendar](sentences/view-calendar)                        | Show your calendar events by requesting by voice                                      |
 | [View Camera](sentences/view-camera)                            | Use voice to show your security cameras                                               |
 | [What time is it](sentences/what-time-is-it)                    | Get time and date by voice                                                            |
