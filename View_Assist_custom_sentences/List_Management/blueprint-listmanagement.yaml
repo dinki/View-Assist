@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - List Management
-  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist list management v1.3.0)
+  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist list management v1.3.1)
   domain: automation
 
   input:
@@ -179,13 +179,17 @@ action:
                 target:
                   entity_id: "{{ target_satellite_device }}"
                 data:
-                  title: "{{ state_attr(list_entity,'friendly_name') }}"
                   message_font_size: 4vw
                   list: "{{ list_entity }}"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
                   path: "{{ view }}"
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  title: "{{ state_attr(list_entity,'friendly_name') }}"
 
       - conditions:
           - condition: trigger
@@ -239,13 +243,17 @@ action:
                 target:
                   entity_id: "{{ target_satellite_device }}"
                 data:
-                  title: "{{ state_attr(list_entity,'friendly_name') }}"
                   message_font_size: 4vw
                   list: "{{ list_entity }}"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
                   path: "{{ view }}"
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  title: "{{ state_attr(list_entity,'friendly_name') }}"
 
     default:
       - service: todo.get_items
@@ -300,12 +308,17 @@ action:
             target:
               entity_id: "{{ target_satellite_device }}"
             data:
-              title: "{{ state_attr(list_entity,'friendly_name') }}"
               message_font_size: 4vw
               list: "{{ list_entity }}"
+
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
               path: "{{ view }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              title: "{{ state_attr(list_entity,'friendly_name') }}"
 
 mode: single
