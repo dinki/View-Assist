@@ -90,6 +90,8 @@ trigger_phrases:
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description                |
+| ------- | -------------------------- |
+| v 1.3.1 | Bug fix for college sports |
+| v 1.3.0 | Rework                     |
+| v 1.0.0 | Initial release            |
