@@ -119,12 +119,17 @@ Booting LineageOS on the clock will take a long time and will spend a period of 
 There are a few settings that you should modify to expand the screen real-estate and enable ADB.
 
 ### Change screen size
+
 1. Open Settings > Display > Display size and text and set Display size so that the slider is all the way to the left.
 
 ### Enable ADB
 
 1. Open Settings > About device, scroll down to Build number and tap it until it says you're a Developer
-1. Open Settings > System > Developer options, scroll down to USB debugging and disable and enable it so you have ADB enabled over USB.
+2. Open Settings > System > Developer options, scroll down to USB debugging and disable and enable it so you have ADB enabled over USB.
+
+### Reduce boot time
+
+1. For some reason, the boot animation takes a lot of time. To reduce the boot time in half, install this Magisk Module [OEM boot animation](https://github.com/stelios333/x04g_bootanim/releases).
 
 ## Install the VACA app
 
