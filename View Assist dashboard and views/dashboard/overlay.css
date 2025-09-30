@@ -9,6 +9,16 @@
     --blur-pop-up-icon-size: 15vh;
     --blur-pop-up-icon-color: rgb(3, 168, 244);
 }
+
+/* Portrait mode adjustments for blur pop up */
+@media (orientation: portrait) {
+    :host {
+        --blur-pop-up-width: 65vw;
+        --blur-pop-up-font-size: 5vw;
+        --blur-pop-up-icon-size: 10vw;
+    }
+}
+
 @keyframes growFromCenter {
     75% {
     transform: scale(0.5);
@@ -57,8 +67,17 @@
     background-color: var(--blur-pop-up-bg-color);
     padding: 2vh 3vw;
     border-radius: 40vw;
-    width: 45vw;
+    width: var(--blur-pop-up-width);
 }
+
+/* Portrait mode specific adjustments for pill padding */
+@media (orientation: portrait) {
+    #blur_pop_up .pill {
+        padding: 3vw 4vw;
+        border-radius: 20vw;
+    }
+}
+
 #blur_pop_up #listening {
     opacity: 0;
     animation: growFromCenter 0.4s ease-in-out forwards;
@@ -70,19 +89,20 @@
 #blur_pop_up #button {
     display: flex;
     align-items: center;
+    justify-content: center;
     border: none;
     font-size: var(--blur-pop-up-font-size);
     font-weight: var(--blur-pop-up-font-weight);
     color: var(--blur-pop-up-text-color);
     font-family: Roboto, sans-serif;
     background-color: var(--blur-pop-up-bg-color);
-    padding-right: 2vw;
+    width: 100%;
 }
 #blur_pop_up .icon {
     width: var(--blur-pop-up-icon-size);
     height: var(--blur-pop-up-icon-size);
     color: var(--blur-pop-up-icon-color);
-    padding-right: 2vw;
+    margin-right: 1.5vw;
 }
 
 /* flashing_bar */
