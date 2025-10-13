@@ -26,8 +26,15 @@ Use your wakeword and say things like:
 
 ### Installation
 
-- Find and upload a sound to play when the timer expires. Need help? See the Stream Assist video where I discuss how to find these and where to upload
-- Install blueprint using button above and configure options
+- This blueprint is included by default in the View Assist integration.
+- Find and upload a sound to play when the timer expires.
+  - Any valid mp3 file should work. Place the file in /config/www/viewassist/. You may have to create the 'viewassist' subdirectory.
+  - In the Alarm Sound Path blueprint field, enter either `http://your-HA-IP:your-HA-Port/local/viewassist/your-alarm.mp3` or `/local/viewassist/your-alarm.mp3`. 
+  - Still need help? See the Stream Assist video where I discuss how to find these and where to upload.
+
+### Tips
+
+- The mp3 file is played repeatedly to create the alarm sound. When you press the dismiss button, the mp3 file will complete its current repeat before stopping, so choose a short (1-2 second) mp3 if you want the sound to stop quickly after pressing dismiss.
 
 ## Changelog
 
