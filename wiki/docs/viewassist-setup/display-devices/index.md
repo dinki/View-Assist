@@ -12,7 +12,6 @@ There are currently three applications supported.  **You need to pick ONE of the
 - [Wallpanel](./wallpanel.md) -  A free Android app that provides a full screen browser and additional features.  
 - [Fully Kiosk](./fully-kiosk.md) - A full featured paid Android app that provides additional features not offered by Wallpanel. Features like remote management, capturing images from the webcam and more.  
 - [Remote Assist Display](./remote-assist-display.md) - This project provides a full screen browser with its own ability to control the views shown.  Available for Android and Linux.  RAD control is an alternative to the Browser Mod control used on the other devices.  Browser Mod is NOT required when using Remote Assist Display
-- [TouchKio](https://github.com/leukipp/touchkio) - User submitted option for RaspberryPi and Linux users
 
 **NOTE** If you were previously using BrowserMod for control and want to allow View Assist to control your device you will need to remove BrowserMod integration and remove it from resources otherwise conflicts will exist and View Assist will not register the browser
 
