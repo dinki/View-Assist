@@ -6,7 +6,7 @@ variables:
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.list} catch {
     return  "todo.shopping_list"}]]]
-  background: /local/viewassist/announcebird.png
+  background: /view_assist/dashboard/infobackground.png
 template:
   - variable_template
   - body_template
