@@ -1,7 +1,7 @@
 ## This view removes the checkboxes on the view
 type: custom:button-card
 variables:
-  list-nocheckboxcardversion: 1.0.1
+  list-nocheckboxcardversion: 1.0.2
   var_list: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.list} catch {
