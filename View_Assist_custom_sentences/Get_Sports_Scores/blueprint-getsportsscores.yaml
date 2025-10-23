@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Get Sports Scores
   description:
     Get sports scores for your favorite teams (View Assist getsportsscores
-    v 1.3.0)
+    v 1.3.1)
   domain: automation
   input:
     language:
@@ -11,7 +11,14 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it]              
+          languages:
+            - de
+            - en
+            - es
+            - fr
+            - it
+          no_sort: false
+          native_name: false
     trigger_phrases:
       name: Trigger Phrases
       description: The phrases to trigger the sports score conversation
@@ -21,7 +28,7 @@ blueprint:
         - how (is | are) [the] {team} doing
         - how (is | are) [the] {team} (game | match) [going]
       selector:
-        object: { }
+        object: {}
     team_tracker:
       name: Team Tracker Sensor
       description: The Team Tracker sesnor entity that holds data (example sensor.team_tracker)
@@ -53,8 +60,8 @@ blueprint:
         /view-assist/sports)
       default: /view-assist/sports
 trigger:
-- platform: conversation
-  command: !input trigger_phrases
+  - platform: conversation
+    command: !input trigger_phrases
 condition: []
 action:
   - variables:
@@ -239,69 +246,96 @@ action:
         en:
           responses:
             is_singular_true_post: "{team_name} played {opponent_name} and"
-            is_singular_false_post: "The {team_name} played the {opponent_name} and"
+            is_singular_false_post: The {team_name} played the {opponent_name} and
             is_singular_true_pre: "{team_name} plays {opponent_name} {kickoff_in}"
-            is_singular_false_pre: "The {team_name} play the {opponent_name} {kickoff_in}"
+            is_singular_false_pre: The {team_name} play the {opponent_name} {kickoff_in}
             is_singular_true_in: "{team_name} is currently playing {opponent_name}."
-            is_singular_false_in: "The {team_name} are currently playing the {opponent_name}."
+            is_singular_false_in: The {team_name} are currently playing the {opponent_name}.
             is_singular_true_not_found: "{team} has no games on today's schedule"
-            is_singular_false_not_found: "The {team} have no games on today's schedule"
-            error: "Sorry. I could not find any recent or upcoming games for the {team}"
-            outcome_win: "won"
-            outcome_lose: "lost"
+            is_singular_false_not_found: The {team} have no games on today's schedule
+            error: Sorry. I could not find any recent or upcoming games for the {team}
+            outcome_win: won
+            outcome_lose: lost
         it:
           responses:
             is_singular_true_post: "{team_name} ha giocato contro {opponent_name} e"
-            is_singular_false_post: "La squadra {team_name} ha giocato contro {opponent_name} e"
+            is_singular_false_post:
+              La squadra {team_name} ha giocato contro {opponent_name}
+              e
             is_singular_true_pre: "{team_name} giocherà contro {opponent_name} {kickoff_in}."
-            is_singular_false_pre: "La squadra {team_name} giocherà contro {opponent_name} {kickoff_in}."
+            is_singular_false_pre:
+              La squadra {team_name} giocherà contro {opponent_name}
+              {kickoff_in}.
             is_singular_true_in: "{team_name} sta giocando contro {opponent_name}."
-            is_singular_false_in: "La squadra {team_name} sta giocando contro {opponent_name}."
+            is_singular_false_in: La squadra {team_name} sta giocando contro {opponent_name}.
             is_singular_true_not_found: "{team} non ha partite in programma per oggi."
-            is_singular_false_not_found: "La squadra {team} non ha partite in programma per oggi."
-            error: "Mi dispiace, non sono riuscito a trovare partite recenti o imminenti per {team}."
-            outcome_win: "ha vinto"
-            outcome_lose: "ha perso"
+            is_singular_false_not_found:
+              La squadra {team} non ha partite in programma
+              per oggi.
+            error:
+              Mi dispiace, non sono riuscito a trovare partite recenti o imminenti
+              per {team}.
+            outcome_win: ha vinto
+            outcome_lose: ha perso
         de:
           responses:
-            is_singular_true_post: "{team_name} hat gegen {opponent_name} gespielt und hat"
-            is_singular_false_post: "Das Team {team_name} hat gegen {opponent_name} gespielt und hat"
+            is_singular_true_post:
+              "{team_name} hat gegen {opponent_name} gespielt und
+              hat"
+            is_singular_false_post:
+              Das Team {team_name} hat gegen {opponent_name} gespielt
+              und hat
             is_singular_true_pre: "{team_name} spielt gegen {opponent_name} {kickoff_in}."
-            is_singular_false_pre: "Das Team {team_name} spielt gegen {opponent_name} {kickoff_in}."
+            is_singular_false_pre:
+              Das Team {team_name} spielt gegen {opponent_name}
+              {kickoff_in}.
             is_singular_true_in: "{team_name} spielt gerade gegen {opponent_name}."
-            is_singular_false_in: "Das Team {team_name} spielt gerade gegen {opponent_name}."
+            is_singular_false_in: Das Team {team_name} spielt gerade gegen {opponent_name}.
             is_singular_true_not_found: "{team} hat heute keine Spiele im Zeitplan."
-            is_singular_false_not_found: "Das Team {team} hat heute keine Spiele im Zeitplan."
-            error: "Entschuldigung, ich konnte keine aktuellen oder bevorstehenden Spiele für {team} finden."
-            outcome_win: "gewonnen"
-            outcome_lose: "verloren"
+            is_singular_false_not_found: Das Team {team} hat heute keine Spiele im Zeitplan.
+            error:
+              Entschuldigung, ich konnte keine aktuellen oder bevorstehenden Spiele
+              für {team} finden.
+            outcome_win: gewonnen
+            outcome_lose: verloren
         es:
           responses:
             is_singular_true_post: "{team_name} jugó contra {opponent_name} y"
-            is_singular_false_post: "El equipo {team_name} jugó contra {opponent_name} y"
+            is_singular_false_post:
+              El equipo {team_name} jugó contra {opponent_name}
+              y
             is_singular_true_pre: "{team_name} jugará contra {opponent_name} {kickoff_in}."
-            is_singular_false_pre: "El equipo {team_name} jugará contra {opponent_name} {kickoff_in}."
+            is_singular_false_pre:
+              El equipo {team_name} jugará contra {opponent_name}
+              {kickoff_in}.
             is_singular_true_in: "{team_name} está jugando contra {opponent_name}."
-            is_singular_false_in: "El equipo {team_name} está jugando contra {opponent_name}."
+            is_singular_false_in: El equipo {team_name} está jugando contra {opponent_name}.
             is_singular_true_not_found: "{team} no tiene juegos programados para hoy."
-            is_singular_false_not_found: "El equipo {team} no tiene juegos programados para hoy."
-            error: "Lo siento, no pude encontrar juegos recientes o próximos para {team}."
-            outcome_win: "ganó"
-            outcome_lose: "perdió"
+            is_singular_false_not_found:
+              El equipo {team} no tiene juegos programados
+              para hoy.
+            error: Lo siento, no pude encontrar juegos recientes o próximos para {team}.
+            outcome_win: ganó
+            outcome_lose: perdió
         fr:
           responses:
             is_singular_true_post: "{team_name} a joué contre {opponent_name} et"
-            is_singular_false_post: "L'équipe {team_name} a joué contre {opponent_name} et"
+            is_singular_false_post:
+              L'équipe {team_name} a joué contre {opponent_name}
+              et
             is_singular_true_pre: "{team_name} jouera contre {opponent_name} {kickoff_in}."
-            is_singular_false_pre: "L'équipe {team_name} jouera contre {opponent_name} {kickoff_in}."
+            is_singular_false_pre:
+              L'équipe {team_name} jouera contre {opponent_name}
+              {kickoff_in}.
             is_singular_true_in: "{team_name} joue actuellement contre {opponent_name}."
-            is_singular_false_in: "L'équipe {team_name} joue actuellement contre {opponent_name}."
+            is_singular_false_in: L'équipe {team_name} joue actuellement contre {opponent_name}.
             is_singular_true_not_found: "{team} n'a pas de matchs prévus aujourd'hui."
-            is_singular_false_not_found: "L'équipe {team} n'a pas de matchs prévus aujourd'hui."
-            error: "Désolé, je n'ai pas pu trouver de matchs récents ou à venir pour {team}."
-            outcome_win: "a gagné"
-            outcome_lose: "a perdu"
-
+            is_singular_false_not_found: L'équipe {team} n'a pas de matchs prévus aujourd'hui.
+            error:
+              Désolé, je n'ai pas pu trouver de matchs récents ou à venir pour
+              {team}.
+            outcome_win: a gagné
+            outcome_lose: a perdu
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
@@ -403,39 +437,33 @@ action:
         value_template: "{{ (trigger.slots.team)|lower in college_teams }}"
     then:
       - variables:
-          query_team: "{{ college_teams[(trigger.slots.team)|lower]['team_id'] }}"
+          query_team: "{{ college_teams[(trigger.slots.team)|lower]['team_id'] | lower}}"
           sport_path: "{{ college_teams[(trigger.slots.team)|lower]['sport_path'] }}"
-          league_path:
-            "{{ college_teams[(trigger.slots.team)|lower]['league_path']
-            }}"
-          conference_id:
-            "{{ college_teams[(trigger.slots.team)|lower]['conference_id']
-            }}"
+          league_path: "{{ college_teams[(trigger.slots.team)|lower]['league_path'] }}"
+          conference_id: "'{{ college_teams[(trigger.slots.team)|lower]['conference_id'] | string}}'"
           is_singular: true
       - service: teamtracker.call_api
         target:
           entity_id: "{{ team_tracker }}"
-        data: |
-          {
-            "sport_path": sport_path,
-            "team_id": query_team | lower,
-            "league_path": league_path,
-            "conference_id": conference_id | string
-          }
+        data:
+          sport_path: "{{ sport_path }}"
+          team_id: "{{ query_team }}"
+          league_path: "{{ league_path }}"
+          conference_id: "{{ conference_id }}"
   - variables:
-      conversation_response: >-
+      conversation_response: |
         {% if is_state(team_tracker, 'POST') %}
           {% if is_singular is false %}
             {{ translations[language]['responses']['is_singular_false_post'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
           {% else %}
             {{ translations[language]['responses']['is_singular_true_post'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
           {% endif %}
-            {% if is_state_attr(team_tracker, 'team_winner', false) %}
-              {{ translations[language]['responses']['outcome_lose'] }}
-            {% else %}
-              {{ translations[language]['responses']['outcome_win'] }}
-            {% endif %}
-            {{ state_attr(team_tracker, 'team_score') }} - {{ state_attr(team_tracker, 'opponent_score') }}
+          {% if is_state_attr(team_tracker, 'team_winner', false) %}
+            {{ translations[language]['responses']['outcome_lose'] }}
+          {% else %}
+            {{ translations[language]['responses']['outcome_win'] }}
+          {% endif %}
+          {{ state_attr(team_tracker, 'team_score') }} - {{ state_attr(team_tracker, 'opponent_score') }}
         {% elif is_state(team_tracker, 'PRE') %}
           {% if is_singular is false %}
             {{ translations[language]['responses']['is_singular_false_pre'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')).replace("{kickoff_in}", state_attr(team_tracker, 'kickoff_in')) }}
@@ -448,8 +476,8 @@ action:
           {% else %}
             {{ translations[language]['responses']['is_singular_true_in'].replace("{team_name}", state_attr(team_tracker, 'team_name')).replace("{opponent_name}", state_attr(team_tracker, 'opponent_name')) }}
           {% endif %}
-            The score is {{ state_attr(team_tracker, 'team_name') }} {{ state_attr(team_tracker, 'team_score') }},
-            {{ state_attr(team_tracker, 'opponent_name') }} {{ state_attr(team_tracker, 'opponent_score') }}
+          The score is {{ state_attr(team_tracker, 'team_name') }} {{ state_attr(team_tracker, 'team_score') }},
+          {{ state_attr(team_tracker, 'opponent_name') }} {{ state_attr(team_tracker, 'opponent_score') }}
         {% elif is_state(team_tracker, 'NOT_FOUND') %}
           {% if is_singular is false %}
             {{ translations[language]['responses']['is_singular_false_not_found'].replace("{team}", trigger.slots.team) }}
