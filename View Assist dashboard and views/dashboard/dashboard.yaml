@@ -529,6 +529,7 @@ button_card_templates:
   body_template:
     template:
       - variable_template
+      - responsive_base
       - body_template_base
     styles:
       card:
@@ -538,11 +539,12 @@ button_card_templates:
         - overflow: hidden
         - aspect-ratio: |-
             [[[
-              if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
+              if (!window.viewAssistResponsive) return "16 / 9";
+
+              if (window.viewAssistResponsive.orientation === "portrait") {
                 return window.viewAssistResponsive.is_small_screen ? "9 / 16" : "3 / 4";
-              } else {
-                return "16 / 9";
               }
+              return "16 / 9";
             ]]]
       grid:
         - grid-template-rows: min-content 1fr
