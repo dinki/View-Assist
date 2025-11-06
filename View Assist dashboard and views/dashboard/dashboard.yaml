@@ -257,13 +257,14 @@ button_card_templates:
         [[[
           if (!window.viewAssistResponsive) {
             const companionOrientation = variables.var_companion_orientation;
-            const initialOrientation = companionOrientation || 
-              (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
+            const windowOrientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+            const initialOrientation = companionOrientation || windowOrientation;
             
             window.viewAssistResponsive = {
               orientation: initialOrientation,
               is_small_screen: window.innerWidth < 600,
               is_tablet: window.innerWidth >= 600 && window.innerWidth < 1024,
+              is_desktop: window.innerWidth >= 1024,
               companion_available: !!companionOrientation
             };
 
@@ -274,18 +275,22 @@ button_card_templates:
                 const oldState = { ...window.viewAssistResponsive };
 
                 const companionOrientationNow = variables.var_companion_orientation;
-                const newOrientation = companionOrientationNow || 
-                  (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
+                const windowOrientationNow = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+                const newOrientation = companionOrientationNow || windowOrientationNow;
+                
                 const newSmallScreen = window.innerWidth < 600;
                 const newTablet = window.innerWidth >= 600 && window.innerWidth < 1024;
+                const newDesktop = window.innerWidth >= 1024;
 
                 if (oldState.orientation !== newOrientation ||
                     oldState.is_small_screen !== newSmallScreen ||
-                    oldState.is_tablet !== newTablet) {
+                    oldState.is_tablet !== newTablet ||
+                    oldState.is_desktop !== newDesktop) {
 
                   window.viewAssistResponsive.orientation = newOrientation;
                   window.viewAssistResponsive.is_small_screen = newSmallScreen;
                   window.viewAssistResponsive.is_tablet = newTablet;
+                  window.viewAssistResponsive.is_desktop = newDesktop;
                   window.viewAssistResponsive.companion_available = !!companionOrientationNow;
 
                   const event = new CustomEvent('view-assist-responsive-change', {
@@ -293,7 +298,7 @@ button_card_templates:
                   });
                   window.dispatchEvent(event);
                 }
-              }, 150);
+              }, 100);
             });
           }
 
