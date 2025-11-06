@@ -112,13 +112,15 @@ button_card_templates:
           try {
             const baseSize = states[variables.var_assistsat_entity].attributes.status_icons_size || "6vw";
 
-            if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-              return parseFloat(baseSize) * 1.55 + 'vw';
+            if (window.viewAssistResponsive?.orientation === "portrait") {
+              const numericValue = parseFloat(baseSize);
+              const unit = baseSize.replace(numericValue.toString(), '');
+              return `${numericValue * 1.55}${unit}`;
             }
 
             return baseSize;
           } catch {
-            return window.viewAssistResponsive?.orientation === "portrait" ? "7.8vw" : "6vw";
+            return window.viewAssistResponsive?.orientation === "portrait" ? "9.3vw" : "6vw";
           }
         ]]]
       var_assistsat_entity_use_24_hour_time: |
