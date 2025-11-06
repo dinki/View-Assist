@@ -160,19 +160,20 @@ button_card_templates:
       var_responsive_font_scale: |-
         [[[
           try {
-            const responsive = window.viewAssistResponsive;
-            if (!responsive) return 1;
+            if (!window.viewAssistResponsive) return 1;
 
-            if (responsive.orientation === "portrait") {
-              if (responsive.is_small_screen) return 0.85;
-              if (responsive.is_tablet) return 1.1;
+            if (window.viewAssistResponsive.orientation === "portrait") {
+              if (window.viewAssistResponsive.is_small_screen) return 0.85;
+              if (window.viewAssistResponsive.is_tablet) return 1.1;
               return 1.25;
             } else {
-              if (responsive.is_small_screen) return 0.9;
-              if (responsive.is_tablet) return 1.0;
+              if (window.viewAssistResponsive.is_small_screen) return 0.9;
+              if (window.viewAssistResponsive.is_tablet) return 1.0;
               return 1.2;
             }
-          } catch { return 1; }
+          } catch { 
+            return 1; 
+          }
         ]]]
       var_weather_temperature: |-
         [[[
