@@ -22,24 +22,20 @@ template:
 triggers_update: all
 styles:
   grid:
-    - grid-template-areas: |-
-        [[[
-          if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-            return `"title status"
-                    "time time"
-                    "date date"`;
-          } else {
-            return `"title status"
-                    "time time"
-                    "date date"`;
-          }
-        ]]]
+    - grid-template-areas: |
+        "title status"
+        "time time"
+        "date date"
     - grid-template-rows: |-
         [[[
           if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-            return window.viewAssistResponsive.is_small_screen ? "15vh 30vh 15vh" : "15vh 35vh 15vh";
+            if (window.viewAssistResponsive.is_small_screen) return "15vh 30vh 15vh";
+            if (window.viewAssistResponsive.is_tablet) return "15vh 35vh 15vh";
+            return "15vh 40vh 15vh";
           } else {
-            return "15vh 50vh 15vh";
+            if (window.viewAssistResponsive?.is_small_screen) return "12vh 45vh 12vh";
+            if (window.viewAssistResponsive?.is_tablet) return "15vh 50vh 15vh";
+            return "15vh 55vh 15vh";
           }
         ]]]
     - grid-template-columns: 1fr 1fr
@@ -62,9 +58,13 @@ styles:
       - font-size: |-
           [[[
             if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-              return window.viewAssistResponsive.is_small_screen ? "20vh" : "25vh";
+              if (window.viewAssistResponsive.is_small_screen) return "20vh";
+              if (window.viewAssistResponsive.is_tablet) return "25vh";
+              return "30vh";
             } else {
-              return "55vh";
+              if (window.viewAssistResponsive?.is_small_screen) return "50vh";
+              if (window.viewAssistResponsive?.is_tablet) return "55vh";
+              return "60vh";
             }
           ]]]
       - font-weight: bold
@@ -84,9 +84,13 @@ styles:
       - font-size: |-
           [[[
             if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-              return window.viewAssistResponsive.is_small_screen ? "6vh" : "8vh";
+              if (window.viewAssistResponsive.is_small_screen) return "6vh";
+              if (window.viewAssistResponsive.is_tablet) return "8vh";
+              return "10vh";
             } else {
-              return "15vh";
+              if (window.viewAssistResponsive?.is_small_screen) return "12vh";
+              if (window.viewAssistResponsive?.is_tablet) return "15vh";
+              return "18vh";
             }
           ]]]
       - width: max-content
@@ -135,9 +139,13 @@ custom_fields:
           - font-size: |-
               [[[
                 if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-                  return window.viewAssistResponsive.is_small_screen ? "8vh" : "10vh";
+                  if (window.viewAssistResponsive.is_small_screen) return "8vh";
+                  if (window.viewAssistResponsive.is_tablet) return "10vh";
+                  return "12vh";
                 } else {
-                  return "15vh";
+                  if (window.viewAssistResponsive?.is_small_screen) return "12vh";
+                  if (window.viewAssistResponsive?.is_tablet) return "15vh";
+                  return "18vh";
                 }
               ]]]
           - color: "[[[ return variables.var_font_color_night ]]]"
@@ -145,9 +153,13 @@ custom_fields:
           - width: |-
               [[[
                 if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-                  return window.viewAssistResponsive.is_small_screen ? "7vh" : "9vh";
+                  if (window.viewAssistResponsive.is_small_screen) return "8vh";
+                  if (window.viewAssistResponsive.is_tablet) return "10vh";
+                  return "12vh";
                 } else {
-                  return "13vh";
+                  if (window.viewAssistResponsive?.is_small_screen) return "12vh";
+                  if (window.viewAssistResponsive?.is_tablet) return "15vh";
+                  return "18vh";
                 }
               ]]]
           - color: "[[[ return variables.var_font_color_night ]]]"
