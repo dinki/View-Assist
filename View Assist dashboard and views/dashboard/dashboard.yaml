@@ -40,18 +40,18 @@ button_card_templates:
       var_companion_orientation: |-
         [[[
           try {
-            var browser_id = localStorage.getItem("view_assist_browser_id");
-            if (!browser_id || !browser_id.startsWith("va-")) {
-              return "";
+            if (!window.vaOrientationSensor) {
+              const browserId = localStorage.getItem("view_assist_browser_id");
+              if (browserId && browserId.startsWith("va-")) {
+                window.vaOrientationSensor = `sensor.${browserId.replace(/[^a-zA-Z0-9]/g, '_')}_orientation`;
+              } else {
+                window.vaOrientationSensor = null;
+              }
             }
             
-            var orientation_sensor = `sensor.${browser_id.replace(/[^a-zA-Z0-9]/g, '_')}_orientation`;
-            
-            if (orientation_sensor in hass.states) {
-              return hass.states[orientation_sensor].state;
-            }
-            
-            return "";
+            return (window.vaOrientationSensor && window.vaOrientationSensor in hass.states)
+              ? hass.states[window.vaOrientationSensor].state
+              : "";
           } catch {
             return "";
           }
