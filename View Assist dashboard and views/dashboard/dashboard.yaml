@@ -446,7 +446,7 @@ button_card_templates:
                         template: "menu"
                       });
                     }
-                  } catch (error) {
+                  } catch (e) {
                   }
 
                   return buttonList;
