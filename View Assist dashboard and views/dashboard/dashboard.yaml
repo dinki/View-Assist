@@ -314,8 +314,22 @@ button_card_templates:
                     const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
                     const menuItems = hass.states[vaEntity].attributes.menu_items || [];
                     const menuActive = hass.states[vaEntity].attributes.menu_active || false;
-
                     const currentView = variables.var_current_view;
+
+                    const availableTemplates = new Set();
+                    try {
+                      const lovelace = document.querySelector("home-assistant")
+                        ?.shadowRoot?.querySelector("home-assistant-main")
+                        ?.shadowRoot?.querySelector("ha-drawer partial-panel-resolver ha-panel-lovelace")
+                        ?.lovelace;
+
+                      if (lovelace?.config?.button_card_templates) {
+                        Object.keys(lovelace.config.button_card_templates).forEach(template => {
+                          availableTemplates.add(template);
+                        });
+                      }
+                    } catch (e) {
+                    }
 
                     function isCurrentView(item) {
                       if (!currentView) return false;
@@ -366,10 +380,17 @@ button_card_templates:
                           }
                         };
                       } else {
-                        buttonConfig = {
-                          type: "custom:button-card",
-                          template: icon
-                        };
+                        if (availableTemplates.size > 0 && !availableTemplates.has(icon)) {
+                          buttonConfig = {
+                            type: "custom:button-card",
+                            template: icon
+                          };
+                        } else {
+                          buttonConfig = {
+                            type: "custom:button-card",
+                            template: icon
+                          };
+                        }
                       }
 
                       const key = icon;
