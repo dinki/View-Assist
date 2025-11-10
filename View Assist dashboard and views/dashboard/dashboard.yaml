@@ -314,8 +314,22 @@ button_card_templates:
                     const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
                     const menuItems = hass.states[vaEntity].attributes.menu_items || [];
                     const menuActive = hass.states[vaEntity].attributes.menu_active || false;
-
                     const currentView = variables.var_current_view;
+
+                    const availableTemplates = new Set();
+                    try {
+                      const lovelace = document.querySelector("home-assistant")
+                        ?.shadowRoot?.querySelector("home-assistant-main")
+                        ?.shadowRoot?.querySelector("ha-drawer partial-panel-resolver ha-panel-lovelace")
+                        ?.lovelace;
+
+                      if (lovelace?.config?.button_card_templates) {
+                        Object.keys(lovelace.config.button_card_templates).forEach(template => {
+                          availableTemplates.add(template);
+                        });
+                      }
+                    } catch (e) {
+                    }
 
                     function isCurrentView(item) {
                       if (!currentView) return false;
@@ -355,6 +369,7 @@ button_card_templates:
                       }
 
                       let buttonConfig;
+
                       if (isDynamicItem) {
                         const type = icon.split(':')[0];
                         buttonConfig = {
@@ -366,10 +381,32 @@ button_card_templates:
                           }
                         };
                       } else {
-                        buttonConfig = {
-                          type: "custom:button-card",
-                          template: icon
-                        };
+                        if (availableTemplates.size > 0 && !availableTemplates.has(icon)) {
+                          buttonConfig = {
+                            type: "custom:button-card",
+                            template: "icon_template",
+                            icon: "mdi:alert-circle-outline",
+                            name: icon,
+                            styles: {
+                              card: [{ "border": "2px dashed rgba(255, 152, 0, 0.8)" }],
+                              icon: [{ "color": "rgba(255, 152, 0, 0.9)" }],
+                              name: [{ 
+                                "font-size": "0.7em",
+                                "color": "rgba(255, 152, 0, 0.9)",
+                                "padding-top": "4px"
+                              }]
+                            },
+                            show_name: true,
+                            tap_action: {
+                              action: "none"
+                            }
+                          };
+                        } else {
+                          buttonConfig = {
+                            type: "custom:button-card",
+                            template: icon
+                          };
+                        }
                       }
 
                       const key = icon;
@@ -409,7 +446,7 @@ button_card_templates:
                         template: "menu"
                       });
                     }
-                  } catch (error) {
+                  } catch (e) {
                   }
 
                   return buttonList;
