@@ -84,9 +84,6 @@ Yes, I'm listening.
 
 How can I assist you?
 
-markdown
-Copiază codul
-
 *Keep them short (1.5–2s playback) for synchronization with the avatar animation.*
 
 ---
