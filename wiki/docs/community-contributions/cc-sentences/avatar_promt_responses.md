@@ -38,10 +38,8 @@ This allows a natural and personalized interaction flow between the user and the
 
 Copy the **`custom_overlays`** folder and the desired files into your Home Assistant configuration:
 
-/config/view_assist/
+`/config/view_assist/`
 
-markdown
-Copiază codul
 
 Be careful **not to confuse this with** `/config/custom_components/view_assist/`.  
 Inside `custom_overlays`, you’ll find:
