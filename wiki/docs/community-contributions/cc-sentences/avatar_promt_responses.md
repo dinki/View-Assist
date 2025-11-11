@@ -50,10 +50,8 @@ Inside `custom_overlays`, you’ll find:
   `<name>_speech.gif` and `<name>_listen.gif`)
 
 If you don’t want to copy the full folder (to save space), you can manually create:
-/config/view_assist/custom_overlays/
+`/config/view_assist/custom_overlays/` directory
 
-yaml
-Copiază codul
 Then:
 1. Copy `overlay.css`
 2. Copy `overlay.html` and **uncomment** only the sections for the avatars you wish to use
