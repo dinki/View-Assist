@@ -3,6 +3,10 @@ sidebar_position: 4
 title: "Step Three: Display Devices"
 ---
 
+Setting up the display for View Assist consists of setting up a browser and also adding the necessary Lovelace prerequisites.  
+
+**Skipping the Lovelace prerequisites is the cause of most of the issues with View Assist so do not skip this step!  See instructions in the second section below**
+
 # Installing Browser Display Software
 In order to render your Home Assistant dashboards in full screen on your Android tablet, you'll need an application that will render in a full screen fashion and provides additional functionality to make interacting with the dashboards easier. 
 
