@@ -3,7 +3,7 @@ title: Xiaomi Smart Clock (X04G / LX04)
 sidebar_position: 3
 ---
 
-The Xiaomi Smart Clock is an Android based smart clock that runs Android Go 10. There are two variants: the LX04 for China (LX04) and the X04G for the rest of the world. They have the same hardware but LineageOS can only be installed on the LX04 as the LineageOS image for this device assumes the LX04 partition layout. Fortunately the X04G can be flashed to the LX04.
+The Xiaomi Smart Clock is an Android based smart clock that runs Android Go 10. There are two variants: the LX04 for China (LX04) and the X04G for the rest of the world. They have the same hardware but LineageOS can only be installed on the X04G as the LineageOS image for this device assumes the X04G partition layout. Fortunately the LX04 can be flashed to the X04G.
 
 This guide is based on:
 - [Rainygortex3's XDA thread](https://xdaforums.com/t/guide-xiaomi-smart-clock-guide-to-convert-lx04-china-edition-to-x04g-global-edition-and-vice-versa.4665010/)
