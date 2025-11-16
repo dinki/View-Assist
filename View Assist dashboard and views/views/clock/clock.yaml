@@ -29,13 +29,9 @@ styles:
     - grid-template-rows: |-
         [[[
           if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-            if (window.viewAssistResponsive.is_small_screen) return "15vh 30vh 15vh";
-            if (window.viewAssistResponsive.is_tablet) return "15vh 35vh 15vh";
-            return "15vh 40vh 15vh";
+            return "15vh 35vh 15vh";
           } else {
-            if (window.viewAssistResponsive?.is_small_screen) return "12vh 45vh 12vh";
-            if (window.viewAssistResponsive?.is_tablet) return "15vh 50vh 15vh";
-            return "15vh 55vh 15vh";
+            return "15vh 50vh 15vh";
           }
         ]]]
     - grid-template-columns: 1fr 1fr
@@ -58,13 +54,9 @@ styles:
       - font-size: |-
           [[[
             if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-              if (window.viewAssistResponsive.is_small_screen) return "20vh";
-              if (window.viewAssistResponsive.is_tablet) return "25vh";
-              return "30vh";
+              return "25vh";
             } else {
-              if (window.viewAssistResponsive?.is_small_screen) return "50vh";
-              if (window.viewAssistResponsive?.is_tablet) return "55vh";
-              return "60vh";
+              return "55vh";
             }
           ]]]
       - font-weight: bold
@@ -84,13 +76,9 @@ styles:
       - font-size: |-
           [[[
             if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-              if (window.viewAssistResponsive.is_small_screen) return "6vh";
-              if (window.viewAssistResponsive.is_tablet) return "8vh";
-              return "10vh";
+              return "8vh";
             } else {
-              if (window.viewAssistResponsive?.is_small_screen) return "12vh";
-              if (window.viewAssistResponsive?.is_tablet) return "15vh";
-              return "18vh";
+              return "15vh";
             }
           ]]]
       - width: max-content
@@ -139,13 +127,9 @@ custom_fields:
           - font-size: |-
               [[[
                 if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-                  if (window.viewAssistResponsive.is_small_screen) return "8vh";
-                  if (window.viewAssistResponsive.is_tablet) return "10vh";
-                  return "12vh";
+                  return "10vh";
                 } else {
-                  if (window.viewAssistResponsive?.is_small_screen) return "12vh";
-                  if (window.viewAssistResponsive?.is_tablet) return "15vh";
-                  return "18vh";
+                  return "15vh";
                 }
               ]]]
           - color: "[[[ return variables.var_font_color_night ]]]"
@@ -153,13 +137,9 @@ custom_fields:
           - width: |-
               [[[
                 if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
-                  if (window.viewAssistResponsive.is_small_screen) return "8vh";
-                  if (window.viewAssistResponsive.is_tablet) return "10vh";
-                  return "12vh";
+                  return "10vh";
                 } else {
-                  if (window.viewAssistResponsive?.is_small_screen) return "12vh";
-                  if (window.viewAssistResponsive?.is_tablet) return "15vh";
-                  return "18vh";
+                  return "15vh";
                 }
               ]]]
           - color: "[[[ return variables.var_font_color_night ]]]"

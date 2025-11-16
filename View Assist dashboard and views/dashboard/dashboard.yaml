@@ -115,12 +115,12 @@ button_card_templates:
             if (window.viewAssistResponsive?.orientation === "portrait") {
               const numericValue = parseFloat(baseSize);
               const unit = baseSize.replace(numericValue.toString(), '');
-              return `${numericValue * 1.55}${unit}`;
+              return `${numericValue * 1.5}${unit}`;
             }
 
             return baseSize;
           } catch {
-            return window.viewAssistResponsive?.orientation === "portrait" ? "9.3vw" : "6vw";
+            return window.viewAssistResponsive?.orientation === "portrait" ? "9vw" : "6vw";
           }
         ]]]
       var_assistsat_entity_use_24_hour_time: |
@@ -165,16 +165,12 @@ button_card_templates:
             if (!window.viewAssistResponsive) return 1;
 
             if (window.viewAssistResponsive.orientation === "portrait") {
-              if (window.viewAssistResponsive.is_small_screen) return 0.85;
-              if (window.viewAssistResponsive.is_tablet) return 1.1;
-              return 1.25;
+              return 1.1;
             } else {
-              if (window.viewAssistResponsive.is_small_screen) return 0.9;
-              if (window.viewAssistResponsive.is_tablet) return 1.0;
-              return 1.2;
+              return 1.0;
             }
           } catch { 
-            return 1; 
+            return 1;
           }
         ]]]
       var_weather_temperature: |-
@@ -262,12 +258,9 @@ button_card_templates:
             const companionOrientation = variables.var_companion_orientation;
             const windowOrientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
             const initialOrientation = companionOrientation || windowOrientation;
-            
+
             window.viewAssistResponsive = {
               orientation: initialOrientation,
-              is_small_screen: window.innerWidth < 600,
-              is_tablet: window.innerWidth >= 600 && window.innerWidth < 1024,
-              is_desktop: window.innerWidth >= 1024,
               companion_available: !!companionOrientation
             };
 
@@ -275,25 +268,13 @@ button_card_templates:
             window.addEventListener('resize', () => {
               clearTimeout(resizeTimeout);
               resizeTimeout = setTimeout(() => {
-                const oldState = { ...window.viewAssistResponsive };
-
+                const oldOrientation = window.viewAssistResponsive.orientation;
                 const companionOrientationNow = variables.var_companion_orientation;
                 const windowOrientationNow = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
                 const newOrientation = companionOrientationNow || windowOrientationNow;
-                
-                const newSmallScreen = window.innerWidth < 600;
-                const newTablet = window.innerWidth >= 600 && window.innerWidth < 1024;
-                const newDesktop = window.innerWidth >= 1024;
 
-                if (oldState.orientation !== newOrientation ||
-                    oldState.is_small_screen !== newSmallScreen ||
-                    oldState.is_tablet !== newTablet ||
-                    oldState.is_desktop !== newDesktop) {
-
+                if (oldOrientation !== newOrientation) {
                   window.viewAssistResponsive.orientation = newOrientation;
-                  window.viewAssistResponsive.is_small_screen = newSmallScreen;
-                  window.viewAssistResponsive.is_tablet = newTablet;
-                  window.viewAssistResponsive.is_desktop = newDesktop;
                   window.viewAssistResponsive.companion_available = !!companionOrientationNow;
 
                   const event = new CustomEvent('view-assist-responsive-change', {
@@ -310,7 +291,7 @@ button_card_templates:
               window.viewAssistResponsive.orientation !== companionOrientation) {
             window.viewAssistResponsive.orientation = companionOrientation;
             window.viewAssistResponsive.companion_available = true;
-            
+
             const event = new CustomEvent('view-assist-responsive-change', {
               detail: window.viewAssistResponsive
             });
@@ -541,10 +522,7 @@ button_card_templates:
             [[[
               if (!window.viewAssistResponsive) return "16 / 9";
 
-              if (window.viewAssistResponsive.orientation === "portrait") {
-                return window.viewAssistResponsive.is_small_screen ? "9 / 16" : "3 / 4";
-              }
-              return "16 / 9";
+              return window.viewAssistResponsive.orientation === "portrait" ? "9 / 16" : "16 / 9";
             ]]]
       grid:
         - grid-template-rows: min-content 1fr
