@@ -139,7 +139,7 @@ custom_fields:
                 if (window.viewAssistResponsive && window.viewAssistResponsive.orientation === "portrait") {
                   return "10vh";
                 } else {
-                  return "15vh";
+                  return "13vh";
                 }
               ]]]
           - color: "[[[ return variables.var_font_color_night ]]]"
