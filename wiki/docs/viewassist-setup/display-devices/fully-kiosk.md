@@ -1,6 +1,6 @@
 ---
 title: Fully Kiosk Installation
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Fully Kiosk Installation and configuration
