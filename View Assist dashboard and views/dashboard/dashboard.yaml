@@ -37,25 +37,6 @@ button_card_templates:
             return "";
           }
         ]]]
-      var_companion_orientation: |-
-        [[[
-          try {
-            if (!window.vaOrientationSensor) {
-              const browserId = localStorage.getItem("view_assist_browser_id");
-              if (browserId && browserId.startsWith("va-")) {
-                window.vaOrientationSensor = `sensor.${browserId.replace(/[^a-zA-Z0-9]/g, '_')}_orientation`;
-              } else {
-                window.vaOrientationSensor = null;
-              }
-            }
-            
-            return (window.vaOrientationSensor && window.vaOrientationSensor in hass.states)
-              ? hass.states[window.vaOrientationSensor].state
-              : "";
-          } catch {
-            return "";
-          }
-        ]]]
       var_mediaplayer_device: |-
         [[[
           try {
@@ -159,20 +140,6 @@ button_card_templates:
           }
           catch { return  ""}
         ]]]
-      var_responsive_font_scale: |-
-        [[[
-          try {
-            if (!window.viewAssistResponsive) return 1;
-
-            if (window.viewAssistResponsive.orientation === "portrait") {
-              return 1.1;
-            } else {
-              return 1.0;
-            }
-          } catch { 
-            return 1;
-          }
-        ]]]
       var_weather_temperature: |-
         [[[
           try
@@ -252,59 +219,66 @@ button_card_templates:
         ]]]
   responsive_base:
     variables:
-      var_orientation: |-
+      var_orientation_sensor: |-
         [[[
-          if (!window.viewAssistResponsive) {
-            const companionOrientation = variables.var_companion_orientation;
-            const windowOrientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
-            const initialOrientation = companionOrientation || windowOrientation;
+          try {
+            const orientationSensor = hass.states[variables.var_assistsat_entity]?.attributes?.orientation_sensor;
 
-            window.viewAssistResponsive = {
-              orientation: initialOrientation,
-              companion_available: !!companionOrientation
-            };
+            if (orientationSensor && orientationSensor in hass.states) {
+              const state = hass.states[orientationSensor].state;
+              if (state === "portrait" || state === "landscape") {
+                return state;
+              }
+            }
 
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-              clearTimeout(resizeTimeout);
-              resizeTimeout = setTimeout(() => {
-                const oldOrientation = window.viewAssistResponsive.orientation;
-                const companionOrientationNow = variables.var_companion_orientation;
-                const windowOrientationNow = window.innerHeight > window.innerWidth ? "portrait" : "landscape";
-                const newOrientation = companionOrientationNow || windowOrientationNow;
-
-                if (oldOrientation !== newOrientation) {
-                  window.viewAssistResponsive.orientation = newOrientation;
-                  window.viewAssistResponsive.companion_available = !!companionOrientationNow;
-
-                  const event = new CustomEvent('view-assist-responsive-change', {
-                    detail: window.viewAssistResponsive
-                  });
-                  window.dispatchEvent(event);
-                }
-              }, 100);
-            });
+            return "";
+          } catch {
+            return "";
           }
+        ]]]
 
-          const companionOrientation = variables.var_companion_orientation;
-          if (companionOrientation && 
-              window.viewAssistResponsive.orientation !== companionOrientation) {
-            window.viewAssistResponsive.orientation = companionOrientation;
-            window.viewAssistResponsive.companion_available = true;
+      var_orientation:
+        value: |-
+          [[[
+            const sensorOrientation = variables.var_orientation_sensor;
+            const windowOrientation = window.innerHeight > window.innerWidth 
+              ? "portrait" 
+              : "landscape";
+            const currentOrientation = sensorOrientation || windowOrientation;
 
-            const event = new CustomEvent('view-assist-responsive-change', {
-              detail: window.viewAssistResponsive
-            });
-            window.dispatchEvent(event);
-          }
+            if (!window.viewAssistResponsive) {
+              window.viewAssistResponsive = {
+                orientation: currentOrientation,
+                sensor_available: !!sensorOrientation,
+                lastUpdate: Date.now()
+              };
+            } else {
+              const oldOrientation = window.viewAssistResponsive.orientation;
+              window.viewAssistResponsive.sensor_available = !!sensorOrientation;
 
-          return window.viewAssistResponsive.orientation;
+              if (oldOrientation !== currentOrientation) {
+                window.viewAssistResponsive.orientation = currentOrientation;
+                window.viewAssistResponsive.lastUpdate = Date.now();
+
+                window.dispatchEvent(new CustomEvent('view-assist-responsive-change', {
+                  detail: window.viewAssistResponsive,
+                  bubbles: true
+                }));
+              }
+            }
+
+            return window.viewAssistResponsive.orientation;
+          ]]]
+        force_eval: true
+
+      var_responsive_font_scale: |-
+        [[[
+          return window.viewAssistResponsive?.orientation === "portrait" ? 1.1 : 1.0;
         ]]]
   body_template_base:
     show_state: false
     show_icon: false
     show_name: false
-    triggers_update: all
     tap_action:
       action: call-service
       service: view_assist.set_state
