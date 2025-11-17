@@ -7,6 +7,8 @@ The Amazon Echo Show 8 Gen 1 device makes a nice, compact Android tablet with di
 
 [![Image](https://img.youtube.com/vi/6iazriZKPL4/mqdefault.jpg)](https://www.youtube.com/watch?6iazriZKPL4)
 
+^^ Click the image for the video ^^
+
 Here are some important links for this device:
 
 Unlock and install custom recovery:
