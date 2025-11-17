@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  advancedcameracardversion: 1.0.0
+  advancedcameracardversion: 1.0.1
   var_camera: |-
     [[[
       const urlParams = new URLSearchParams(window.location.search);
@@ -126,7 +126,7 @@ variables:
     ]]]
   var_responsive_columns: |-
     [[[
-      return window.innerWidth < 600 ? 1 : 
+      return window.innerWidth < 602 ? 1 : 
              window.innerWidth < 1200 ? 2 : 3;
     ]]]
   var_timeout_seconds: |-
