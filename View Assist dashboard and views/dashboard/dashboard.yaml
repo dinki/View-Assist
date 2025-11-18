@@ -270,11 +270,6 @@ button_card_templates:
             return window.viewAssistResponsive.orientation;
           ]]]
         force_eval: true
-
-      var_responsive_font_scale: |-
-        [[[
-          return window.viewAssistResponsive?.orientation === "portrait" ? 1.1 : 1.0;
-        ]]]
   body_template_base:
     show_state: false
     show_icon: false
@@ -339,9 +334,7 @@ button_card_templates:
           - z-index: 5
           - font-size: |-
               [[[
-                const baseSize = 200;
-                const scale = parseFloat(variables.var_responsive_font_scale);
-                return `${Math.round(baseSize * scale)}%`;
+                return window.viewAssistResponsive?.orientation === "portrait" ? "220%" : "200%";
               ]]]
           - font-weight: 400
           - width: max-content
