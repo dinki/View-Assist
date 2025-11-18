@@ -19,7 +19,6 @@ template:
   - variable_template
   - responsive_base
   - body_template
-triggers_update: all
 styles:
   grid:
     - grid-template-areas: |
