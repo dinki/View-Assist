@@ -351,10 +351,7 @@ button_card_templates:
               layout_type: grid-layout
               layout:
                 margin: 0
-                card_margin: |-
-                  [[[
-                    return window.viewAssistResponsive?.orientation === "portrait" ? "0.5vh" : "0";
-                  ]]]
+                card_margin: 0
                 place-content: end
                 grid-template-columns: |-
                   [[[
