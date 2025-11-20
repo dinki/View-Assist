@@ -15,3 +15,9 @@ Combining an Android application and a Home Assistant integration (to control yo
 - A comprehensive set of controls & sensor entities to use in your automations and dashboards
 
 For more information vist the [View Assist Companion App Github](https://github.com/msp1974/ViewAssist_Companion_App)
+
+# Installation
+
+The installation of the View Assist Companion App is accomplished by installing the APK on the device **AND INSTALLING THE View Assist Companion App INTEGRATION!!!** Skipping the installation of the VACA integration is by far the cause of most problems people have with using it with View Assist. Please follow the detailed installation guide here:
+
+[View Assist Companion App Installation Guide](https://github.com/msp1974/ViewAssist_Companion_App/wiki/Getting-Started)
