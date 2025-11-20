@@ -1,4 +1,4 @@
-# View Assist - View Camera (v 2.0.0)
+# View Assist - View Camera (v 2.0.1)
 blueprint:
   name: View Assist - View Camera
   description: |
@@ -205,4 +205,3 @@ action:
                       last_said: "Camera '{{ requested_camera }}' not found."
             default: []
 mode: single
-
