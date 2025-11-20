@@ -83,7 +83,7 @@ action:
         value_template: "{{ trigger.id == 'startup' }}"
     then:
       - repeat:
-          for_each: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
+          for_each: "{{ view_assist_entities(filter={'type':'view_audio'}) + view_assist_entities(filter={'type':'vaca'}) }}"
           sequence:
             - action: view_assist.set_state
               target:
@@ -205,3 +205,4 @@ action:
                       last_said: "Camera '{{ requested_camera }}' not found."
             default: []
 mode: single
+
