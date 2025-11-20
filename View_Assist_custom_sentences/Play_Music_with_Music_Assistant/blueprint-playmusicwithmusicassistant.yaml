@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.1.0)
+    Assistant v 1.2.0)
   domain: automation
   input:
     ma_instance:
@@ -122,6 +122,7 @@ actions:
                 data:
                   mode: music
                   title: ""
+                  message_font_size: "5vw"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -189,6 +190,7 @@ actions:
                 data:
                   mode: music
                   title: ""
+                  message_font_size: "5vw"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
@@ -258,6 +260,7 @@ actions:
                 data:
                   mode: music
                   title: ""
+                  message_font_size: "5vw"
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"

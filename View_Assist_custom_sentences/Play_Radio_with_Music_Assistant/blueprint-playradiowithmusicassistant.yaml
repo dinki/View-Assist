@@ -1,7 +1,7 @@
 blueprint:
   name: View Assist - Play Radio with Music Assistant
   description: Play radio stations from your Music Assistant server (View Assist
-    Play TuneIn with Music Assistant v 1.1.0)
+    Play TuneIn with Music Assistant v 1.2.0)
   domain: automation
   input:
     command:
@@ -66,6 +66,7 @@ action:
             data:
               mode: music
               title: ""
+              message_font_size: "5vw"
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
