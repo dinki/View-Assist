@@ -205,5 +205,3 @@ action:
                       last_said: "Camera '{{ requested_camera }}' not found."
             default: []
 mode: single
-
-
