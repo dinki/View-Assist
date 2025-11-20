@@ -9,7 +9,7 @@ variables:
     ]]]
   var_camera: |-
     [[[
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = variables.var_url_params;
       const urlCamera = urlParams.get('camera');
       const showAll = urlParams.get('show');
 
@@ -22,12 +22,13 @@ variables:
       }
 
       const availableCameras = [];
-      for (const entityId in hass.states) {
-        if (entityId.startsWith('camera.')) {
-          const cameraState = hass.states[entityId].state;
-          if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
-            availableCameras.push(entityId);
-          }
+      const cameraKeys = Object.keys(hass.states).filter(id => id.startsWith('camera.'));
+
+      for (let i = 0; i < cameraKeys.length; i++) {
+        const entityId = cameraKeys[i];
+        const state = hass.states[entityId].state;
+        if (state !== 'unavailable' && state !== 'unknown') {
+          availableCameras.push(entityId);
         }
       }
 
