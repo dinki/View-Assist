@@ -1,6 +1,12 @@
 type: custom:button-card
 variables:
   cameracardversion: 2.0.1
+  var_url_params: |-
+    [[[
+      const currentPath = hass.states[variables.var_assistsat_entity]?.attributes?.current_path || '';
+      const queryString = currentPath.includes('?') ? currentPath.split('?')[1] : '';
+      return new URLSearchParams(queryString);
+    ]]]
   var_camera: |-
     [[[
       const urlParams = new URLSearchParams(window.location.search);
