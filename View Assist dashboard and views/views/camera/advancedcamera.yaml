@@ -1,9 +1,15 @@
 type: custom:button-card
 variables:
   advancedcameracardversion: 1.0.0
+  var_url_params: |-
+    [[[
+      const browserPath = hass.states[variables.var_assistsat_entity]?.attributes?.browser_path || '';
+      const queryString = browserPath.includes('?') ? browserPath.split('?')[1] : '';
+      return new URLSearchParams(queryString);
+    ]]]
   var_camera: |-
     [[[
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = variables.var_url_params;
       const urlCamera = urlParams.get('camera');
       const showAll = urlParams.get('show');
 
@@ -16,12 +22,13 @@ variables:
       }
 
       const availableCameras = [];
-      for (const entityId in hass.states) {
-        if (entityId.startsWith('camera.')) {
-          const cameraState = hass.states[entityId].state;
-          if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
-            availableCameras.push(entityId);
-          }
+      const cameraKeys = Object.keys(hass.states).filter(id => id.startsWith('camera.'));
+
+      for (let i = 0; i < cameraKeys.length; i++) {
+        const entityId = cameraKeys[i];
+        const state = hass.states[entityId].state;
+        if (state !== 'unavailable' && state !== 'unknown') {
+          availableCameras.push(entityId);
         }
       }
 
@@ -129,21 +136,10 @@ variables:
       return window.innerWidth < 600 ? 1 : 
              window.innerWidth < 1200 ? 2 : 3;
     ]]]
-  var_timeout_seconds: |-
-    [[[
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const timeout = urlParams.get('timeout');
-        return timeout ? parseInt(timeout, 10) : 0;
-      } catch (e) {
-        return 0;
-      }
-    ]]]
   var_camera_card_key: |-
     [[[
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlCamera = urlParams.get('camera');
-      return urlCamera ? `camera-${urlCamera}` : 'camera-default';
+      const urlCamera = variables.var_url_params.get('camera');
+      return urlCamera ? `camera-${urlCamera}` : 'camera-grid';
     ]]]
   var_setup_camera_hold_mode: |-
     [[[
