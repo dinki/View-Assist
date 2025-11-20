@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  advancedcameracardversion: 1.0.0
+  advancedcameracardversion: 1.1.0
   var_url_params: |-
     [[[
       const browserPath = hass.states[variables.var_assistsat_entity]?.attributes?.browser_path || '';
