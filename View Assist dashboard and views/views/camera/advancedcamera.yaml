@@ -122,101 +122,73 @@ variables:
     ]]]
   var_setup_camera_hold_mode: |-
     [[[
-      if (variables.var_current_view === 'camera' && variables.var_assistsat_entity) {
-        const currentPageKey = `${window.location.pathname}${window.location.search}`;
-        if (window.cameraPageKey === currentPageKey && window.cameraHoldTimeout) {
-          return '';
+      const cleanup = () => {
+        if (window.vaCameraHoldTimeout) {
+          clearTimeout(window.vaCameraHoldTimeout);
         }
+        window.vaCameraHoldTimeout = null;
+        window.vaCameraHoldModeSet = false;
+        window.vaCameraPageKey = null;
+        window.vaCameraTimeoutStart = null;
+        window.vaCameraStoredPreviousMode = null;
+        window.vaCameraRevertMode = null;
+      };
 
-        window.cameraPageKey = currentPageKey;
-
-        const entityId = variables.var_assistsat_entity;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const timeoutSeconds = urlParams.get('timeout') ? 
-          parseInt(urlParams.get('timeout'), 10) : 0;
-
-        let previousMode = 'normal';
-        try {
-          const entityState = hass.states[entityId];
-          if (entityState && entityState.attributes) {
-            const currentMode = entityState.attributes.mode || 'normal';
-            previousMode = (currentMode === 'hold') ? 'normal' : currentMode;
-          }
-        } catch (error) {
-          previousMode = 'normal';
-        }
-
-        window.cameraStoredPreviousMode = previousMode;
-
-        hass.callService('view_assist', 'set_state', {
-          entity_id: entityId,
-          mode: 'hold'
-        });
-        window.cameraHoldModeSet = true;
-
-        if (window.cameraHoldTimeout) {
-          clearTimeout(window.cameraHoldTimeout);
-          window.cameraHoldTimeout = null;
-        }
-
-        if (timeoutSeconds && timeoutSeconds > 0 && !isNaN(timeoutSeconds)) {
-          window.cameraTimeoutStart = Date.now();
-
-          window.cameraRevertMode = function() {
-            try {
-              let hassInstance = null;
-              if (typeof hass !== 'undefined') {
-                hassInstance = hass;
-              } else if (window.hassConnection) {
-                hassInstance = window.hassConnection;
-              } else if (document.querySelector('home-assistant')) {
-                hassInstance = document.querySelector('home-assistant').hass;
-              } else if (window.parent && window.parent.hass) {
-                hassInstance = window.parent.hass;
-              }
-
-              if (hassInstance) {
-                const revertMode = window.cameraStoredPreviousMode || 'normal';
-
-                hassInstance.callService('view_assist', 'set_state', {
-                  entity_id: entityId,
-                  mode: revertMode
-                });
-              }
-
-              window.cameraHoldTimeout = null;
-              window.cameraHoldModeSet = false;
-              window.cameraRevertMode = null;
-              window.cameraPageKey = null;
-              window.cameraTimeoutStart = null;
-              window.cameraStoredPreviousMode = null;
-
-            } catch (error) {
-              window.cameraHoldTimeout = null;
-              window.cameraHoldModeSet = false;
-              window.cameraRevertMode = null;
-              window.cameraPageKey = null;
-              window.cameraTimeoutStart = null;
-              window.cameraStoredPreviousMode = null;
-            }
-          };
-
-          window.cameraHoldTimeout = setTimeout(window.cameraRevertMode, timeoutSeconds * 1000);
-        }
-      } else {
-        if (window.cameraHoldTimeout) {
-          clearTimeout(window.cameraHoldTimeout);
-          window.cameraHoldTimeout = null;
-        }
-        if (window.cameraRevertMode) {
-          window.cameraRevertMode = null;
-        }
-        window.cameraHoldModeSet = false;
-        window.cameraPageKey = null;
-        window.cameraTimeoutStart = null;
-        window.cameraStoredPreviousMode = null;
+      if (variables.var_current_view !== 'camera' || !variables.var_assistsat_entity) {
+        cleanup();
+        return '';
       }
+
+      const currentPageKey = `${window.location.pathname}${window.location.search}`;
+
+      if (window.vaCameraPageKey === currentPageKey && window.vaCameraHoldTimeout) {
+        return '';
+      }
+
+      window.vaCameraPageKey = currentPageKey;
+      const entityId = variables.var_assistsat_entity;
+      const vaEntity = hass.states[entityId];
+
+      const currentMode = vaEntity?.attributes?.mode || 'normal';
+      const previousMode = currentMode === 'hold' ? 'normal' : currentMode;
+      window.vaCameraStoredPreviousMode = previousMode;
+
+      hass.callService('view_assist', 'set_state', {
+        entity_id: entityId,
+        mode: 'hold'
+      });
+      window.vaCameraHoldModeSet = true;
+
+      if (window.vaCameraHoldTimeout) {
+        clearTimeout(window.vaCameraHoldTimeout);
+        window.vaCameraHoldTimeout = null;
+      }
+
+      const timeoutSeconds = variables.var_timeout_seconds;
+      if (timeoutSeconds > 0) {
+        window.vaCameraTimeoutStart = Date.now();
+
+        window.vaCameraRevertMode = function() {
+          try {
+            let hassInstance = typeof hass !== 'undefined' ? hass : 
+                              document.querySelector('home-assistant')?.hass;
+
+            if (hassInstance) {
+              hassInstance.callService('view_assist', 'set_state', {
+                entity_id: entityId,
+                mode: window.vaCameraStoredPreviousMode || 'normal'
+              });
+            }
+          } catch (error) {
+            console.warn('View Assist camera mode revert failed:', error);
+          } finally {
+            cleanup();
+          }
+        };
+
+        window.vaCameraHoldTimeout = setTimeout(window.vaCameraRevertMode, timeoutSeconds * 1000);
+      }
+
       return '';
     ]]]
 template:
