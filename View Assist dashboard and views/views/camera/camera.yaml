@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  cameracardversion: 2.0.1
+  cameracardversion: 2.1.0
   var_url_params: |-
     [[[
       const currentPath = hass.states[variables.var_assistsat_entity]?.attributes?.current_path || '';
