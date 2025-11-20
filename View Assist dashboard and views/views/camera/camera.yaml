@@ -113,8 +113,7 @@ variables:
     ]]]
   var_responsive_columns: |-
     [[[
-      return window.innerWidth < 600 ? 1 : 
-             window.innerWidth < 1200 ? 2 : 3;
+      return window.viewAssistResponsive?.orientation === "portrait" ? 1 : 2;
     ]]]
   var_timeout_seconds: |-
     [[[
