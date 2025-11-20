@@ -120,6 +120,11 @@ variables:
       const urlCamera = variables.var_url_params.get('camera');
       return urlCamera ? `camera-${urlCamera}` : 'camera-grid';
     ]]]
+  var_timeout_seconds: |-
+    [[[
+      const timeout = variables.var_url_params.get('timeout');
+      return timeout ? parseInt(timeout, 10) : 0;
+    ]]]
   var_setup_camera_hold_mode: |-
     [[[
       const cleanup = () => {
