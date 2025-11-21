@@ -3,8 +3,18 @@ variables:
   advancedcameracardversion: 1.1.0
   var_url_params: |-
     [[[
-      const currentPath = hass.states[variables.var_assistsat_entity]?.attributes?.current_path || '';
-      const queryString = currentPath.includes('?') ? currentPath.split('?')[1] : '';
+      let queryString = '';
+      const vaEntity = hass.states[variables.var_assistsat_entity];
+
+      if (vaEntity?.attributes?.current_path) {
+        const currentPath = vaEntity.attributes.current_path;
+        queryString = currentPath.includes('?') ? currentPath.split('?')[1] : '';
+      }
+
+      if (!queryString && window.location.search) {
+        queryString = window.location.search.substring(1);
+      }
+
       return new URLSearchParams(queryString);
     ]]]
   var_camera: |-
