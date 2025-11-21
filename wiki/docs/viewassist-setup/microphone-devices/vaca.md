@@ -18,6 +18,10 @@ For more information vist the [View Assist Companion App Github](https://github.
 
 # Installation
 
+[![Image](https://img.youtube.com/vi/FrMPi-XxcLs/mqdefault.jpg)](https://youtu.be/FrMPi-XxcLs)
+
+^^ Click the image for the video ^^
+
 The installation of the View Assist Companion App is accomplished by installing the APK on the device **AND INSTALLING THE View Assist Companion App INTEGRATION!!!** Skipping the installation of the VACA integration is by far the cause of most problems people have with using it with View Assist. Please follow the detailed installation guide here:
 
 [View Assist Companion App Installation Guide](https://github.com/msp1974/ViewAssist_Companion_App/wiki/Getting-Started)
