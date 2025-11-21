@@ -443,6 +443,7 @@ button_card_templates:
                       }
 
                       let buttonConfig;
+
                       if (isDynamicItem) {
                         const type = icon.split(':')[0];
                         buttonConfig = {
@@ -519,7 +520,7 @@ button_card_templates:
                         template: "menu"
                       });
                     }
-                  } catch (error) {
+                  } catch (e) {
                   }
 
                   return buttonList;
