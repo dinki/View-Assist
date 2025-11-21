@@ -1,13 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.2.0
-      default_satellite: |-
-        [[[ try {
-          return hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.type === "view_audio");
-          } catch { return  ""}
-        ]]]
+      dashboardversion: 1.2.1
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -16,7 +10,7 @@ button_card_templates:
         [[[
           try
           {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+            var micdevice_assistbid = localStorage.getItem("view_assist_sensor");
             var micdevice = hass.states[micdevice_assistbid].attributes.mute_switch;
             return `${micdevice}`;
           } catch { return  ""}
@@ -24,7 +18,7 @@ button_card_templates:
       var_wake_switch: |-
         [[[
           try {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+            var micdevice_assistbid = localStorage.getItem("view_assist_sensor");
             var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
             if (micdevice.startsWith("assist_satellite.")) {
               var wakebutton = micdevice.replace("assist_satellite.", "button.") + "_wake";
@@ -40,7 +34,7 @@ button_card_templates:
       var_mediaplayer_device: |-
         [[[
           try {
-            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor");
             var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
             return `${mediadevice}`;
           } catch { return  "";}
@@ -48,7 +42,7 @@ button_card_templates:
       var_mediaplayer_mute: |-
         [[[
           try {
-            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor");
             var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
             var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
             return `${mediaplayerstate}`;
