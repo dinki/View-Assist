@@ -8,18 +8,15 @@ button_card_templates:
         ]]]
       var_mic_switch: |-
         [[[
-          try
-          {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor");
-            var micdevice = hass.states[micdevice_assistbid].attributes.mute_switch;
+          try {
+            var micdevice = hass.states[variables.var_assistsat_entity].attributes.mute_switch;
             return `${micdevice}`;
-          } catch { return  ""}
+          } catch { return ""}
         ]]]
       var_wake_switch: |-
         [[[
           try {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor");
-            var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
+            var micdevice = hass.states[variables.var_assistsat_entity].attributes.mic_device;
             if (micdevice.startsWith("assist_satellite.")) {
               var wakebutton = micdevice.replace("assist_satellite.", "button.") + "_wake";
               if (wakebutton in hass.states) {
@@ -34,19 +31,17 @@ button_card_templates:
       var_mediaplayer_device: |-
         [[[
           try {
-            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor");
-            var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
+            var mediadevice = hass.states[variables.var_assistsat_entity].attributes.mediaplayer_device;
             return `${mediadevice}`;
-          } catch { return  "";}
+          } catch { return "";}
         ]]]
       var_mediaplayer_mute: |-
         [[[
           try {
-            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor");
-            var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
+            var mediadevice = hass.states[variables.var_assistsat_entity].attributes.mediaplayer_device;
             var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
             return `${mediaplayerstate}`;
-          } catch { return  "";}
+          } catch { return "";}
         ]]]
       var_assistsat_time_format: |-
         [[[
