@@ -21,7 +21,7 @@ Here we are configuring a device with display. Note that the audio only devices 
     - **Microphone Device:**  Used to assign microphone to View Assist device.  See the microphone section for set up instructions
     - **Media Player Device:** Used to assign the media player used for View Assist audio message playback
     - **Music Player Device:** Used to assign the media player used for View Assist music playback.  This can be the same as Media Player Device or different
-    - **Intent Device:** The device to provide intent data for this satellite.  This is optional but can be used to provide AI context for display.  View Assist Companion App users should earch for the 'intent' device for that matches this device.
+    - **Intent Device:** The device to provide intent data for this satellite.  This is optional but can be used to provide AI context for display and should be configured if possible.  View Assist Companion App users should search for the 'intent' device for that matches this device.
     - **Display Device:** Used to assign display device to View Assist device.  See the display section for set up instructions
 
 After setting these values you can then click 'Submit' and the View Assist satellite will be ready for use!
