@@ -200,22 +200,11 @@ button_card_templates:
         [[[
           try {
             const pathname = window.location.pathname;
-            if (pathname) {
-              const match = pathname.match(/\/view-assist\/([^\/]+)/);
-              if (match && match[1]) {
-                return match[1];
-              }
-            }
-
-            const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
-            if (currentPath) {
-              const match = currentPath.match(/\/view-assist\/([^\/]+)/);
-              if (match && match[1]) {
-                return match[1];
-              }
-            }
-            return "";
-          } catch { return ""; }
+            const match = pathname.match(/\/view-assist\/([^\/]+)/);
+            return match && match[1] ? match[1] : "";
+          } catch { 
+            return ""; 
+          }
         ]]]
   responsive_base:
     variables:
