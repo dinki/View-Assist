@@ -1,9 +1,15 @@
 type: custom:button-card
 variables:
-  cameracardversion: 2.0.1
+  cameracardversion: 2.1.0
+  var_url_params: |-
+    [[[
+      const currentPath = hass.states[variables.var_assistsat_entity]?.attributes?.current_path || '';
+      const queryString = currentPath.includes('?') ? currentPath.split('?')[1] : '';
+      return new URLSearchParams(queryString);
+    ]]]
   var_camera: |-
     [[[
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = variables.var_url_params;
       const urlCamera = urlParams.get('camera');
       const showAll = urlParams.get('show');
 
@@ -16,12 +22,13 @@ variables:
       }
 
       const availableCameras = [];
-      for (const entityId in hass.states) {
-        if (entityId.startsWith('camera.')) {
-          const cameraState = hass.states[entityId].state;
-          if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
-            availableCameras.push(entityId);
-          }
+      const cameraKeys = Object.keys(hass.states).filter(id => id.startsWith('camera.'));
+
+      for (let i = 0; i < cameraKeys.length; i++) {
+        const entityId = cameraKeys[i];
+        const state = hass.states[entityId].state;
+        if (state !== 'unavailable' && state !== 'unknown') {
+          availableCameras.push(entityId);
         }
       }
 
@@ -33,7 +40,15 @@ variables:
     ]]]
   var_all_cameras: |-
     [[[
-      const urlParams = new URLSearchParams(window.location.search);
+      const formatCameraName = (entityId) => {
+        return entityId.replace('camera.', '').replace(/_/g, ' ');
+      };
+
+      const isCameraAvailable = (state) => {
+        return state !== 'unavailable' && state !== 'unknown';
+      };
+
+      const urlParams = variables.var_url_params;
       const showType = urlParams.get('show');
       const configuredCameras = urlParams.get('cameras');
       
@@ -41,205 +56,144 @@ variables:
         const cameras = [];
         const cameraEntityList = decodeURIComponent(configuredCameras).split(',');
         
-        for (const entityId of cameraEntityList) {
-          const trimmedId = entityId.trim();
-          if (hass.states[trimmedId]) {
-            const cameraState = hass.states[trimmedId].state;
-            if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
-              cameras.push({
-                entity_id: trimmedId,
-                name: hass.states[trimmedId].attributes.friendly_name || 
-                      trimmedId.replace('camera.', '').replace(/_/g, ' ')
-              });
-            }
+        for (let i = 0; i < cameraEntityList.length; i++) {
+          const entityId = cameraEntityList[i].trim();
+          const entity = hass.states[entityId];
+          if (entity && isCameraAvailable(entity.state)) {
+            cameras.push({
+              entity_id: entityId,
+              name: entity.attributes.friendly_name || formatCameraName(entityId)
+            });
           }
         }
         return cameras;
       }
-      
-      let viewAssistEntity = null;
-      
-      if (variables.var_assistsat_entity && hass.states[variables.var_assistsat_entity]) {
-        viewAssistEntity = variables.var_assistsat_entity;
-      }
-      
-      if (!viewAssistEntity) {
-        for (const entityId in hass.states) {
-          if (entityId.startsWith('sensor.')) {
+
+      const viewAssistEntity = variables.var_assistsat_entity;
+
+      if (viewAssistEntity && hass.states[viewAssistEntity]) {
+        const cameraList = hass.states[viewAssistEntity].attributes.camera_list;
+
+        if (Array.isArray(cameraList)) {
+          const cameras = [];
+
+          for (let i = 0; i < cameraList.length; i++) {
+            const entityId = cameraList[i];
             const entity = hass.states[entityId];
-            if (entity.attributes && entity.attributes.camera_list) {
-              viewAssistEntity = entityId;
-              break;
-            }
-          }
-        }
-      }
-      
-      if (viewAssistEntity) {
-        const sensorAttributes = hass.states[viewAssistEntity].attributes;
-        
-        if (sensorAttributes.camera_list) {
-          try {
-            if (Array.isArray(sensorAttributes.camera_list)) {
-              const cameras = [];
-              for (const entityId of sensorAttributes.camera_list) {
-                if (hass.states[entityId]) {
-                  const cameraState = hass.states[entityId].state;
-                  if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
-                    cameras.push({
-                      entity_id: entityId,
-                      name: hass.states[entityId].attributes.friendly_name || 
-                            entityId.replace('camera.', '').replace(/_/g, ' ')
-                    });
-                  }
-                }
-              }
-              
-              if (cameras.length > 0) {
-                return cameras;
-              }
-            }
-          } catch (e) {
-          }
-        }
-      }
-      
-      const cameras = [];
-      try {
-        for (const entityId in hass.states) {
-          if (entityId.startsWith('camera.')) {
-            const cameraState = hass.states[entityId].state;
-            if (cameraState !== 'unavailable' && cameraState !== 'unknown') {
+            if (entity && isCameraAvailable(entity.state)) {
               cameras.push({
                 entity_id: entityId,
-                name: hass.states[entityId].attributes.friendly_name || 
-                      entityId.replace('camera.', '').replace(/_/g, ' ')
+                name: entity.attributes.friendly_name || formatCameraName(entityId)
               });
             }
           }
+
+          if (cameras.length > 0) {
+            return cameras;
+          }
         }
-        cameras.sort((a, b) => a.name.localeCompare(b.name));
-        return cameras;
-      } catch (e) {
-        return [];
       }
+
+      const cameras = [];
+      const cameraKeys = Object.keys(hass.states).filter(id => id.startsWith('camera.'));
+
+      for (let i = 0; i < cameraKeys.length; i++) {
+        const entityId = cameraKeys[i];
+        const entity = hass.states[entityId];
+        if (isCameraAvailable(entity.state)) {
+          cameras.push({
+            entity_id: entityId,
+            name: entity.attributes.friendly_name || formatCameraName(entityId)
+          });
+        }
+      }
+
+      cameras.sort((a, b) => a.name.localeCompare(b.name));
+      return cameras;
     ]]]
   var_responsive_columns: |-
     [[[
-      return window.innerWidth < 600 ? 1 : 
-             window.innerWidth < 1200 ? 2 : 3;
+      return window.viewAssistResponsive?.orientation === "portrait" ? 1 : 2;
     ]]]
   var_timeout_seconds: |-
     [[[
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const timeout = urlParams.get('timeout');
-        return timeout ? parseInt(timeout, 10) : 0;
-      } catch (e) {
-        return 0;
-      }
+      const timeout = variables.var_url_params.get('timeout');
+      return timeout ? parseInt(timeout, 10) : 0;
     ]]]
   var_setup_camera_hold_mode: |-
     [[[
-      if (variables.var_current_view === 'camera' && variables.var_assistsat_entity) {
-        const currentPageKey = `${window.location.pathname}${window.location.search}`;
-        if (window.cameraPageKey === currentPageKey && window.cameraHoldTimeout) {
-          return '';
+      const cleanup = () => {
+        if (window.vaCameraHoldTimeout) {
+          clearTimeout(window.vaCameraHoldTimeout);
         }
+        window.vaCameraHoldTimeout = null;
+        window.vaCameraHoldModeSet = false;
+        window.vaCameraPageKey = null;
+        window.vaCameraTimeoutStart = null;
+        window.vaCameraStoredPreviousMode = null;
+        window.vaCameraRevertMode = null;
+      };
 
-        window.cameraPageKey = currentPageKey;
-
-        const entityId = variables.var_assistsat_entity;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const timeoutSeconds = urlParams.get('timeout') ? 
-          parseInt(urlParams.get('timeout'), 10) : 0;
-
-        let previousMode = 'normal';
-        try {
-          const entityState = hass.states[entityId];
-          if (entityState && entityState.attributes) {
-            const currentMode = entityState.attributes.mode || 'normal';
-            previousMode = (currentMode === 'hold') ? 'normal' : currentMode;
-          }
-        } catch (error) {
-          previousMode = 'normal';
-        }
-
-        window.cameraStoredPreviousMode = previousMode;
-
-        hass.callService('view_assist', 'set_state', {
-          entity_id: entityId,
-          mode: 'hold'
-        });
-        window.cameraHoldModeSet = true;
-
-        if (window.cameraHoldTimeout) {
-          clearTimeout(window.cameraHoldTimeout);
-          window.cameraHoldTimeout = null;
-        }
-
-        if (timeoutSeconds && timeoutSeconds > 0 && !isNaN(timeoutSeconds)) {
-          window.cameraTimeoutStart = Date.now();
-
-          window.cameraRevertMode = function() {
-            try {
-              let hassInstance = null;
-              if (typeof hass !== 'undefined') {
-                hassInstance = hass;
-              } else if (window.hassConnection) {
-                hassInstance = window.hassConnection;
-              } else if (document.querySelector('home-assistant')) {
-                hassInstance = document.querySelector('home-assistant').hass;
-              } else if (window.parent && window.parent.hass) {
-                hassInstance = window.parent.hass;
-              }
-
-              if (hassInstance) {
-                const revertMode = window.cameraStoredPreviousMode || 'normal';
-
-                hassInstance.callService('view_assist', 'set_state', {
-                  entity_id: entityId,
-                  mode: revertMode
-                });
-              }
-
-              window.cameraHoldTimeout = null;
-              window.cameraHoldModeSet = false;
-              window.cameraRevertMode = null;
-              window.cameraPageKey = null;
-              window.cameraTimeoutStart = null;
-              window.cameraStoredPreviousMode = null;
-
-            } catch (error) {
-              window.cameraHoldTimeout = null;
-              window.cameraHoldModeSet = false;
-              window.cameraRevertMode = null;
-              window.cameraPageKey = null;
-              window.cameraTimeoutStart = null;
-              window.cameraStoredPreviousMode = null;
-            }
-          };
-
-          window.cameraHoldTimeout = setTimeout(window.cameraRevertMode, timeoutSeconds * 1000);
-        }
-      } else {
-        if (window.cameraHoldTimeout) {
-          clearTimeout(window.cameraHoldTimeout);
-          window.cameraHoldTimeout = null;
-        }
-        if (window.cameraRevertMode) {
-          window.cameraRevertMode = null;
-        }
-        window.cameraHoldModeSet = false;
-        window.cameraPageKey = null;
-        window.cameraTimeoutStart = null;
-        window.cameraStoredPreviousMode = null;
+      if (variables.var_current_view !== 'camera' || !variables.var_assistsat_entity) {
+        cleanup();
+        return '';
       }
+
+      const currentPageKey = `${window.location.pathname}${window.location.search}`;
+
+      if (window.vaCameraPageKey === currentPageKey && window.vaCameraHoldTimeout) {
+        return '';
+      }
+
+      window.vaCameraPageKey = currentPageKey;
+      const entityId = variables.var_assistsat_entity;
+      const vaEntity = hass.states[entityId];
+
+      const currentMode = vaEntity?.attributes?.mode || 'normal';
+      const previousMode = currentMode === 'hold' ? 'normal' : currentMode;
+      window.vaCameraStoredPreviousMode = previousMode;
+
+      hass.callService('view_assist', 'set_state', {
+        entity_id: entityId,
+        mode: 'hold'
+      });
+      window.vaCameraHoldModeSet = true;
+
+      if (window.vaCameraHoldTimeout) {
+        clearTimeout(window.vaCameraHoldTimeout);
+        window.vaCameraHoldTimeout = null;
+      }
+
+      const timeoutSeconds = variables.var_timeout_seconds;
+      if (timeoutSeconds > 0) {
+        window.vaCameraTimeoutStart = Date.now();
+
+        window.vaCameraRevertMode = function() {
+          try {
+            let hassInstance = typeof hass !== 'undefined' ? hass : 
+                              document.querySelector('home-assistant')?.hass;
+
+            if (hassInstance) {
+              hassInstance.callService('view_assist', 'set_state', {
+                entity_id: entityId,
+                mode: window.vaCameraStoredPreviousMode || 'normal'
+              });
+            }
+          } catch (error) {
+            console.warn('View Assist camera mode revert failed:', error);
+          } finally {
+            cleanup();
+          }
+        };
+
+        window.vaCameraHoldTimeout = setTimeout(window.vaCameraRevertMode, timeoutSeconds * 1000);
+      }
+
       return '';
     ]]]
 template:
   - variable_template
+  -responsive_base
   - body_template
 styles:
   grid:
