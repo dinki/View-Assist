@@ -203,7 +203,7 @@ variables:
     ]]]
 template:
   - variable_template
-  -responsive_base
+  - responsive_base
   - body_template
 styles:
   grid:
