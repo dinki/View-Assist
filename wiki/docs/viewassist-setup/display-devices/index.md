@@ -7,7 +7,7 @@ Setting up the display for View Assist consists of setting up a browser and also
 
 **Skipping the Lovelace prerequisites is the cause of most of the issues with View Assist so do not skip this step! See instructions in the second section below**
 
-# Installing Browser Display Software
+## Installing Browser Display Software
 
 In order to render your Home Assistant dashboards in full screen on your Android tablet, you'll need an application that will render in a full screen fashion and provides additional functionality to make interacting with the dashboards easier.
 
@@ -20,7 +20,7 @@ There are currently three applications supported. **You need to pick ONE of the 
 
 **NOTE** If you were previously using BrowserMod for control and want to allow View Assist to control your device you will need to remove BrowserMod integration and remove it from resources otherwise conflicts will exist and View Assist will not register the browser
 
-# Installing the Lovelace Prerequisites
+## Installing the Lovelace Prerequisites
 
 The View Assist dashboard and views are built using several great frontend Lovelace cards and utilities. These are easily installed via HACS. **These must be installed**
 
