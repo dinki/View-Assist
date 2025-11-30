@@ -1,11 +1,11 @@
 blueprint:
   name: View Assist Custom Prompt Responses
   description: >
-        Play a random customizable TTS greeting when a satellite enters listening mode.
+    Play a random customizable TTS greeting when a satellite enters listening mode.
     Automatically mutes/unmutes the satellite microphone with configurable delay.
     Supports multiple satellites, optional overrides for mute/media_player,
     customizable responses and TTS service URL.
-        This blueprint works with the [View Assist integration](https://github.com/dinki/view_assist_integration)  
+    This blueprint works with the [View Assist integration](https://github.com/dinki/view_assist_integration)  
     and is RECOMMENDED to be used together with the  
     [View Assist Companion App](https://github.com/msp1974/ViewAssist_Companion_App).  
   domain: automation
@@ -110,12 +110,12 @@ action:
       mute_on: "{{ 'off' if mute_active_state else 'on' }}"
       mute_off: "{{ 'on' if mute_active_state else 'off' }}"
 
-  # Mute microfon
+  # Mute microphone
   - service: "switch.turn_{{ mute_on }}"
     target:
       entity_id: "{{ mute_switch }}"
 
-  # Redă TTS
+  # Play TTS
   - service: media_player.play_media
     target:
       entity_id: "{{ media_player }}"
@@ -124,7 +124,7 @@ action:
       media_content_type: provider
       announce: true
 
-  # Așteaptă și reactivează microfonul
+  # Wait and reactivate the microphone
   - delay:
       seconds: "{{ reenable_delay }}"
 
