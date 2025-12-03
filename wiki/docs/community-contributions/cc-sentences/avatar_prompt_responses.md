@@ -1,4 +1,4 @@
-# 🎭 View Assist — Custom Prompt Avatars
+#  Custom Prompt Avatars
 
 This feature adds the ability to **select an avatar as a custom wake-word prompt**, allowing it to respond in *any language, voice, or TTS service* with **personalized random TTS responses**.  
 
