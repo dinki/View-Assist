@@ -1,6 +1,6 @@
 ---
 title: Stream Assist Installation
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Stream Assist Device Setup

@@ -1,4 +1,4 @@
-# View Assist - View Camera (v 2.0.0)
+# View Assist - View Camera (v 2.0.1)
 blueprint:
   name: View Assist - View Camera
   description: |
@@ -83,7 +83,7 @@ action:
         value_template: "{{ trigger.id == 'startup' }}"
     then:
       - repeat:
-          for_each: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
+          for_each: "{{ view_assist_entities(filter={'type':'view_audio'}) + view_assist_entities(filter={'type':'vaca'}) }}"
           sequence:
             - action: view_assist.set_state
               target:

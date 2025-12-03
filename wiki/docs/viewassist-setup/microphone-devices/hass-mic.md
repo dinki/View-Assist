@@ -1,6 +1,6 @@
 ---
 title: HassMic Installation
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # HassMic Installation and configuration
