@@ -73,7 +73,7 @@ wget -O /config/view_assist/custom_overlays/overlay.css \
   https://raw.githubusercontent.com/dinki/View-Assist/main/View_Assist_custom_sentences/community_contributions/Avatar_Prompt_Responses/view_assist/custom_overlays/overlay.css
 ```
 You can also download any avatar GIFs you want to use.
-Each avatar includes two files: <name>_listen.gif and <name>_speech.gif.
+Each avatar includes two files: `<name>_listen.gif` and `<name>_speech.gif`.
 Only download the ones you need:
 ```
 # Nabu
