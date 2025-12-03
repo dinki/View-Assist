@@ -1,0 +1,136 @@
+blueprint:
+  name: View Assist Custom Prompt Responses
+  description: >
+    Play a random customizable TTS greeting when a satellite enters listening mode.
+    Automatically mutes/unmutes the satellite microphone with configurable delay.
+    Supports multiple satellites, optional overrides for mute/media_player,
+    customizable responses and TTS service URL.
+    This blueprint works with the [View Assist integration](https://github.com/dinki/view_assist_integration)  
+    and is RECOMMENDED to be used together with the  
+    [View Assist Companion App](https://github.com/msp1974/ViewAssist_Companion_App).  
+  domain: automation
+
+  input:
+    satellites:
+      name: Assist Satellites
+      description: Select one or more assist_satellite entities to monitor
+      selector:
+        entity:
+          domain: assist_satellite
+          multiple: true
+
+    custom_responses:
+      name: Custom Responses
+      description: >
+        List of possible random responses (edit for your language).  
+        Example: ["How can I help you?", "Yes, I'm listening", "How can I assist you?"]
+      default: ["How can I help you?", "Yes, I'm listening", "How can I assist you?"]
+      selector:
+        object: {}
+
+    tts_url_template:
+      name: TTS URL Template
+      description: >
+        Template for TTS media source URL.  
+        Example (Edge TTS, English voice):
+        media-source://tts/edge_tts?message={{ custom_responses | random }}&language=en-US-ChristopherNeural
+      default: >
+        media-source://tts/edge_tts?message={{ custom_responses | random }}&language=en-US-ChristopherNeural
+      selector:
+        text: {}
+
+    mute_switch_overrides:
+      name: Mute Switch Overrides
+      description: >
+        Optional overrides for mute switches per satellite.  
+        Example: {"assist_satellite.vaca_lenovo_hua0al2p": "switch.custom_mute_entity"}
+      default: {}
+      selector:
+        object: {}
+
+    media_player_overrides:
+      name: Media Player Overrides
+      description: >
+        Optional overrides for media players per satellite.  
+        Example: {"assist_satellite.vaca_lenovo_hua0al2p": "media_player.custom_player"}
+      default: {}
+      selector:
+        object: {}
+
+    mute_active_state:
+      name: Microphone Active State
+      description: >
+        Select the switch state that corresponds to "microphone active".  
+        If checked, ON = active; if unchecked, OFF = active.
+      default: false
+      selector:
+        boolean: {}
+
+    reenable_delay:
+      name: Microphone Reactivation Delay (seconds)
+      description: >
+        Time to wait after greeting before re-enabling microphone (0–5 seconds).
+      default: 2
+      selector:
+        number:
+          min: 0
+          max: 5
+          step: 1
+          unit_of_measurement: s
+
+variables:
+  custom_responses: !input custom_responses
+  tts_url_template: !input tts_url_template
+  mute_switch_overrides: !input mute_switch_overrides
+  media_player_overrides: !input media_player_overrides
+  mute_active_state: !input mute_active_state
+  reenable_delay: !input reenable_delay
+
+trigger:
+  - platform: state
+    entity_id: !input satellites
+    to: listening
+
+condition: []
+
+action:
+  - variables:
+      trigger_entity: "{{ trigger.entity_id }}"
+      sat_name: "{{ trigger_entity.split('.')[1] }}"
+      mute_switch: >-
+        {{
+          mute_switch_overrides.get(trigger_entity) if trigger_entity in mute_switch_overrides
+          else "switch." + sat_name + "_mute"
+        }}
+      media_player: >-
+        {{
+          media_player_overrides.get(trigger_entity) if trigger_entity in media_player_overrides
+          else "media_player." + sat_name + "_media_player"
+        }}
+      mute_on: "{{ 'off' if mute_active_state else 'on' }}"
+      mute_off: "{{ 'on' if mute_active_state else 'off' }}"
+
+  # Mute microphone
+  - service: "switch.turn_{{ mute_on }}"
+    target:
+      entity_id: "{{ mute_switch }}"
+
+  # Play TTS
+  - service: media_player.play_media
+    target:
+      entity_id: "{{ media_player }}"
+    data:
+      media_content_id: "{{ tts_url_template }}"
+      media_content_type: provider
+      announce: true
+
+  # Wait and reactivate the microphone
+  - delay:
+      seconds: "{{ reenable_delay }}"
+
+  - service: "switch.turn_{{ mute_off }}"
+    target:
+      entity_id: "{{ mute_switch }}"
+
+mode: restart
+max_exceeded: silent
