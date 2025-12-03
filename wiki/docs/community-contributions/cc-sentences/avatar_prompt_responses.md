@@ -100,7 +100,7 @@ Here’s a simple trick to find the correct format for your setup:
 5. Choose a **TTS service**, **language**, and **voice**, then type a short test message
 6. Switch to **YAML mode** — you’ll see the field `media_content_id` — that’s your **TTS URL**
 7. Copy that URL, and replace the message text inside it with:
-{{ custom_responses | random }}
+`{{ custom_responses | random }}`
 8. Paste the full modified URL into the blueprint’s **TTS URL Template** field
 
 This method works with **any language**, **any voice**, and **any number of custom messages**, making it extremely flexible.
