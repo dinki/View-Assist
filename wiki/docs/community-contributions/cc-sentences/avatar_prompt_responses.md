@@ -36,7 +36,7 @@ This allows a natural and personalized interaction flow between the user and the
 
 ### Step 1 — Copy overlay files
 
-Copy the **`custom_overlays`** folder and the desired files into your Home Assistant configuration:
+Copy the [custom_overlays](View_Assist_custom_sentences/community_contributions/Avatar_Prompt_Responses/view_assist/custom_overlays) folder and the desired files into your Home Assistant configuration:
 
 `/config/view_assist/`
 
