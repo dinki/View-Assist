@@ -71,7 +71,7 @@ and select the avatar you’ve activated.
 ### Step 3 — Install and set up the Blueprint
 
 Import and install the blueprint:  
-👉 [Custom Prompt Responses](https://github.com/dinki/View-Assist/tree/dev/View_Assist_custom_sentences/community_contributions/Custom_Promt_Responses)
+👉 [Custom Prompt Responses](https://github.com/dinki/View-Assist/tree/dev/View_Assist_custom_sentences/community_contributions/Custom_Prompt_Responses)
 
 Then, configure the fields as follows:
 
