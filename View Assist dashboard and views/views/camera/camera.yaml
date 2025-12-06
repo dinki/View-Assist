@@ -271,7 +271,7 @@ custom_fields:
         service: view_assist.navigate
         service_data:
           device: '[[[ return variables.var_assistsat_entity ]]]'
-          path: /view-assist/camera
+          path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
   camera:
     card:
       type: picture-entity
@@ -321,7 +321,7 @@ custom_fields:
               service: "view_assist.navigate",
               service_data: {
                 device: variables.var_assistsat_entity,
-                path: `/view-assist/camera?camera=${camera.entity_id}${timeoutParam}`
+                path: `${variables.var_dashboard}/camera?camera=${camera.entity_id}${timeoutParam}`
               }
             },
             card_mod: {
