@@ -666,7 +666,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/clock
+        path: home
   menu:
     type: custom:button-card
     template: icon_template
