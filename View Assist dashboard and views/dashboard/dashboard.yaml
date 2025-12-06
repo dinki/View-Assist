@@ -543,7 +543,8 @@ button_card_templates:
             const parts = variables.menu_item.split('|');
             const typeAndTarget = parts[0];
             const target = typeAndTarget.split(':')[1];
-            return target.startsWith('/') ? target : `/view-assist/${target}`;
+            const base = variables.var_dashboard || '/view-assist';
+            return target.startsWith('/') ? target : `${base}/${target}`;
           ]]]
   dynamic_entity_item:
     template: icon_template
