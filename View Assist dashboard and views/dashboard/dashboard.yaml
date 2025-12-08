@@ -6,6 +6,14 @@ button_card_templates:
         [[[
           return localStorage.getItem("view_assist_sensor")
         ]]]
+      var_dashboard: |-
+        [[[
+          try {
+            return hass.states[variables.var_assistsat_entity].attributes.dashboard || '/view-assist';
+          } catch {
+            return '/view-assist';
+          }
+        ]]]
       var_mic_switch: |-
         [[[
           try {
@@ -544,7 +552,8 @@ button_card_templates:
             const parts = variables.menu_item.split('|');
             const typeAndTarget = parts[0];
             const target = typeAndTarget.split(':')[1];
-            return target.startsWith('/') ? target : `/view-assist/${target}`;
+            const base = variables.var_dashboard || '/view-assist';
+            return target.startsWith('/') ? target : `${base}/${target}`;
           ]]]
   dynamic_entity_item:
     template: icon_template
@@ -665,7 +674,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/weather
+        path: '[[[ return `${variables.var_dashboard}/weather` ]]]'
   home:
     type: custom:button-card
     template: icon_template
@@ -675,7 +684,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/clock
+        path: home
   menu:
     type: custom:button-card
     template: icon_template
@@ -697,7 +706,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/camera
+        path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
   wake:
     type: custom:button-card
     template: icon_template
