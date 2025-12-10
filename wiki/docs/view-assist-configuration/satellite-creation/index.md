@@ -41,3 +41,7 @@ From this page, click on the device you want to configure
 ![](./vaconfig2.png)
 
 Enter the section and make any needed changes and hit submit. This will set those options for use on this satellite device only
+
+## Next Steps
+
+Your View Assist satellite is now ready for use. While View Assist does have some built in functions, most of the power comes from using the Custom Sentences. See [this section of the wiki](../../extend-functionality/sentences/index.md) for information on the preinstalled View Assist blueprints. These can be found on your Home Assistant server by going to Settings -> Automations & Scenes then click on the blueprints tab. All View Assist blueprints are labeled with `View Assist` in the name so you can filter on that if you like.
