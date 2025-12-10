@@ -33,54 +33,56 @@ Here are some ideas for automations that can be created using the Device Alerts 
 
 ### Show doorbell camera for 60 seconds when button is pressed
 
+```
     Start Sensor: binary_sensor.doorbell
     Start View: /view-assist/camera?camera=camera.doorbell_camera&timeout=60
+```
 
 ### Show Teams icon when on a Teams call and remove when call ends
 
+```
     Start Sensor: binary_sensor.beelink_isinmeeting
     Start Sensor: "on"
     Start Icon: teams
     End Sensor: binary_sensor.beelink_isinmeeting
     End Sensor To: "off"
     End Icon: teams
+```
 
 ### Show the alert screen when the washer finishes
 
+```
     Start Sensor: input_boolean.washer
     Start Sensor_to: "off"
     Start Sensor_from: "on"
     Start_Alert:
-    ```
       alert_data:
         icon: mdi:washing-machine-alert
         header: Washer Status
         line1: The wash cycle has finished
         line2: Please move clothes to dryer
-    ```
+```
 
 ### Show the alert screen when the alarm is armed and send a different message when it is disarmed
 
+```
     Start Sensor: alarm_control_panel.alarmo
     Start Sensor_to: armed_home
     Start Alert:
-    ```
       alert_data:
         icon: mdi:home-circle
         header: Alarm Status
         line1: Armed Home
         line2: ""
-    ```
     End Sensor: alarm_control_panel.alarmo
     End Sensor To: disarmed
     End Alert:
-    ```
       alert_data:
         icon: mdi:home-circle
         header: Alarm Status
         line1: Disarmed
         line2: ""
-    ```
+```
 
 Do you have a clever use for this blueprint? Let us know and we will include it for others!
 
