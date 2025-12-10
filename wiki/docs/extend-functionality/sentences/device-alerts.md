@@ -20,7 +20,7 @@ The blueprint will require a `Start Alert` and an optional `End Alert`. Within e
 - Start Sensor To Condition (mandatory) - The value the start sensor to watch for (example 'on')
 - Start Sensor From Condition (optional) - The value the start sensor comes from (example 'off')
 - Start Wait Duration (optional) - The amount of time the `Start Sensor To Condition` state must be set before becoming true (example 'on' for 60 seconds)
-- Start Icon (optional) - The View Assist icon to display in the status section. This MUST be defined in the dashboard to be usable (example 'weather')
+- Start Icon (optional) - The View Assist icon to display in the status section. This MUST be defined in the dashboard to be usable (example 'weather') See [this wiki page](https://dinki.github.io/View-Assist/docs/view-assist-configuration/masterconfig-configuration/dashboard-options#icon-templates) for information on defining your own custom icons
 - Start Speech (optional) - The speech to speak on the selected VA satellites
 - Start Alert Variables (optional) - Any VA variables to be set. This can allow for doing things like setting titles, hold mode, view specific variables and just about anything you like for your VA satellite attributes. Example is prepopulated for setting values to show on the `alert` View Assist view. This can be removed if not used.
 - Start View (optional) - The View Assist view to change to (example /view-assist/alert)
