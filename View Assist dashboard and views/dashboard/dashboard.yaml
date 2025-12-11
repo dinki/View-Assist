@@ -291,18 +291,8 @@ button_card_templates:
         - grid-template-columns: 1fr 1fr
         - row-gap: .5rem
       card:
-        - min-height: |-
-            [[[
-              return 'calc(100vh - var(--header-height, 0px))';
-            ]]]
-        - max-height: |-
-            [[[
-              return 'calc(100vh - var(--header-height, 0px))';
-            ]]]
-        - height: |-
-            [[[
-              return 'calc(100vh - var(--header-height, 0px))';
-            ]]]
+        - min-height: 100vh
+        - max-height: 100vh
         - aspect-ratio: |-
             [[[
               if (!window.viewAssistResponsive) return "16 / 9";
@@ -329,6 +319,7 @@ button_card_templates:
             ]]]
         - font-weight: 300
         - position: relative
+        - height: 100vh
         - box-sizing: border-box
       custom_fields:
         title:
