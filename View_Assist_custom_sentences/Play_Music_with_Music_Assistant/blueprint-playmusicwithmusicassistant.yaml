@@ -41,6 +41,26 @@ blueprint:
       name: Queue Song Command
       description: The command to trigger the queue song action
       default: (queue | cue | Q) {song} by {artist}
+    pause_music_command:
+      name: Pause Music Command
+      description: The command to trigger the pause music action
+      default: pause [the] music
+    resume_music_command:
+      name: Resume Music Command
+      description: The command to trigger the resume music action
+      default: (resume [the] music | unpause [the] music)
+    what_song_command:
+      name: What Song Command
+      description: The command to trigger the what song action
+      default: (what [is] playing | what song is playing)
+    skip_song_command:
+      name: Skip Song Command
+      description: The command to trigger the skip song action
+      default: (skip [this] song | skip [this] track | next song | next track)
+    previous_song_command:
+      name: Previous Song Command
+      description: The command to trigger the previous song action
+      default: (play the last song again | previous song | previous track | go back)      
 alias: View Assist - Play Music with Music Assistant
 description: Play music using music assistant
 trigger:
@@ -56,6 +76,21 @@ trigger:
   - trigger: conversation
     command: !input queue_song_command
     id: cuesong
+  - trigger: conversation
+    command: !input pause_music_command
+    id: pausemusic
+  - trigger: conversation
+    command: !input resume_music_command
+    id: resumemusic    
+  - trigger: conversation
+    command: !input what_song_command
+    id: whatisplaying
+  - trigger: conversation
+    command: !input skip_song_command
+    id: skiptrack
+  - trigger: conversation
+    command: !input previous_song_command
+    id: previoustrack
 conditions: []
 actions:
   - variables:
@@ -77,6 +112,14 @@ actions:
             playsong_found: "Playing {song} by {artist}"
             playsong_not_found: "Sorry {song} by {artist} was not found"
             playsong_queue: "Queuing {song} by {artist}"
+            music_paused: "Music paused"
+            music_not_playing: "No music is playing"
+            music_resumed: "Music resumed"
+            music_no_resume: "No music to resume"
+            nothing_playing: "Nothing is playing right now"
+            info_playing: "It’s {title} by {artist}"
+            track_skipped: "Skipping this track"
+            track_previous: "Playing the previous track"
         de:
           responses:
             playartist_found: "Spiele Musik von {artist}"
@@ -86,6 +129,14 @@ actions:
             playsong_found: "Spiele {song} von {artist}"
             playsong_not_found: "Entschuldigung, ich konnte den Song {song} von {artist} nicht finden"
             playsong_queue: "Füge {song} von {artist} zur Warteschlange hinzu"
+            music_paused: "Musik pausiert"
+            music_not_playing: "Es spielt keine Musik"
+            music_resumed: "Musik fortgesetzt"
+            music_no_resume: "Keine Musik zum Fortsetzen vorhanden"
+            nothing_playing: "Gerade läuft nichts"
+            info_playing: "Es läuft {title} von {artist}"
+            track_skipped: "Titel übersprungen"
+            track_previous: "Spiele den vorherigen Titel"
         pt:
           responses:
             playartist_found: "Tocando música de {artist}"
@@ -95,6 +146,14 @@ actions:
             playsong_found: "Tocando {song} por {artist}"
             playsong_not_found: "Desculpe, a música {song} por {artist} não foi encontrada"
             playsong_queue: "Incluindo a música {song} por {artist} na lista"
+            music_paused: "Música pausada"
+            music_not_playing: "Nenhuma música está tocando"
+            music_resumed: "Música retomada"
+            music_no_resume: "Não há música para retomar"
+            nothing_playing: "Nada está tocando agora"
+            info_playing: "Está tocando {title} por {artist}"
+            track_skipped: "Pulando esta faixa"
+            track_previous: "Tocando a faixa anterior"
 
   - choose:
       - conditions:
@@ -341,3 +400,112 @@ actions:
                       last_said: "{{ conversation_response }}"
                 else:
                   - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
+              - pausemusic
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ states(target_musicplayer_device) == 'playing' }}"
+            then:
+              - action: media_player.media_pause
+                metadata: {}
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data: {}
+              - variables:
+                  conversation_response: "{{ translations[language]['responses']['music_paused'] }}"
+              - set_conversation_response: "{{ conversation_response }}"
+            else:
+              - variables:
+                  conversation_response: >-
+                    {{ translations[language]['responses']['music_not_playing']
+                    }}
+              - set_conversation_response: "{{ conversation_response }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - resumemusic
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ states(target_musicplayer_device) == 'paused' }}"
+            then:
+              - action: media_player.media_play
+                metadata: {}
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data: {}
+              - variables:
+                  conversation_response: "{{ translations[language]['responses']['music_resumed'] }}"
+              - set_conversation_response: "{{ conversation_response }}"
+            else:
+              - variables:
+                  conversation_response: "{{ translations[language]['responses']['music_no_resume'] }}"
+              - set_conversation_response: "{{ conversation_response }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - whatisplaying
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: >
+                      {{ states(target_musicplayer_device) in ['playing',
+                      'paused'] }}
+                sequence:
+                  - variables:
+                      title: >
+                        {{ state_attr(target_musicplayer_device, 'media_title')
+                        | default('something', true) }}
+                      artist: >
+                        {{ state_attr(target_musicplayer_device, 'media_artist')
+                        | default('an unknown artist', true) }}
+                  - variables:
+                      conversation_response: |
+                        {{ translations[language].responses.info_playing
+                           .replace('{title}', title | default('something'))
+                           .replace('{artist}', artist | default('an unknown artist')) }}
+                  - set_conversation_response: "{{ conversation_response }}"
+            default:
+              - variables:
+                  conversation_response: "{{ translations[language]['responses']['nothing_playing'] }}"
+              - set_conversation_response: "{{ conversation_response }}"
+      - conditions:
+          - condition: trigger
+            id: skiptrack
+        sequence:
+          - if:
+              - "{{ states(target_musicplayer_device) == 'playing' }}"
+            then:
+              - action: media_player.media_next_track
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data: {}
+              - variables:
+                  conversation_response: |
+                    {{ translations[language].responses.track_skipped }}
+              - set_conversation_response: "{{ conversation_response }}"
+            else:
+              - set_conversation_response: "{{ translations[language].responses.music_not_playing }}"
+      - conditions:
+          - condition: trigger
+            id: previoustrack
+        sequence:
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ states(target_musicplayer_device) in ['playing', 'paused']
+                  }}
+            then:
+              - action: media_player.media_previous_track
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+              - variables:
+                  conversation_response: |
+                    {{ translations[language].responses.track_previous }}
+              - set_conversation_response: "{{ conversation_response }}"
+            else:
+              - set_conversation_response: "{{ translations[language].responses.music_not_playing }}"
