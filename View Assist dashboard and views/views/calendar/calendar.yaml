@@ -1,0 +1,42 @@
+type: custom:button-card
+variables:
+  calendarcardversion: 1.0.0
+  var_list: >-
+    [[[ try {return
+    hass.states[variables.var_assistsat_entity].attributes.calendar_list} catch
+    { return  ""}]]]
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
+    - background-size: cover
+  custom_fields:
+    message:
+      - position: absolute
+      - align-self: left
+      - width: 100%
+custom_fields:
+  message:
+    card:
+      entities: "[[[ return variables.var_list ]]]"
+      days_to_show: 2
+      day_spacing: 20px
+      event_spacing: 8px
+      today_indicator: mdi:star
+      today_indicator_size: 12px
+      weekday_font_size: 28px
+      day_font_size: 52px
+      month_font_size: 24px
+      event_font_size: 28px
+      time_font_size: 24px
+      time_icon_size: 24px
+      location_font_size: 24px
+      location_icon_size: 24px
+      type: custom:calendar-card-pro
+      card_mod:
+        style: |
+          ha-card {
+            text-align: left;
+          }

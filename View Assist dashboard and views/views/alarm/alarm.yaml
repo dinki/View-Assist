@@ -1,32 +1,12 @@
 type: custom:button-card
 variables:
-  alarmcardversion: 1.0.1
-  var_display_timer_name: |-
-    [[[
-      var assistbid = localStorage.getItem("view_assist_sensor");
-      var alarm_name = hass.states[assistbid].attributes.display_timer_name;
-      try {return `${alarm_name}`;} catch { return  ""}
-    ]]]
-  var_display_timer_expire: |-
-    [[[
-      var assistbid = localStorage.getItem("view_assist_sensor");
-      var alarm_name = hass.states[assistbid].attributes.display_timer_expire;
-      try {return `${alarm_name}`;} catch { return  ""}
-    ]]]
-  var_display_timer_type: |-
-    [[[
-      var assistbid = localStorage.getItem("view_assist_sensor");
-      var alarm_name = hass.states[assistbid].attributes.display_timer_type;
-      try {return `${alarm_name}`;} catch { return  ""}
-    ]]]
-  var_time: |-
-    [[[ 
-      if (variables.var_display_timer_type === 'timer') {
-        return `<viewassist-countdown expires='${variables.var_display_timer_expire}'></viewassist-countdown>`;
-      } else {
-        return `<viewassist-clock server_time=true></viewassist-clock>`;
-      }
-    ]]]
+  alarmcardversion: 1.1.0
+  var_background: >-
+    [[[ try {if (variables.var_assistsat_entity &&
+    hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+    return ""; else return
+    hass.states[variables.var_assistsat_entity].attributes.background} catch
+    {return ""}]]]
 template:
   - variable_template
   - body_template
@@ -34,113 +14,34 @@ styles:
   grid:
     - grid-template-areas: |
         "title status"
-        "display_timer_name display_timer_name"
-        "time time"
-        "snooze dismiss"
+        "timers timers"
         "assist assist"
-    - grid-template-rows: .5fr min-content min-content min-content min-content
+    - grid-template-rows: 15vh max-content 10vh
     - grid-template-columns: 1fr 1fr
   card:
+    - background: |-
+        [[[ 
+          return `center / cover no-repeat url(${variables.var_background})`;
+        ]]]
     - background-size: cover
     - background-color: "#24292c"
   custom_fields:
-    display_timer_name:
-      - justify-self: center
-      - z-index: 1
-      - font-size: 10vh
-      - position: grid
-      - color: white
-      - align-content: end
-    time:
-      - justify-self: center
-      - z-index: 1
-      - font-size: 35vh
-      - font-weight: bold
-      - position: grid
-      - color: white
-    snooze:
-      - justify-self: center
-      - align-self: center
-      - z-index: 1
-      - font-size: 15vh
-      - width: max-content
-      - position: grid
-      - top: 70%
-    dismiss:
-      - justify-self: center
-      - align-self: center
-      - z-index: 1
-      - font-size: 15vh
-      - width: max-content
-      - position: grid
-      - top: 70%
+    title:
+      - padding: 10px 0
+    timers:
+      - justify-items: center
+      - overflow-y: >-
+          [[[ return viewassist.config.timers.length > 1 ? 'scroll' : 'hidden'
+          ]]]
+      - max-height: 75vh
+    shader:
+      - position: absolute
+      - top: 0
+      - height: 100%
+      - width: 100%
+      - background-color: rgba(0,0,0,0.15)
 custom_fields:
-  title: " "
-  display_timer_name: "[[[ return variables.var_display_timer_name ]]]"
-  time: |-
-    [[[ 
-      return variables.var_time; 
-    ]]]
-  snooze:
-    card:
-      type: custom:button-card
-      name: Snooze
-      show_icon: false
-      show_name: true
-      tap_action:
-        action: call-service
-        service: view_assist.broadcast_event
-        service_data:
-          event_name: viewassist
-          event_data:
-            command: snooze alarm
-            entity_id: "[[[ return variables.var_assistsat_entity ]]]"
-            mic_device: >-
-              [[[ return
-              hass.states[variables.var_assistsat_entity].attributes.mic_device
-              ]]]
-      styles:
-        card:
-          - display: flex
-          - justify-content: center
-          - align-items: center
-          - width: 30vw
-          - height: 10vh
-          - border-radius: 5vw
-          - border: none
-          - background-color: white
-        name:
-          - font-size: 5vh
-          - color: black
-          - font-weight: bold
-          - text-align: center
-  dismiss:
-    card:
-      type: custom:button-card
-      name: Dismiss
-      show_icon: false
-      show_name: true
-      tap_action:
-        action: call-service
-        service: view_assist.broadcast_event
-        service_data:
-          event_name: viewassist
-          event_data:
-            command: dismiss alarm
-            entity_id: "[[[ return variables.var_assistsat_entity ]]]"
-      styles:
-        card:
-          - display: flex
-          - justify-content: center
-          - align-items: center
-          - width: 30vw
-          - height: 10vh
-          - border-radius: 5vh
-          - color: white
-          - border: none
-          - background-color: "#2899f3"
-        name:
-          - font-size: 5vh
-          - color: white
-          - font-weight: bold
-          - text-align: center
+  title: Timers & Alarms
+  shader: ""
+  timers:
+    card: "[[[ return viewassist.helpers.timerCards() ]]]"

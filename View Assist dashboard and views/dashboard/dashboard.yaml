@@ -1,31 +1,30 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.1.2
-      default_satellite: |-
-        [[[ try {
-          return hass.states[variables.assist_group].attributes.entity_id
-             .find((eid) => hass.states[eid].attributes.type === "view_audio");
-          } catch { return  ""}
-        ]]]
+      dashboardversion: 1.2.1
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
         ]]]
+      var_dashboard: |-
+        [[[
+          try {
+            return hass.states[variables.var_assistsat_entity].attributes.dashboard || '/view-assist';
+          } catch {
+            return '/view-assist';
+          }
+        ]]]
       var_mic_switch: |-
         [[[
-          try
-          {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var micdevice = hass.states[micdevice_assistbid].attributes.mute_switch;
+          try {
+            var micdevice = hass.states[variables.var_assistsat_entity].attributes.mute_switch;
             return `${micdevice}`;
-          } catch { return  ""}
+          } catch { return ""}
         ]]]
       var_wake_switch: |-
         [[[
           try {
-            var micdevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var micdevice = hass.states[micdevice_assistbid].attributes.mic_device;
+            var micdevice = hass.states[variables.var_assistsat_entity].attributes.mic_device;
             if (micdevice.startsWith("assist_satellite.")) {
               var wakebutton = micdevice.replace("assist_satellite.", "button.") + "_wake";
               if (wakebutton in hass.states) {
@@ -40,19 +39,17 @@ button_card_templates:
       var_mediaplayer_device: |-
         [[[
           try {
-            var mediadevice_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var mediadevice = hass.states[mediadevice_assistbid].attributes.mediaplayer_device;
+            var mediadevice = hass.states[variables.var_assistsat_entity].attributes.mediaplayer_device;
             return `${mediadevice}`;
-          } catch { return  "";}
+          } catch { return "";}
         ]]]
       var_mediaplayer_mute: |-
         [[[
           try {
-            var mediaplayer_assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
-            var mediadevice = hass.states[mediaplayer_assistbid].attributes.mediaplayer_device;
+            var mediadevice = hass.states[variables.var_assistsat_entity].attributes.mediaplayer_device;
             var mediaplayerstate = hass.states[mediadevice].attributes.is_volume_muted;
             return `${mediaplayerstate}`;
-          } catch { return  "";}
+          } catch { return "";}
         ]]]
       var_assistsat_time_format: |-
         [[[
@@ -88,12 +85,21 @@ button_card_templates:
             return states[variables.var_assistsat_entity].attributes.weather_entity;
           } catch { return  ""}
         ]]]
-      var_assistsat_entity_status_icons_size: |
+      var_assistsat_entity_responsive_status_icons_size: |
         [[[
-          try
-          {
-            return states[variables.var_assistsat_entity].attributes.status_icons_size;
-          } catch { return  "6vw"}
+          try {
+            const baseSize = states[variables.var_assistsat_entity].attributes.status_icons_size || "6vw";
+
+            if (window.viewAssistResponsive?.orientation === "portrait") {
+              const numericValue = parseFloat(baseSize);
+              const unit = baseSize.replace(numericValue.toString(), '');
+              return `${numericValue * 1.5}${unit}`;
+            }
+
+            return baseSize;
+          } catch {
+            return window.viewAssistResponsive?.orientation === "portrait" ? "9vw" : "6vw";
+          }
         ]]]
       var_assistsat_entity_use_24_hour_time: |
         [[[
@@ -135,7 +141,7 @@ button_card_templates:
         [[[
           try
           {
-            return (states[variables. var_assistsat_entity_weather_entity].attributes.temperature  + '°');
+            return (states[variables.var_assistsat_entity_weather_entity].attributes.temperature  + '°');
           }
           catch { return  ""}
         ]]]
@@ -174,7 +180,7 @@ button_card_templates:
           };
           try
           {
-            var condition = states[variables. var_assistsat_entity_weather_entity].state;
+            var condition = states[variables.var_assistsat_entity_weather_entity].state;
             if (states['sun.sun'] === 'above_horizon') {
               var weather_icon = weatherIconsDay[condition];
             } else {
@@ -191,28 +197,69 @@ button_card_templates:
         [[[
           try {
             const pathname = window.location.pathname;
-            if (pathname) {
-              const match = pathname.match(/\/view-assist\/([^\/]+)/);
-              if (match && match[1]) {
-                return match[1];
+            const match = pathname.match(/\/view-assist\/([^\/]+)/);
+            return match && match[1] ? match[1] : "";
+          } catch { 
+            return ""; 
+          }
+        ]]]
+  responsive_base:
+    variables:
+      var_orientation_sensor: |-
+        [[[
+          try {
+            const orientationSensor = hass.states[variables.var_assistsat_entity]?.attributes?.orientation_sensor;
+
+            if (orientationSensor && orientationSensor in hass.states) {
+              const state = hass.states[orientationSensor].state;
+              if (state === "portrait" || state === "landscape") {
+                return state;
               }
             }
 
-            const currentPath = hass.states[variables.var_assistsat_entity].attributes.current_path;
-            if (currentPath) {
-              const match = currentPath.match(/\/view-assist\/([^\/]+)/);
-              if (match && match[1]) {
-                return match[1];
+            return "";
+          } catch {
+            return "";
+          }
+        ]]]
+
+      var_orientation:
+        value: |-
+          [[[
+            const sensorOrientation = variables.var_orientation_sensor;
+            const windowOrientation = window.innerHeight > window.innerWidth 
+              ? "portrait" 
+              : "landscape";
+            const currentOrientation = sensorOrientation || windowOrientation;
+
+            if (!window.viewAssistResponsive) {
+              window.viewAssistResponsive = {
+                orientation: currentOrientation,
+                sensor_available: !!sensorOrientation,
+                lastUpdate: Date.now()
+              };
+            } else {
+              const oldOrientation = window.viewAssistResponsive.orientation;
+              window.viewAssistResponsive.sensor_available = !!sensorOrientation;
+
+              if (oldOrientation !== currentOrientation) {
+                window.viewAssistResponsive.orientation = currentOrientation;
+                window.viewAssistResponsive.lastUpdate = Date.now();
+
+                window.dispatchEvent(new CustomEvent('view-assist-responsive-change', {
+                  detail: window.viewAssistResponsive,
+                  bubbles: true
+                }));
               }
             }
-            return "";
-          } catch { return ""; }
-        ]]]
+
+            return window.viewAssistResponsive.orientation;
+          ]]]
+        force_eval: true
   body_template:
     show_state: false
     show_icon: false
     show_name: false
-    triggers_update: all
     tap_action:
       action: call-service
       service: view_assist.set_state
@@ -234,18 +281,24 @@ button_card_templates:
       service: switch.toggle
       service_data:
         entity_id: '[[[ try { return variables.var_mic_switch } catch { return  "" } ]]]'
-    aspect_ratio: 2/1
     styles:
       grid:
         - grid-template-areas: |
             "title status"
             "message message"
             "assist assist"
-        - grid-template-rows: min-content 30vh min-content
+        - grid-template-rows: min-content 1fr
         - grid-template-columns: 1fr 1fr
         - row-gap: .5rem
       card:
         - min-height: 100vh
+        - max-height: 100vh
+        - aspect-ratio: |-
+            [[[
+              if (!window.viewAssistResponsive) return "16 / 9";
+
+              return window.viewAssistResponsive.orientation === "portrait" ? "9 / 16" : "16 / 9";
+            ]]]
         - background: |
             [[[
               if (variables.background != null) {
@@ -265,17 +318,23 @@ button_card_templates:
               return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
             ]]]
         - font-weight: 300
+        - position: relative
+        - height: 100vh
+        - box-sizing: border-box
       custom_fields:
         title:
           - position: absolute
           - justify-self: start
           - align-self: start
           - z-index: 1
-          - font-size: 200%
+          - font-size: |-
+              [[[
+                return window.viewAssistResponsive?.orientation === "portrait" ? "220%" : "200%";
+              ]]]
           - font-weight: 400
           - width: max-content
           - margin-left: 2%
-          - margin-top: "-4%"
+          - margin-top: '-4%'
         status:
           - position: absolute
           - justify-self: end
@@ -285,7 +344,7 @@ button_card_templates:
           - right: 0vw
           - z-index: 1
     custom_fields:
-      title: "[[[ return variables.var_title ]]]"
+      title: '[[[ return variables.var_title ]]]'
       status:
         card:
           type: custom:layout-card
@@ -297,9 +356,10 @@ button_card_templates:
                 margin: 0
                 card_margin: 0
                 place-content: end
-                grid-template-columns: |
+                grid-template-columns: |-
                   [[[
-                    return `repeat(auto-fit, minmax(max(${variables.var_assistsat_entity_status_icons_size}, ${variables.var_assistsat_entity_status_icons_size}), ${variables.var_assistsat_entity_status_icons_size}))`
+                    const baseIconSize = variables.var_assistsat_entity_responsive_status_icons_size;
+                    return `repeat(auto-fit, minmax(${baseIconSize}, ${baseIconSize}))`;
                   ]]]
               cards: |-
                 [[[{
@@ -314,8 +374,22 @@ button_card_templates:
                     const statusIcons = hass.states[vaEntity].attributes.status_icons || [];
                     const menuItems = hass.states[vaEntity].attributes.menu_items || [];
                     const menuActive = hass.states[vaEntity].attributes.menu_active || false;
-
                     const currentView = variables.var_current_view;
+
+                    const availableTemplates = new Set();
+                    try {
+                      const lovelace = document.querySelector("home-assistant")
+                        ?.shadowRoot?.querySelector("home-assistant-main")
+                        ?.shadowRoot?.querySelector("ha-drawer partial-panel-resolver ha-panel-lovelace")
+                        ?.lovelace;
+
+                      if (lovelace?.config?.button_card_templates) {
+                        Object.keys(lovelace.config.button_card_templates).forEach(template => {
+                          availableTemplates.add(template);
+                        });
+                      }
+                    } catch (e) {
+                    }
 
                     function isCurrentView(item) {
                       if (!currentView) return false;
@@ -350,11 +424,12 @@ button_card_templates:
                     function addIconToList(icon, isDynamicItem = false) {
                       if (icon === "menu") return;
 
-                      if (menuActive && isCurrentView(icon)) {
+                      if (isCurrentView(icon)) {
                         return;
                       }
 
                       let buttonConfig;
+
                       if (isDynamicItem) {
                         const type = icon.split(':')[0];
                         buttonConfig = {
@@ -366,10 +441,32 @@ button_card_templates:
                           }
                         };
                       } else {
-                        buttonConfig = {
-                          type: "custom:button-card",
-                          template: icon
-                        };
+                        if (availableTemplates.size > 0 && !availableTemplates.has(icon)) {
+                          buttonConfig = {
+                            type: "custom:button-card",
+                            template: "icon_template",
+                            icon: "mdi:alert-circle-outline",
+                            name: icon,
+                            styles: {
+                              card: [{ "border": "2px dashed rgba(255, 152, 0, 0.8)" }],
+                              icon: [{ "color": "rgba(255, 152, 0, 0.9)" }],
+                              name: [{ 
+                                "font-size": "0.7em",
+                                "color": "rgba(255, 152, 0, 0.9)",
+                                "padding-top": "4px"
+                              }]
+                            },
+                            show_name: true,
+                            tap_action: {
+                              action: "none"
+                            }
+                          };
+                        } else {
+                          buttonConfig = {
+                            type: "custom:button-card",
+                            template: icon
+                          };
+                        }
                       }
 
                       const key = icon;
@@ -409,14 +506,13 @@ button_card_templates:
                         template: "menu"
                       });
                     }
-                  } catch (error) {
+                  } catch (e) {
                   }
 
                   return buttonList;
                 }]]]
   icon_template:
     template: variable_template
-    aspect_ratio: 1/1
     color_type: card
     show_name: false
     size: 90%
@@ -425,6 +521,7 @@ button_card_templates:
       card:
         - background-color: transparent
         - border-width: 0px
+        - aspect-ratio: 1 / 1
       icon:
         - display: grid
         - color: white
@@ -440,13 +537,14 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.entity_id; ]]]"
+        device: '[[[ return variables.entity_id; ]]]'
         path: |-
           [[[
             const parts = variables.menu_item.split('|');
             const typeAndTarget = parts[0];
             const target = typeAndTarget.split(':')[1];
-            return target.startsWith('/') ? target : `/view-assist/${target}`;
+            const base = variables.var_dashboard || '/view-assist';
+            return target.startsWith('/') ? target : `${base}/${target}`;
           ]]]
   dynamic_entity_item:
     template: icon_template
@@ -517,7 +615,7 @@ button_card_templates:
       action: call-service
       service: media_player.volume_mute
       service_data:
-        entity_id: "[[[ return variables.var_mediaplayer_device ]]]"
+        entity_id: '[[[ return variables.var_mediaplayer_device ]]]'
         is_volume_muted: false
   mic:
     type: custom:button-card
@@ -527,7 +625,7 @@ button_card_templates:
       action: call-service
       service: homeassistant.turn_off
       service_data:
-        entity_id: "[[[ return variables.var_mic_switch ]]]"
+        entity_id: '[[[ return variables.var_mic_switch ]]]'
   hold:
     type: custom:button-card
     template: icon_template
@@ -537,7 +635,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   cycle:
     type: custom:button-card
     template: icon_template
@@ -547,7 +645,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         mode: normal
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   dnd:
     type: custom:button-card
     template: icon_template
@@ -557,7 +655,7 @@ button_card_templates:
       service: view_assist.set_state
       service_data:
         do_not_disturb: false
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
   weather:
     type: custom:button-card
     template: icon_template
@@ -566,8 +664,8 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.var_assistsat_entity ]]]"
-        path: /view-assist/weather
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: '[[[ return `${variables.var_dashboard}/weather` ]]]'
   home:
     type: custom:button-card
     template: icon_template
@@ -576,8 +674,8 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.var_assistsat_entity ]]]"
-        path: /view-assist/clock
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: home
   menu:
     type: custom:button-card
     template: icon_template
@@ -586,7 +684,7 @@ button_card_templates:
       action: call-service
       service: view_assist.toggle_menu
       service_data:
-        entity_id: "[[[ return variables.var_assistsat_entity ]]]"
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
         show: >-
           [[[ return
           !states[variables.var_assistsat_entity].attributes.menu_active ]]]
@@ -598,8 +696,8 @@ button_card_templates:
       action: call-service
       service: view_assist.navigate
       service_data:
-        device: "[[[ return variables.var_assistsat_entity ]]]"
-        path: /view-assist/camera
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
   wake:
     type: custom:button-card
     template: icon_template

@@ -1,6 +1,6 @@
 ---
 title: Wyoming Installation
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Wyoming Installation and configuration
