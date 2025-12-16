@@ -515,6 +515,34 @@ button_card_templates:
 
                   return buttonList;
                 }]]]
+  status_icons_overlay:
+    template:
+      - variable_template
+      - responsive_base
+      - status_icons_content
+    show_state: false
+    show_icon: false
+    show_name: false
+    triggers_update: all
+    styles:
+      card: null
+      custom_fields:
+        status:
+          - position: fixed
+          - top: |-
+              [[[
+                try {
+                  const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+                  if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+                    return 'calc(0vh + var(--header-height))';
+                  }
+                  return '0vh';
+                } catch {
+                  return '0vh';
+                }
+              ]]]
+          - right: 0vw
+          - z-index: 4
   icon_template:
     template: variable_template
     color_type: card
