@@ -1,8 +1,8 @@
-# View Assist - View Assist Search Wikipedia (v 1.1.0)
+# View Assist - View Assist Search Wikipedia (v 1.1.1)
 # Special thanks to Scratt for his work on this blueprint
 blueprint:
   name: View Assist - Search Wikipedia
-  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.0.0)
+  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.1)
   domain: automation
   input:
     language:
@@ -45,12 +45,6 @@ action:
     data:
       searchterm: "{{ trigger.slots.searchterm }}"
       language: "{{ language }}"
-  - action: view_assist.set_state
-    target:
-      entity_id: "{{ target_satellite_device }}"
-    data:
-      title: "{{ translations[language]['responses']['view_title'] }}"
-      message_font_size: 3vw
   - choose:
       - conditions:
           - condition: template
@@ -61,33 +55,41 @@ action:
             target:
               entity_id: "{{ target_satellite_device }}"
             data:
+              message_font_size: 3vw
               message: "{{ wiki_response['extract'] }}"
               image: "{{ wiki_response['thumbnail'] }}"
-          - set_conversation_response: "{{ wiki_response['extract'] }}"
           - action: view_assist.navigate
             data:
               device: "{{ target_satellite_device }}"
               path: !input dashboard_infopic
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              title: "{{ translations[language]['responses']['view_title'] }}"
+          - set_conversation_response: "{{ wiki_response['extract'] }}"
       - conditions:
           - condition: template
             value_template: >-
               {{ wiki_response.get('type') != 'disambiguation' and not wiki_response.get('error') }}
         sequence:
-          - action: view_assist.set_state
-            target:
-              entity_id: "{{ target_satellite_device }}"
-            data:
-              message: "{{ wiki_response['extract'] }}"
-          - set_conversation_response: "{{ wiki_response['extract'] }}"
           - if:
               - condition: template
                 value_template: >-
-                  {{ ('view' in state_attr(repeat.item, 'type')) }}
+                  {{ ('view' in target_satellite_device_type) }}
             then:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
                   path: !input dashboard_info
+          - action: view_assist.set_state
+            target:
+              entity_id: "{{ target_satellite_device }}"
+            data:
+              title: "{{ translations[language]['responses']['view_title'] }}"
+              message_font_size: 3vw
+              message: "{{ wiki_response['extract'] }}"
+          - set_conversation_response: "{{ wiki_response['extract'] }}"
     default:
       - variables:
           conversation_response: "{{ translations[language]['responses']['search_error'] }}"
@@ -98,3 +100,4 @@ action:
         data:
           last_said: "{{ conversation_response }}"
 mode: single
+
