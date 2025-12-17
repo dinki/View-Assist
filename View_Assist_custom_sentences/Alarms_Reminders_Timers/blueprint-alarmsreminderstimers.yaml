@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.2.1)
+    v 1.2.2)
   domain: automation
   input:
     alarmsound_path:
@@ -352,4 +352,5 @@ action:
             else:
               - set_conversation_response: This device does not have a display to show timers
 mode: parallel
+
 
