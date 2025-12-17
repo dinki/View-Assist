@@ -721,6 +721,12 @@ button_card_templates:
         show: >-
           [[[ return
           !states[variables.var_assistsat_entity].attributes.menu_active ]]]
+    hold_action:
+      action: call-service
+      service: view_assist.set_state
+      service_data:
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        mode: hold
   camera:
     type: custom:button-card
     template: icon_template
