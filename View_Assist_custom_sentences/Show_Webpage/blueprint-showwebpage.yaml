@@ -1,7 +1,7 @@
-# View Assist - Show Webpage (v 1.1.0)
+# View Assist - Show Webpage (v 1.1.1)
 blueprint:
   name: View Assist - Show Webpage
-  description: Ask View Assist to show a website as defined by the blueprint (View Assist showwebpage v 1.0.0)
+  description: Ask View Assist to show a website as defined by the blueprint (View Assist showwebpage v 1.1.1)
   domain: automation
   input:
     command:
@@ -47,7 +47,6 @@ action:
       entity_id: "{{ target_satellite_device }}"
     data:
       url: "{{ url }}"
-      title: ""
   - action: view_assist.navigate
     data:
       device: "{{ target_satellite_device }}"

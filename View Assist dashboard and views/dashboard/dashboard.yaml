@@ -1,10 +1,18 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.2.1
+      dashboardversion: 1.3.0
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
+        ]]]
+      var_dashboard: |-
+        [[[
+          try {
+            return hass.states[variables.var_assistsat_entity].attributes.dashboard || '/view-assist';
+          } catch {
+            return '/view-assist';
+          }
         ]]]
       var_mic_switch: |-
         [[[
@@ -214,7 +222,6 @@ button_card_templates:
             return "";
           }
         ]]]
-
       var_orientation:
         value: |-
           [[[
@@ -249,6 +256,10 @@ button_card_templates:
           ]]]
         force_eval: true
   body_template:
+    template:
+      - variable_template
+      - status_icons_content
+      - responsive_base
     show_state: false
     show_icon: false
     show_name: false
@@ -283,8 +294,42 @@ button_card_templates:
         - grid-template-columns: 1fr 1fr
         - row-gap: .5rem
       card:
-        - min-height: 100vh
-        - max-height: 100vh
+        - min-height: |-
+            [[[
+              try {
+                const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+                if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+                  return 'calc(100vh - var(--header-height))';
+                }
+                return '100vh';
+              } catch {
+                return '100vh';
+              }
+            ]]]
+        - max-height: |-
+            [[[
+              try {
+                const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+                if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+                  return 'calc(100vh - var(--header-height))';
+                }
+                return '100vh';
+              } catch {
+                return '100vh';
+              }
+            ]]]
+        - height: |-
+            [[[
+              try {
+                const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+                if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+                  return 'calc(100vh - var(--header-height))';
+                }
+                return '100vh';
+              } catch {
+                return '100vh';
+              }
+            ]]]
         - aspect-ratio: |-
             [[[
               if (!window.viewAssistResponsive) return "16 / 9";
@@ -311,7 +356,6 @@ button_card_templates:
             ]]]
         - font-weight: 300
         - position: relative
-        - height: 100vh
         - box-sizing: border-box
       custom_fields:
         title:
@@ -335,6 +379,7 @@ button_card_templates:
           - top: 0vh
           - right: 0vw
           - z-index: 1
+  status_icons_content:
     custom_fields:
       title: '[[[ return variables.var_title ]]]'
       status:
@@ -503,6 +548,34 @@ button_card_templates:
 
                   return buttonList;
                 }]]]
+  status_icons_overlay:
+    template:
+      - variable_template
+      - responsive_base
+      - status_icons_content
+    show_state: false
+    show_icon: false
+    show_name: false
+    triggers_update: all
+    styles:
+      card: null
+      custom_fields:
+        status:
+          - position: fixed
+          - top: |-
+              [[[
+                try {
+                  const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+                  if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+                    return 'calc(0vh + var(--header-height))';
+                  }
+                  return '0vh';
+                } catch {
+                  return '0vh';
+                }
+              ]]]
+          - right: 0vw
+          - z-index: 4
   icon_template:
     template: variable_template
     color_type: card
@@ -535,7 +608,8 @@ button_card_templates:
             const parts = variables.menu_item.split('|');
             const typeAndTarget = parts[0];
             const target = typeAndTarget.split(':')[1];
-            return target.startsWith('/') ? target : `/view-assist/${target}`;
+            const base = variables.var_dashboard || '/view-assist';
+            return target.startsWith('/') ? target : `${base}/${target}`;
           ]]]
   dynamic_entity_item:
     template: icon_template
@@ -656,7 +730,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/weather
+        path: '[[[ return `${variables.var_dashboard}/weather` ]]]'
   home:
     type: custom:button-card
     template: icon_template
@@ -666,7 +740,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/clock
+        path: home
   menu:
     type: custom:button-card
     template: icon_template
@@ -679,6 +753,12 @@ button_card_templates:
         show: >-
           [[[ return
           !states[variables.var_assistsat_entity].attributes.menu_active ]]]
+    hold_action:
+      action: call-service
+      service: view_assist.set_state
+      service_data:
+        entity_id: '[[[ return variables.var_assistsat_entity ]]]'
+        mode: hold
   camera:
     type: custom:button-card
     template: icon_template
@@ -688,7 +768,7 @@ button_card_templates:
       service: view_assist.navigate
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
-        path: /view-assist/camera
+        path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
   wake:
     type: custom:button-card
     template: icon_template
