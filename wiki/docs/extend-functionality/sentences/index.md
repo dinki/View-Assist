@@ -11,6 +11,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | [Alarms Reminders & Timers](sentences/alarms-reminders-timers)  | Allows for an on demand call to create and list alarms, reminders and timers          |
 | [Broadcast](sentences/broadcast)                                | Broadcast messages to other View Assist Satellites                                    |
+| [Device Alerts](sentences/device-alerts)                        | Automation builder used to do something with a VA satellite when something happens    |
 | [Device Functions](sentences/device-functions)                  | Extend device functions for media control, modes and repeat speech                    |
 | [Get Sports Scores](sentences/get-sports-scores)                | Get sports scores from US major sports teams and custom definitions                   |
 | [How\'s the Weather](sentences/hows-the-weather)                | Get current conditions and see the forecast on view enabled devices                   |

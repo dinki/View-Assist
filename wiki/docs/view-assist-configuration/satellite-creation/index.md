@@ -3,7 +3,7 @@ title: "View Assist Satellite Creation"
 sidebar_position: 2
 ---
 
-# Satellite Device Creation
+## Satellite Device Creation
 
 Despite the name, View Assist supports both devices with and without displays. These devices can use the same custom sentences and can interact with each other. These are the instructions for adding these devices:
 
@@ -26,7 +26,7 @@ Here we are configuring a device with display. Note that the audio only devices 
 
 After setting these values you can then click 'Submit' and the View Assist satellite will be ready for use!
 
-# Satellite Device Default Option Override
+## Satellite Device Default Option Override
 
 Once the View Assist satellite device is created you can then customize the default options set in the Master Configuration for this satellite device if you desire:
 
@@ -41,3 +41,7 @@ From this page, click on the device you want to configure
 ![](./vaconfig2.png)
 
 Enter the section and make any needed changes and hit submit. This will set those options for use on this satellite device only
+
+## Next Steps
+
+Your View Assist satellite is now ready for use. While View Assist does have some built in functions, most of the power comes from using the Custom Sentences. See [this section of the wiki](../../extend-functionality/sentences/index.md) for information on the preinstalled View Assist blueprints. These can be found on your Home Assistant server by going to Settings -> Automations & Scenes then click on the blueprints tab. All View Assist blueprints are labeled with `View Assist` in the name so you can filter on that if you like.
