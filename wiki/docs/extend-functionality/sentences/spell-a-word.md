@@ -12,6 +12,7 @@ Allows user to ask for the spelling of a word or phrase and Assist will spell th
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description            |
+| ------- | ---------------------- |
+| v 1.0.1 | Update title set order |
+| v 1.0.0 | Initial release        |
