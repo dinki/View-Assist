@@ -1,0 +1,248 @@
+blueprint:
+  name: View Assist - Device Alerts
+  description: This blueprint allows the user to define an event that will add an icon, speak an announcement, and/or display a screen with status.  It will optionally do the same for an ending event (View Assist devicealert v 1.0.0)
+  domain: automation
+  input:
+    satellite_use_all:
+      name: Use All Satellites
+      description: Check this box to use all View Assist Satellites instead of selecting specific entities
+      default: false
+      selector:
+        boolean:
+    satellite:
+      name: Specific Satellites
+      description: The View Assist individual device entities to display the alert on.  Multiple satellite selection acceptable.  Do not use this option if use all option above is enabled! (example sensor.viewassist_living_room)
+      selector:
+        entity:
+          multiple: true
+          filter:
+            - integration: view_assist
+    start_definitions:
+      name: Start Alert Definitions
+      description: These options are used for the variables needed for the start condition for the alert
+      input:
+        start_sensor:
+          name: Start Sensor
+          description: The sensor to monitor for changes for starting the alert (example binary_sensor.washer_notification)
+          default: ""
+          selector:
+            entity:
+        start_sensor_to:
+          name: Start Sensor TO condition
+          description: The start monitored sensor value TO condition (example on)
+          default:
+        start_sensor_from:
+          name: Start Sensor FROM condition (optional)
+          description: The monitored start sensor value FROM condition (example off)
+          default:
+        start_wait_duration:
+          name: Start Wait Duration
+          description: How long the sensor must be in the desired state before triggering
+          default:
+            hours: 0
+            minutes: 0
+            seconds: 0
+          selector:
+            duration:
+        start_icon:
+          name: Start Icon
+          description: The icon name as defined in the dashboard to display for start event (example washer) **Note that this MUST be defined in the dashboard to be usable**
+          default: ""
+        start_speech:
+          name: Start Speech
+          description: The text to speak for the start event (example Washer is done)
+          default: ""
+        start_alert:
+          name: Start Alert Variables
+          description: The icon, text, and/or any other VA variables to set for the start event
+          default: ""
+          selector:
+            object:
+          default:
+            alert_data:
+              icon: mdi:shield-home
+              header: "Alarm Status"
+              line1: "Armed Home"
+              line2: ""
+        start_view:
+          name: Start View
+          description: The view to display when the start event happens (default /view-assist/alert)
+          default: "/view-assist/alert"
+    end_definitions:
+      name: End Alert Definitions
+      description: These options are used for the variables needed for the end condition for the alert (Optional)
+      input:
+        end_sensor:
+          name: End Sensor
+          description: The sensor to monitor for changes for ending the alert (example binary_sensor.washer_notification)
+          default: 'sensor.dummy'
+          selector:
+            entity:
+        end_sensor_to:
+          name: End Sensor TO condition
+          description: The monitored end sensor value TO condition (example on)
+          default:
+        end_sensor_from:
+          name: End Sensor FROM condition (optional)
+          description: The monitored end sensor value FROM condition (example off)
+          default:
+        end_wait_duration:
+          name: End Wait Duration
+          description: How long the sensor must be in the desired state before triggering
+          default:
+            hours: 0
+            minutes: 0
+            seconds: 0
+          selector:
+            duration:
+        end_icon:
+          name: End Icon
+          description: The icon name as defined in the dashboard to display for end event (example washer) **Note that this MUST be defined in the dashboard to be usable**
+          default: ""
+        end_speech:
+          name: End Speech
+          description: The text to speak for the end event (example Washer is done)
+          default: ""
+        end_alert:
+          name: End Alert
+          description: The icon, text, and/or any other VA variables to set for the end event
+          default: ""
+          selector:
+            object:
+          default:
+            alert_data:
+              icon: mdi:home-circle
+              header: "Alarm Status"
+              line1: "Armed Disarmed"
+              line2: ""
+        end_view:
+          name: End View
+          description: The view to display when the end event happens (default /view-assist/alert)
+          default: "/view-assist/alert"
+trigger_variables:
+  end_sensor: !input end_sensor
+triggers:
+  - trigger: state
+    entity_id:
+    - !input start_sensor
+    for: !input start_wait_duration
+    from: !input start_sensor_from
+    to: !input start_sensor_to
+    id: startaction
+  - trigger: state
+    entity_id:
+    - !input end_sensor
+    for: !input end_wait_duration
+    from: "on"
+    to: "off"
+    id: endaction
+    enabled: "{{ end_sensor != 'sensor.dummy' }}"
+conditions: []
+actions:
+  - variables:
+      satellite: !input satellite
+      satellite_use_all: !input satellite_use_all
+      expanded_satellites: >
+        {% if satellite_use_all %}
+          {{ view_assist_entities() }}
+        {% else %}
+          {% set input_satellites = expand(states | selectattr('entity_id', 'in', satellite)) %}
+          {{ input_satellites | map(attribute='entity_id') | list }}
+        {% endif %}
+      start_icon: !input start_icon
+      start_speech: !input start_speech
+      start_alert: !input start_alert
+      start_view: !input start_view
+      end_icon: !input end_icon
+      end_speech: !input end_speech
+      end_alert: !input end_alert
+      end_view: !input end_view
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: startaction
+        sequence:
+          - repeat:
+              for_each: "{{ expanded_satellites }}"
+              sequence:
+                - variables:
+                    current_satellite: "{{ repeat.item }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ start_icon | default('', true) != '' }}"
+                  then:
+                    - action: view_assist.add_status_item
+                      data:
+                        menu: false
+                        entity_id: "{{ current_satellite }}"
+                        status_item: "{{ start_icon }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ start_alert | default('', true) != '' }}"
+                  then:
+                    - action: view_assist.set_state
+                      data: "{{ start_alert }}"
+                      target:
+                        entity_id: "{{ current_satellite }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ start_view | default('', true) != '' }}"
+                  then:
+                    - action: view_assist.navigate
+                      data:
+                        device: '{{ current_satellite }}'
+                        path: '{{ start_view }}'
+                - if:
+                    - condition: template
+                      value_template: "{{ (start_speech | default('', true) != '') and (state_attr(current_satellite, 'do_not_disturb') != 'on') }}"
+                  then:
+                    - action: assist_satellite.announce
+                      target:
+                        entity_id: "{{ state_attr(current_satellite,'mic_device') }}"
+                      data:
+                        message: '{{ start_speech }}'
+                        preannounce: true
+      - conditions:
+          - condition: trigger
+            id: endaction
+        sequence:
+          - repeat:
+              for_each: "{{ expanded_satellites }}"
+              sequence:
+                - variables:
+                    current_satellite: "{{ repeat.item }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ start_icon | default('', true) != '' }}"
+                  then:
+                    - action: view_assist.remove_status_item
+                      data:
+                        menu: false
+                        entity_id: "{{ current_satellite }}"
+                        status_item: "{{ end_icon }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ end_alert | default('', true) != '' }}"
+                  then:
+                    - action: view_assist.set_state
+                      data: "{{ end_alert }}"
+                      target:
+                        entity_id: "{{ current_satellite }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ end_view | default('', true) != '' }}"
+                  then:
+                    - action: view_assist.navigate
+                      data:
+                        device: '{{ current_satellite }}'
+                        path: '{{ end_view }}'
+                - if:
+                    - condition: template
+                      value_template: "{{ (end_speech | default('', true) != '') and (state_attr(current_satellite, 'do_not_disturb') != 'on') }}"
+                  then:
+                    - action: assist_satellite.announce
+                      target:
+                        entity_id: "{{ state_attr(current_satellite,'mic_device') }}"
+                      data:
+                        message: '{{ end_speech }}'
+                        preannounce: true

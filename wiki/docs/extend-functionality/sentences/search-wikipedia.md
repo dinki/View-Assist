@@ -14,6 +14,8 @@ Special thanks to Scratt for his work on this automation
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description              |
+| ------- | ------------------------ |
+| v 1.1.1 | Update title set order   |
+| v 1.1.0 | Incremental improvements |
+| v 1.0.0 | Initial release          |

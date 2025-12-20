@@ -22,5 +22,6 @@ Nothing additional
 
 | Version | Description                |
 | ------- | -------------------------- |
+| v 2.0.1 | Update title set order     |
 | v 2.0.0 | Major improvements by Flab |
 | v 1.0.0 | Initial release            |

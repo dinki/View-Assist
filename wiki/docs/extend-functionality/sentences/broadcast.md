@@ -8,7 +8,7 @@ title: Broadcast
 
 Detailed install video: https://youtu.be/dZLcBbkZaes
 
-Note that this video was recorded before the integration existed so you can skip the blueprint and view install as those are now automatically provided for you.  Also note as of v 1.1.0 Chime TTS is no longer used and only Home Assistant `assist_satellite` devices types are supported.  Examples of those are View Assist Companion App and Home Assistant Voice Preview edition devices.
+Note that this video was recorded before the integration existed so you can skip the blueprint and view install as those are now automatically provided for you. Also note as of v 1.1.0 Chime TTS is no longer used and only Home Assistant `assist_satellite` devices types are supported. Examples of those are View Assist Companion App and Home Assistant Voice Preview edition devices.
 
 ### Description
 
@@ -22,11 +22,11 @@ User says "Broadcast" plus the message to broadcast
 
 - **View**: [Info view](../views/info)
 
-
 ## Changelog
 
 | Version | Description                                                  |
 | ------- | ------------------------------------------------------------ |
+| v 1.1.1 | Update title set order                                       |
 | v 1.1.0 | Work with VA integration; Only assist_satellite device types |
 | v 1.0.3 | Rearrange variable order                                     |
 | v 1.0.2 | Not using group                                              |

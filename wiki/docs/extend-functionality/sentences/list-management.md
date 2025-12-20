@@ -112,6 +112,8 @@ command_show2: >-
 
 | Version | Description                                                                               |
 | ------- | ----------------------------------------------------------------------------------------- |
+| v 1.3.1 | Update title set order                                                                    |
+| v 1.3.0 | Incremental improvements                                                                  |
 | v 1.2.0 | Added german, spanish and french translations and new options to fine tune spoken content |
 | v 1.1.2 | Add entity to VA config for all calls to ensure no errors show when not set               |
 | v 1.1.1 | Move list view variable out of dictionary                                                 |
