@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Get Sports Scores
   description:
     Get sports scores for your favorite teams (View Assist getsportsscores
-    v 1.4.0)
+    v 1.4.1)
   domain: automation
   input:
     language:
