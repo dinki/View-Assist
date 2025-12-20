@@ -36,8 +36,7 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain:
-                - teamtracker
+            - integration: teamtracker
           multiple: false
     college_teams:
       name: College Teams
