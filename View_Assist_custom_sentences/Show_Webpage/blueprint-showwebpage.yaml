@@ -50,7 +50,7 @@ action:
   - action: view_assist.navigate
     data:
       device: "{{ target_satellite_device }}"
-      path: "{{ url }}"
+      path: "{{ view }}"
   - if:
       - condition: template
         value_template: "{% if hold_mode %}true{%endif%}"
