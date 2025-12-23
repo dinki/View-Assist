@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Device Alerts
-  description: This blueprint allows the user to define an event that will add an icon, speak an announcement, and/or display a screen with status.  It will optionally do the same for an ending event (View Assist devicealert v 1.0.1)
+  description: This blueprint allows the user to define an event that will add an icon, speak an announcement, and/or display a screen with status.  It will optionally do the same for an ending event (View Assist devicealert v 1.0.1a)
   domain: automation
   input:
     satellite_use_all:
@@ -17,6 +17,7 @@ blueprint:
           multiple: true
           filter:
             - integration: view_assist
+              domain: sensor
     start_definitions:
       name: Start Alert Definitions
       description: These options are used for the variables needed for the start condition for the alert
