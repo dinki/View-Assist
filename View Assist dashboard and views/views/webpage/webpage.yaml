@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  webpageversion: "1.1.0"
+  webpageversion: "1.1.1"
   var_url: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.url} catch {
