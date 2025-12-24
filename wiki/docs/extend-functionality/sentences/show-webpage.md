@@ -15,6 +15,7 @@ Requires [webpage](../views/webpage) view
 
 | Version | Description              |
 | ------- | ------------------------ |
+| v 1.1.2 | Correction for navigating to view   |
 | v 1.1.1 | Update title set order   |
 | v 1.1.0 | Incremental improvements |
 | v 1.0.0 | Initial release          |
