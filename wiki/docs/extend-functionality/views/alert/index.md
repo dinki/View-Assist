@@ -5,7 +5,7 @@
 - **Description**: Provides a view for presenting alert data
 - **Defaultname**: alert
 - **Current Version**: v1.0.0
-- **Code link**: [Webpage View Raw Code]([https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/webpage/webpage.yaml](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/alert/alert.yaml))
+- **Code link**: [View the alert.yaml file](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View%20Assist%20dashboard%20and%20views/views/alert/alert.yaml)
 - **Special Requirements**: None
 
 ## Installation
