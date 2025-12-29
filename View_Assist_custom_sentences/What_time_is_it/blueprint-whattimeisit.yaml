@@ -1,8 +1,6 @@
-# View Assist - What time is it (v 1.0.0)
-# Written by - Dinki
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.0)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.1)
   domain: automation
   input:
     language:
@@ -85,7 +83,7 @@ action:
             dec: December
         de:
           responses:
-            time: "Es ist {time_24h}"
+            time: "Es ist {time}"
             day_of_week: "Heute ist {day_of_week}"
             date: "Heute ist {day_of_week}, der {day_of_month}. {month} {year}"
           weekdays:
