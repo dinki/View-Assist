@@ -12,8 +12,10 @@
 #
 # Things to do:
 #
-#   * Support multiple players
-#   * Support multiple playlists
+#   * Support up to four players.  Use dictionary to hold players.  Can have names
+#   * Support multiple playlists (any MA playlist including local)
+#   * Support additional AI agents
+#   * Create dictionary for player scores
 #   * Change ending to determine winner with multiple players
 #   * Turn into blueprint for variables:
 #       * Number of rounds
