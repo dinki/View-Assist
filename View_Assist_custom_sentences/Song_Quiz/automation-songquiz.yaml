@@ -1,10 +1,10 @@
-# Version 0.0.4
+# Version 0.0.5
 # 
 # What's changed
 # ==============
 #   
-#   * Fix one hard coded variable I missed
-#   * Tweak to AI prompt
+#   * Don't give score on final round
+#   * Small tweaks
 #
 # What it does
 #
@@ -31,7 +31,6 @@
 #    * Create view for visual
 #    * Add ability to stop game at any point by voice and touch
 #    * Figure out what to do when ask_question times out before answer given
-#    * Don't give score on final round
 #
 # Issues:
 # 
@@ -150,9 +149,9 @@ actions:
             tts_message: |-
               {% set response_map = {
                 '0': "Incorrect! " ~ song_info,
-                '1': "You got the song right. " ~ song_info,
+                '1': "You got the song title right. " ~ song_info,
                 '1': "You got the artist right. " ~ song_info,
-                '3': "Wow! You got both the song and artist correct."
+                '3': "Wow you got both the song title and artist correct."
               } %}
               {{ response_map.get(ai_score  | string, song_info) }}
         - variables:
@@ -164,12 +163,17 @@ actions:
           data:
             message: "{{ tts_message }}"
             preannounce: false
-        - action: assist_satellite.announce
-          target:
-            entity_id: "{{ target_ha_satellite_device }}"
-          data:
-            message: Your score is {{ player1_score }}
-            preannounce: false
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: "{{ repeat.index < number_of_rounds }}"
+              sequence:
+                - action: assist_satellite.announce
+                  target:
+                    entity_id: "{{ target_ha_satellite_device }}"
+                  data:
+                    message: Your score is {{ player1_score }}
+                    preannounce: false
   - action: assist_satellite.announce
     target:
       entity_id: "{{ target_ha_satellite_device }}"
