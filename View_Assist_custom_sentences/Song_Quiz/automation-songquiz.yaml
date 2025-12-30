@@ -1,9 +1,10 @@
-# Version 0.0.3
+# Version 0.0.4
 # 
 # What's changed
 # ==============
 #   
-#   * Removed hardcoded values for VA device specific
+#   * Fix one hard coded variable I missed
+#   * Tweak to AI prompt
 #
 # What it does
 #
@@ -68,14 +69,6 @@ actions:
           target:
             entity_id: "{{ target_ha_satellite_device }}"
           data:
-            message: Starting Round {{ repeat.index }}
-            preannounce: false
-          enabled: false
-        - action: assist_satellite.announce
-          target:
-            entity_id:
-              - assist_satellite.vaca_51de8bc0646f80c9
-          data:
             message: |-
               {% if repeat.index < number_of_rounds %}
                 Round {{ repeat.index }}
@@ -118,26 +111,33 @@ actions:
             config_entry: 01J3BJ7KG89K0C82N45MQQ2F0G
             prompt: >-
               You are judge of a music game.  I will provide you with the
-              correct answer and the user's guess.  I want you to tell me if
-              they got the answer correct.  The user's guess and the actual
-              title should be a match but extra data in the title like the year,
-              things in parenthesis and other none essential information should
-              not be counted against the guess.  User input is from STT so some
-              words may be misspelled.  Simple words like 'the', 'and' and
+              correct song title and song artist as well as  the user's guess. 
+              I want you to tell me if they got the answer correct.  The user's
+              guess and the correct  title and/or artist should be a match but
+              extra data in the title like the year, things in parenthesis,
+              foreign characters and other none essential information should not
+              be counted against the user's guess.  User input is from STT so
+              some words may be misspelled.  Simple words like 'the', 'and' and
               others can be omitted unless they are deemed necessary to the
               overall meaning.  Use your best judgement.  Be fair but kind. The
               user input may provide the song title, the song title and artist
               or just artist
 
               I want you to respond with a zero if nothing is correct, answer
-              with one if the song title is correct, answer with two if the song
+              with one if the song title is correct, answer with one if the song
               artist is correct, and answer with three if song title and song
               artist is correct.
 
-              Song title: {{ state_attr(target_musicplayer_device,
-              'media_title') }} Song Artist: {{
-              state_attr(target_musicplayer_device, 'media_artist') }} User
-              guess: {{ song_guess.sentence }}
+              Correct song title: {{ state_attr(target_musicplayer_device,
+              'media_title') }} 
+
+
+              Correct song artist: {{ state_attr(target_musicplayer_device,
+              'media_artist') }} 
+
+
+              User guess: {{ song_guess.sentence }}
+
 
               Only respond with a number.  Nothing else.
           response_variable: ai_answer
@@ -146,9 +146,7 @@ actions:
             title: "{{ state_attr(target_musicplayer_device, 'media_title') }}"
             artist: "{{ state_attr(target_musicplayer_device, 'media_artist') }}"
             song_info: The song was {{ title }} by {{ artist }}
-            round_score: >-
-              {% set score = ai_score | int %} {{ (score * 100) + (100 if score
-              == 3 else 0) }}
+            round_score: "{{ (ai_score | int) * 100 }}"
             tts_message: |-
               {% set response_map = {
                 '0': "Incorrect! " ~ song_info,
