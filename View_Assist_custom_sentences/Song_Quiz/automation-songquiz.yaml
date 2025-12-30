@@ -1,4 +1,29 @@
-# Version 0.0.1
+# Version 0.0.2
+# 
+# What it does
+#
+#   * Loops through rounds set by variable number_of_rounds
+#   * Plays random song using MA Spotify playlist for ten seconds
+#   * Prompts for guess of song and artist
+#   * Evaluates guess using OpenAI with ai_score return variable.  Returns 0 if wrong, 1 is title or artist is correct, 2 if both are correct
+#   * Calculates score by multiplying ai_score * 100 and gives bonus 100 point if both title and artist are correct
+#   * Provides voice response of the guess results and score
+#   * Provides final score
+#
+# Things to do:
+#
+#   * Support multiple players
+#   * Support multiple playlists
+#   * Change ending to determine winner with multiple players
+#   * Turn into blueprint for variables:
+#       * Number of rounds
+#       * Playlist dictionary
+#       * Amount of time to play song
+#    * Set variables using standard VA methods for satellite devices (musicplayer, assist_satellite, display, etc)
+#    * Create view for visual
+#    * Add ability to stop game at any point by voice and touch
+
+
 alias: View Assist - Song Quiz AI
 description: ""
 triggers:
@@ -9,124 +34,142 @@ conditions: []
 actions:
   - variables:
       player1_score: 0
-  - action: assist_satellite.ask_question
-    metadata: {}
-    data:
-      question: What song just played?
-      preannounce: false
-      entity_id: assist_satellite.vaca_51de8bc0646f80c9
-    response_variable: song_guess
-    enabled: false
-  - action: media_player.shuffle_set
-    metadata: {}
-    data:
-      shuffle: true
-    target:
-      entity_id: media_player.vaca_51de8bc0646f80c9_none_2
-  - action: music_assistant.play_media
-    metadata: {}
-    target:
-      entity_id: media_player.vaca_51de8bc0646f80c9_none_2
-    data:
-      media_type: playlist
-      media_id: spotify:playlist:37i9dQZF1DXbTxeAdrVG2l
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
-  - action: media_player.media_pause
-    metadata: {}
-    target:
-      entity_id: media_player.vaca_51de8bc0646f80c9_none_2
-    data: {}
-  - action: assist_satellite.ask_question
-    metadata: {}
-    data:
-      question: What song just played?
-      preannounce: false
-      entity_id: assist_satellite.vaca_51de8bc0646f80c9
-    response_variable: song_guess
-  - action: openai_conversation.generate_content
-    data:
-      config_entry: 01J3BJ7KG89K0C82N45MQQ2F0G
-      prompt: >-
-        You are judge of a music game.  I will provide you with the correct
-        answer and the user's guess.  I want you to tell me if they got the
-        answer correct.  The user's guess and the actual title should be a match
-        but extra data in the title like the year, things in parenthesis and
-        other none essential information should not be counted against the
-        guess.  User input is from STT so some words may be misspelled.  Use
-        your best judgement.  Simple words like 'the', 'and' and others can be
-        omitted unless they are deemed necessary to the overall meaning.  Use
-        your best judgement.  Be fair but kind. The user input may provide the
-        song title, the song title and artist or just artist
-
-
-        I want you to respond with a zero if nothing is correct, answer with one
-        if the song title is correct, answer with two if the song artist is
-        correct, and answer with three if song title and song artist is
-        correct.  
-
-
-        Song title: {{ state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
-        'media_title') }}
-
-        Song Artist: {{ state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
-        'media_artist') }}
-
-        User guess: {{ song_guess.sentence }}
-
-
-        Only respond with a number.  Nothing else.
-    response_variable: ai_answer
-  - action: tts.google_translate_say
-    data:
-      cache: false
-      entity_id: media_player.vaca_51de8bc0646f80c9_none_2
-      message: >-
-        {% set ai_score = ai_answer.text | trim %} {% set title =
-        state_attr('media_player.vaca_51de8bc0646f80c9_none_2', 'media_title')
-        %} {% set artist =
-        state_attr('media_player.vaca_51de8bc0646f80c9_none_2', 'media_artist')
-        %}
-
-        {% if ai_score == '0' %}
-          Incorrect! The song was {{ title }} by {{ artist }}
-        {% elif ai_score == '1' %}
-          You got the song right. The song was {{ title }} by {{ artist }}
-        {% elif ai_score == '2' %}
-          You got the artist right. The song was {{ title }} by {{ artist }}
-        {% elif ai_score == '3' %}
-          Wow! You got both the song and artist correct.
-        {% else %}
-          I didn't quite catch that. The song was {{ title }} by {{ artist }}.
-        {% endif %}
-    enabled: false
-  - variables:
-      ai_score: "{{ ai_answer.text | trim }}"
-      title: >-
-        {{ state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
-        'media_title') }}
-      artist: >-
-        {{ state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
-        'media_artist') }}
-      song_info: The song was {{ title }} by {{ artist }}
-      round_score: >-
-        {% set score = ai_answer.text | int %} {{ (score * 100) + (100 if score
-        == 3 else 0) }} 
-      tts_message: |-
-        {% set response_map = {
-          '0': "Incorrect! " ~ song_info,
-          '1': "You got the song right. " ~ song_info,
-          '2': "You got the artist right. " ~ song_info,
-          '3': "Wow! You got both the song and artist correct."
-        } %} {{ response_map.get(ai_score, song_info) }}
+      number_of_rounds: 4
   - action: assist_satellite.announce
     target:
       entity_id:
         - assist_satellite.vaca_51de8bc0646f80c9
     data:
-      message: "{{ tts_message }}"
+      message: Welcome to Song Quiz, the song guessing game.  Let's get started!
+      preannounce: false
+  - repeat:
+      count: "{{ number_of_rounds }}"
+      sequence:
+        - variables:
+            ai_answer: "0"
+        - action: assist_satellite.announce
+          target:
+            entity_id:
+              - assist_satellite.vaca_51de8bc0646f80c9
+          data:
+            message: Starting Round {{ repeat.index }}
+            preannounce: false
+          enabled: false
+        - action: assist_satellite.announce
+          target:
+            entity_id:
+              - assist_satellite.vaca_51de8bc0646f80c9
+          data:
+            message: |-
+              {% if repeat.index < number_of_rounds %}
+                Round {{ repeat.index }}
+              {% else %}
+                This is the last round
+              {% endif %}
+            preannounce: false
+        - action: media_player.shuffle_set
+          metadata: {}
+          data:
+            shuffle: true
+          target:
+            entity_id: media_player.vaca_51de8bc0646f80c9_none_2
+        - action: music_assistant.play_media
+          metadata: {}
+          target:
+            entity_id: media_player.vaca_51de8bc0646f80c9_none_2
+          data:
+            media_type: playlist
+            media_id: spotify:playlist:37i9dQZF1DXbTxeAdrVG2l
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: media_player.media_pause
+          metadata: {}
+          target:
+            entity_id: media_player.vaca_51de8bc0646f80c9_none_2
+          data: {}
+        - action: assist_satellite.ask_question
+          metadata: {}
+          data:
+            question: What song just played?
+            preannounce: false
+            entity_id: assist_satellite.vaca_51de8bc0646f80c9
+          response_variable: song_guess
+        - action: openai_conversation.generate_content
+          data:
+            config_entry: 01J3BJ7KG89K0C82N45MQQ2F0G
+            prompt: >-
+              You are judge of a music game.  I will provide you with the
+              correct answer and the user's guess.  I want you to tell me if
+              they got the answer correct.  The user's guess and the actual
+              title should be a match but extra data in the title like the year,
+              things in parenthesis and other none essential information should
+              not be counted against the guess.  User input is from STT so some
+              words may be misspelled.  Simple words like 'the', 'and' and
+              others can be omitted unless they are deemed necessary to the
+              overall meaning.  Use your best judgement.  Be fair but kind. The
+              user input may provide the song title, the song title and artist
+              or just artist
+
+              I want you to respond with a zero if nothing is correct, answer
+              with one if the song title is correct, answer with two if the song
+              artist is correct, and answer with three if song title and song
+              artist is correct.
+
+              Song title: {{
+              state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
+              'media_title') }} Song Artist: {{
+              state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
+              'media_artist') }} User guess: {{ song_guess.sentence }}
+
+              Only respond with a number.  Nothing else.
+          response_variable: ai_answer
+        - variables:
+            ai_score: "{{ ai_answer.text | trim }}"
+            title: >-
+              {{ state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
+              'media_title') }}
+            artist: >-
+              {{ state_attr('media_player.vaca_51de8bc0646f80c9_none_2',
+              'media_artist') }}
+            song_info: The song was {{ title }} by {{ artist }}
+            round_score: >-
+              {% set score = ai_score | int %} {{ (score * 100) + (100 if score
+              == 2 else 0) }}
+            tts_message: |-
+              {% set response_map = {
+                '0': "Incorrect! " ~ song_info,
+                '1': "You got the song right. " ~ song_info,
+                '1': "You got the artist right. " ~ song_info,
+                '2': "Wow! You got both the song and artist correct."
+              } %}
+              {{ response_map.get(ai_score  | string, song_info) }}
+        - variables:
+            player1_score: "{{ player1_score + round_score }}"
+          enabled: true
+        - action: assist_satellite.announce
+          target:
+            entity_id:
+              - assist_satellite.vaca_51de8bc0646f80c9
+          data:
+            message: "{{ tts_message }}"
+            preannounce: false
+        - action: assist_satellite.announce
+          target:
+            entity_id:
+              - assist_satellite.vaca_51de8bc0646f80c9
+          data:
+            message: Your score is {{ player1_score }}
+            preannounce: false
+  - action: assist_satellite.announce
+    target:
+      entity_id:
+        - assist_satellite.vaca_51de8bc0646f80c9
+    data:
+      message: >-
+        That's the end of the game.  You ended with a score of {{ player1_score
+        }}.  Hope you had fun!
       preannounce: false
 mode: single
