@@ -1,15 +1,13 @@
-# Version 0.0.6
+# Version 0.0.7
 # 
 # What's changed
 # ==============
 #   
-#   * Support up to four players.  Use dictionary to hold players.  Can have names
-#   * Support multiple playlists (any MA playlist including local)
-#   * Fix ask_question time out by using continue on error.  AI reports condition 4 to tell user they took too long
-#   * Create dictionary for player scores
-#   * Change ending to determine winner with multiple players
+#   * No longer has audio playback issues after many rounds by switching from pause to stop
+#   * Change score report per round from cumulative to round based to make it harder to know who is leading
 #
 # What it does
+# ============
 #
 #   * Loops through rounds set by variable number_of_rounds
 #   * Plays random song using MA Spotify playlist for ten seconds
@@ -18,9 +16,15 @@
 #   * Calculates score by multiplying ai_score * 100 and gives bonus 100 point if both title and artist are correct
 #   * Provides voice response of the guess results and score
 #   * Provides final score
-#    * Set variables using standard VA methods for satellite devices (musicplayer, assist_satellite, display, etc)
+#   * Set variables using standard VA methods for satellite devices (musicplayer, assist_satellite, display, etc)
+#   * Support up to four players.  Use dictionary to hold players.  Can have names
+#   * Support multiple playlists (any MA playlist including local)
+#   * Fix ask_question time out by using continue on error.  AI reports condition 4 to tell user they took too long
+#   * Create dictionary for player scores
+#   * Change ending to determine winner with multiple players
 #
 # Things to do:
+# =============
 #
 #   * Support additional AI agents
 #   * Turn into blueprint for variables:
@@ -31,7 +35,6 @@
 #    * Add ability to stop game at any point by voice and touch
 #    * Switch to 'game' mode to prevent revealing answer if auto music mode enabled
 #    * Switch to flashing bar to not obscure play screen when that gets implemented
-#    * Change score report per round from cumulative to round based to make it harder to know who is leading
 #
 # Issues:
 # 
@@ -116,7 +119,7 @@ actions:
                   minutes: 0
                   seconds: 10
                   milliseconds: 0
-              - action: media_player.media_pause
+              - action: media_player.media_stop
                 metadata: {}
                 target:
                   entity_id: "{{ target_musicplayer_device }}"
@@ -217,8 +220,7 @@ actions:
                           entity_id: "{{ target_ha_satellite_device }}"
                         data:
                           message: >-
-                            Your score is {{ player_scores[current_player |
-                            string] }}
+                            You earned {{ round_score | string }} points
                           preannounce: false
   - action: assist_satellite.announce
     target:
