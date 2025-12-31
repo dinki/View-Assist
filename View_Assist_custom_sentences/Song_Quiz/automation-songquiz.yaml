@@ -31,6 +31,7 @@
 #    * Add ability to stop game at any point by voice and touch
 #    * Switch to 'game' mode to prevent revealing answer if auto music mode enabled
 #    * Switch to flashing bar to not obscure play screen when that gets implemented
+#    * Change score report per round from cumulative to round based to make it harder to know who is leading
 #
 # Issues:
 # 
