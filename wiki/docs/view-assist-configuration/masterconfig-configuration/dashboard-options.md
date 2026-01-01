@@ -37,7 +37,7 @@ The dashboard options control different aspects of the View Assist display
 
 - **Assist Prompt** - The Assist prompt style to use for wake word and intent processing (default blur pop up)
 - **Font Style** - The default font to use for this satellite device. Font name must match perfectly and be available (default Roboto)
-- **Status Icons**
+- **Status Icons** (See Icon Template Reference Guide below for defining custom icons)
   - **Status Icon Size** - The size of the activated status icons shown in the top right corner
   - **Launch Icons** - List of status icons that are always visibile
   - **Menu Items** - List of status icons that are hidden in a toggleable menu
