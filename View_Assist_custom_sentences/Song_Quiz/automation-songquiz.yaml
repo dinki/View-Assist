@@ -1,10 +1,11 @@
-# Version 0.0.7
+# Version 0.0.8
 # 
 # What's changed
 # ==============
 #   
-#   * No longer has audio playback issues after many rounds by switching from pause to stop
-#   * Change score report per round from cumulative to round based to make it harder to know who is leading
+#    * Add ability to stop game at any point by voice
+#    * Switch to 'game' mode to prevent revealing answer if auto music mode enabled
+#    * Switch to flashing bar to not obscure play screen when that gets implemented
 #
 # What it does
 # ============
@@ -22,6 +23,8 @@
 #   * Fix ask_question time out by using continue on error.  AI reports condition 4 to tell user they took too long
 #   * Create dictionary for player scores
 #   * Change ending to determine winner with multiple players
+#   * No longer has audio playback issues after many rounds by switching from pause to stop
+#   * Change score report per round from cumulative to round based to make it harder to know who is leading
 #
 # Things to do:
 # =============
@@ -32,14 +35,12 @@
 #       * Playlist dictionary
 #       * Amount of time to play song
 #    * Create view for visual
-#    * Add ability to stop game at any point by voice and touch
-#    * Switch to 'game' mode to prevent revealing answer if auto music mode enabled
-#    * Switch to flashing bar to not obscure play screen when that gets implemented
 #
 # Issues:
 # 
 #   * AI has issues with numbers in titles.  May be using words and not matching numerals.  Also issues with additional data 
 #     in title and artist and not cosidering it to be a match
+#   * Flashing bar not working when called from this automation but works fine from dev tools.  what??!
 
 alias: View Assist - Song Quiz AI
 description: ""
@@ -65,6 +66,12 @@ actions:
       playlist_2000s: spotify:playlist:37i9dQZF1DX4o1oenSJRJd
       playlist_2010s: spotify:playlist:37i9dQZF1DX4UtSsGT1Sbe
       playlist_today: spotify:playlist:37i9dQZEVXbMDoHDwVN2tF
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      mode: game
+      assist_popup: kitt_bar
   - action: assist_satellite.announce
     target:
       entity_id: "{{ target_ha_satellite_device }}"
@@ -144,15 +151,24 @@ actions:
                     against the user's guess.  User input is from STT so some
                     words may be misspelled.  Simple words like 'the', 'and' and
                     others can be omitted unless they are deemed necessary to
-                    the overall meaning.  Use your best judgement.  Be fair but
-                    kind. The user input may provide the song title, the song
-                    title and artist or just artist
+                    the overall meaning.  Some numerals may exist and the user
+                    response may have those numerals spelled out as words. 
+                    These should be treated as the same. Use your best
+                    judgement.  Be fair but kind. The user input may provide the
+                    song title, the song title and artist or just artist Use
+                    your knowledge of songs and artist to know when the provided
+                    target values are just variants of the common title/artist. 
+                    Also, if multiple artists names are listed you can accept
+                    the user's guess if any match.  They don't all have to be
+                    there as long as it is a partial match.  Last name is good
+                    enough too. I want you to respond with a zero if nothing is
+                    correct, answer with one if the song title is correct,
+                    answer with two if the song artist is correct, and answer
+                    with three if song title and song artist is correct. If user
+                    guess is empty then return four
 
-                    I want you to respond with a zero if nothing is correct,
-                    answer with one if the song title is correct, answer with
-                    two if the song artist is correct, and answer with three if
-                    song title and song artist is correct. If user guess is
-                    empty then return four
+                    If the user guess says something like exit game, stop game,
+                    quit, or anything like that then return five
 
                     Correct song title: {{ state_attr(target_musicplayer_device,
                     'media_title') }} 
@@ -167,7 +183,7 @@ actions:
 
                     Only respond with a number.  Nothing else.  It should be the
                     number and not the word representing the number.  So 0, 1,
-                    2, 3, or 4 only
+                    2, 3, 4, or 5 only
               - action: openai_conversation.generate_content
                 data:
                   config_entry: 01J3BJ7KG89K0C82N45MQQ2F0G
@@ -204,6 +220,24 @@ actions:
                     {{ dict(player_scores, **{current_player | string:
                     current_player_score + round_score}) }}                  
                 enabled: true
+              - choose:
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ ai_score | int == 5 }}"
+                    sequence:
+                      - action: assist_satellite.announce
+                        target:
+                          entity_id: "{{ target_ha_satellite_device }}"
+                        data:
+                          message: Ending the game now.
+                          preannounce: false
+                      - action: view_assist.set_state
+                        target:
+                          entity_id: "{{ target_satellite_device }}"
+                        data:
+                          mode: normal
+                          assist_popup: ""
+                      - stop: AI requested game termination
               - action: assist_satellite.announce
                 target:
                   entity_id: "{{ target_ha_satellite_device }}"
@@ -219,8 +253,7 @@ actions:
                         target:
                           entity_id: "{{ target_ha_satellite_device }}"
                         data:
-                          message: >-
-                            You earned {{ round_score | string }} points
+                          message: You earned {{ round_score | string }} points
                           preannounce: false
   - action: assist_satellite.announce
     target:
@@ -261,4 +294,10 @@ actions:
     data:
       message: That's the end of the game.  Hope you had fun!
       preannounce: false
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      mode: normal
+      assist_popup: ""
 mode: single
