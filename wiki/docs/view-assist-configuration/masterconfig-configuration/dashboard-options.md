@@ -43,7 +43,7 @@ The dashboard options control different aspects of the View Assist display
   - **Menu Items** - List of status icons that are hidden in a toggleable menu
   - **Menu Timeout** - Time in seconds before menu automatically closes (0 to disable timeout)
   - <details>
-    <summary><strong>Reference Guide</strong></summary>
+    <strong>Reference Guide</strong>
         
     ## Icon Templates
     
