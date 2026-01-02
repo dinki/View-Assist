@@ -48,6 +48,10 @@ The dashboard options control different aspects of the View Assist display
         
 ## Icon Template Reference Guide
 
+### Adding Icons:
+
+There are two ways to add status icons. By referencing a predefined or custom template, or by using the dynamic status icon format(recommended for those that do not want to edit yaml).
+
 ### Predefined Templates
   
 View Assist includes ready-to-use templates:
@@ -57,11 +61,11 @@ View Assist includes ready-to-use templates:
 | `home` | Navigate to clock view | home |
 | `weather` | Navigate to weather view | weather-sunny |
 | `camera` | Navigate to camera view | cctv |
-| `menu` | Toggle menu display | menu |
+| `menu` | Toggle menu display | menu | (This is used by the integration and shouldn't be included in your icon list.)
 
 ### Custom Templates
 
-Create your own templates by adding them to `dashboard.yaml` emulating the custom templates [here](https://github.com/dinki/View-Assist/blob/8ccf40ee4497b745e119a6b9eaee241ec973d5cc/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L496-L595): <!-- Update line numbers when dashboard.yaml changes occur -->
+Create your own templates by editing your dashboard through the raw configuration editor and emulating the custom templates [here](https://github.com/dinki/View-Assist/blob/8ccf40ee4497b745e119a6b9eaee241ec973d5cc/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L496-L595): <!-- Update line numbers when dashboard.yaml changes occur -->
 
 ```yaml
 # Example custom template
@@ -96,6 +100,8 @@ living_room_lights:
   - webpage                    # Custom template
   - living_room_lights         # Custom template
 ```
+
+**Note**: If you see an orange exclamation mark instead of your expected icon, this means you are referencing a template that doesn't exist.
 
 ### Dynamic Status Icon Format
 
