@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, it]              
+          languages: [de, en, it]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -82,6 +82,17 @@ actions:
             minute_label: "minuti fa"
             hour_label: "ore fa"
             day_label: "giorni fa"
+        de:
+          responses:
+            person_away: "{person} ist nicht zu Hause."
+            person_location: "{person} ist bei {location}"
+            person_undefined: "{person} ist nicht definiert"
+          last_update:
+            prefix: "Zuletzt aktualisiert"
+            now_label: "jetzt"
+            minute_label: "Minuten zuvor"
+            hour_label: "Stunden zuvor"
+            day_label: "Tage zuvor"
   - if:
       - condition: template
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
