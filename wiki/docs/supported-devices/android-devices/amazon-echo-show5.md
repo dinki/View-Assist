@@ -11,10 +11,16 @@ The Amazon Echo Show 5 Gen 1 device makes a nice, compact Android tablet with di
 
 Here are some important links as mentioned in the video:
 
-Unlock and install custom recovery:
+Unlock and install custom recovery Echo Show 5 Gen 1:
 https://xdaforums.com/t/unlock-root-twrp-unbrick-amazon-echo-show-5-1st-gen-2019-checkers.4762900/
 
-Install Android ROM:
+Install Android ROM Echo Show 5 Gen 1:
+https://xdaforums.com/t/rom-unofficial-11-checkers-lineageos-18-1-for-the-amazon-echo-show-5-2019.4763475/
+
+Unlock and install custom recovery Echo Show 5 Gen 2:
+https://xdaforums.com/t/unlock-root-twrp-unbrick-amazon-echo-show-5-2nd-gen-2021-cronos.4772596/
+
+Install Android ROM Echo Show 5 Gen 2:
 https://xdaforums.com/t/rom-unofficial-11-checkers-lineageos-18-1-for-the-amazon-echo-show-5-2019.4763475/
 
 Install ADB for Windows:
