@@ -8,6 +8,7 @@ User asks for the time or the date and receives response and screen switches to 
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description                  |
+| ------- | ---------------------------- |
+| v 1.0.1 | Update for DE wrong variable |
+| v 1.0.0 | Initial release              |

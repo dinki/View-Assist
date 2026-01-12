@@ -94,4 +94,6 @@ Do you have a clever use for this blueprint? Let us know and we will include it 
 
 | Version | Description     |
 | ------- | --------------- |
+| v 1.0.2 | Filter only VA sensor devices |
+| v 1.0.1 | Misc changes |
 | v 1.0.0 | Initial release |

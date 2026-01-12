@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Get Sports Scores
   description:
     Get sports scores for your favorite teams (View Assist getsportsscores
-    v 1.4.1)
+    v 1.4.2)
   domain: automation
   input:
     language:
@@ -47,7 +47,7 @@ blueprint:
         college_teams:
           lsu football:
             team_id: LSU
-            conference_id: "8"
+            conference_id: 8
             league_path: college-football
             sport_path: football
       selector:
@@ -439,7 +439,7 @@ action:
           query_team: "{{ college_teams[(trigger.slots.team)|lower]['team_id'] | lower}}"
           sport_path: "{{ college_teams[(trigger.slots.team)|lower]['sport_path'] }}"
           league_path: "{{ college_teams[(trigger.slots.team)|lower]['league_path'] }}"
-          conference_id: "'{{ college_teams[(trigger.slots.team)|lower]['conference_id'] | string}}'"
+          conference_id: "{{ college_teams[(trigger.slots.team)|lower]['conference_id'] }}"
           is_singular: true
       - service: teamtracker.call_api
         target:

@@ -90,8 +90,11 @@ trigger_phrases:
 
 ## Changelog
 
-| Version | Description                |
-| ------- | -------------------------- |
-| v 1.3.1 | Bug fix for college sports |
-| v 1.3.0 | Rework                     |
-| v 1.0.0 | Initial release            |
+| Version | Description                                                                                   |
+| ------- | --------------------------------------------------------------------------------------------- |
+| v 1.4.2 | Fix issue with college sports conference_id type (Team Tracker v0.14.13 or greater required ) |
+| v 1.4.1 | Minor update                                                                                  |
+| v 1.4.0 | Various fixes                                                                                 |
+| v 1.3.1 | Bug fix for college sports                                                                    |
+| v 1.3.0 | Rework                                                                                        |
+| v 1.0.0 | Initial release                                                                               |
