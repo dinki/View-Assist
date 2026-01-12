@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, it, de, fr]
+          languages: [de, en, fr, it]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
