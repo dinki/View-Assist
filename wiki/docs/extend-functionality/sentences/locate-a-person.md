@@ -25,6 +25,7 @@ All credit goes to @JimmyJamesBob and @colin715 for their collaboration on this 
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description            |
+| ------- | ---------------------- |
+| v 1.0.1 | Add German translation |
+| v 1.0.0 | Initial release        |

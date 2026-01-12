@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Locate a Person
-  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.0)
+  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.1)
   domain: automation
   input:
     language:
@@ -145,7 +145,7 @@ actions:
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-         locate_data: >-
+          locate_data: >-
             {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
             geocoded_source, 'location_text': location_source,
             'location_last_change': location_last_update_translated, 'map_mode':
@@ -168,7 +168,7 @@ actions:
           entity_id: "{{ target_satellite_device }}"
         data:
           title: ""
-          message:  "{{ response_undefined }}"
+          message: "{{ response_undefined }}"
           message_font_size: 6vw
       - set_conversation_response: "{{ response_undefined }}"
       - action: view_assist.set_state

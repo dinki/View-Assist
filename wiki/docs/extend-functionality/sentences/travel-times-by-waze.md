@@ -17,6 +17,7 @@ Or import using [raw link](https://raw.githubusercontent.com/dinki/View-Assist/m
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description            |
+| ------- | ---------------------- |
+| v 1.0.1 | Add German translation |
+| v 1.0.0 | Initial release        |

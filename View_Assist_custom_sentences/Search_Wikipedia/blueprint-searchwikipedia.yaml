@@ -1,8 +1,6 @@
-# View Assist - View Assist Search Wikipedia (v 1.1.1)
-# Special thanks to Scratt for his work on this blueprint
 blueprint:
   name: View Assist - Search Wikipedia
-  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.1)
+  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.2)
   domain: automation
   input:
     language:
@@ -104,4 +102,3 @@ action:
         data:
           last_said: "{{ conversation_response }}"
 mode: single
-

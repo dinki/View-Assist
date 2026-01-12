@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Travel Times by Waze
-  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.0)
+  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.1)
   domain: automation
   input:
     language:
@@ -94,7 +94,7 @@ action:
             minutesonly: "{minutes} minutes"
             viewtitle: "Travel Time"
         de:
-          responses: 
+          responses:
             travelfromhome: "Es dauert etwa {time}, um nach {destination} zu fahren"
             travelfromatob: "Es dauert etwa {time}, um von {origin} nach {destination} zu fahren"
             hoursandminutes: "{hours} Stunden und {minutes} Minuten"
