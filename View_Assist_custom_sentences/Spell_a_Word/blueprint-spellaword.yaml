@@ -1,8 +1,6 @@
-# View Assist - Spell a Word (v 1.0.1)
-# Written by - Dinki
 blueprint:
   name: View Assist - Spell a Word
-  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.1)
+  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.2)
   domain: automation
   input:
     language:
@@ -11,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, it, de, fr]
+          languages: [de, en, fr, it]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -77,4 +75,3 @@ action:
           device: "{{ target_satellite_device }}"
           path: "{{ view }}"
 mode: single
-

@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Locate a Person
-  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.0)
+  description: Ask Assist to locate a person (View Assist locateaperson v 1.0.1)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, it]              
+          languages: [de, en, it]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -82,6 +82,17 @@ actions:
             minute_label: "minuti fa"
             hour_label: "ore fa"
             day_label: "giorni fa"
+        de:
+          responses:
+            person_away: "{person} ist nicht zu Hause."
+            person_location: "{person} ist bei {location}"
+            person_undefined: "{person} ist nicht definiert"
+          last_update:
+            prefix: "Zuletzt aktualisiert"
+            now_label: "jetzt"
+            minute_label: "Minuten zuvor"
+            hour_label: "Stunden zuvor"
+            day_label: "Tage zuvor"
   - if:
       - condition: template
         value_template: "{% if trigger.slots.person in persons_name %}true{%endif%}"
@@ -134,7 +145,7 @@ actions:
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-         locate_data: >-
+          locate_data: >-
             {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
             geocoded_source, 'location_text': location_source,
             'location_last_change': location_last_update_translated, 'map_mode':
@@ -157,7 +168,7 @@ actions:
           entity_id: "{{ target_satellite_device }}"
         data:
           title: ""
-          message:  "{{ response_undefined }}"
+          message: "{{ response_undefined }}"
           message_font_size: 6vw
       - set_conversation_response: "{{ response_undefined }}"
       - action: view_assist.set_state
