@@ -1,0 +1,294 @@
+blueprint:
+  name: View Assist - Song Quiz AI
+  description: "Play a song guessing game using View Assist and AI"
+  domain: automation
+  input:
+    conversation_command:
+      name: Trigger Command
+      description: The sentence to trigger the game.
+      default: "play song quiz"
+      selector:
+        text:
+    openai_config_entry:
+      name: OpenAI Config Entry ID
+      description: The Config Entry ID for the OpenAI conversation agent.
+      selector:
+        config_entry:
+          integration: openai_conversation
+    number_of_rounds:
+      name: Number of Rounds
+      description: How many rounds to play.
+      default: 4
+      selector:
+        number:
+          min: 1
+          max: 10
+    number_of_players:
+      name: Number of Players
+      description: How many players are participating.
+      default: 2
+      selector:
+        number:
+          min: 1
+          max: 4
+
+trigger:
+  - trigger: conversation
+    command:
+      - !input conversation_command
+
+condition: []
+
+action:
+  - variables:
+      target_ha_satellite_device: "{{ trigger.satellite_id }}"
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_musicplayer_device: "{{ state_attr(target_satellite_device, 'musicplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      openai_config_entry: !input openai_config_entry
+  - variables:
+      number_of_players: !input number_of_players
+      number_of_rounds: !input number_of_rounds
+      player_scores: "{{ {'1': 0, '2': 0, '3': 0, '4': 0} }}"
+      playlist_kpop: spotify:playlist:2EoheVFjqIxgJMb8VnDRtZ
+      playlist_80s: spotify:playlist:19PgP2QSGPcm6Ve8VhbtpG
+      playlist_90s: spotify:playlist:37i9dQZF1DXbTxeAdrVG2l
+      playlist_2000s: spotify:playlist:37i9dQZF1DX4o1oenSJRJd
+      playlist_2010s: spotify:playlist:37i9dQZF1DX4UtSsGT1Sbe
+      playlist_today: spotify:playlist:37i9dQZEVXbMDoHDwVN2tF
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      mode: game
+      assist_popup: kitt_bar
+  - action: assist_satellite.announce
+    target:
+      entity_id: "{{ target_ha_satellite_device }}"
+    data:
+      message: Welcome to Song Quiz, the song guessing game.  Let's get started!
+      preannounce: false
+  - repeat:
+      count: "{{ number_of_rounds }}"
+      sequence:
+        - variables:
+            ai_answer: "0"
+          enabled: false
+        - action: assist_satellite.announce
+          target:
+            entity_id: "{{ target_ha_satellite_device }}"
+          data:
+            message: |-
+              {% if repeat.index < number_of_rounds %}
+                Round {{ repeat.index }}
+              {% else %}
+                This is the last round
+              {% endif %}
+            preannounce: false
+        - repeat:
+            count: "{{ number_of_players }}"
+            sequence:
+              - variables:
+                  ai_answer: "0"
+                  song_guess: ""
+                  current_player: "{{ repeat.index }}"
+              - action: assist_satellite.announce
+                target:
+                  entity_id: "{{ target_ha_satellite_device }}"
+                data:
+                  message: Player {{ current_player }} here is your song
+                  preannounce: false
+              - action: media_player.shuffle_set
+                metadata: {}
+                data:
+                  shuffle: true
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+              - action: music_assistant.play_media
+                metadata: {}
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data:
+                  media_type: playlist
+                  media_id: "{{ playlist_80s }}"
+              - delay:
+                  hours: 0
+                  minutes: 0
+                  seconds: 10
+                  milliseconds: 0
+              - action: media_player.media_stop
+                metadata: {}
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data: {}
+              - action: assist_satellite.ask_question
+                metadata: {}
+                data:
+                  question: What song just played?
+                  preannounce: false
+                  entity_id: "{{ target_ha_satellite_device }}"
+                response_variable: song_guess
+                continue_on_error: true
+              - variables:
+                  ai_prompt: >-
+                    You are judge of a music game.  I will provide you with the
+                    correct song title and song artist as well as  the user's
+                    guess.  I want you to tell me if they got the answer
+                    correct.  The user's guess and the correct  title and/or
+                    artist should be a match but extra data in the title like
+                    the year, things in parenthesis, foreign characters and
+                    other none essential information should not be counted
+                    against the user's guess.  User input is from STT so some
+                    words may be misspelled.  Simple words like 'the', 'and' and
+                    others can be omitted unless they are deemed necessary to
+                    the overall meaning.  Some numerals may exist and the user
+                    response may have those numerals spelled out as words.
+                    These should be treated as the same. Use your best
+                    judgement.  Be fair but kind. The user input may provide the
+                    song title, the song title and artist or just artist Use
+                    your knowledge of songs and artist to know when the provided
+                    target values are just variants of the common title/artist.
+                    Also, if multiple artists names are listed you can accept
+                    the user's guess if any match.  They don't all have to be
+                    there as long as it is a partial match.  Last name is good
+                    enough too. I want you to respond with a zero if nothing is
+                    correct, answer with one if the song title is correct,
+                    answer with two if the song artist is correct, and answer
+                    with three if song title and song artist is correct. If user
+                    guess is empty then return four
+
+                    If the user guess says something like exit game, stop game,
+                    quit, or anything like that then return five
+
+                    Correct song title: {{ state_attr(target_musicplayer_device,
+                    'media_title') }}
+
+
+                    Correct song artist: {{
+                    state_attr(target_musicplayer_device, 'media_artist') }}
+
+
+                    User guess: {{ song_guess.sentence }}
+
+
+                    Only respond with a number.  Nothing else.  It should be the
+                    number and not the word representing the number.  So 0, 1,
+                    2, 3, 4, or 5 only
+              - action: openai_conversation.generate_content
+                data:
+                  config_entry: "{{ openai_config_entry }}"
+                  prompt: "{{ ai_prompt }}"
+                response_variable: ai_answer
+              - variables:
+                  ai_score: "{{ ai_answer.text | trim }}"
+                  title: "{{ state_attr(target_musicplayer_device, 'media_title') }}"
+                  artist: "{{ state_attr(target_musicplayer_device, 'media_artist') }}"
+                  song_info: The song was {{ title }} by {{ artist }}
+                  round_score: |
+                    {% set score = ai_score | int %}
+                    {% if score == 3 %}
+                      300
+                    {% elif score in [1, 2] %}
+                      100
+                    {% elif score in [0, 4] %}
+                      0
+                    {% else %}
+                      0
+                    {% endif %}
+                  current_player_score: "{{ player_scores[current_player | string] }}"
+                  tts_message: |-
+                    {% set response_map = {
+                      '0': "Incorrect! " ~ song_info,
+                      '1': "You got the song title right. " ~ song_info,
+                      '2': "You got the artist right. " ~ song_info,
+                      '3': "Wow, you got both the song title and artist correct.",
+                      '4': "You took too long. " ~ song_info,
+                    } %}
+                    {{ response_map.get(ai_score  | string, song_info) }}
+              - variables:
+                  player_scores: >-
+                    {{ dict(player_scores, **{current_player | string:
+                    current_player_score + round_score}) }}
+                enabled: true
+              - choose:
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ ai_score | int == 5 }}"
+                    sequence:
+                      - action: assist_satellite.announce
+                        target:
+                          entity_id: "{{ target_ha_satellite_device }}"
+                        data:
+                          message: Ending the game now.
+                          preannounce: false
+                      - action: view_assist.set_state
+                        target:
+                          entity_id: "{{ target_satellite_device }}"
+                        data:
+                          mode: normal
+                          assist_popup: ""
+                      - stop: AI requested game termination
+              - action: assist_satellite.announce
+                target:
+                  entity_id: "{{ target_ha_satellite_device }}"
+                data:
+                  message: "{{ tts_message }}"
+                  preannounce: false
+              - choose:
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ repeat.index < number_of_rounds }}"
+                    sequence:
+                      - action: assist_satellite.announce
+                        target:
+                          entity_id: "{{ target_ha_satellite_device }}"
+                        data:
+                          message: You earned {{ round_score | string }} points
+                          preannounce: false
+  - action: assist_satellite.announce
+    target:
+      entity_id: "{{ target_ha_satellite_device }}"
+    data:
+      preannounce: false
+      message: >-
+        {% set active = player_scores
+          | dictsort(by='key')
+          | list
+        %}
+
+        {% set active = active[:number_of_players] %} {% set ranked = active |
+        sort(attribute=1) %}
+
+        {% if number_of_players == 2 %}
+          {% set second = ranked[0] %}
+          {% set first = ranked[1] %}
+          Player {{ first[0] }} is the winner with a score of {{ first[1] }}.
+          Player {{ second[0] }} came in second with a score of {{ second[1] }}.
+        {% else %}
+          {% for entry in ranked %}
+            {% set place = loop.index %}
+            {% if loop.last %}
+              And our champion is Player {{ entry[0] }} with a score of {{ entry[1] }}!
+            {% elif place == ranked | length - 1 %}
+              In second place is Player {{ entry[0] }} with a score of {{ entry[1] }}.
+            {% elif place == ranked | length - 2 %}
+              Coming in third is Player {{ entry[0] }} with a score of {{ entry[1] }}.
+            {% else %}
+              Player {{ entry[0] }} finished in place {{ place }} with a score of {{ entry[1] }}.
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+  - action: assist_satellite.announce
+    target:
+      entity_id: "{{ target_ha_satellite_device }}"
+    data:
+      message: That's the end of the game.  Hope you had fun!
+      preannounce: false
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
+    data:
+      mode: normal
+      assist_popup: ""
+mode: single
