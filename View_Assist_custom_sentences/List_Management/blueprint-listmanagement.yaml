@@ -10,7 +10,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, de, fr, es]
+          languages: [en, de, fr, es, ro]
     command_add1:
       name: Command Text Add 1
       description: First phrase for adding to the list
@@ -134,7 +134,16 @@ action:
             one_item: "Hay 1 elemento pendiente en tu {list_name}. Es {items}"
             multiple_items: "Hay {count} elementos en tu {list_name}. Son {items}"
             multiple_items_limited: "Hay {count} elementos en tu {list_name}. Los primeros {max_items} son: {items}, y más."
-
+        ro:
+          responses:
+            added: "{item} a fost adăugat în {list_name}"
+            already_in: "{item} este deja în {list_name}"
+            removed: "{item} a fost eliminat din {list_name}"
+            not_in: "{item} nu este în {list_name}"
+            empty: "Nu există elemente nebifate în {list_name}"
+            one_item: "Există un element nebifat în {list_name}. Acesta este {items}"
+            multiple_items: "Există {count} elemente în {list_name}. Acestea sunt {items}"
+            multiple_items_limited: "Există {count} elemente în {list_name}. Primele {max_items} sunt: {items}, și altele."
   - choose:
       - conditions:
           - condition: trigger
