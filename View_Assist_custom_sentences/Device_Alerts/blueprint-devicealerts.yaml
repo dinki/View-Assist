@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Device Alerts
-  description: This blueprint allows the user to define an event that will add an icon, speak an announcement, and/or display a screen with status.  It will optionally do the same for an ending event (View Assist devicealert v 1.0.2)
+  description: This blueprint allows the user to define an event that will add an icon, speak an announcement, and/or display a screen with status.  It will optionally do the same for an ending event (View Assist devicealert v 1.1.0)
   domain: automation
   input:
     satellite_definitions:
@@ -157,14 +157,14 @@ actions:
       satellite_use_all: !input satellite_use_all
       satellites_by_template: !input satellites_by_template
       expanded_satellites: >
-        {% if satellite_use_all %}  
+        {% if satellite_use_all %}
           {{ view_assist_entities() }}
         {% elif satellite is defined and satellite %}
           {% set input_satellites = expand(states | selectattr('entity_id','in', satellite)) %}
           {{ input_satellites | map(attribute='entity_id') | list}}
         {% else %}
           {{ satellites_by_template }}
-        {% endif %}        
+        {% endif %}
       start_icon: !input start_icon
       start_speech: !input start_speech
       start_alert: !input start_alert
@@ -174,10 +174,10 @@ actions:
       end_alert: !input end_alert
       end_view: !input end_view
   - choose:
-      - conditions: 
+      - conditions:
         - condition: template
           value_template: "{{ expanded_satellites | length < 1 }}"
-        sequence: []    
+        sequence: []
       - conditions:
           - condition: trigger
             id: startaction
