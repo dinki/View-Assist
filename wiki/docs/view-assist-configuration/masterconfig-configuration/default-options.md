@@ -16,3 +16,5 @@ The default options contain a variety of different configuration settings
 - **Disable Announce** - Some media player devices like BrowserMod and Squeezelite cannot use the Home Assistant announce feature while media is playing. This option allows for turning off announce messages if problems arise. Default is on but turn this off if your device supports announce
 - **Unmute Mic** - Unmute microphone on HA start/restart. This is helpful for Stream Assist devices which default to muted on Home Asistant start
 - **Volume Ducking** - Lower media playback volume to this level when Assist is active. You may need to play with this value to tune it correctly for your needs (default 35)
+- **Auto music mode** - Automatically enter music mode when music player starts playing. When turned on this will result in the view switching to the music view
+- **Music mode timeout** - Time in seconds before automatically exiting music mode after music stops. This is dependent on Auto music mode above being enabled. Set a value of 0 to disable timeout so that music mode continues even after media has stopped playing
