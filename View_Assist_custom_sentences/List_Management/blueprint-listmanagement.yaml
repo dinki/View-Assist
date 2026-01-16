@@ -134,7 +134,7 @@ action:
             one_item: "Hay 1 elemento pendiente en tu {list_name}. Es {items}"
             multiple_items: "Hay {count} elementos en tu {list_name}. Son {items}"
             multiple_items_limited: "Hay {count} elementos en tu {list_name}. Los primeros {max_items} son: {items}, y más."
-         ro:
+        ro:
           responses:
             added: "{item} a fost adăugat în {list_name}"
             already_in: "{item} este deja în {list_name}"
