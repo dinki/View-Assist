@@ -141,7 +141,7 @@ actions:
                   - variables:
                       conversation_response: >-
                         {{ translations[language]['responses']['playartist_found'].replace("{artist}", found_artist.artists.0.name)}}
-                  - set_conversation_response: "{{ conversation_reponse }}"
+                  - set_conversation_response: "{{ conversation_response }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
@@ -157,7 +157,7 @@ actions:
                   - variables:
                       conversation_response: >-
                         {{ translations[language]['responses']['playartist_not_found'].replace("{search_artist}", trigger.slots.artist)}}
-                  - set_conversation_response: "{{ conversation_reponse }}"
+                  - set_conversation_response: "{{ conversation_response }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
@@ -209,7 +209,7 @@ actions:
                   - variables:
                       conversation_response: >-
                         {{ translations[language]['responses']['playlist_found'].replace("{playlist}", found_playlist.playlists.0.name )}}
-                  - set_conversation_response: "{{ conversation_reponse }}"
+                  - set_conversation_response: "{{ conversation_response }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
@@ -224,8 +224,8 @@ actions:
                 then:
                   - variables:
                       conversation_response: >-
-                        {{ translations[language]['responses']['playlist_found'].replace("{search_playlist}", trigger.slots.artist )}}
-                  - set_conversation_response: "{{ conversation_reponse }}"
+                        {{ translations[language]['responses']['playlist_not_found'].replace("{search_playlist}", trigger.slots.playlist )}}
+                  - set_conversation_response: "{{ conversation_response }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
@@ -289,7 +289,7 @@ actions:
                           - variables:
                               conversation_response: >-
                                 {{ translations[language]['responses']['playsong_queue'].replace("{artist}", trigger.slots.artist ).replace("{song}", found_track.tracks.0.name ) }}
-                          - set_conversation_response: "{{ conversation_reponse }}"
+                          - set_conversation_response: "{{ conversation_response }}"
                           - action: view_assist.set_state
                             target:
                               entity_id: "{{ target_satellite_device }}"
@@ -317,7 +317,7 @@ actions:
                           - variables:
                               conversation_response: >-
                                 {{ translations[language]['responses']['playsong_found'].replace("{artist}", trigger.slots.artist ).replace("{song}", found_track.tracks.0.name ) }}
-                          - set_conversation_response: "{{ conversation_reponse }}"
+                          - set_conversation_response: "{{ conversation_response }}"
                           - action: view_assist.set_state
                             target:
                               entity_id: "{{ target_satellite_device }}"
@@ -333,7 +333,7 @@ actions:
                   - variables:
                       conversation_response: >-
                         {{ translations[language]['responses']['playsong_not_found'].replace("{artist}", trigger.slots.artist ).replace("{song}", trigger.slots.song ) }}
-                  - set_conversation_response: "{{ conversation_reponse }}"
+                  - set_conversation_response: "{{ conversation_response }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
