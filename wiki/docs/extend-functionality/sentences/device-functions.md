@@ -62,17 +62,11 @@ This blueprint will contain device specific functions. Current functions include
 - en: `stop [the] music`
 - de: `Stoppe [die] Musik`
 
-## To do
-
-- Add rewind/fast forward XX seconds/minutes, previous/restart track
-- query what song/media is playing by voice
-- Add 'move to [area]' to move music playback from one satellite to another
-- Add device screen reload/refresh
-
 ## Changelog
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.4.1 | Add 'what song is playing'. Thanks Rymez2k                                               |
 | v 1.4.0 | Add more music specific functions                                                        |
 | v 1.3.0 | Add additional functions pause, next, additional                                         |
 | v 1.2.2 | Stop music stops music player device and expires timer to go back to home screen quicker |
