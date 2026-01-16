@@ -1,52 +1,58 @@
-      - type: custom:button-card
-        variables:
-          musiccardalternativeversion: 1.1.0
-        template:
-          - variable_template
-          - body_template
-        styles:
-          card:
-            - background-color: black;
-          custom_fields:
-            message:
-              - font-size: '[[[ return variables.var_font_size ]]]'
-              - position: absolute
-              - text-align: start
-              - text-wrap: wrap
-              - justify-content: center
-              - align-self: center
-              - z-index: 0
-        custom_fields:
-          title: ''
-          message:
-            card:
-              type: custom:mod-card
-              card:
-                type: custom:mini-media-player
-                entity: '[[[ return variables.var_musicplayer_device ]]]'
-                artwork: cover
-                hide:
-                  icon: true
-                  info: false
-                  name: true
-                  volume: false
-                  power: false
-                  progress: true
-                card_mod:
-                  style:
-                    mmp-powerstrip $: |
-                      ha-icon-button {
-                        color: white !important;
-                      }
-                    .: |
-                      ha-card {
-                         --mmp-icon-color: white !important;
-                         --mmp-text-color: white !important;
-                         --mmp-unit: 1 !important;
-                         --mdc-icon-size: 7vw  !important;
-                        font-size: 4vw !important;
-                        font-weight: bold;
-                        width: 100vw !important;
-                        height: 100vh !important;                    
-                           }                     
-        cards: []
+type: custom:button-card
+variables:
+  musiccardalternativeversion: 1.2.0
+  var_musicplayer_device: |-
+    [[[
+      var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
+      var musicdevice = hass.states[assistbid].attributes.musicplayer_device;
+      return `${musicdevice}`
+    ]]]   
+template:
+  - variable_template
+  - body_template
+styles:
+  card:
+    - background-color: black;
+  custom_fields:
+    message:
+      - font-size: "[[[ return variables.var_font_size ]]]"
+      - position: absolute
+      - text-align: start
+      - text-wrap: wrap
+      - justify-content: center
+      - align-self: center
+      - z-index: 0
+custom_fields:
+  title: ""
+  message:
+    card:
+      type: custom:mod-card
+      card:
+        type: custom:mini-media-player
+        entity: "[[[ return variables.var_musicplayer_device ]]]"
+        artwork: cover
+        hide:
+          icon: true
+          info: false
+          name: true
+          volume: false
+          power: false
+          progress: true
+        card_mod:
+          style:
+            mmp-powerstrip $: |
+              ha-icon-button {
+                color: white !important;
+              }
+            .: |
+              ha-card {
+                 --mmp-icon-color: white !important;
+                 --mmp-text-color: white !important;
+                 --mmp-unit: 1 !important;
+                 --mdc-icon-size: 7vw  !important;
+                font-size: 4vw !important;
+                font-weight: bold;
+                width: 100vw !important;
+                height: 100vh !important;                    
+                   }                     
+cards: []
