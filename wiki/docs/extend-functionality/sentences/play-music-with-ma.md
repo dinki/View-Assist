@@ -35,6 +35,8 @@ Adjustments may be needed based on your specific usage and preferences.
 
 | Version | Description                                                                                  |
 | ------- | -------------------------------------------------------------------------------------------- |
+| v 1.2.1 | Correct typo in variable name                                                                |
+| v 1.2.0 | Various improvements                                                                         |
 | v 1.0.4 | Add additional sentences, improvements and conditional responses                             |
 | v 1.0.3 | Add new MA instance requirement to BP inputs                                                 |
 | v 1.0.2 | Change action calls to use new music_assistant viariant                                      |
