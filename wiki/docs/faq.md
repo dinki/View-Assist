@@ -6,10 +6,9 @@ sidebar_position: 8
 # Frequently Asked Questions
 
 <details>
-  <summary>What is this project?</summary>
+  <summary>What is View Assist?</summary>
 
-A modern documentation site / tool / library built with [your tech stack].
-We aim to make [main goal] easier and faster.
+View Assist provides visual feedback for the Home Assistant Assist voice assistant using a collection of different automations, custom sentences, scripts, and extensions with the view being displayed on any Android device. Multiple devices can join the View Assist satellite network and interact. This is not limited to Android devices as voice only ESPHome satellites like the Home Assistant Voice Preview Edition are also supported. Some users have even brought Linux devices in as View Assist satellites as well.
 
 </details>
 
