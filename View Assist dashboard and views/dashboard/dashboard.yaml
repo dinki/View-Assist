@@ -772,7 +772,7 @@ button_card_templates:
   music:
     type: custom:button-card
     template: icon_template
-    icon: mdi:cctv
+    icon: mdi:music
     tap_action:
       action: call-service
       service: view_assist.navigate
