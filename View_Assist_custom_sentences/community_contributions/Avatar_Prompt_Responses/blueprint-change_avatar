@@ -1,0 +1,355 @@
+blueprint:
+  name: View Assist - Change Avatar
+  description: >
+    Automation blueprint to change the active avatar for the View Assist
+    integration.
+
+    This blueprint works with the [View Assist integration](https://github.com/dinki/view_assist_integration)
+    and is RECOMMENDED to be used together with the
+    [View Assist Companion App](https://github.com/msp1974/ViewAssist_Companion_App).
+
+    Each avatar requires its own automation for **Custom Prompt Responses**.
+
+    You can configure one or more trigger sentences (in different languages if desired).
+    Example:
+    - "I want to speak to {avatar}"
+    - "Vreau să vorbesc cu {avatar}"
+    - "Je veux parler à {avatar}"
+
+  domain: automation
+
+  input:
+    satellites:
+      name: Assist Satellites
+      description: >
+        Select the Assist Satellite entities where the pipeline and wake word
+        will be updated.
+      selector:
+        entity:
+          multiple: true
+          domain: assist_satellite
+
+    avatar_sensors:
+      name: Satellite Sensors
+      description: >
+        Select the View Assist satellite sensor entities.
+        These sensors are used to update the avatar state, prompt and GIFs
+        via the View Assist integration.
+      selector:
+        entity:
+          multiple: true
+          domain: sensor
+
+    trigger_sentences:
+      name: Trigger sentences
+      description: >
+        Enter one or more trigger sentences to activate avatar switching.
+        Use `{avatar}` as a placeholder for the avatar name.
+        Example: `I want to speak to {avatar}`
+      default:
+        - "I want to speak to {avatar}"
+      selector:
+        text:
+          multiple: true
+
+    # --- Avatar 1 ---
+    avatar1_name:
+      name: Avatar 1 - Name
+      default: ""
+    avatar1_id:
+      name: Avatar 1 - Avatar ID
+      description: >
+        The avatar ID as defined in overlay.html (e.g. avatar_jarvis).
+      default: ""
+    avatar1_aliases:
+      name: Avatar 1 - Aliases (comma-separated)
+      default: ""
+    avatar1_pipeline:
+      name: Avatar 1 - Pipeline
+      default: ""
+    avatar1_wake:
+      name: Avatar 1 - Wake word
+      default: ""
+    avatar1_automation:
+      name: Avatar 1 - Automation (Custom Prompt Responses)
+      selector:
+        entity:
+          domain: automation
+
+    # --- Avatar 2 ---
+    avatar2_name:
+      name: Avatar 2 - Name
+      default: ""
+    avatar2_id:
+      name: Avatar 2 - Avatar ID
+      description: >
+        The avatar ID as defined in overlay.html.
+      default: ""
+    avatar2_aliases:
+      name: Avatar 2 - Aliases (comma-separated)
+      default: ""
+    avatar2_pipeline:
+      name: Avatar 2 - Pipeline
+      default: ""
+    avatar2_wake:
+      name: Avatar 2 - Wake word
+      default: ""
+    avatar2_automation:
+      name: Avatar 2 - Automation (Custom Prompt Responses)
+      selector:
+        entity:
+          domain: automation
+
+    # --- Avatar 3 ---
+    avatar3_name:
+      name: Avatar 3 - Name
+      default: ""
+    avatar3_id:
+      name: Avatar 3 - Avatar ID
+      description: >
+        The avatar ID as defined in overlay.html.
+      default: ""
+    avatar3_aliases:
+      name: Avatar 3 - Aliases (comma-separated)
+      default: ""
+    avatar3_pipeline:
+      name: Avatar 3 - Pipeline
+      default: ""
+    avatar3_wake:
+      name: Avatar 3 - Wake word
+      default: ""
+    avatar3_automation:
+      name: Avatar 3 - Automation (Custom Prompt Responses)
+      selector:
+        entity:
+          domain: automation
+
+    # --- Avatar 4 ---
+    avatar4_name:
+      name: Avatar 4 - Name
+      default: ""
+    avatar4_id:
+      name: Avatar 4 - Avatar ID
+      description: >
+        The avatar ID as defined in overlay.html.
+      default: ""
+    avatar4_aliases:
+      name: Avatar 4 - Aliases (comma-separated)
+      default: ""
+    avatar4_pipeline:
+      name: Avatar 4 - Pipeline
+      default: ""
+    avatar4_wake:
+      name: Avatar 4 - Wake word
+      default: ""
+    avatar4_automation:
+      name: Avatar 4 - Automation (Custom Prompt Responses)
+      selector:
+        entity:
+          domain: automation
+
+mode: single
+
+variables:
+  raw_avatar: "{{ trigger.slots.avatar | default('') | lower | trim }}"
+  satellites: !input satellites
+  avatar_sensors: !input avatar_sensors
+
+  avatar_defs:
+    - name: !input avatar1_name
+      id: !input avatar1_id
+      aliases: !input avatar1_aliases
+      pipeline: !input avatar1_pipeline
+      wake: !input avatar1_wake
+      automation: !input avatar1_automation
+
+    - name: !input avatar2_name
+      id: !input avatar2_id
+      aliases: !input avatar2_aliases
+      pipeline: !input avatar2_pipeline
+      wake: !input avatar2_wake
+      automation: !input avatar2_automation
+
+    - name: !input avatar3_name
+      id: !input avatar3_id
+      aliases: !input avatar3_aliases
+      pipeline: !input avatar3_pipeline
+      wake: !input avatar3_wake
+      automation: !input avatar3_automation
+
+    - name: !input avatar4_name
+      id: !input avatar4_id
+      aliases: !input avatar4_aliases
+      pipeline: !input avatar4_pipeline
+      wake: !input avatar4_wake
+      automation: !input avatar4_automation
+
+  avatar: >-
+    {% set raw = raw_avatar %}
+    {% set found = namespace(val="") %}
+    {% for av in avatar_defs %}
+      {% set aliases = av.aliases.split(',') | map('trim') | map('lower') | list %}
+      {% if av.name | lower == raw or raw in aliases %}
+        {% set found.val = av.name %}
+      {% endif %}
+    {% endfor %}
+    {{ found.val if found.val != "" else raw }}
+
+triggers:
+  - platform: conversation
+    command: !input trigger_sentences
+
+actions:
+  - service: system_log.write
+    data:
+      message: "View Assist - Change Avatar triggered with avatar={{ avatar }}"
+      level: info
+
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ avatar == avatar_defs[0].name }}"
+        sequence:
+          - repeat:
+              for_each: "{{ satellites }}"
+              sequence:
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_assistant"
+                  data:
+                    option: "{{ avatar_defs[0].pipeline }}"
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_wake_word"
+                  data:
+                    option: "{{ avatar_defs[0].wake }}"
+
+          - repeat:
+              for_each: "{{ avatar_sensors }}"
+              sequence:
+                - action: view_assist.set_state
+                  target:
+                    entity_id: "{{ repeat.item }}"
+                  data:
+                    assist_prompt: "{{ avatar_defs[0].id }}"
+
+          - service: automation.turn_off
+            target:
+              entity_id:
+                - "{{ avatar_defs[1].automation }}"
+                - "{{ avatar_defs[2].automation }}"
+                - "{{ avatar_defs[3].automation }}"
+          - service: automation.turn_on
+            target:
+              entity_id: "{{ avatar_defs[0].automation }}"
+
+      - conditions:
+          - condition: template
+            value_template: "{{ avatar == avatar_defs[1].name }}"
+        sequence:
+          - repeat:
+              for_each: "{{ satellites }}"
+              sequence:
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_assistant"
+                  data:
+                    option: "{{ avatar_defs[1].pipeline }}"
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_wake_word"
+                  data:
+                    option: "{{ avatar_defs[1].wake }}"
+
+          - repeat:
+              for_each: "{{ avatar_sensors }}"
+              sequence:
+                - action: view_assist.set_state
+                  target:
+                    entity_id: "{{ repeat.item }}"
+                  data:
+                    assist_prompt: "{{ avatar_defs[1].id }}"
+
+          - service: automation.turn_off
+            target:
+              entity_id:
+                - "{{ avatar_defs[0].automation }}"
+                - "{{ avatar_defs[2].automation }}"
+                - "{{ avatar_defs[3].automation }}"
+          - service: automation.turn_on
+            target:
+              entity_id: "{{ avatar_defs[1].automation }}"
+
+      - conditions:
+          - condition: template
+            value_template: "{{ avatar == avatar_defs[2].name }}"
+        sequence:
+          - repeat:
+              for_each: "{{ satellites }}"
+              sequence:
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_assistant"
+                  data:
+                    option: "{{ avatar_defs[2].pipeline }}"
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_wake_word"
+                  data:
+                    option: "{{ avatar_defs[2].wake }}"
+
+          - repeat:
+              for_each: "{{ avatar_sensors }}"
+              sequence:
+                - action: view_assist.set_state
+                  target:
+                    entity_id: "{{ repeat.item }}"
+                  data:
+                    assist_prompt: "{{ avatar_defs[2].id }}"
+
+          - service: automation.turn_off
+            target:
+              entity_id:
+                - "{{ avatar_defs[0].automation }}"
+                - "{{ avatar_defs[1].automation }}"
+                - "{{ avatar_defs[3].automation }}"
+          - service: automation.turn_on
+            target:
+              entity_id: "{{ avatar_defs[2].automation }}"
+
+      - conditions:
+          - condition: template
+            value_template: "{{ avatar == avatar_defs[3].name }}"
+        sequence:
+          - repeat:
+              for_each: "{{ satellites }}"
+              sequence:
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_assistant"
+                  data:
+                    option: "{{ avatar_defs[3].pipeline }}"
+                - service: select.select_option
+                  target:
+                    entity_id: "{{ repeat.item | replace('assist_satellite.', 'select.') }}_wake_word"
+                  data:
+                    option: "{{ avatar_defs[3].wake }}"
+
+          - repeat:
+              for_each: "{{ avatar_sensors }}"
+              sequence:
+                - action: view_assist.set_state
+                  target:
+                    entity_id: "{{ repeat.item }}"
+                  data:
+                    assist_prompt: "{{ avatar_defs[3].id }}"
+
+          - service: automation.turn_off
+            target:
+              entity_id:
+                - "{{ avatar_defs[0].automation }}"
+                - "{{ avatar_defs[1].automation }}"
+                - "{{ avatar_defs[2].automation }}"
+          - service: automation.turn_on
+            target:
+              entity_id: "{{ avatar_defs[3].automation }}"
