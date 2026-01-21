@@ -769,6 +769,16 @@ button_card_templates:
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
         path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
+  music:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:cctv
+    tap_action:
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: '[[[ return `${variables.var_dashboard}/music` ]]]'
   wake:
     type: custom:button-card
     template: icon_template
