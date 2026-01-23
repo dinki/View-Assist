@@ -61,6 +61,7 @@ View Assist includes ready-to-use templates:
 | `home` | Navigate to clock view | home |
 | `weather` | Navigate to weather view | weather-sunny |
 | `camera` | Navigate to camera view | cctv |
+| `music` | Navigate to music view | music |
 | `menu` | Toggle menu display | menu | (This is used by the integration and shouldn't be included in your icon list.)
 
 ### Custom Templates

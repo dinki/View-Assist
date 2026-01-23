@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.3.0
+      dashboardversion: 1.3.1
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -769,6 +769,16 @@ button_card_templates:
       service_data:
         device: '[[[ return variables.var_assistsat_entity ]]]'
         path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
+  music:
+    type: custom:button-card
+    template: icon_template
+    icon: mdi:music
+    tap_action:
+      action: call-service
+      service: view_assist.navigate
+      service_data:
+        device: '[[[ return variables.var_assistsat_entity ]]]'
+        path: '[[[ return `${variables.var_dashboard}/music` ]]]'
   wake:
     type: custom:button-card
     template: icon_template
