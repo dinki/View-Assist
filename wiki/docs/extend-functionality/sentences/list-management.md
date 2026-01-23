@@ -112,6 +112,7 @@ command_show2: >-
 
 | Version | Description                                                                               |
 | ------- | ----------------------------------------------------------------------------------------- |
+| v 1.3.2 | Add Romainian translation                                                                 |
 | v 1.3.1 | Update title set order                                                                    |
 | v 1.3.0 | Incremental improvements                                                                  |
 | v 1.2.0 | Added german, spanish and french translations and new options to fine tune spoken content |

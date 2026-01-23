@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.1)
+    Assistant v 1.2.2)
   domain: automation
   input:
     ma_instance:
@@ -24,7 +24,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pt]
+          languages: [de, en, pt, ro]
     play_artist_command:
       name: Play Artist Command
       description: The command to trigger the play artist action
@@ -95,7 +95,15 @@ actions:
             playsong_found: "Tocando {song} por {artist}"
             playsong_not_found: "Desculpe, a música {song} por {artist} não foi encontrada"
             playsong_queue: "Incluindo a música {song} por {artist} na lista"
-
+        ro:
+          responses:
+            playartist_found: "Redau muzică de {artist}"
+            playartist_not_found: "Nu am găsit muzică de {search_artist}"
+            playlist_found: "Redau lista de redare {playlist}"
+            playlist_not_found: "Îmi pare rău, nu a fost găsită nicio listă de redare numită {search_playlist}"
+            playsong_found: "Redau {song} de {artist}"
+            playsong_not_found: "Îmi pare rău, {song} de {artist} nu a fost găsit"
+            playsong_queue: "Adaug în coadă {song} de {artist}"
   - choose:
       - conditions:
           - condition: trigger

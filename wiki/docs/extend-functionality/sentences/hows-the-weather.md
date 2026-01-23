@@ -14,6 +14,7 @@ Special thanks to Scratt for his work on this blueprint
 
 ## Changelog
 
-| Version | Description     |
-| ------- | --------------- |
-| v 1.0.0 | Initial release |
+| Version | Description               |
+| ------- | ------------------------- |
+| v 1.0.1 | Add Romainian translation |
+| v 1.0.0 | Initial release           |
