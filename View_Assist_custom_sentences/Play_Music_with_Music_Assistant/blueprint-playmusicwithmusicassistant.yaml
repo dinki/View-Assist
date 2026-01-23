@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.1)
+    Assistant v 1.2.2)
   domain: automation
   input:
     ma_instance:

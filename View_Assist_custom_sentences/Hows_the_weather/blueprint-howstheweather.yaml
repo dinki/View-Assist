@@ -1,7 +1,8 @@
 blueprint:
   name: View Assist - How's the Weather?
-  description: Ask "How's the Weather?" and ViewAssist will respond with the weather
-    and show the weather view (View Assist howstheweather v 1.0.0)
+  description:
+    Ask "How's the Weather?" and ViewAssist will respond with the weather
+    and show the weather view (View Assist howstheweather v 1.0.1)
   domain: automation
   input:
     language:
@@ -21,171 +22,172 @@ blueprint:
       selector:
         entity:
           filter:
-          - domain:
-            - weather
+            - domain:
+                - weather
           multiple: false
     view:
       name: Dashboard Weather view
       description: The View Assist dashboard view to use for weather (example /dashboard-viewassist/weather)
       default: /view-assist/weather
 trigger:
-- platform: conversation
-  command: !input command_prompt
+  - platform: conversation
+    command: !input command_prompt
 condition: []
 action:
-- variables:
-    target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
-    target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
-    target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
-    weather_entity: !input weather_entity
-    language: !input language
-    view: !input view
-    translations:
-      en:
-        responses:
-          temperature: "It's {temperature} degrees and {condition}"
-        weather_states:
-          sunny: "Sunny"
-          clear-night: "Clear Night"
-          cloudy: "Cloudy"
-          partlycloudy: "Partly Cloudy"
-          rainy: "Rainy"
-          pouring: "Pouring"
-          lightning: "Thunderstorm"
-          lightning-rainy: "Thunderstorm with Rain"
-          snowy: "Snowy"
-          snowy-rainy: "Sleet"
-          windy: "Windy"
-          fog: "Foggy"
-      es:
-        responses:
-          temperature: "Hace {temperature} grados y está {condition}"
-        weather_states:
-          sunny: "Soleado"
-          clear-night: "Noche despejada"
-          cloudy: "Nublado"
-          partlycloudy: "Parcialmente nublado"
-          rainy: "Lluvioso"
-          pouring: "Lluvia intensa"
-          lightning: "Tormenta"
-          lightning-rainy: "Tormenta con lluvia"
-          snowy: "Nevado"
-          snowy-rainy: "Aguanieve"
-          windy: "Ventoso"
-          fog: "Nebuloso"
-      fr:
-        responses:
-          temperature: "Il fait {temperature} degrés et {condition}"
-        weather_states:
-          sunny: "Ensoleillé"
-          clear-night: "Nuit claire"
-          cloudy: "Nuageux"
-          partlycloudy: "Partiellement nuageux"
-          rainy: "Pluvieux"
-          pouring: "Fortes pluies"
-          lightning: "Orage"
-          lightning-rainy: "Orage avec pluie"
-          snowy: "Neigeux"
-          snowy-rainy: "Neige fondue"
-          windy: "Venteux"
-          fog: "Brumeux"          
-      nl:
-        responses:
-          temperature: "Het is {temperature} graden en {condition}"
-        weather_states:
-          sunny: "Zonnig"
-          clear-night: "Heldere nacht"
-          cloudy: "Bewolkt"
-          partlycloudy: "Gedeeltelijk bewolkt"
-          rainy: "Regenachtig"
-          pouring: "Hevige regen"
-          lightning: "Onweer"
-          lightning-rainy: "Onweer met regen"
-          snowy: "Sneeuwachtig"
-          snowy-rainy: "Natsneeuw"
-          windy: "Winderig"
-          fog: "Mistig"
-      de:
-        responses:
-          temperature: "{condition} bei einer Temperatur von {temperature} Grad"
-        weather_states:
-          sunny: "Es ist sonnig"
-          clear-night: "Es ist sternenklarer Himmel"
-          cloudy: "Es ist bewölkt"
-          partlycloudy: "Es ist teilweise bewölkt"
-          rainy: "Es ist regnerisch"
-          pouring: "Es regnet stark"
-          lightning: "Es gewittert"
-          lightning-rainy: "Es gibt Gewitter mit Regen"
-          snowy: "Es schneit"
-          snowy-rainy: "Es gibt Schneeregen"
-          windy: "Es ist windig"
-          fog: "Es ist nebelig"
-      it:
-        responses:
-          temperature: "Ci sono {temperature} gradi e {condition}"
-        weather_states:
-          sunny: "Soleggiato"
-          clear-night: "Notte serena"
-          cloudy: "Nuvoloso"
-          partlycloudy: "Parzialmente nuvoloso"
-          rainy: "Piovoso"
-          pouring: "Pioggia intensa"
-          lightning: "Temporale"
-          lightning-rainy: "Temporale con pioggia"
-          snowy: "Nevoso"
-          snowy-rainy: "Nevischio"
-          windy: "Ventoso"
-          fog: "Nebbioso"
-      pt:
-        responses:
-          temperature: "Faz {temperature} graus e está {condition}"
-        weather_states:
-          sunny: "Ensolarado"
-          clear-night: "Uma noite clara"
-          cloudy: "Nublado"
-          partlycloudy: "Parcialmente nublado"
-          rainy: "Chuvoso"
-          pouring: "Chovendo torrencialmente"
-          lightning: "Com trovoada"
-          lightning-rainy: "Chovendo com trovoada"
-          snowy: "Nevando"
-          snowy-rainy: "Chovendo com granizo"
-          windy: "Ventando"
-          fog: "Com nevoeiro"
-      ro:
-        responses:
-          temperature: "Sunt {temperature} grade și {condition}"
-        weather_states:
-          sunny: "Este însorit"
-          clear-night: "Este noapte senină"
-          cloudy: "Este înnorat"
-          partlycloudy: "Este parțial înnorat"
-          rainy: "Plouă"
-          pouring: "Plouă torențial"
-          lightning: "Este furtună cu descărcări electrice"
-          lightning-rainy: "Este furtună cu ploaie"
-          snowy: "Ninge"
-          snowy-rainy: "Este lapoviță"
-          windy: "Este vânt"
-          fog: "Este ceață"
-    conversation_response: >-
-      {% set weather_state = states(weather_entity) %}
-      {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
-      {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature') | string).replace("{condition}", translated_condition) }}          
-- set_conversation_response: "{{ conversation_response }}"
-- action: view_assist.set_state
-  target:
-    entity_id: "{{ target_satellite_device }}"              
-  data:     
-    last_said: "{{ conversation_response }}"
-- if:
-  - condition: template
-    value_template: '{% if target_satellite_device_type != ''audio_only'' %}true{%
-      else %}false{% endif %}'
-  then:
-  - action: view_assist.navigate
+  - variables:
+      target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
+      target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
+      target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      weather_entity: !input weather_entity
+      language: !input language
+      view: !input view
+      translations:
+        en:
+          responses:
+            temperature: "It's {temperature} degrees and {condition}"
+          weather_states:
+            sunny: "Sunny"
+            clear-night: "Clear Night"
+            cloudy: "Cloudy"
+            partlycloudy: "Partly Cloudy"
+            rainy: "Rainy"
+            pouring: "Pouring"
+            lightning: "Thunderstorm"
+            lightning-rainy: "Thunderstorm with Rain"
+            snowy: "Snowy"
+            snowy-rainy: "Sleet"
+            windy: "Windy"
+            fog: "Foggy"
+        es:
+          responses:
+            temperature: "Hace {temperature} grados y está {condition}"
+          weather_states:
+            sunny: "Soleado"
+            clear-night: "Noche despejada"
+            cloudy: "Nublado"
+            partlycloudy: "Parcialmente nublado"
+            rainy: "Lluvioso"
+            pouring: "Lluvia intensa"
+            lightning: "Tormenta"
+            lightning-rainy: "Tormenta con lluvia"
+            snowy: "Nevado"
+            snowy-rainy: "Aguanieve"
+            windy: "Ventoso"
+            fog: "Nebuloso"
+        fr:
+          responses:
+            temperature: "Il fait {temperature} degrés et {condition}"
+          weather_states:
+            sunny: "Ensoleillé"
+            clear-night: "Nuit claire"
+            cloudy: "Nuageux"
+            partlycloudy: "Partiellement nuageux"
+            rainy: "Pluvieux"
+            pouring: "Fortes pluies"
+            lightning: "Orage"
+            lightning-rainy: "Orage avec pluie"
+            snowy: "Neigeux"
+            snowy-rainy: "Neige fondue"
+            windy: "Venteux"
+            fog: "Brumeux"
+        nl:
+          responses:
+            temperature: "Het is {temperature} graden en {condition}"
+          weather_states:
+            sunny: "Zonnig"
+            clear-night: "Heldere nacht"
+            cloudy: "Bewolkt"
+            partlycloudy: "Gedeeltelijk bewolkt"
+            rainy: "Regenachtig"
+            pouring: "Hevige regen"
+            lightning: "Onweer"
+            lightning-rainy: "Onweer met regen"
+            snowy: "Sneeuwachtig"
+            snowy-rainy: "Natsneeuw"
+            windy: "Winderig"
+            fog: "Mistig"
+        de:
+          responses:
+            temperature: "{condition} bei einer Temperatur von {temperature} Grad"
+          weather_states:
+            sunny: "Es ist sonnig"
+            clear-night: "Es ist sternenklarer Himmel"
+            cloudy: "Es ist bewölkt"
+            partlycloudy: "Es ist teilweise bewölkt"
+            rainy: "Es ist regnerisch"
+            pouring: "Es regnet stark"
+            lightning: "Es gewittert"
+            lightning-rainy: "Es gibt Gewitter mit Regen"
+            snowy: "Es schneit"
+            snowy-rainy: "Es gibt Schneeregen"
+            windy: "Es ist windig"
+            fog: "Es ist nebelig"
+        it:
+          responses:
+            temperature: "Ci sono {temperature} gradi e {condition}"
+          weather_states:
+            sunny: "Soleggiato"
+            clear-night: "Notte serena"
+            cloudy: "Nuvoloso"
+            partlycloudy: "Parzialmente nuvoloso"
+            rainy: "Piovoso"
+            pouring: "Pioggia intensa"
+            lightning: "Temporale"
+            lightning-rainy: "Temporale con pioggia"
+            snowy: "Nevoso"
+            snowy-rainy: "Nevischio"
+            windy: "Ventoso"
+            fog: "Nebbioso"
+        pt:
+          responses:
+            temperature: "Faz {temperature} graus e está {condition}"
+          weather_states:
+            sunny: "Ensolarado"
+            clear-night: "Uma noite clara"
+            cloudy: "Nublado"
+            partlycloudy: "Parcialmente nublado"
+            rainy: "Chuvoso"
+            pouring: "Chovendo torrencialmente"
+            lightning: "Com trovoada"
+            lightning-rainy: "Chovendo com trovoada"
+            snowy: "Nevando"
+            snowy-rainy: "Chovendo com granizo"
+            windy: "Ventando"
+            fog: "Com nevoeiro"
+        ro:
+          responses:
+            temperature: "Sunt {temperature} grade și {condition}"
+          weather_states:
+            sunny: "Este însorit"
+            clear-night: "Este noapte senină"
+            cloudy: "Este înnorat"
+            partlycloudy: "Este parțial înnorat"
+            rainy: "Plouă"
+            pouring: "Plouă torențial"
+            lightning: "Este furtună cu descărcări electrice"
+            lightning-rainy: "Este furtună cu ploaie"
+            snowy: "Ninge"
+            snowy-rainy: "Este lapoviță"
+            windy: "Este vânt"
+            fog: "Este ceață"
+      conversation_response: >-
+        {% set weather_state = states(weather_entity) %}
+        {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
+        {{ translations[language]['responses']['temperature'].replace("{temperature}", state_attr(weather_entity, 'temperature') | string).replace("{condition}", translated_condition) }}
+  - set_conversation_response: "{{ conversation_response }}"
+  - action: view_assist.set_state
+    target:
+      entity_id: "{{ target_satellite_device }}"
     data:
-      device: "{{ target_satellite_device }}"
-      path: "{{ view }}"
+      last_said: "{{ conversation_response }}"
+  - if:
+      - condition: template
+        value_template:
+          "{% if target_satellite_device_type != 'audio_only' %}true{%
+          else %}false{% endif %}"
+    then:
+      - action: view_assist.navigate
+        data:
+          device: "{{ target_satellite_device }}"
+          path: "{{ view }}"
 mode: single
