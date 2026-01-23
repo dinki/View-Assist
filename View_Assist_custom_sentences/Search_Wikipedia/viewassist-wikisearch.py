@@ -23,13 +23,44 @@ def search_wikipedia(searchterm=None, language="en"):
     if searchterm is None:
         return {"error": "Missing searchterm"}
 
-    # Construct the URL with the specified language
-    url = f"https://{language}.wikipedia.org/api/rest_v1/page/summary/{searchterm.replace(' ', '_')}?redirect=true"
-    
     # Custom User-Agent (required!)
     headers = {
         "User-Agent": "HA-WikipediaSearch/1.0 (HomeAssistant pyscript; your.email@example.com)"
     }
+
+    # Step 1: Search Wikipedia to resolve canonical page title
+    search_url = f"https://{language}.wikipedia.org/w/api.php"
+    search_params = {
+        "action": "query",
+        "list": "search",
+        "srsearch": searchterm,
+        "format": "json"
+    }
+
+    search_r = task.executor(
+        requests.get,
+        search_url,
+        params=search_params,
+        headers=headers
+    )
+
+    if search_r.status_code != requests.codes.ok:
+        return {"error": "Search failed", "details": search_r.text}
+
+    search_data = search_r.json()
+    search_results = search_data.get("query", {}).get("search", [])
+
+    if not search_results:
+        return {"error": "No results found"}
+
+    # Use canonical Wikipedia title from search result
+    page_title = search_results[0]["title"]
+
+    # Step 2: Construct summary URL using canonical title
+    url = (
+        f"https://{language}.wikipedia.org/api/rest_v1/page/summary/"
+        f"{page_title.replace(' ', '_')}?redirect=true"
+    )
     
     r = task.executor(requests.get, url, headers=headers)
 
