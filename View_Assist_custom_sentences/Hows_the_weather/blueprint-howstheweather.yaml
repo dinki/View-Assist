@@ -158,7 +158,7 @@ action:
           temperature: "Sunt {temperature} grade și {condition}"
         weather_states:
           sunny: "Este însorit"
-          clear-night: "Este noapte seninăt"
+          clear-night: "Este noapte senină"
           cloudy: "Este înnorat"
           partlycloudy: "Este parțial înnorat"
           rainy: "Plouă"
