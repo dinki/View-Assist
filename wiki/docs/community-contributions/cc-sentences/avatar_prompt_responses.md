@@ -233,7 +233,35 @@ This method works with **any language**, **any voice**, and **any number of cust
 - If too long, the beginning of the user’s command might be missed.
 
 ---
+# View Assist – Change Avatar (Quick Setup Tutorial)
 
+If you want to **change the active View Assist avatar using voice commands**, you can download the blueprint here: 
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/dinki/View-Assist/blob/main/View_Assist_custom_sentences/community_contributions/Avatar_Prompt_Responses/blueprint-change_avatar)
+ 
+## Setup instructions
+
+1. **Import the blueprint** into Home Assistant and create a new automation from it.  
+2. Select the **Assist Satellites** you want to control.  
+3. Select the **avatar sensor(s)** used by View Assist (these update the avatar, GIFs, and prompts).  
+4. Configure up to **four avatars**. For each avatar, provide:  
+   - **Name** – the display name of the avatar.  
+   - **ID** – must match the avatar ID in `config/view-assist/custom_overlays/overlay.html` (e.g., `avatar_jarvis`).  
+   - **Pipeline** – choose a pipeline corresponding to the avatar’s voice (male/female, specific voice model, etc.).  
+   - **Wake word** – select an existing, functional wake word.  
+   - **Custom Prompt Response automation** – a separate automation that handles responses for this avatar (e.g., using a matching voice/prompt).  
+   - **Aliases (optional)** – alternative names for the avatar for easier voice recognition.  
+5. Define **trigger sentences** using `{avatar}` as a placeholder, for example:  
+   - `I want to speak to {avatar}`  
+   - `Vreau să vorbesc cu {avatar}`  
+
+Once configured, saying a sentence like *“I want to speak to Jarvis”* will:  
+- Switch the active avatar across all selected satellites  
+- Update the avatar sensor(s) in View Assist  
+- Enable the correct Custom Prompt Response automation for that avatar  
+- Disable other avatar automations  
+
+This setup ensures each avatar has a **dedicated voice, pipeline, wake word, and automation**, fully synchronized across your devices.
 ## ✅ Summary
 
 Once set up, your system will:
