@@ -17,8 +17,10 @@ blueprint:
       selector:
         entity:
           filter:
-            - domain: group
-      default: "group.viewassist_satellites"
+            - domain:
+              - group
+              - sensor
+      default: "sensor.viewassist_satellites"
 trigger:
   - platform: conversation
     command:
@@ -34,7 +36,7 @@ action:
             {{ sat.entity_id }}
           {% endif %}
         {% endfor %}
-      target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
+      target_display_device: "{{ state_attr(target_satellite_device, 'display_device') }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
   - service: pyscript.viewassist_wolfram_short_answer
