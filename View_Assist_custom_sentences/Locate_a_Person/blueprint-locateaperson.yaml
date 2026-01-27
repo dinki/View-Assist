@@ -1,5 +1,5 @@
 blueprint:
-  name: View Assist - Locate a Person (Case Insensitive)
+  name: View Assist - Locate a Person
   description: Ask Assist to locate a person (View Assist locateaperson v 1.1.0)
   domain: automation
   input:
