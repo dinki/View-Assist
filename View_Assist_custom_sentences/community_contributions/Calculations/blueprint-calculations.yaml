@@ -3,6 +3,13 @@ blueprint:
   description: Calculate the result of a mathematical expression (View Assist Community Contributions - Calculations v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, pl]
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
@@ -33,19 +40,39 @@ action:
       target_display_device: "{{ device_id(state_attr(target_satellite_device, 'display_device')) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+      language: !input language
+      translations:
+        en:
+          responses:
+            result: "The result of {expression} is {answer}."
+            title: "Calculation"
+            expression_label: "Expression"
+            answer_label: "Answer"
+        de:
+          responses:
+            result: "Das Ergebnis von {expression} ist {answer}."
+            title: "Berechnung"
+            expression_label: "Ausdruck"
+            answer_label: "Antwort"
+        pl:
+          responses:
+            result: "Wynik {expression} to {answer}."
+            title: "Obliczenie"
+            expression_label: "Wyrażenie"
+            answer_label: "Odpowiedź"
   - service: pyscript.viewassist_wolfram_short_answer
     data:
       query: "{{ trigger.slots.expression }}"
     response_variable: wolfram_answer
-  - set_conversation_response: "The result of {{ trigger.slots.expression }} is {{ wolfram_answer.response }}."
+  - set_conversation_response: "{{ translations[language]['responses']['result'].replace('{expression}', trigger.slots.expression).replace('{answer}', wolfram_answer.response) }}"
   - service: python_script.set_state
     data:
       entity_id: "{{ target_satellite_device }}"
-      title: Conversion
+      title: "{{ translations[language]['responses']['title'] }}"
       message_font_size: 4vw
       message: >-
-        <b>Expression</b>: <br /\> {{ trigger.slots.expression }}<br /\><br /\> <b>Answer:</b> <br
-        /\> The result of {{ trigger.slots.expression }} is {{ wolfram_answer.response }}.
+        <b>{{ translations[language]['responses']['expression_label'] }}</b>: <br /\> {{ trigger.slots.expression }}<br /\><br /\> <b>{{ translations[language]['responses']['answer_label'] }}:</b> <br
+        /\> {{ translations[language]['responses']['result'].replace('{expression}', trigger.slots.expression).replace('{answer}', wolfram_answer.response) }}
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"
