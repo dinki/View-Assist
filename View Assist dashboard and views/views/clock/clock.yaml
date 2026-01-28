@@ -144,5 +144,5 @@ custom_fields:
           - color: "[[[ return variables.var_font_color_night ]]]"
   time: "[[[ return variables.var_current_time ]]]"
   date: "[[[ return variables.var_date_short ]]]"
-  night: .
+  night: ""
   shader: ""
