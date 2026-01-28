@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en]
+          languages: [de, en, pl]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -123,6 +123,15 @@ action:
             mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
             mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
             info_playing: "Es läuft {title} von {artist}"
+        pl:
+          responses:
+            repeat: "Powiedziałem {last_said}"
+            repeat_remove: "Powiedziałem"
+            do_not_disturb_off: "Tryb nie przeszkadzać został wyłączony"
+            mode_success: "Ustawiam tryb na {mode}"
+            mode_failure_device: "Przepraszam. {mode} nie jest prawidłowym trybem dla tego urządzenia"
+            mode_failure_unrecognized: "Przepraszam. {mode} nie jest prawidłowym trybem. Proszę spróbować {{ modes }}."
+            info_playing: "Teraz gra {title} od {artist}"
   - choose:
       - conditions:
           - condition: trigger
