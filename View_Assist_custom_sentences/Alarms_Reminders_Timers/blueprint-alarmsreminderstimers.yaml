@@ -1,8 +1,8 @@
 blueprint:
-  name: View Assist - Alarms Reminders Timers
+  name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.2.2)
+    v 1.3.0)
   domain: automation
   input:
     alarmsound_path:
@@ -11,6 +11,12 @@ blueprint:
         The path to the sound file that will sound repeatedly when the
         timer expires
       default: /view_assist/views/alarm/sounds_timer_finished.wav
+    use_vaca_onboard_sound:
+      name: Use VACA onboard sound
+      description: If enabled, the View Assist Companion App (VACA) satellite will use the onboard sound rather than the sound in the option above.  All others will use the specified sound.
+      default: false
+      selector:
+        boolean: {}
     snooze_time:
       name: Snooze Time
       description:
@@ -23,6 +29,12 @@ blueprint:
         The View Assist dashboard view to use for displaying the notification
         and buttons to dismiss/snooze
       default: /view-assist/alarm
+    allow_hold_mode:
+      name: Allow Hold Mode
+      description: If enabled, the display will stay (hold) on the timer view until dismissed.
+      default: false
+      selector:
+        boolean: {}
 trigger:
   - platform: conversation
     command:
@@ -101,6 +113,16 @@ action:
       view: !input view
       snooze_time_input: !input snooze_time
       snooze_time: "{{ snooze_time_input | int }}"
+      allow_hold_mode: !input allow_hold_mode
+      use_vaca_onboard_sound: !input use_vaca_onboard_sound
+      is_vaca_device: >-
+        {% set mic_ent = state_attr(target_satellite_device, 'mic_device') %}
+        {% set dev_id = device_id(mic_ent) if mic_ent else none %}
+        {{ 'vaca' in (device_attr(dev_id, 'identifiers') | string) if dev_id else false }}
+      trigger_vaca_onboard: "{{ use_vaca_onboard_sound and is_vaca_device }}"
+      vaca_alarm_switch: >-
+        {% set mic_ent = state_attr(target_satellite_device, 'mic_device') %}
+        {{ device_entities(device_id(mic_ent)) | select('match', '^switch\..*_alarm$') | first | default('') if mic_ent else '' }}
   - choose:
       - conditions:
           - condition: trigger
@@ -127,12 +149,23 @@ action:
           - set_conversation_response: "{{ timer_result.response }}"
           - if:
               - condition: template
-                value_template: "{{ timer_result.timer is defined and timer_result.timer != null and target_satellite_device_type != 'audio_only'}}"
+                value_template:
+                  "{{ timer_result.timer is defined and timer_result.timer !=
+                  null and target_satellite_device_type != 'audio_only'}}"
             then:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
                   path: "{{ view }}"
+          - if:
+              - condition: template
+                value_template: "{{ allow_hold_mode }}"
+            then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  mode: hold
       - conditions:
           - condition: trigger
             id:
@@ -154,10 +187,20 @@ action:
                   "{% if trigger.id == 'ringalarm' %}true{% else %}false{%
                   endif %}"
             then:
-              - action: view_assist.sound_alarm
-                data:
-                  entity_id: "{{ target_mediaplayer_device }}"
-                  media_file: "{{ alarmsound_path }}"
+              - if:
+                  - condition: template
+                    value_template: >-
+                      {{ trigger_vaca_onboard }}
+                then:
+                  - action: switch.turn_on
+                    target:
+                      entity_id: "{{ vaca_alarm_switch }}"
+                else:
+                  - action: view_assist.sound_alarm
+                    data:
+                      entity_id: "{{ target_mediaplayer_device }}"
+                      media_file: "{{ alarmsound_path }}"
+
       - conditions:
           - condition: trigger
             id:
@@ -165,9 +208,19 @@ action:
         sequence:
           - variables:
               timer_id: "{{ trigger.event.data.timer_id }}"
-          - action: view_assist.cancel_sound_alarm
-            data:
-              entity_id: "{{ target_mediaplayer_device }}"
+
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ trigger_vaca_onboard }}
+            then:
+              - action: switch.turn_off
+                target:
+                  entity_id: "{{ vaca_alarm_switch }}"
+            else:
+              - action: view_assist.cancel_sound_alarm
+                data:
+                  entity_id: "{{ target_mediaplayer_device }}"
           - action: view_assist.cancel_timer
             data:
               timer_id: "{{ timer_id }}"
@@ -184,9 +237,18 @@ action:
           - variables:
               new_time: "{{ snooze_time }} minutes"
               timer_id: "{{ trigger.event.data.timer_id }}"
-          - action: view_assist.cancel_sound_alarm
-            data:
-              entity_id: "{{ target_mediaplayer_device }}"
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ trigger_vaca_onboard }}
+            then:
+              - action: switch.turn_off
+                target:
+                  entity_id: "{{ vaca_alarm_switch }}"
+            else:
+              - action: view_assist.cancel_sound_alarm
+                data:
+                  entity_id: "{{ target_mediaplayer_device }}"
           - action: view_assist.snooze_timer
             data:
               timer_id: "{{ timer_id }}"
@@ -206,18 +268,24 @@ action:
           - action: view_assist.get_timers
             data:
               device_id: "{{ trigger.device_id }}"
-              name: '{{ trigger.slots.name if trigger.slots.name is defined else trigger.slots.when if trigger.slots.when is defined else "" }}'
+              name:
+                '{{ trigger.slots.name if trigger.slots.name is defined else trigger.slots.when
+                if trigger.slots.when is defined else "" }}'
               include_expired: true
             response_variable: timer_info
           - variables:
-              timer_id: '{{ timer_info["result"][0].id if timer_info["result"] | length > 0 else "" }}'
-              timer_class:
-                '{{ timer_info["result"][0].timer_class if timer_info["result"] | length
+              timer_id:
+                '{{ timer_info["result"][0].id if timer_info["result"] | length
                 > 0 else "" }}'
+              timer_class:
+                '{{ timer_info["result"][0].timer_class if timer_info["result"]
+                | length > 0 else "" }}'
               timer_name:
                 '{{ timer_info["result"][0].name if timer_info["result"] | length
                 > 0 else "" }}'
-              timer_sentence: '{{ timer_info["result"][0].extra_info.sentence if timer_info["result"] | length > 0 else "" }}'
+              timer_sentence:
+                '{{ timer_info["result"][0].extra_info.sentence if timer_info["result"]
+                | length > 0 else "" }}'
           - if:
               - condition: template
                 value_template: '{% if timer_id != "" %}true{% endif %}'
@@ -228,9 +296,13 @@ action:
               - action: view_assist.cancel_timer
                 data:
                   timer_id: "{{ timer_id }}"
-              - set_conversation_response: Your {{ timer_name if timer_name else timer_sentence }} {{ timer_class }} has been canceled
+              - set_conversation_response:
+                  Your {{ timer_name if timer_name else timer_sentence
+                  }} {{ timer_class }} has been canceled
             else:
-              - set_conversation_response: I could not find an active timer called {{ trigger.slots.name }}
+              - set_conversation_response:
+                  I could not find an active timer called {{ trigger.slots.name
+                  }}
               - if:
                   - condition: template
                     value_template:
@@ -252,22 +324,28 @@ action:
               name: '{{ trigger.slots.name if trigger.slots.name is defined else "" }}'
             response_variable: timer_info
           - variables:
-              timer_id: '{{ timer_info["result"][0].id if timer_info["result"] | length > 0 else "" }}'
-              timer_class:
-                '{{ timer_info["result"][0].timer_class if timer_info["result"] | length
+              timer_id:
+                '{{ timer_info["result"][0].id if timer_info["result"] | length
                 > 0 else "" }}'
+              timer_class:
+                '{{ timer_info["result"][0].timer_class if timer_info["result"]
+                | length > 0 else "" }}'
               timer_name:
                 '{{ timer_info["result"][0].name if timer_info["result"] | length
                 > 0 else "" }}'
               timer_duration:
-                '{{ timer_info["result"][0].duration if timer_info["result"] | length
-                > 0 else "" }}'
-              time_left: '{{ timer_info["result"][0].expiry.text if timer_info["result"] | length > 0 else "" }}'
+                '{{ timer_info["result"][0].duration if timer_info["result"]
+                | length > 0 else "" }}'
+              time_left:
+                '{{ timer_info["result"][0].expiry.text if timer_info["result"]
+                | length > 0 else "" }}'
           - if:
               - condition: template
                 value_template: "{% if timer_id != '' %}true{% endif %}"
             then:
-              - set_conversation_response: You have {{ time_left }} on your {{ timer_name if timer_name else timer_duration}} {{ timer_class}}
+              - set_conversation_response:
+                  You have {{ time_left }} on your {{ timer_name
+                  if timer_name else timer_duration}} {{ timer_class}}
               - if:
                   - condition: template
                     value_template:
@@ -279,7 +357,9 @@ action:
                       device: "{{ target_satellite_device }}"
                       path: "{{ view }}"
             else:
-              - set_conversation_response: No timer {{"called " ~ trigger.slots.name if trigger.slots.name is defined else "" }} could be found
+              - set_conversation_response:
+                  No timer {{"called " ~ trigger.slots.name if trigger.slots.name
+                  is defined else "" }} could be found
               - if:
                   - condition: template
                     value_template:
@@ -303,26 +383,15 @@ action:
             data:
               device_id: "{{ device_id }}"
             response_variable: timer_info
-          - set_conversation_response: |-
-              {% set active_timers = timer_info['result'] | selectattr('status',
-              '!=', 'expired') | list %}
-              {% set count = active_timers | length %}
-              {% if count == 0 %}
-                There are no active timers.
-              {% else %}
-                  {% if count == 1 %}
-                    There is 1 active timer:
-                  {% else %}
-                    There are {{ count }} active timers:
-                  {% endif -%}
-                  {% for timer in active_timers -%}
-                    {%- if count > 1 and loop.last %}
-                      {{ 'and ' ~ timer['expiry']['speak'] }},
-                    {% else %}
-                      {{ timer['expiry']['speak'] }},
-                    {% endif -%}
-                  {% endfor %}
-              {% endif %}"
+          - set_conversation_response:
+              "{% set active_timers = timer_info['result'] | selectattr('status',\n'!=',
+              'expired') | list %}\n{% set count = active_timers | length %}\n{% if count
+              == 0 %}\n  There are no active timers.\n{% else %}\n    {% if count == 1 %}\n
+              \     There is 1 active timer:\n    {% else %}\n      There are {{ count }}
+              active timers:\n    {% endif -%}\n    {% for timer in active_timers -%}\n
+              \     {%- if count > 1 and loop.last %}\n        {{ 'and ' ~ timer['expiry']['speak']
+              }},\n      {% else %}\n        {{ timer['expiry']['speak'] }},\n      {% endif
+              -%}\n    {% endfor %}\n{% endif %}\""
           - if:
               - condition: template
                 value_template:
@@ -352,5 +421,3 @@ action:
             else:
               - set_conversation_response: This device does not have a display to show timers
 mode: parallel
-
-
