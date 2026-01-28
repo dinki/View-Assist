@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  clockcardversion: 1.5.0
+  clockcardversion: 1.5.1
   var_background: >-
     [[[ try {if (hass.states[variables.var_assistsat_entity] && 
     hass.states[variables.var_assistsat_entity].attributes.mode === "night")
