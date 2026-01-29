@@ -58,7 +58,7 @@ target_satellite_device is set by looking through all of the View Assist instanc
 
 ## How are VA status and launch icons defined?
 
-VA provides a method for providing both status and launch icons in the top right side of the view area.  These icons are custom button elements that can be defined in the [icon template](https://github.com/dinki/View-Assist/blob/main/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L512) portion of the dashboard.  These custom button icons follow the same flexibility for adding actions based on single and double tape as well as long press.  Aside from the built in VA functionality, the user is free to create these to fire services based on the type of press.  Here is an example for creating a weather icon that when single pressed will change views to the `weather` view using the `navigate` service:
+VA provides a method for providing both status and launch icons in the top right side of the view area.  These icons are custom button elements that can be defined in the [icon template](https://github.com/dinki/View-Assist/blob/main/View%20Assist%20dashboard%20and%20views/dashboard/dashboard.yaml#L512) portion of the dashboard.  These custom button icons follow the same flexibility for adding actions based on single and double tap as well as long press.  Aside from the built in VA functionality, the user is free to create these to fire services based on the type of press.  Here is an example for creating a weather icon that when single pressed will change views to the `weather` view using the `navigate` service:
 
 ```
   weather:
