@@ -7,6 +7,13 @@ blueprint:
     You can use multiple names for the same camera entity. (v 2.0.1)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, pl]
     command:
       name: Command Text
       description: |
@@ -103,7 +110,24 @@ action:
           response_all: !input response_all
           fallback_behavior: !input fallback_behavior
           hold_timeout: !input hold_timeout
+          language: !input language
           requested_camera: "{{ trigger.slots.camera | default('') | lower }}"
+          translations:
+            en:
+              responses:
+                camera_not_found_show: "Camera '{camera}' not found. Showing configured cameras."
+                camera_not_found_error: "Sorry, I couldn't find a camera named '{camera}'. Available cameras are: {available}."
+                camera_not_found_short: "Camera '{camera}' not found."
+            de:
+              responses:
+                camera_not_found_show: "Kamera '{camera}' nicht gefunden. Zeige konfigurierte Kameras."
+                camera_not_found_error: "Entschuldigung, ich konnte keine Kamera namens '{camera}' finden. Verfügbare Kameras sind: {available}."
+                camera_not_found_short: "Kamera '{camera}' nicht gefunden."
+            pl:
+              responses:
+                camera_not_found_show: "Kamera '{camera}' nie znaleziona. Wyświetlam skonfigurowane kamery."
+                camera_not_found_error: "Przepraszam, nie mogłem znaleźć kamery o nazwie '{camera}'. Dostępne kamery to: {available}."
+                camera_not_found_short: "Kamera '{camera}' nie znaleziona."
           timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
           camera_entities_list: >-
             {% set camera_list = cameras.keys() | list %}
@@ -169,22 +193,22 @@ action:
                     data:
                       device: "{{ target_satellite_device }}"
                       path: "{{ view }}?show=configured&cameras={{ camera_entities_list }}{{ timeout_param }}"
-                  - set_conversation_response: "Camera '{{ requested_camera }}' not found. Showing configured cameras."
+                  - set_conversation_response: "{{ translations[language]['responses']['camera_not_found_show'].replace('{camera}', requested_camera) }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
                     data:
-                      last_said: "Camera '{{ requested_camera }}' not found. Showing configured cameras."
+                      last_said: "{{ translations[language]['responses']['camera_not_found_show'].replace('{camera}', requested_camera) }}"
               - conditions:
                   - condition: template
                     value_template: "{{ fallback_behavior == 'speak_error' }}"
                 sequence:
-                  - set_conversation_response: "Sorry, I couldn't find a camera named '{{ requested_camera }}'. Available cameras are: {% for entity, names in cameras.items() %}{{ names | join(', ') }}{% if not loop.last %}, {% endif %}{% endfor %}."
+                  - set_conversation_response: "{{ translations[language]['responses']['camera_not_found_error'].replace('{camera}', requested_camera).replace('{available}', cameras.values() | map('join', ', ') | join(', ')) }}"
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
                     data:
-                      last_said: "Camera '{{ requested_camera }}' not found."
+                      last_said: "{{ translations[language]['responses']['camera_not_found_short'].replace('{camera}', requested_camera) }}"
             default: []
 mode: single
 

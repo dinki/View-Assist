@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en]
+          languages: [de, en, pl]
     increasetemperature:
       name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
@@ -76,6 +76,13 @@ action:
             tstat_set: "Thermostattemperatur auf {amount} Grad eingestellt"
             tstat_show: "Thermostat wird angezeigt"
             tstat_display_error: "Entschuldigung. Dieses Gerät kann das Thermostat nicht anzeigen"
+        pl:
+          responses:
+            tstat_raise: "Temperatura termostatu podniesiona o {amount} stopień"
+            tstat_lower: "Temperatura termostatu obniżona o {amount} stopień"
+            tstat_set: "Temperatura termostatu ustawiona na {amount} stopni"
+            tstat_show: "Wyświetlam termostat"
+            tstat_display_error: "Przepraszam. To urządzenie nie może wyświetlić termostatu"
   - action: view_assist.set_state
     target:
       entity_id: "{{ target_satellite_device }}"

@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, it]
+          languages: [de, en, it, pl]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -89,6 +89,17 @@ action:
             minute_label: "Minuten zuvor"
             hour_label: "Stunden zuvor"
             day_label: "Tage zuvor"
+        pl:
+          responses:
+            person_away: "{person} jest poza domem."
+            person_location: "{person} jest w {location}"
+            person_undefined: "{person} nie został zdefiniowany"
+          last_update:
+            prefix: "Ostatnia aktualizacja"
+            now_label: "teraz"
+            minute_label: "minut temu"
+            hour_label: "godzin temu"
+            day_label: "dni temu"
 
   - if:
       - condition: template

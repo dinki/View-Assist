@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl, ro]
+          languages: [de, en, es, fr, it, nl, pl, ro]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -154,6 +154,22 @@ action:
             snowy-rainy: "Chovendo com granizo"
             windy: "Ventando"
             fog: "Com nevoeiro"
+        pl:
+          responses:
+            temperature: "Jest {temperature} stopni i {condition}"
+          weather_states:
+            sunny: "Słonecznie"
+            clear-night: "Bezchmurna noc"
+            cloudy: "Pochmurno"
+            partlycloudy: "Częściowe zachmurzenie"
+            rainy: "Deszczowo"
+            pouring: "Ulewa"
+            lightning: "Burza"
+            lightning-rainy: "Burza z deszczem"
+            snowy: "Śnieżnie"
+            snowy-rainy: "Deszcz ze śniegiem"
+            windy: "Wietrznie"
+            fog: "Mgliście"
         ro:
           responses:
             temperature: "Sunt {temperature} grade și {condition}"
