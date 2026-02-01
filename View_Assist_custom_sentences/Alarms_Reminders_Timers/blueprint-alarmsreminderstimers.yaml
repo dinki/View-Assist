@@ -2,9 +2,19 @@ blueprint:
   name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.0-beta2)
+    v 1.3.0-beta3)
   domain: automation
   input:
+    spokenlanguage:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages:
+          - en
+          native_name: false
+          no_sort: false  
     alarmsound_path:
       name: Alarm Sound Path
       description:
@@ -164,6 +174,7 @@ action:
         == 'conversation' else trigger.event.data.entity_id }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      spokenlanguage: !input spokenlanguage
       alarmsound_path: !input alarmsound_path
       view: !input view
       snooze_time_input: !input snooze_time
@@ -178,6 +189,18 @@ action:
       vaca_alarm_switch: >-
         {% set mic_ent = state_attr(target_satellite_device, 'mic_device') %}
         {{ device_entities(device_id(mic_ent)) | select('match', '^switch\..*_alarm$') | first | default('') if mic_ent else '' }}
+      translations:
+        en:
+          responses:
+            no_active_timers: "There are no active timers."
+            one_active_timer: "There is one active timer:"
+            multiple_active_timers: "There are {count} active timers:"  
+            final_timer:  "and {timer_expiry_speak}"   
+            no_display: "This device does not have a display to show timers" 
+            timer_cancel: "Your {timer_info} has been canceled"  
+            named_timer_not_found: "No active timer named {timername} could be found"
+            timer_not_found: "The {timer_info} could not be found"
+            time_left: "You have {time_left} on your {timer_info}"
   - choose:
       - conditions:
           - condition: trigger
@@ -417,9 +440,8 @@ action:
               - action: view_assist.cancel_timer
                 data:
                   timer_id: "{{ timer_id }}"
-              - set_conversation_response:
-                  Your {{ timer_name if timer_name else timer_sentence
-                  }} {{ timer_class }} has been canceled
+              - set_conversation_response: >
+                  {{ translations[spokenlanguage]['responses']['timer_cancel'].replace('{timer_info}', (timer_name if timer_name else timer_sentence) ~ ' ' ~ timer_class) }}
               - if:
                   - condition: template
                     value_template: "{{ allow_hold_mode and type == 'timer'}}"
@@ -430,9 +452,8 @@ action:
                     data:
                       mode: normal
             else:
-              - set_conversation_response:
-                  I could not find an active timer called {{ trigger.slots.name
-                  }}
+              - set_conversation_response: >
+                  {{ translations[spokenlanguage]['responses']['named_timer_not_found'].replace('{timername}', trigger.slots.name) }}
               - if:
                   - condition: template
                     value_template:
@@ -506,9 +527,11 @@ action:
               - condition: template
                 value_template: "{% if timer_id != '' %}true{% endif %}"
             then:
-              - set_conversation_response:
-                  You have {{ time_left }} on your {{ timer_name
-                  if timer_name else timer_duration}} {{ timer_class}}
+              - set_conversation_response: >
+                  {{ translations[spokenlanguage]['responses']['time_left']
+                    .replace('{time_left}', time_left)
+                    .replace('{timer_info}', (timer_name if timer_name else timer_duration) ~ ' ' ~ timer_class) 
+                  }}                  
               - if:
                   - condition: template
                     value_template:
@@ -521,8 +544,7 @@ action:
                       path: "{{ view }}"
             else:
               - set_conversation_response:
-                  No timer {{"called " ~ trigger.slots.name if trigger.slots.name
-                  is defined else "" }} could be found
+                  {{ translations[spokenlanguage]['responses']['timer_not_found'].replace('{timer_info}', (timer_name if timer_name else timer_sentence) ~ ' ' ~ timer_class) }}
               - if:
                   - condition: template
                     value_template:
@@ -546,15 +568,25 @@ action:
             data:
               device_id: "{{ device_id }}"
             response_variable: timer_info
-          - set_conversation_response:
-              "{% set active_timers = timer_info['result'] | selectattr('status',\n'!=',
-              'expired') | list %}\n{% set count = active_timers | length %}\n{% if count
-              == 0 %}\n  There are no active timers.\n{% else %}\n    {% if count == 1 %}\n
-              \     There is 1 active timer:\n    {% else %}\n      There are {{ count }}
-              active timers:\n    {% endif -%}\n    {% for timer in active_timers -%}\n
-              \     {%- if count > 1 and loop.last %}\n        {{ 'and ' ~ timer['expiry']['speak']
-              }},\n      {% else %}\n        {{ timer['expiry']['speak'] }},\n      {% endif
-              -%}\n    {% endfor %}\n{% endif %}\""
+          - set_conversation_response: >
+              {% set active_timers = timer_info['result'] | selectattr('status', '!=', 'expired') | list %}
+              {% set count = active_timers | length %}
+              {% if count == 0 %}
+                {{ translations[spokenlanguage]['responses']['no_active_timers'] }}
+              {% else %}
+                {% if count == 1 %}
+                  {{ translations[spokenlanguage]['responses']['one_active_timer'] }}
+                {% else %}
+                  {{ translations[spokenlanguage]['responses']['multiple_active_timers'].replace('{count}', count | string) }}
+                {% endif %}
+                {% for timer in active_timers -%}
+                  {% if count > 1 and loop.last -%}
+                    {{ translations[spokenlanguage]['responses']['final_timer'].replace('{timer_expiry_speak}', timer['expiry']['speak']) }}
+                  {%- else -%}
+                    {{ timer['expiry']['speak'] }}{{ ',' if count > 1 else '' }}
+                  {%- endif %}
+                {%- endfor %}
+              {% endif %}            
           - if:
               - condition: template
                 value_template:
@@ -582,5 +614,6 @@ action:
                   path: "{{ view }}"
               - set_conversation_response: ""
             else:
-              - set_conversation_response: This device does not have a display to show timers
+              - set_conversation_response: >
+                 {{ translations[spokenlanguage]['responses']['no_display'] }}
 mode: parallel
