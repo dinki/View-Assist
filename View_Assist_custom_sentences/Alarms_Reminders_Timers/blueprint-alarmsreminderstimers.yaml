@@ -112,7 +112,7 @@ action:
           - variables:
               device_id: "{{ trigger.device_id }}"
               type: "{{ trigger.id }}"
-              time: "{{ trigger.slots.when }}"
+              time: "{{ trigger.slots.when | regex_replace('-', ' ') }}"
               name: '{{ trigger.slots.name if trigger.slots.name is defined else "" }}'
               language: "{{ trigger.user_input.language }}"
           - action: view_assist.set_timer
