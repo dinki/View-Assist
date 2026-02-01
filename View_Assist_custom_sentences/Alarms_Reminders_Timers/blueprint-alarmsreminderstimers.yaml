@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.0-beta1)
+    v 1.3.0-beta2)
   domain: automation
   input:
     alarmsound_path:
@@ -35,49 +35,104 @@ blueprint:
       default: false
       selector:
         boolean: {}
+    trigger_sentences_section:
+          name: "Trigger Sentence Configuration"
+          icon: mdi:form-select
+          description: "Modify these sentences to match your language or preferences"
+          collapsed: true
+          input:  
+            timer:
+              name: Set Timer
+              description: "Sentences to create a new timer."
+              default:
+                - "set [a] timer for {when}"
+                - "set [a] {when} timer"
+                - "(set|start) [a | an] {name} timer for {when}"
+              selector:
+                object: {}
+            reminder:
+              name: Set Reminder
+              description: "Sentences to create a new reminder."
+              default:
+                - "(remind me | set a reminder) to {name} (at | in) {when}"
+                - "remind me (at | in) {when} to {name}"
+                - "set a reminder (at | for) {when} to {name}"
+                - "set a reminder for {when}"
+              selector:
+                object: {}
+            alarm:
+              name: Set Alarm
+              description: "Sentences to create a new alarm."
+              default:
+                - "set [an] alarm for {when}"
+                - "set a {name} alarm for {when}"
+              selector:
+                object: {}
+            listtimers:
+              name: List Timers
+              description: "Sentences specifically for listing active timers/alarms."
+              default:
+                - "list [me] my (timers | alarms | reminders)"
+              selector:
+                object: {}
+            showtimers:
+              name: Show Timers
+              description: "Sentences specifically for showing active timers/alarms on a display."
+              default:
+                - "show [me] my (timers | alarms | reminders)"
+              selector:
+                object: {}
+            snoozealarm:
+              name: Snooze Alarm
+              description: "Sentences to snooze a ringing alarm."
+              default:
+                - "snooze [my] (alarm | timer | reminder)"
+              selector:
+                object: {}
+            timeremaining:
+              name: Time Remaining
+              description: "Sentences to check how much time is left."
+              default:
+                - "how much time [is] left on my (alarm | timer | reminder)"
+                - "how much time [is] left on my {name} (alarm | timer | reminder)"
+                - "how (long | long's) [is] left on my (alarm | timer | reminder)"
+                - "how (long | long's) [is] left on my {name} (alarm | timer | reminder)"
+              selector:
+                object: {}
+            canceltimer:
+              name: Cancel Timer
+              description: "Sentences to stop or cancel a timer/alarm."
+              default:
+                - "cancel my {name} (alarm | timer | reminder)"
+                - "cancel my (alarm | timer | reminder) for {when}"
+                - "(Turn off | cancel | stop) [my] (alarm | timer | reminder)"
+              selector:
+                object: {} 
+        
 trigger:
   - platform: conversation
-    command:
-      - set [a] timer for {when}
-      - set [a] {when} timer
-      - (set|start) [a | an] {name} timer for {when}
+    command: !input timer
     id: timer
   - platform: conversation
-    command:
-      - (remind me | set a reminder) to {name} (at | in) {when}
-      - remind me (at | in) {when} to {name}
-      - set a reminder (at | for) {when} to {name}
-      - set a reminder for {when}
+    command: !input reminder
     id: reminder
   - platform: conversation
-    command:
-      - set [an] alarm for {when}
-      - set a {name} alarm for {when}
+    command: !input alarm
     id: alarm
   - platform: conversation
-    command:
-      - list [me] my (timers | alarms | reminders)
+    command: !input listtimers
     id: listtimers
   - platform: conversation
-    command:
-      - show [me] my (timers | alarms | reminders)
+    command: !input showtimers
     id: showtimers
   - platform: conversation
-    command:
-      - snooze [my] (alarm | timer | reminder)
+    command: !input snoozealarm
     id: snoozealarm
   - platform: conversation
-    command:
-      - how much time [is] left on my (alarm | timer | reminder)
-      - how much time [is] left on my {name} (alarm | timer | reminder)
-      - how (long | long's) [is] left on my (alarm | timer | reminder)
-      - how (long | long's) [is] left on my {name} (alarm | timer | reminder)
+    command: !input timeremaining
     id: timeremaining
   - platform: conversation
-    command:
-      - cancel my {name} (alarm | timer | reminder)
-      - cancel my (alarm | timer | reminder) for {when}
-      - (Turn off | cancel | stop) [my] (alarm | timer | reminder)
+    command: !input canceltimer
     id: canceltimer
   - event_type: va_timer_warning
     id: timerwarning
