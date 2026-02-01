@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.0-beta3)
+    v 1.3.0-beta4)
   domain: automation
   input:
     spokenlanguage:
@@ -117,8 +117,7 @@ blueprint:
                 - "cancel my (alarm | timer | reminder) for {when}"
                 - "(Turn off | cancel | stop) [my] (alarm | timer | reminder)"
               selector:
-                object: {} 
-        
+                object: {}        
 trigger:
   - platform: conversation
     command: !input timer
@@ -166,6 +165,20 @@ trigger:
     enabled: true
     event_data:
       command: dismiss alarm
+  - alias: When VA cancel_timer runs
+    trigger: event
+    id: cancel_timer_trigger
+    event_type: call_service
+    event_data:
+      domain: view_assist
+      service: cancel_timer   
+  - alias: When VA set_timer runs
+    trigger: event
+    id: set_timer_trigger
+    event_type: call_service
+    event_data:
+      domain: view_assist
+      service: set_timer
 condition: []
 action:
   - variables:
@@ -244,39 +257,6 @@ action:
                   entity_id: "{{ target_satellite_device }}"
                 data:
                   mode: hold
-          - action: view_assist.get_timers
-            data: {}
-            response_variable: timer_data
-          - variables:
-              timer_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'timer') | list | count }}"
-              reminder_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
-              alarm_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
-          - if:
-              - condition: template
-                value_template: "{{ timer_count == 1 }}"
-            then:
-              - action: view_assist.add_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|timer-outline"
-
-          - if:
-              - condition: template
-                value_template: "{{ reminder_count == 1 }}"
-            then:
-              - action: view_assist.add_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|reminder"
-
-          - if:
-              - condition: template
-                value_template: "{{ alarm_count == 1 }}"
-            then:
-              - action: view_assist.add_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|alarm"
       - conditions:
           - condition: trigger
             id:
@@ -343,36 +323,6 @@ action:
           - action: view_assist.get_timers
             data: {}
             response_variable: timer_data
-          - variables:
-              timer_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'timer') | list | count }}"
-              reminder_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
-              alarm_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
-          - if:
-              - condition: template
-                value_template: "{{ timer_count == 0 }}"
-            then:
-              - action: view_assist.remove_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|timer-outline"
-
-          - if:
-              - condition: template
-                value_template: "{{ reminder_count == 0 }}"
-            then:
-              - action: view_assist.remove_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|reminder"
-
-          - if:
-              - condition: template
-                value_template: "{{ alarm_count == 0 }}"
-            then:
-              - action: view_assist.remove_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|alarm"
       - conditions:
           - condition: trigger
             id:
@@ -464,39 +414,6 @@ action:
                     data:
                       device: "{{ target_satellite_device }}"
                       path: "{{ view }}"
-          - action: view_assist.get_timers
-            data: {}
-            response_variable: timer_data
-          - variables:
-              timer_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'timer') | list | count }}"
-              reminder_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
-              alarm_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
-          - if:
-              - condition: template
-                value_template: "{{ timer_count == 0 }}"
-            then:
-              - action: view_assist.remove_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|timer-outline"
-
-          - if:
-              - condition: template
-                value_template: "{{ reminder_count == 0 }}"
-            then:
-              - action: view_assist.remove_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|reminder"
-
-          - if:
-              - condition: template
-                value_template: "{{ alarm_count == 0 }}"
-            then:
-              - action: view_assist.remove_status_item
-                data:
-                  entity_id: "{{ target_satellite_device }}"
-                  status_item: "view:alarm|alarm"
       - conditions:
           - condition: trigger
             id:
@@ -543,7 +460,7 @@ action:
                       device: "{{ target_satellite_device }}"
                       path: "{{ view }}"
             else:
-              - set_conversation_response:
+              - set_conversation_response: >
                   {{ translations[spokenlanguage]['responses']['timer_not_found'].replace('{timer_info}', (timer_name if timer_name else timer_sentence) ~ ' ' ~ timer_class) }}
               - if:
                   - condition: template
@@ -616,4 +533,120 @@ action:
             else:
               - set_conversation_response: >
                  {{ translations[spokenlanguage]['responses']['no_display'] }}
+      - conditions:
+          - condition: trigger
+            id: 
+              - cancel_timer_trigger
+        sequence:
+          - variables:
+              timer_id: "{{ trigger.event.data.service_data.timer_id }}"
+          - delay: "00:00:05"    
+          - action: view_assist.get_timers
+            data: {}
+            response_variable: timer_data
+          - variables:
+              results: "{{ timer_data.get('result', []) }}"
+              timer_count: "{{ result | selectattr('timer_class', 'eq', 'timer') | list | count }}"
+              reminder_count: "{{ result | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
+              alarm_count: "{{ result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
+              all_display_entities: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
+              contains_timer_icon: >
+                {% set ns = namespace(found=[]) %}
+                {% for e in all_display_entities %}
+                  {% set icons = state_attr(e, 'status_icons') %}
+                  {% if icons is iterable and 'view:alarm|timer-outline' in icons %}
+                    {% set ns.found = ns.found + [e] %}
+                  {% endif %}
+                {% endfor %}
+                {{ ns.found }}
+              contains_reminder_icon: >
+                {% set ns = namespace(found=[]) %}
+                {% for e in all_display_entities %}
+                  {% set icons = state_attr(e, 'status_icons') %}
+                  {% if icons is iterable and 'view:alarm|reminder' in icons %}
+                    {% set ns.found = ns.found + [e] %}
+                  {% endif %}
+                {% endfor %}
+                {{ ns.found }}
+              contains_alarm_icon: >
+                {% set ns = namespace(found=[]) %}
+                {% for e in all_display_entities %}
+                  {% set icons = state_attr(e, 'status_icons') %}
+                  {% if icons is iterable and 'view:alarm|alarm' in icons %}
+                    {% set ns.found = ns.found + [e] %}
+                  {% endif %}
+                {% endfor %}
+                {{ ns.found }}              
+          - if:
+              - condition: template
+                value_template: "{{ timer_count == 0 and contains_timer_icon | count > 0 }}"
+            then:
+              - repeat:
+                  for_each: "{{ contains_timer_icon }}"
+                  sequence:
+                    - action: view_assist.remove_status_item
+                      data:
+                        entity_id: "{{ repeat.item }}"
+                        status_item: "view:alarm|timer-outline"            
+          - if:
+              - condition: template
+                value_template: "{{ timer_count == 0 and contains_reminder_icon | count > 0 }}"
+            then:
+              - repeat:
+                  for_each: "{{ contains_reminder_icon }}"
+                  sequence:
+                    - action: view_assist.remove_status_item
+                      data:
+                        entity_id: "{{ repeat.item }}"
+                        status_item: "view:alarm|reminder"  
+          - if:
+              - condition: template
+                value_template: "{{ timer_count == 0 and contains_alarm_icon | count > 0 }}"
+            then:
+              - repeat:
+                  for_each: "{{ contains_alarm_icon }}"
+                  sequence:
+                    - action: view_assist.remove_status_item
+                      data:
+                        entity_id: "{{ repeat.item }}"
+                        status_item: "view:alarm|alarm"                                                     
+      - conditions:
+          - condition: trigger
+            id: 
+              - set_timer_trigger
+        sequence:
+          - delay: "00:00:05"
+          - action: view_assist.get_timers
+            data: 
+              device_id: "{{ trigger.event.data.service_data.device_id }}"
+            response_variable: timer_data
+          - variables:
+              target_satellite_device: "{{ timer_data['result'][0]['entity_id'] }}"
+              timer_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'timer') | list | count }}"
+              reminder_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
+              alarm_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
+          - if:
+              - condition: template
+                value_template: "{{ timer_count == 1 }}"
+            then:
+              - action: view_assist.add_status_item
+                data:
+                  entity_id: "{{ target_satellite_device }}"
+                  status_item: "view:alarm|timer-outline"
+          - if:
+              - condition: template
+                value_template: "{{ reminder_count == 1 }}"
+            then:
+              - action: view_assist.add_status_item
+                data:
+                  entity_id: "{{ target_satellite_device }}"
+                  status_item: "view:alarm|reminder"
+          - if:
+              - condition: template
+                value_template: "{{ alarm_count == 1 }}"
+            then:
+              - action: view_assist.add_status_item
+                data:
+                  entity_id: "{{ target_satellite_device }}"
+                  status_item: "view:alarm|alarm"
 mode: parallel
