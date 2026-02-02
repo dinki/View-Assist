@@ -9,8 +9,10 @@ This blueprint allows you to calculate the result of a mathematical expression u
 ## Prerequisites
 
 - You must have Pyscript installed [See installation video](https://www.youtube.com/watch?v=jpJxZaisbGQ)
+- You must have python_script enabled [See documentation](https://www.home-assistant.io/integrations/python_script)
+- You must have browser_mod installed [See documentation](https://github.com/thomasloven/hass-browser_mod)
 - You must set up an account and create an API key for Wolfram Alpha's [Short Answers](https://products.wolframalpha.com/short-answers-api/documentation) API. Free API keys are alloted 2,000 calls per month.
-- You must download the [required pyscript](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Frefs%2Fheads%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FAsk_Wolfram%2Fviewassist-get_wolfram_short_answer.py), add your appid to the `appid` parameter, and place this file in your 'pyscripts' directory on your Home Assistant Server. Note that if you have multiple custom sentences using this script, this only needs to be performed once.
+- You must download the [required pyscript](https://raw.githubusercontent.com/dinki/View-Assist/refs/heads/main/View_Assist_custom_sentences/community_contributions/Ask_Wolfram/viewassist_wolfram_short_answer.py), add your appid to the `appid` parameter, and place this file in your 'pyscripts' directory on your Home Assistant Server. Note that if you have multiple custom sentences using this script, this only needs to be performed once.
 
 ## Changelog
 
