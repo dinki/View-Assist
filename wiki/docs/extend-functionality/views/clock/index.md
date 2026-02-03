@@ -20,7 +20,9 @@ Views are automatically installed courtesy of the View Assist integration
 
 ## Changelog
 
-| Version | Description                  |
-| ------- | ---------------------------- |
-| v 1.4.0 | Update for better night mode |
-| v 1.0.0 | Initial release              |
+| Version | Description                    |
+| ------- | ------------------------------ |
+| v 1.5.1 | Fix for night mode white pixel |
+| v 1.5.0 | Various improvements           |
+| v 1.4.0 | Update for better night mode   |
+| v 1.0.0 | Initial release                |

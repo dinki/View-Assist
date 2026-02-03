@@ -1,13 +1,13 @@
 ---
-title: Sentence Gallery
+title: Automations Gallery
 sidebar_position: 1
 ---
 
-View Assist is easily extendable by adding custom sentences which provide data to different custom views. On this page you will find a gallery of premade custom sentences. You will find links to the requirements and installation instructions. Blueprints have been made available for easy installation.
+View Assist is easily extendable by adding custom sentences automations which provide data to different custom views. On this page you will find a gallery of premade custom sentences blueprints. You will find links to the requirements and installation instructions. These blueprints have been made available for easy installation. You MUST use these to extend the base Home Assistant voice experience to fully utilize View Assist. Use these blueprints to create automations to fit your needs.
 
 We encourage everyone to share their creations so that others might enjoy what you have brought to life. These user submitted blueprints can be found in the [Community Contribution](../../community-contributions/index.md) section of the wiki.
 
-| Sentence                                                        | Description                                                                           | Languages                  |
+| Automations                                                     | Description                                                                           | Languages                  |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------- |
 | [Alarms Reminders & Timers](sentences/alarms-reminders-timers)  | Allows for an on demand call to create and list alarms, reminders and timers          | en                         |
 | [Broadcast](sentences/broadcast)                                | Broadcast messages to other View Assist Satellites                                    | en                         |

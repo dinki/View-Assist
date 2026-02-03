@@ -25,3 +25,12 @@ You are trying to use View Assist on a PC or other nonView Assist satellite devi
 View Assist relies on Assist voice automations to provide information dynamically to the views. When you browse to views manually you will not have the underlying data the view needs to display something worth seeing.
 
 </details>
+
+<details>
+  <summary>Why doesn't my view change when I issue the commands from the videos and wiki?</summary>
+
+View Assist relies on automations from the View Assist blueprints to incorporate those controls. Some have made assumptions that everything is provide on View Assist integration install. This is incorrect. The View Assist controls are ala carte in that you can choose which you want to incoroporate and which you do not. Additionally, the blueprints allow for more control of what sentence triggers to use, what language to communicate in and other options that cannot be set globally for all users.
+
+See the sidebar menu option ['Automations and Views'](./extend-functionality/index.md) for more information.
+
+</details>
