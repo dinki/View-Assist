@@ -10,5 +10,6 @@ User asks for the time or the date and receives response and screen switches to 
 
 | Version | Description                  |
 | ------- | ---------------------------- |
+| v 1.0.2 | Add Polish translation       |
 | v 1.0.1 | Update for DE wrong variable |
 | v 1.0.0 | Initial release              |

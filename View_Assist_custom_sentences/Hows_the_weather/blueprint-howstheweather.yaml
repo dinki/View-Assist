@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - How's the Weather?
   description:
     Ask "How's the Weather?" and ViewAssist will respond with the weather
-    and show the weather view (View Assist howstheweather v 1.0.1)
+    and show the weather view (View Assist howstheweather v 1.0.2)
   domain: automation
   input:
     language:

@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Travel Times by Waze
-  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.1)
+  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.2)
   domain: automation
   input:
     language:

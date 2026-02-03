@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Search Wikipedia
-  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.2)
+  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.3)
   domain: automation
   input:
     language:

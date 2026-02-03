@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.1)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.2)
   domain: automation
   input:
     language:

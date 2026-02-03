@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Locate a Person
-  description: Ask Assist to locate a person (View Assist locateaperson v 1.1.0)
+  description: Ask Assist to locate a person (View Assist locateaperson v 1.1.1)
   domain: automation
   input:
     language:

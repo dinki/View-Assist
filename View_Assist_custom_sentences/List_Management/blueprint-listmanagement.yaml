@@ -1,8 +1,7 @@
 blueprint:
   name: View Assist - List Management
-  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist list management v1.3.2)
+  description: Ask "Show/Add/Remove from list" and ViewAssist will respond by saying what action was taken and show the list (View Assist list management v 1.3.3)
   domain: automation
-
   input:
     language:
       name: Language

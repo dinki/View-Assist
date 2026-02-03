@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Spell a Word
-  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.2)
+  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.3)
   domain: automation
   input:
     language:
