@@ -23,6 +23,9 @@ Open Music Assistant and then go to the radio page (1). Find the station you wan
 
 | Version | Description                                          |
 | ------- | ---------------------------------------------------- |
+| v 1.2.1 | Add translations                                     |
+| v 1.2.0 | Various improvments                                  |
+| v 1.1.0 | Various improvments                                  |
 | v 1.0.3 | Bug fix plus add ability to have custom announcement |
 | v 1.0.2 | Update to use condtional response                    |
 | v 1.0.1 | Update to use music_assistant action                 |

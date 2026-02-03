@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Spell a Word
-  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.2)
+  description: Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable (View Assist spellaword v 1.0.3)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, fr, it]
+          languages: [de, en, fr, it, pl]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -48,7 +48,10 @@ action:
             spell: "{word} wird buchstabiert ... {spaced_text}"
         fr:
           responses:
-            spell: "{word} s’écrit ... {spaced_text}"
+            spell: "{word} s'écrit ... {spaced_text}"
+        pl:
+          responses:
+            spell: "{word} pisze się ... {spaced_text}"
 
       conversation_response: >-
         {{ translations[language]['responses']['spell'].replace("{word}", trigger.slots.word).replace("{spaced_text}", spaced_text) }}

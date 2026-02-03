@@ -66,6 +66,7 @@ This blueprint will contain device specific functions. Current functions include
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.4.2 | Add Polish translation                                                                   |
 | v 1.4.1 | Add 'what song is playing'. Thanks Rymez2k                                               |
 | v 1.4.0 | Add more music specific functions                                                        |
 | v 1.3.0 | Add additional functions pause, next, additional                                         |
