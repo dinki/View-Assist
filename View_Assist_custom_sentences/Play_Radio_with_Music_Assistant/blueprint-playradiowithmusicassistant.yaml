@@ -11,7 +11,15 @@ blueprint:
       name: Announcement
       description:
         The phrase you want to hear when you start your station (example
-        Playing Big 102)
+        Playing Big 102).
+      default: ""
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, nl, pt, ro]
     station:
       name: Station ID
       description: The radio station to play.  This must be an exact match
@@ -36,7 +44,25 @@ action:
       target_use_announce: "{{ state_attr(target_satellite_device, 'use_announce') }}"
       view_path: !input view_path
       station: !input station
-      announce: !input announce
+      announce_input: !input announce
+      language: !input language
+      translations:
+        en:
+          responses:
+            playing_station: "Playing {station}"
+        de:
+          responses:
+            playing_station: "Spiele {station}"
+        nl:
+          responses:
+            playing_station: "{station} afspelen"
+        pt:
+          responses:
+            playing_station: "Tocando {station}"
+        ro:
+          responses:
+            playing_station: "Redau {station}"
+      announce: "{{ announce_input if announce_input != '' else translations[language]['responses']['playing_station'].replace('{station}', station) }}"
   - choose:
       - conditions:
           - condition: trigger
