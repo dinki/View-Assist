@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.3)
+    Assistant v 1.2.4)
   domain: automation
   input:
     ma_instance:
@@ -24,7 +24,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl, pt, ro]
+          languages: [de, en, nl, pl, pt, ro]
     play_artist_command:
       name: Play Artist Command
       description: The command to trigger the play artist action
@@ -86,6 +86,15 @@ actions:
             playsong_found: "Spiele {song} von {artist}"
             playsong_not_found: "Entschuldigung, ich konnte den Song {song} von {artist} nicht finden"
             playsong_queue: "Füge {song} von {artist} zur Warteschlange hinzu"
+        nl:
+          responses:
+            playartist_found: "Muziek van {artist} afspelen"
+            playartist_not_found: "Ik kon geen muziek vinden van {search_artist}"
+            playlist_found: "De afspeellijst {playlist} afspelen"
+            playlist_not_found: "Sorry, er kon geen afspeellijst met de naam {search_playlist} worden gevonden"
+            playsong_found: "{song} van {artist} afspelen"
+            playsong_not_found: "Sorry, {song} van {artist} is niet gevonden"
+            playsong_queue: "{song} van {artist} toevoegen aan de wachtrij"
         pl:
           responses:
             playartist_found: "Odtwarzam muzykę {artist}"

@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Device Functions
   description:
     Various device functions for the View Assist Satellites (View Assist
-    devicefunctions v 1.4.2)
+    devicefunctions v 1.4.3)
   domain: automation
   input:
     language:
@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl]
+          languages: [de, en, nl, pl]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -128,6 +128,15 @@ action:
             mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
             mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
             info_playing: "Es läuft {title} von {artist}"
+        nl:
+          responses:
+            repeat: "Ik zei {last_said}"
+            repeat_remove: "Ik zei"
+            do_not_disturb_off: "Niet storen modus is nu uit"
+            mode_success: "Modus wordt ingesteld op {mode}"
+            mode_failure_device: "Sorry. {mode} is geen geldige modus voor dit apparaat"
+            mode_failure_unrecognized: "Sorry. {mode} is geen geldige modus. Probeer {{ modes }}."
+            info_playing: "Dit is {title} van {artist}"
             view_switch: "Wechsle zur Ansicht {view}"
             view_invalid: "Entschuldige. {view} ist keine gültige Ansicht."
             volume_set: "Die Lautstärke wurde auf {level} gesetzt"
