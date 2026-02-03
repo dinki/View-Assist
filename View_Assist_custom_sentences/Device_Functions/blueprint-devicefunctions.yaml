@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en]
+          languages: [de, en, nl]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -123,6 +123,15 @@ action:
             mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
             mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
             info_playing: "Es läuft {title} von {artist}"
+        nl:
+          responses:
+            repeat: "Ik zei {last_said}"
+            repeat_remove: "Ik zei"
+            do_not_disturb_off: "Niet storen modus is nu uit"
+            mode_success: "Modus wordt ingesteld op {mode}"
+            mode_failure_device: "Sorry. {mode} is geen geldige modus voor dit apparaat"
+            mode_failure_unrecognized: "Sorry. {mode} is geen geldige modus. Probeer {{ modes }}."
+            info_playing: "Dit is {title} van {artist}"
   - choose:
       - conditions:
           - condition: trigger
