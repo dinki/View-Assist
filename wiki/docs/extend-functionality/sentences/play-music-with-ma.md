@@ -35,6 +35,7 @@ Adjustments may be needed based on your specific usage and preferences.
 
 | Version | Description                                                                                  |
 | ------- | -------------------------------------------------------------------------------------------- |
+| v 1.2.4 | Add Dutch translation                                                                        |
 | v 1.2.3 | Add Polish translation                                                                       |
 | v 1.2.2 | Add Romainian translation                                                                    |
 | v 1.2.1 | Correct typo in variable name                                                                |
