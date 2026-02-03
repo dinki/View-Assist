@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.1)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.2)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl]
+          languages: [de, en, es, fr, it, nl, pl]
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -148,6 +148,32 @@ action:
             time: "Het is {time}"
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {date}"
+        pl:
+          responses:
+            time: "Jest {time}"
+            day_of_week: "Dzisiaj jest {day_of_week}"
+            date: "Dzisiaj jest {day_of_week}, {day_of_month} {month} {year}"
+          weekdays:
+            mon: Poniedziałek
+            tue: Wtorek
+            wed: Środa
+            thu: Czwartek
+            fri: Piątek
+            sat: Sobota
+            sun: Niedziela
+          months:
+            jan: Styczeń
+            feb: Luty
+            mar: Marzec
+            apr: Kwiecień
+            may: Maj
+            jun: Czerwiec
+            jul: Lipiec
+            aug: Sierpień
+            sep: Wrzesień
+            oct: Październik
+            nov: Listopad
+            dec: Grudzień
   - choose:
       - conditions:
           - condition: trigger
