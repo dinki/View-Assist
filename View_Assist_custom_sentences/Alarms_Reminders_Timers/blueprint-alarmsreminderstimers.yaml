@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.0-beta4)
+    v 1.3.0-beta5)
   domain: automation
   input:
     spokenlanguage:
@@ -12,9 +12,9 @@ blueprint:
       selector:
         language:
           languages:
-          - en
+            - en
           native_name: false
-          no_sort: false  
+          no_sort: false
     alarmsound_path:
       name: Alarm Sound Path
       description:
@@ -45,79 +45,96 @@ blueprint:
       default: false
       selector:
         boolean: {}
+    enabled_icons:
+      name: Enabled Status Icons
+      description: "Select which features should display status icons on your devices."
+      default:
+        - timers
+        - alarms
+        - reminders
+      selector:
+        select:
+          multiple: true
+          options:
+            - label: "Timers"
+              value: "timers"
+            - label: "Alarms"
+              value: "alarms"
+            - label: "Reminders"
+              value: "reminders"
     trigger_sentences_section:
-          name: "Trigger Sentence Configuration"
-          icon: mdi:form-select
-          description: "Modify these sentences to match your language or preferences"
-          collapsed: true
-          input:  
-            timer:
-              name: Set Timer
-              description: "Sentences to create a new timer."
-              default:
-                - "set [a] timer for {when}"
-                - "set [a] {when} timer"
-                - "(set|start) [a | an] {name} timer for {when}"
-              selector:
-                object: {}
-            reminder:
-              name: Set Reminder
-              description: "Sentences to create a new reminder."
-              default:
-                - "(remind me | set a reminder) to {name} (at | in) {when}"
-                - "remind me (at | in) {when} to {name}"
-                - "set a reminder (at | for) {when} to {name}"
-                - "set a reminder for {when}"
-              selector:
-                object: {}
-            alarm:
-              name: Set Alarm
-              description: "Sentences to create a new alarm."
-              default:
-                - "set [an] alarm for {when}"
-                - "set a {name} alarm for {when}"
-              selector:
-                object: {}
-            listtimers:
-              name: List Timers
-              description: "Sentences specifically for listing active timers/alarms."
-              default:
-                - "list [me] my (timers | alarms | reminders)"
-              selector:
-                object: {}
-            showtimers:
-              name: Show Timers
-              description: "Sentences specifically for showing active timers/alarms on a display."
-              default:
-                - "show [me] my (timers | alarms | reminders)"
-              selector:
-                object: {}
-            snoozealarm:
-              name: Snooze Alarm
-              description: "Sentences to snooze a ringing alarm."
-              default:
-                - "snooze [my] (alarm | timer | reminder)"
-              selector:
-                object: {}
-            timeremaining:
-              name: Time Remaining
-              description: "Sentences to check how much time is left."
-              default:
-                - "how much time [is] left on my (alarm | timer | reminder)"
-                - "how much time [is] left on my {name} (alarm | timer | reminder)"
-                - "how (long | long's) [is] left on my (alarm | timer | reminder)"
-                - "how (long | long's) [is] left on my {name} (alarm | timer | reminder)"
-              selector:
-                object: {}
-            canceltimer:
-              name: Cancel Timer
-              description: "Sentences to stop or cancel a timer/alarm."
-              default:
-                - "cancel my {name} (alarm | timer | reminder)"
-                - "cancel my (alarm | timer | reminder) for {when}"
-                - "(Turn off | cancel | stop) [my] (alarm | timer | reminder)"
-              selector:
-                object: {}        
+      name: "Trigger Sentence Configuration"
+      icon: mdi:form-select
+      description: "Modify these sentences to match your language or preferences"
+      collapsed: true
+      input:
+        timer:
+          name: Set Timer
+          description: "Sentences to create a new timer."
+          default:
+            - "set [a] timer for {when}"
+            - "set [a] {when} timer"
+            - "(set|start) [a | an] {name} timer for {when}"
+          selector:
+            object: {}
+        reminder:
+          name: Set Reminder
+          description: "Sentences to create a new reminder."
+          default:
+            - "(remind me | set a reminder) to {name} (at | in) {when}"
+            - "remind me (at | in) {when} to {name}"
+            - "set a reminder (at | for) {when} to {name}"
+            - "set a reminder for {when}"
+          selector:
+            object: {}
+        alarm:
+          name: Set Alarm
+          description: "Sentences to create a new alarm."
+          default:
+            - "set [an] alarm for {when}"
+            - "set a {name} alarm for {when}"
+          selector:
+            object: {}
+        listtimers:
+          name: List Timers
+          description: "Sentences specifically for listing active timers/alarms."
+          default:
+            - "list [me] my (timers | alarms | reminders)"
+          selector:
+            object: {}
+        showtimers:
+          name: Show Timers
+          description: "Sentences specifically for showing active timers/alarms on a display."
+          default:
+            - "show [me] my (timers | alarms | reminders)"
+          selector:
+            object: {}
+        snoozealarm:
+          name: Snooze Alarm
+          description: "Sentences to snooze a ringing alarm."
+          default:
+            - "snooze [my] (alarm | timer | reminder)"
+          selector:
+            object: {}
+        timeremaining:
+          name: Time Remaining
+          description: "Sentences to check how much time is left."
+          default:
+            - "how much time [is] left on my (alarm | timer | reminder)"
+            - "how much time [is] left on my {name} (alarm | timer | reminder)"
+            - "how (long | long's) [is] left on my (alarm | timer | reminder)"
+            - "how (long | long's) [is] left on my {name} (alarm | timer | reminder)"
+          selector:
+            object: {}
+        canceltimer:
+          name: Cancel Timer
+          description: "Sentences to stop or cancel a timer/alarm."
+          default:
+            - "cancel my {name} (alarm | timer | reminder)"
+            - "cancel my (alarm | timer | reminder) for {when}"
+            - "(Turn off | cancel | stop) [my] (alarm | timer | reminder)"
+          selector:
+            object: {}
 trigger:
   - platform: conversation
     command: !input timer
@@ -171,7 +188,7 @@ trigger:
     event_type: call_service
     event_data:
       domain: view_assist
-      service: cancel_timer   
+      service: cancel_timer
   - alias: When VA set_timer runs
     trigger: event
     id: set_timer_trigger
@@ -194,6 +211,7 @@ action:
       snooze_time: "{{ snooze_time_input | int }}"
       allow_hold_mode: !input allow_hold_mode
       use_vaca_onboard_sound: !input use_vaca_onboard_sound
+      enabled_icons: !input enabled_icons
       is_vaca_device: >-
         {% set mic_ent = state_attr(target_satellite_device, 'mic_device') %}
         {% set dev_id = device_id(mic_ent) if mic_ent else none %}
@@ -207,11 +225,11 @@ action:
           responses:
             no_active_timers: "There are no active timers."
             one_active_timer: "There is one active timer:"
-            multiple_active_timers: "There are {count} active timers:"  
-            final_timer:  "and {timer_expiry_speak}"   
-            no_display: "This device does not have a display to show timers" 
-            timer_cancel: "Your {timer_info} has been canceled"  
-            named_timer_not_found: "No active timer named {timername} could be found"
+            multiple_active_timers: "There are {count} active timers:"
+            final_timer: "and {timer_expiry_speak}"
+            no_display: "This device does not have a display to show timers"
+            timer_cancel: "Your {timer_info} has been canceled"
+            named_timer_not_found: "That timer could not be found"
             timer_not_found: "The {timer_info} could not be found"
             time_left: "You have {time_left} on your {timer_info}"
   - choose:
@@ -315,14 +333,21 @@ action:
           - action: view_assist.cancel_timer
             data:
               timer_id: "{{ timer_id }}"
-          - action: view_assist.set_state
-            target:
-              entity_id: "{{ target_satellite_device }}"
-            data:
-              mode: normal
+          - delay: "00:00:01"
           - action: view_assist.get_timers
             data: {}
             response_variable: timer_data
+          - variables:
+              timer_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'timer') | list | count }}"
+          - if:
+              - condition: template
+                value_template: "{{ (timer_count > 0 and not allow_hold_mode) or (timer_count == 0) }}"
+            then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  mode: normal
       - conditions:
           - condition: trigger
             id:
@@ -403,7 +428,7 @@ action:
                       mode: normal
             else:
               - set_conversation_response: >
-                  {{ translations[spokenlanguage]['responses']['named_timer_not_found'].replace('{timername}', trigger.slots.name) }}
+                  {{ translations[spokenlanguage]['responses']['named_timer_not_found'] }}
               - if:
                   - condition: template
                     value_template:
@@ -447,8 +472,8 @@ action:
               - set_conversation_response: >
                   {{ translations[spokenlanguage]['responses']['time_left']
                     .replace('{time_left}', time_left)
-                    .replace('{timer_info}', (timer_name if timer_name else timer_duration) ~ ' ' ~ timer_class) 
-                  }}                  
+                    .replace('{timer_info}', (timer_name if timer_name else timer_duration) ~ ' ' ~ timer_class)
+                  }}
               - if:
                   - condition: template
                     value_template:
@@ -503,7 +528,7 @@ action:
                     {{ timer['expiry']['speak'] }}{{ ',' if count > 1 else '' }}
                   {%- endif %}
                 {%- endfor %}
-              {% endif %}            
+              {% endif %}
           - if:
               - condition: template
                 value_template:
@@ -532,23 +557,22 @@ action:
               - set_conversation_response: ""
             else:
               - set_conversation_response: >
-                 {{ translations[spokenlanguage]['responses']['no_display'] }}
+                  {{ translations[spokenlanguage]['responses']['no_display'] }}
       - conditions:
           - condition: trigger
-            id: 
+            id:
               - cancel_timer_trigger
         sequence:
           - variables:
               timer_id: "{{ trigger.event.data.service_data.timer_id }}"
-          - delay: "00:00:05"    
+          - delay: "00:00:01"
           - action: view_assist.get_timers
             data: {}
             response_variable: timer_data
           - variables:
-              results: "{{ timer_data.get('result', []) }}"
-              timer_count: "{{ result | selectattr('timer_class', 'eq', 'timer') | list | count }}"
-              reminder_count: "{{ result | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
-              alarm_count: "{{ result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
+              timer_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'timer') | list | count }}"
+              reminder_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
+              alarm_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
               all_display_entities: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
               contains_timer_icon: >
                 {% set ns = namespace(found=[]) %}
@@ -576,7 +600,7 @@ action:
                     {% set ns.found = ns.found + [e] %}
                   {% endif %}
                 {% endfor %}
-                {{ ns.found }}              
+                {{ ns.found }}
           - if:
               - condition: template
                 value_template: "{{ timer_count == 0 and contains_timer_icon | count > 0 }}"
@@ -587,7 +611,7 @@ action:
                     - action: view_assist.remove_status_item
                       data:
                         entity_id: "{{ repeat.item }}"
-                        status_item: "view:alarm|timer-outline"            
+                        status_item: "view:alarm|timer-outline"
           - if:
               - condition: template
                 value_template: "{{ timer_count == 0 and contains_reminder_icon | count > 0 }}"
@@ -598,7 +622,7 @@ action:
                     - action: view_assist.remove_status_item
                       data:
                         entity_id: "{{ repeat.item }}"
-                        status_item: "view:alarm|reminder"  
+                        status_item: "view:alarm|reminder"
           - if:
               - condition: template
                 value_template: "{{ timer_count == 0 and contains_alarm_icon | count > 0 }}"
@@ -609,15 +633,25 @@ action:
                     - action: view_assist.remove_status_item
                       data:
                         entity_id: "{{ repeat.item }}"
-                        status_item: "view:alarm|alarm"                                                     
+                        status_item: "view:alarm|alarm"
+          # This is broken as we can't figure out what device the timer was set on to change the state
+          # - if:
+          #     - condition: template
+          #       value_template: "{{ timer_count == 0 }}"
+          #   then:
+          #     - action: view_assist.set_state
+          #       target:
+          #         entity_id: "{{ target_satellite_device }}"
+          #       data:
+          #         mode: normal
       - conditions:
           - condition: trigger
-            id: 
+            id:
               - set_timer_trigger
         sequence:
-          - delay: "00:00:05"
+          - delay: "00:00:01"
           - action: view_assist.get_timers
-            data: 
+            data:
               device_id: "{{ trigger.event.data.service_data.device_id }}"
             response_variable: timer_data
           - variables:
@@ -627,7 +661,7 @@ action:
               alarm_count: "{{ timer_data.result | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
           - if:
               - condition: template
-                value_template: "{{ timer_count == 1 }}"
+                value_template: "{{ 'timers' in enabled_icons and timer_count == 1 }}"
             then:
               - action: view_assist.add_status_item
                 data:
@@ -635,7 +669,7 @@ action:
                   status_item: "view:alarm|timer-outline"
           - if:
               - condition: template
-                value_template: "{{ reminder_count == 1 }}"
+                value_template: "{{ 'reminder' in enabled_icons and reminder_count == 1 }}"
             then:
               - action: view_assist.add_status_item
                 data:
@@ -643,7 +677,7 @@ action:
                   status_item: "view:alarm|reminder"
           - if:
               - condition: template
-                value_template: "{{ alarm_count == 1 }}"
+                value_template: "{{ 'alarm' in enabled_icons and alarm_count == 1 }}"
             then:
               - action: view_assist.add_status_item
                 data:
