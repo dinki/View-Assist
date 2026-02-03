@@ -18,7 +18,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 | [List Management](sentences/list-management)                    | Add, remove, show items from your shopping or to do list                              | en, de, fr, es, pl, ro         |
 | [Locate a Person](sentences/locate-a-person)                    | Ask for the location of a family member and see it displayed on a map                 | en, de, it, pl                 |
 | [Play Music with Music Assistant](sentences/play-music-with-ma) | Play your music media using Music Assistant                                           | en, de, pl, pt, ro             |
-| [Play Radio with Music Assistant](sentences/play-radio-with-ma) | Play TuneIn radio using Music Assistant                                               | en                             |
+| [Play Radio with Music Assistant](sentences/play-radio-with-ma) | Play TuneIn radio using Music Assistant                                               | en, de, nl, pt, ro             |
 | [Search Wikipedia](sentences/search-wikipedia)                  | Search Wikipedia using voice and receive a response and image on view enabled devices | en, de, pl                     |
 | [Show Webpage](sentences/show-webpage)                          | Show your favorite website on your view enabled device                                | en                             |
 | [Sound Machine](sentences/sound-machine)                        | Enables the user to play ambient sounds for relaxation or noise cancelation           | en                             |
