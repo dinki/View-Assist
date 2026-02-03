@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.0-beta5)
+    v 1.3.0-beta6)
   domain: automation
   input:
     spokenlanguage:
@@ -356,6 +356,7 @@ action:
           - variables:
               new_time: "{{ snooze_time }} minutes"
               timer_id: "{{ trigger.event.data.timer_id }}"
+              device_entity: "{{ trigger.event.data.entity_id }}"
           - if:
               - condition: template
                 value_template: >-
@@ -373,11 +374,20 @@ action:
               timer_id: "{{ timer_id }}"
               time: "{{ new_time }}"
             response_variable: snooze_response
-          - action: view_assist.set_state
-            target:
-              entity_id: "{{ target_satellite_device }}"
-            data:
-              mode: normal
+          - if:
+              - condition: template
+                value_template: "{{ not allow_hold_mode }}"
+            then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  mode: normal
+          # - action: view_assist.set_state
+          #   target:
+          #     entity_id: "{{ target_satellite_device }}"
+          #   data:
+          #     mode: normal
           - set_conversation_response: "{{ snooze_response.response }}"
       - conditions:
           - condition: trigger
@@ -417,15 +427,32 @@ action:
                   timer_id: "{{ timer_id }}"
               - set_conversation_response: >
                   {{ translations[spokenlanguage]['responses']['timer_cancel'].replace('{timer_info}', (timer_name if timer_name else timer_sentence) ~ ' ' ~ timer_class) }}
+              # - if:
+              #     - condition: template
+              #       value_template: "{{ allow_hold_mode and type == 'timer'}}"
+              #   then:
+              #     - action: view_assist.set_state
+              #       target:
+              #         entity_id: "{{ target_satellite_device }}"
+              #       data:
+              #         mode: normal
+
+              - delay: "00:00:01"
+              - action: view_assist.get_timers
+                data: {}
+                response_variable: timer_data
+              - variables:
+                  timer_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'timer') | list | count }}"
               - if:
                   - condition: template
-                    value_template: "{{ allow_hold_mode and type == 'timer'}}"
+                    value_template: "{{ (timer_count > 0 and not allow_hold_mode) or (timer_count == 0) }}"
                 then:
                   - action: view_assist.set_state
                     target:
                       entity_id: "{{ target_satellite_device }}"
                     data:
                       mode: normal
+
             else:
               - set_conversation_response: >
                   {{ translations[spokenlanguage]['responses']['named_timer_not_found'] }}
