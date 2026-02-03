@@ -1,8 +1,6 @@
 blueprint:
   name: View Assist - Get Sports Scores
-  description:
-    Get sports scores for your favorite teams (View Assist getsportsscores
-    v 1.4.2)
+  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.4.3)
   domain: automation
   input:
     language:
@@ -17,6 +15,7 @@ blueprint:
             - es
             - fr
             - it
+            - pl
           no_sort: false
           native_name: false
     trigger_phrases:
@@ -335,6 +334,19 @@ action:
               {team}.
             outcome_win: a gagné
             outcome_lose: a perdu
+        pl:
+          responses:
+            is_singular_true_post: "{team_name} grał z {opponent_name} i"
+            is_singular_false_post: Drużyna {team_name} grała z {opponent_name} i
+            is_singular_true_pre: "{team_name} gra z {opponent_name} {kickoff_in}."
+            is_singular_false_pre: Drużyna {team_name} gra z {opponent_name} {kickoff_in}.
+            is_singular_true_in: "{team_name} aktualnie gra z {opponent_name}."
+            is_singular_false_in: Drużyna {team_name} aktualnie gra z {opponent_name}.
+            is_singular_true_not_found: "{team} nie ma dzisiaj żadnych meczów w terminarzu."
+            is_singular_false_not_found: Drużyna {team} nie ma dzisiaj żadnych meczów w terminarzu.
+            error: Przepraszam, nie mogłem znaleźć ostatnich ani nadchodzących meczów dla {team}.
+            outcome_win: wygrał
+            outcome_lose: przegrał
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"

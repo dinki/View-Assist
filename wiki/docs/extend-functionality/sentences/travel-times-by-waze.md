@@ -19,5 +19,6 @@ Or import using [raw link](https://raw.githubusercontent.com/dinki/View-Assist/m
 
 | Version | Description            |
 | ------- | ---------------------- |
+| v 1.0.2 | Add Polish translation |
 | v 1.0.1 | Add German translation |
 | v 1.0.0 | Initial release        |

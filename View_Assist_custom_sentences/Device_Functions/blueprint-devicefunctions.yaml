@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Device Functions
   description:
     Various device functions for the View Assist Satellites (View Assist
-    devicefunctions v 1.4.1)
+    devicefunctions v 1.4.3)
   domain: automation
   input:
     language:
@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl]
+          languages: [de, en, nl, pl]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -114,6 +114,11 @@ action:
             mode_failure_device: "Sorry.  {mode} is not a valid mode for this device"
             mode_failure_unrecognized: "Sorry.  {mode} is not a valid mode. Please try {{ modes }}."
             info_playing: "This is {title} by {artist}"
+            view_switch: "Switching view to {view} view"
+            view_invalid: "Sorry. {view} is not a valid view."
+            volume_set: "The volume was set to {level}"
+            volume_adjusted: "The volume has been turned {direction}"
+            sound_restored: "Sound has been restored"
         de:
           responses:
             repeat: "Ich sagte {last_said}"
@@ -132,6 +137,25 @@ action:
             mode_failure_device: "Sorry. {mode} is geen geldige modus voor dit apparaat"
             mode_failure_unrecognized: "Sorry. {mode} is geen geldige modus. Probeer {{ modes }}."
             info_playing: "Dit is {title} van {artist}"
+            view_switch: "Wechsle zur Ansicht {view}"
+            view_invalid: "Entschuldige. {view} ist keine gültige Ansicht."
+            volume_set: "Die Lautstärke wurde auf {level} gesetzt"
+            volume_adjusted: "Die Lautstärke wurde {direction} gestellt"
+            sound_restored: "Der Ton wurde wiederhergestellt"
+        pl:
+          responses:
+            repeat: "Powiedziałem {last_said}"
+            repeat_remove: "Powiedziałem"
+            do_not_disturb_off: "Tryb nie przeszkadzać został wyłączony"
+            mode_success: "Ustawiam tryb na {mode}"
+            mode_failure_device: "Przepraszam. {mode} nie jest prawidłowym trybem dla tego urządzenia"
+            mode_failure_unrecognized: "Przepraszam. {mode} nie jest prawidłowym trybem. Proszę spróbować {{ modes }}."
+            info_playing: "Teraz gra {title} od {artist}"
+            view_switch: "Przełączam widok na {view}"
+            view_invalid: "Przepraszam. {view} nie jest prawidłowym widokiem."
+            volume_set: "Głośność ustawiona na {level}"
+            volume_adjusted: "Głośność została {direction}"
+            sound_restored: "Dźwięk został przywrócony"
   - choose:
       - conditions:
           - condition: trigger
@@ -237,14 +261,14 @@ action:
                   "{% if target_satellite_device_type != 'audio_only' %}true{%
                   else %}false{% endif %}"
             then:
-              - set_conversation_response: Switching view to {{ trigger.slots.view }} view
+              - set_conversation_response: "{{ translations[language]['responses']['view_switch'].replace('{view}', trigger.slots.view) }}"
                 enabled: true
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
                   path: "{{ trigger.slots.view | lower }}"
             else:
-              - set_conversation_response: "Sorry.  {{ trigger.slots.view }} is not a valid view. "
+              - set_conversation_response: "{{ translations[language]['responses']['view_invalid'].replace('{view}', trigger.slots.view) }}"
       - conditions:
           - condition: trigger
             id:
@@ -261,7 +285,7 @@ action:
                 {% endif %}'
             target:
               entity_id: "{{ target_mediaplayer_device }}"
-          - set_conversation_response: The volume was set to {{ trigger.slots.level }}
+          - set_conversation_response: "{{ translations[language]['responses']['volume_set'].replace('{level}', trigger.slots.level) }}"
             enabled: true
       - conditions:
           - condition: trigger
@@ -273,7 +297,7 @@ action:
               {% if trigger.slots.up_down == "up" %} media_player.volume_up {% endif %}'
             target:
               entity_id: "{{ target_mediaplayer_device }}"
-          - set_conversation_response: The volume has been turned {{ trigger.slots.up_down }}
+          - set_conversation_response: "{{ translations[language]['responses']['volume_adjusted'].replace('{direction}', trigger.slots.up_down) }}"
       - conditions:
           - condition: trigger
             id:
@@ -295,7 +319,7 @@ action:
               is_volume_muted: false
             target:
               entity_id: "{{ target_mediaplayer_device }}"
-          - set_conversation_response: Sound has been restored
+          - set_conversation_response: "{{ translations[language]['responses']['sound_restored'] }}"
       - conditions:
           - condition: trigger
             id:
