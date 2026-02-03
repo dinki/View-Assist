@@ -3,6 +3,13 @@ blueprint:
   description: Convert from one unit of measurement to another (View Assist Community Contributions - Conversions v 1.0.0)
   domain: automation
   input:
+    language:
+      name: Language
+      description: The desired spoken language
+      default: en
+      selector:
+        language:
+          languages: [de, en, pl]
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
@@ -36,19 +43,39 @@ action:
       target_display_device: "{{ state_attr(target_satellite_device, 'display_device') }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device') }}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type') }}"
+      language: !input language
+      translations:
+        en:
+          responses:
+            result: "{response} is equivalent to {source}."
+            title: "Conversion"
+            request_label: "Request"
+            answer_label: "Answer"
+        de:
+          responses:
+            result: "{response} entspricht {source}."
+            title: "Umrechnung"
+            request_label: "Anfrage"
+            answer_label: "Antwort"
+        pl:
+          responses:
+            result: "{response} jest równowartością {source}."
+            title: "Konwersja"
+            request_label: "Zapytanie"
+            answer_label: "Odpowiedź"
   - service: pyscript.viewassist_wolfram_short_answer
     data:
       query: "{{ trigger.sentence }}"
     response_variable: wolfram_answer
-  - set_conversation_response: "{{ wolfram_answer.response }} is equivalent to {{ trigger.slots.source }}."
+  - set_conversation_response: "{{ translations[language]['responses']['result'].replace('{response}', wolfram_answer.response).replace('{source}', trigger.slots.source) }}"
   - service: python_script.set_state
     data:
       entity_id: "{{ target_satellite_device }}"
-      title: Conversion
+      title: "{{ translations[language]['responses']['title'] }}"
       message_font_size: 4vw
       message: >-
-        <b>Request</b>: <br /\> {{ trigger.sentence | capitalize}}<br /\><br /\> <b>Answer:</b> <br
-        /\> {{ wolfram_answer.response }} is equivalent to {{ trigger.slots.source }}.
+        <b>{{ translations[language]['responses']['request_label'] }}</b>: <br /\> {{ trigger.sentence | capitalize}}<br /\><br /\> <b>{{ translations[language]['responses']['answer_label'] }}:</b> <br
+        /\> {{ translations[language]['responses']['result'].replace('{response}', wolfram_answer.response).replace('{source}', trigger.slots.source) }}
   - if:
       - condition: template
         value_template: "{{ target_satellite_device_type != 'audio_only' }}"

@@ -1,0 +1,25 @@
+language: "pl"
+intents:
+  ConvertCurrency:
+    data:
+      - sentences:
+          - "Ile wynosi {fromcurrency} w {tocurrency}"
+          - "przelicz {fromcurrency} na {tocurrency}"
+        response: "convert"
+        requires_context:
+          area:
+            slot: true
+  ExchangeCurrency:
+    data:
+      - sentences:
+          - "Jaki jest kurs wymiany dla {tocurrency}"
+        response: "exchange"
+        requires_context:
+          area:
+            slot: true
+
+lists:
+  fromcurrency:
+    wildcard: true
+  tocurrency:
+    wildcard: true
