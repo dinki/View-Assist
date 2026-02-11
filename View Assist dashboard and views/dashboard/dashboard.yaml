@@ -434,8 +434,10 @@ button_card_templates:
                       if (typeof item === 'string' && !item.includes(':')) {
                         if (item === currentView) return true;
 
+                        const homePath = hass.states[vaEntity]?.attributes?.home_screen || "/view-assist/clock";
+                        const homeView = homePath.split('/').pop() || "clock";
                         const templateViewMap = {
-                          "home": "clock"
+                          "home": homeView
                         };
                         if (templateViewMap[item] === currentView) return true;
                         return false;
