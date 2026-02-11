@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  advancedcameracardversion: 1.1.0
+  advancedcameracardversion: 1.1.1
   var_url_params: |-
     [[[
       let queryString = '';
@@ -335,6 +335,8 @@ custom_fields:
             enabled: true
           mute:
             enabled: true
+          media_player:
+            enabled: false
       live:
         auto_unmute:
           - selected
