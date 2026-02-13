@@ -5,7 +5,7 @@ sidebar_position: 2
 
 ![Image](./m5stackecho.jpg)
 
-The M5Stack Atom Echo Smart Speaker ([Amazon](https://amzn.to/4eC8Tto)/[M5Stack Shop](https://shop.m5stack.com/collections/m5-controllers/products/atom-echo-smart-speaker-dev-kit)/[AliExpress](https://www.aliexpress.us/item/3256803113017446.html?aff_platform=portals-tool&sk=_A8G2YF&aff_trace_key=90326d2a90444b4887632f62dd533ce4-1654058373639-07963-_A8G2YF&terminal_id=c5517a8c9bb44b4fb32147398fbc2576&aff_fcid=90326d2a90444b4887632f62dd533ce4-1654058373639-07963-_A8G2YF&tt=CPS_NORMAL&aff_fsk=_A8G2YF&gatewayAdapt=glo2usa4itemAdapt)) is a small device that allows for easy set up via a webbased flashing tool.  This is one of the easiest devices to get started with Home Assistant voice.  Do know, however, that it is far from perfect in regards to its audio output.  The speaker is very small and does not sound great but it is an inexpensive device and does get the job done for light work.
+The M5Stack Atom Echo Smart Speaker ([Amazon](https://amzn.to/4eC8Tto)/[M5Stack Shop](https://shop.m5stack.com/collections/m5-controllers/products/atom-echo-smart-speaker-dev-kit)/[AliExpress](https://www.aliexpress.us/item/3256803113017446.html?aff_platform=portals-tool&sk=_A8G2YF&aff_trace_key=90326d2a90444b4887632f62dd533ce4-1654058373639-07963-_A8G2YF&terminal_id=c5517a8c9bb44b4fb32147398fbc2576&aff_fcid=90326d2a90444b4887632f62dd533ce4-1654058373639-07963-_A8G2YF&tt=CPS_NORMAL&aff_fsk=_A8G2YF&gatewayAdapt=glo2usa4itemAdapt)) is a small device that allows for easy set up via a webbased flashing tool. This is one of the easiest devices to get started with Home Assistant voice. Do know, however, that it is far from perfect in regards to its audio output. The speaker is very small and does not sound great but it is an inexpensive device and does get the job done for light work.
 
 ## Installation
 
@@ -21,15 +21,13 @@ Then after follow the tutorial found here:
 
 https://www.home-assistant.io/voice_control/thirteen-usd-voice-remote/
 
-You will then fast forward through most of the configuration steps.  Note that you will not need to set up a timer helper for this device as that is only used for View Assist satellites with displays.
+You will then fast forward through most of the configuration steps.
 
-Follow this link to add your M5Stack Atom Echo device as a voice only satellite in View Assist:
-
-https://dinki.github.io/View-Assist/docs/viewassist-setup/homeassistant-configuration/viewassist-configuration/device-configuration#satellite-custom-device-configuration
+At this point you can add your M5Stack Atom Echo device as a View Assist device with no display.
 
 ### Use the M5Stack Atom Echo as a microphone only (Optional)
 
-User @Tohur has come up with a clever way to use an M5Stack Atom Echo device as a microphone replacement for his inferior microphone on their Android tablet.  This use case is not common and most can skip this altogether but for some it may prove to be very useful.
+User @Tohur has come up with a clever way to use an M5Stack Atom Echo device as a microphone replacement for his inferior microphone on their Android tablet. This use case is not common and most can skip this altogether but for some it may prove to be very useful.
 
 @Tohur explains how to use his method here:
 
@@ -39,11 +37,11 @@ Initially follow the setup above for your M5Stack Atom echo.
 
 **ESPHome**
 
-Next we install ESPHome by going to Settings -> Add-ons and clicking the button on the bottom right and searching for ESPHome or   
+Next we install ESPHome by going to Settings -> Add-ons and clicking the button on the bottom right and searching for ESPHome or
 
-[![ESPHome](https://my.home-assistant.io/badges/supervisor_addon.svg 'ESPHome')](https://my.home-assistant.io/redirect/supervisor_addon/?addon=5c53de3b_esphome&repository_url=https%3A%2F%2Fgithub.com%2Fesphome%2Fhome-assistant-addon)
+[![ESPHome](https://my.home-assistant.io/badges/supervisor_addon.svg "ESPHome")](https://my.home-assistant.io/redirect/supervisor_addon/?addon=5c53de3b_esphome&repository_url=https%3A%2F%2Fgithub.com%2Fesphome%2Fhome-assistant-addon)
 
-Make sure to  turn on the sidebar view for easy access to ESPHome. Once you have ESPHome installed and running go to the ESPHome webui in a Chromium based browser and you should see your configured M5Stack Atom Echo ready to be adopted by ESPHome. Follow the adoption process and once its configured click edit and paste the provided firmware yaml. 
+Make sure to turn on the sidebar view for easy access to ESPHome. Once you have ESPHome installed and running go to the ESPHome webui in a Chromium based browser and you should see your configured M5Stack Atom Echo ready to be adopted by ESPHome. Follow the adoption process and once its configured click edit and paste the provided firmware yaml.
 
 The firmware yaml can be found here: [m5stack-atom-echo.yaml](./m5stack-atom-echo.yaml)
 
@@ -54,7 +52,7 @@ substitutions:
   name: "m5stack-atom-echo"
   friendlyname: "M5Stack Atom Echo"
   api_key: "encryption key"
-  # Home assistant media player entity 
+  # Home assistant media player entity
   HA_mediaplayer: "media_player.bedroom"
   # tts to use to bypass the onboard processing to prevent having to repeat yourself when the echo goes idle.
   # Default is set to Nabu Casa, but can be google, piper, or any other TTS you have configured.
@@ -62,7 +60,7 @@ substitutions:
   HA_tts: "tts.cloud_say"
 ```
 
-Replace name and friendlyname values with your device name and friendlyname and replace the api_key value with your encryption key aquired earlier. HA_mediaplayer should be the media player entitiy for your View Assist satellite as with the firmware you are only using the microphone of the M5Stack Atom echo and all audio is outputted over your View Assist satellite. Then find the tts service you use and set HA_tts to that service, This is needed to bypass the onboard TTS processing as when the echo goes idle you may have to repeat yourself to get an audio response, this bypasses that and lets HA  do 100% of the tts processing. Also make sure to look at the cofig in the wfi section and make sure you have an static ip set matching your network details.
+Replace name and friendlyname values with your device name and friendlyname and replace the api_key value with your encryption key aquired earlier. HA_mediaplayer should be the media player entitiy for your View Assist satellite as with the firmware you are only using the microphone of the M5Stack Atom echo and all audio is outputted over your View Assist satellite. Then find the tts service you use and set HA_tts to that service, This is needed to bypass the onboard TTS processing as when the echo goes idle you may have to repeat yourself to get an audio response, this bypasses that and lets HA do 100% of the tts processing. Also make sure to look at the cofig in the wfi section and make sure you have an static ip set matching your network details.
 
 Once you have your config edited make sure to save before clicking Install. If wifi is already setup and ready to go you should be able to install using the wifi option other wise choose to install from the browser you are using and by plugging the Atom Echo directly into your HA Instances machine and install directly over USB.
 
