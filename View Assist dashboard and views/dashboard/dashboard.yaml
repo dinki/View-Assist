@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.3.1
+      dashboardversion: 1.3.2
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -434,8 +434,10 @@ button_card_templates:
                       if (typeof item === 'string' && !item.includes(':')) {
                         if (item === currentView) return true;
 
+                        const homePath = hass.states[vaEntity]?.attributes?.home_screen || "/view-assist/clock";
+                        const homeView = homePath.split('/').pop() || "clock";
                         const templateViewMap = {
-                          "home": "clock"
+                          "home": homeView
                         };
                         if (templateViewMap[item] === currentView) return true;
                         return false;
