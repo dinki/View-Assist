@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Device Functions
   description:
     Various device functions for the View Assist Satellites (View Assist
-    devicefunctions v 1.4.3)
+    devicefunctions v 1.4.4)
   domain: automation
   input:
     language:
@@ -266,7 +266,7 @@ action:
               - action: view_assist.navigate
                 data:
                   device: "{{ target_satellite_device }}"
-                  path: "{{ trigger.slots.view | lower }}"
+                  path: "/view-assist/{{ trigger.slots.view | lower }}"
             else:
               - set_conversation_response: "{{ translations[language]['responses']['view_invalid'].replace('{view}', trigger.slots.view) }}"
       - conditions:
