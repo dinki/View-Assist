@@ -19,7 +19,11 @@ Control your thermostat device using voice. User can say 'Raise temperature 2 de
 
 ## Changelog
 
-| Version | Description            |
-| ------- | ---------------------- |
-| v 1.0.1 | Add German translation |
-| v 1.0.0 | Initial release        |
+| Version | Description              |
+| ------- | ------------------------ |
+| v 1.1.3 | Add Dutch translation    |
+| v 1.1.2 | Add Polish translation   |
+| v 1.1.1 | Various fixes            |
+| v 1.1.0 | Incremental improvements |
+| v 1.0.1 | Add German translation   |
+| v 1.0.0 | Initial release          |

@@ -27,6 +27,7 @@ All credit goes to @JimmyJamesBob and @colin715 for their collaboration on this 
 
 | Version | Description              |
 | ------- | ------------------------ |
+| v 1.1.1 | Add Polish translation   |
 | v 1.1.0 | Fix for case sensitivity |
 | v 1.0.1 | Add German translation   |
 | v 1.0.0 | Initial release          |

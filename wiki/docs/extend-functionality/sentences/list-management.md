@@ -112,6 +112,7 @@ command_show2: >-
 
 | Version | Description                                                                               |
 | ------- | ----------------------------------------------------------------------------------------- |
+| v 1.3.3 | Add Polish translation                                                                    |
 | v 1.3.2 | Add Romainian translation                                                                 |
 | v 1.3.1 | Update title set order                                                                    |
 | v 1.3.0 | Incremental improvements                                                                  |
