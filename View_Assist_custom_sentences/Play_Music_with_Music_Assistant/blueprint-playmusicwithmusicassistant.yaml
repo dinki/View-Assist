@@ -36,7 +36,7 @@ blueprint:
     play_song_command:
       name: Play Song Command
       description: The command to trigger the play song action
-      default: (play {song} by {artist} | play {song})
+      default: play {song} by {artist}
     queue_song_command:
       name: Queue Song Command
       description: The command to trigger the queue song action

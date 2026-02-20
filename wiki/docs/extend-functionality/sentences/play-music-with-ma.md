@@ -22,7 +22,7 @@ Adjustments may be needed based on your specific usage and preferences.
 
 ### Play Song Command
 
-- en: `(play {song} by {artist} | play {song})`
+- en: `play {song} by {artist}`
 - de: `Spiele [den Song|den Titel] {song} von {artist}`
 
 ### Queue Song Command
@@ -34,7 +34,7 @@ Adjustments may be needed based on your specific usage and preferences.
 
 | Version | Description                                                                                  |
 | ------- | -------------------------------------------------------------------------------------------- |
-| v 1.2.5 | Add option to specify just song without artist                                               |
+| v 1.2.5 | Add option to allow for blank artist in play song option                                     |
 | v 1.2.4 | Add Dutch translation                                                                        |
 | v 1.2.3 | Add Polish translation                                                                       |
 | v 1.2.2 | Add Romainian translation                                                                    |
