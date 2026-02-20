@@ -4,7 +4,6 @@
 
 - Music Assistant server installed and integrated with Home Assistant
 - View: [Music view](../views/music)
-- The recently added musicplayer_device must be added to your View Assistant device configuration as explained in the [Satellite Custom Device Configuration](https://github.com/dinki/View-Assist/wiki/View-Assist-device-configuration#satellite-custom-device-configuration) portion of the wiki. This should be a Music Assistant player device. Typically these will be named the same as your mediaplayer_device but with a \_2 on the end
 
 ## Translations
 

@@ -15,7 +15,9 @@ View Assist provides visual feedback for the Home Assistant Assist voice assista
 <details>
   <summary>Why is the dashboard on my PC browser is showing a box telling me to register the device</summary>
 
-You are trying to use View Assist on a PC or other nonView Assist satellite device. The dashboard is only for use on VA satellite devices. The dashboard is only used by View Assist satellites and will not work for general browsing outside of those registered devices
+You are trying to use View Assist on a PC or other nonView Assist satellite device. The dashboard is only for use on VA satellite devices. The dashboard is only used by View Assist satellites and will not work for general browsing outside of those registered devices.  The original intent of View Assist was to be an alternative to the Alexa Show and Next Home display devices.  Those are not general purpose tablets but a supplemental view for voice.  Further, the View Assist views provided are not static views like most Home Assistant views.  These views are dynamic.  The voice commands provide variable data stored in the attributes of each individual VA satellite device.  The views are set to look at those attributes.  This allows device independence and easy expansion of additional satellites without having to create multiple dashboards with a dedicated one per device.
+
+All said, VA is a framework and you are more than welcome to adapt it to your needs but the way things are now will probably not change much, if any, unless someone can provide a suitable way of providing that underlying data with touch.
 
 </details>
 
