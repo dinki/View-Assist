@@ -34,6 +34,7 @@ Adjustments may be needed based on your specific usage and preferences.
 
 | Version | Description                                                                                  |
 | ------- | -------------------------------------------------------------------------------------------- |
+| v 1.2.5 | Add option to allow for blank artist in play song option                                     |
 | v 1.2.4 | Add Dutch translation                                                                        |
 | v 1.2.3 | Add Polish translation                                                                       |
 | v 1.2.2 | Add Romainian translation                                                                    |

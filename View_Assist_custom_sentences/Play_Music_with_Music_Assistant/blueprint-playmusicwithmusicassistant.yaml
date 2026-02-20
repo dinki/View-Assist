@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.4)
+    Assistant v 1.2.5)
   domain: automation
   input:
     ma_instance:
@@ -272,7 +272,7 @@ actions:
               media_type:
                 - track
               name: "{{ trigger.slots.song  }}"
-              artist: "{{ trigger.slots.artist  }}"
+              artist: "{{ trigger.slots.artist | default('') }}"
             response_variable: found_track
           - alias: Did we find a track?
             if:
