@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers WORK IN PROGRESS
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.0-beta6)
+    v 1.3.0-beta7)
   domain: automation
   input:
     spokenlanguage:
@@ -383,11 +383,6 @@ action:
                   entity_id: "{{ target_satellite_device }}"
                 data:
                   mode: normal
-          # - action: view_assist.set_state
-          #   target:
-          #     entity_id: "{{ target_satellite_device }}"
-          #   data:
-          #     mode: normal
           - set_conversation_response: "{{ snooze_response.response }}"
       - conditions:
           - condition: trigger
@@ -427,16 +422,6 @@ action:
                   timer_id: "{{ timer_id }}"
               - set_conversation_response: >
                   {{ translations[spokenlanguage]['responses']['timer_cancel'].replace('{timer_info}', (timer_name if timer_name else timer_sentence) ~ ' ' ~ timer_class) }}
-              # - if:
-              #     - condition: template
-              #       value_template: "{{ allow_hold_mode and type == 'timer'}}"
-              #   then:
-              #     - action: view_assist.set_state
-              #       target:
-              #         entity_id: "{{ target_satellite_device }}"
-              #       data:
-              #         mode: normal
-
               - delay: "00:00:01"
               - action: view_assist.get_timers
                 data: {}
@@ -452,7 +437,6 @@ action:
                       entity_id: "{{ target_satellite_device }}"
                     data:
                       mode: normal
-
             else:
               - set_conversation_response: >
                   {{ translations[spokenlanguage]['responses']['named_timer_not_found'] }}
@@ -628,6 +612,16 @@ action:
                   {% endif %}
                 {% endfor %}
                 {{ ns.found }}
+              hold_mode_on_alarm_view: >
+                    {% set ns = namespace(found=[]) %}
+                    {% for e in all_display_entities %}
+                      {% set path = state_attr(e, 'current_path') or '' %}
+                      {% set mode = state_attr(e, 'mode') or '' %}
+                      {% if 'alarm' in path and mode == 'hold' %}
+                        {% set ns.found = ns.found + [e] %}
+                      {% endif %}
+                    {% endfor %}
+                    {{ ns.found }}                
           - if:
               - condition: template
                 value_template: "{{ timer_count == 0 and contains_timer_icon | count > 0 }}"
@@ -641,7 +635,7 @@ action:
                         status_item: "view:alarm|timer-outline"
           - if:
               - condition: template
-                value_template: "{{ timer_count == 0 and contains_reminder_icon | count > 0 }}"
+                value_template: "{{ reminder_count == 0 and contains_reminder_icon | count > 0 }}"
             then:
               - repeat:
                   for_each: "{{ contains_reminder_icon }}"
@@ -652,7 +646,7 @@ action:
                         status_item: "view:alarm|reminder"
           - if:
               - condition: template
-                value_template: "{{ timer_count == 0 and contains_alarm_icon | count > 0 }}"
+                value_template: "{{ alarm_count == 0 and contains_alarm_icon | count > 0 }}"
             then:
               - repeat:
                   for_each: "{{ contains_alarm_icon }}"
@@ -661,16 +655,18 @@ action:
                       data:
                         entity_id: "{{ repeat.item }}"
                         status_item: "view:alarm|alarm"
-          # This is broken as we can't figure out what device the timer was set on to change the state
-          # - if:
-          #     - condition: template
-          #       value_template: "{{ timer_count == 0 }}"
-          #   then:
-          #     - action: view_assist.set_state
-          #       target:
-          #         entity_id: "{{ target_satellite_device }}"
-          #       data:
-          #         mode: normal
+          - if:
+              - condition: template
+                value_template: "{{ hold_mode_on_alarm_view | count > 0 }}"
+            then:
+              - repeat:
+                  for_each: "{{ hold_mode_on_alarm_view }}"
+                  sequence:
+                    - action: view_assist.set_state
+                      target:
+                        entity_id: "{{ repeat.item }}"
+                      data:
+                        mode: normal
       - conditions:
           - condition: trigger
             id:
@@ -696,7 +692,7 @@ action:
                   status_item: "view:alarm|timer-outline"
           - if:
               - condition: template
-                value_template: "{{ 'reminder' in enabled_icons and reminder_count == 1 }}"
+                value_template: "{{ 'reminders' in enabled_icons and reminder_count == 1 }}"
             then:
               - action: view_assist.add_status_item
                 data:
@@ -704,7 +700,7 @@ action:
                   status_item: "view:alarm|reminder"
           - if:
               - condition: template
-                value_template: "{{ 'alarm' in enabled_icons and alarm_count == 1 }}"
+                value_template: "{{ 'alarms' in enabled_icons and alarm_count == 1 }}"
             then:
               - action: view_assist.add_status_item
                 data:
