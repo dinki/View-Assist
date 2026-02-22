@@ -584,7 +584,11 @@ action:
               timer_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'timer') | list | count }}"
               reminder_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'reminder') | list | count }}"
               alarm_count: "{{ timer_data.get('result', []) | selectattr('timer_class', 'eq', 'alarm') | list | count }}"
-              all_display_entities: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
+              # all_display_entities: "{{ view_assist_entities(filter={'type':'view_audio'}) }}"
+              all_display_entities: >
+                {% set view_audio_entities = view_assist_entities(filter={'type':'view_audio'}) %}
+                {% set vaca_entities = view_assist_entities(filter={'type':'vaca'}) %}
+                {{ view_audio_entities + vaca_entities }}
               contains_timer_icon: >
                 {% set ns = namespace(found=[]) %}
                 {% for e in all_display_entities %}
