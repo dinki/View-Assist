@@ -135,6 +135,53 @@ variables:
       const timeout = variables.var_url_params.get('timeout');
       return timeout ? parseInt(timeout, 10) : 0;
     ]]]
+  var_setup_camera_overlay: |-
+    [[[
+      const cleanupOverlay = () => {
+        if (window.vaCameraOverlaySet && window.vaCameraOverlayEntity) {
+          try {
+            let hassInstance = typeof hass !== 'undefined' ? hass : 
+                              document.querySelector('home-assistant')?.hass;
+
+            if (hassInstance) {
+              hassInstance.callService('view_assist', 'set_state', {
+                entity_id: window.vaCameraOverlayEntity,
+                assist_prompt: ''
+              });
+            }
+          } catch (error) {
+            console.warn('View Assist camera overlay restore failed:', error);
+          } finally {
+            window.vaCameraOverlaySet = false;
+            window.vaCameraOverlayEntity = null;
+            window.vaCameraOverlayPageKey = null;
+          }
+        }
+      };
+
+      if (variables.var_current_view !== 'camera' || !variables.var_assistsat_entity) {
+        cleanupOverlay();
+        return '';
+      }
+
+      const currentPageKey = `${window.location.pathname}${window.location.search}`;
+      const entityId = variables.var_assistsat_entity;
+
+      if (window.vaCameraOverlayPageKey === currentPageKey && window.vaCameraOverlaySet) {
+        return '';
+      }
+
+      window.vaCameraOverlayPageKey = currentPageKey;
+      window.vaCameraOverlayEntity = entityId;
+
+      hass.callService('view_assist', 'set_state', {
+        entity_id: entityId,
+        assist_prompt: 'kitt_bar'
+      });
+      window.vaCameraOverlaySet = true;
+
+      return '';
+    ]]]
   var_setup_camera_hold_mode: |-
     [[[
       const cleanup = () => {
@@ -253,6 +300,7 @@ styles:
       - top: .41rem
       - z-index: 2
 custom_fields:
+  _overlay_init: "[[[ return variables.var_setup_camera_overlay ]]]"
   _hold_mode_init: "[[[ return variables.var_setup_camera_hold_mode ]]]"
   back_button:
     card:
