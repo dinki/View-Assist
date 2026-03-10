@@ -15,7 +15,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 | [Device Functions](sentences/device-functions)                  | Extend device functions for media control, modes and repeat speech                    | en, de, nl, pl                 |
 | [Get Sports Scores](sentences/get-sports-scores)                | Get sports scores from US major sports teams and custom definitions                   | en, de, es, fr, it, pl         |
 | [How\'s the Weather](sentences/hows-the-weather)                | Get current conditions and see the forecast on view enabled devices                   | en, de, es, fr, it, nl, pl, ro |
-| [List Management](sentences/list-management)                    | Add, remove, show items from your shopping or to do list                              | en, de, fr, es, pl, ro         |
+| [List Management](sentences/list-management)                    | Add, remove, show items from your shopping or to do list                              | en, de, es, fr, it, pl, ro     |
 | [Locate a Person](sentences/locate-a-person)                    | Ask for the location of a family member and see it displayed on a map                 | en, de, it, pl                 |
 | [Play Music with Music Assistant](sentences/play-music-with-ma) | Play your music media using Music Assistant                                           | en, de, nl, pl, pt, ro         |
 | [Play Radio with Music Assistant](sentences/play-radio-with-ma) | Play TuneIn radio using Music Assistant                                               | en, de, nl, pt, ro             |
