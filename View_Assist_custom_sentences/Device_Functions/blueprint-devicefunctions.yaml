@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl, pl]
+          languages: [de, en, nl, pl, sr, sr-Latn]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -156,6 +156,34 @@ action:
             volume_set: "Głośność ustawiona na {level}"
             volume_adjusted: "Głośność została {direction}"
             sound_restored: "Dźwięk został przywrócony"
+        sr:
+          responses:
+            repeat: "Рекао сам {last_said}"
+            repeat_remove: "Рекао сам"
+            do_not_disturb_off: "Режим Не узнемиравај је сада искључен"
+            mode_success: "Постављам режим на {mode}"
+            mode_failure_device: "Жао ми је. {mode} није важећи режим за овај уређај"
+            mode_failure_unrecognized: "Жао ми је. {mode} није важећи режим. Покушајте {{ modes }}."
+            info_playing: "Ово је {title} од {artist}"
+            view_switch: "Приказујем приказ {view}"
+            view_invalid: "Жао ми је. {view} није важећи приказ."
+            volume_set: "Јачина звука је подешена на {level}"
+            volume_adjusted: "Јачина звука је {direction}"
+            sound_restored: "Звук је враћен"
+        sr-Latn:
+          responses:
+            repeat: "Rekao sam {last_said}"
+            repeat_remove: "Rekao sam"
+            do_not_disturb_off: "Režim Ne uznemiravaj je sada isključen"
+            mode_success: "Postavljam režim na {mode}"
+            mode_failure_device: "Žao mi je. {mode} nije važeći režim za ovaj uređaj"
+            mode_failure_unrecognized: "Žao mi je. {mode} nije važeći režim. Pokušajte {{ modes }}."
+            info_playing: "Ovo je {title} od {artist}"
+            view_switch: "Prikazujem prikaz {view}"
+            view_invalid: "Žao mi je. {view} nije važeći prikaz."
+            volume_set: "Jačina zvuka je podešena na {level}"
+            volume_adjusted: "Jačina zvuka je {direction}"
+            sound_restored: "Zvuk je vraćen"            
   - choose:
       - conditions:
           - condition: trigger
