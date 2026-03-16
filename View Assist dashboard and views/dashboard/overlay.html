@@ -37,10 +37,12 @@ CSS styles should be defined in overlays.css and not here.
 </div>
 
 <div id="kitt_bar" data-name="KITT sytle bar at the bottom" style="display: none">
-    <div id="listening" class="bar-line">
-        <div id="listening-bar" class="highlight">.</div>
+    <div id="listening" class="bar-line kitt-screen">
+        <div id="listening-bar" class="highlight" aria-hidden="true"></div>
+        <div class="state-label">LISTENING</div>
     </div>
-    <div id="processing" class="bar-line">
-        <div id="processing-bar" class="highlight">.</div>
+    <div id="processing" class="bar-line kitt-screen">
+        <div id="processing-bar" class="highlight" aria-hidden="true"></div>
+        <div class="state-label">THINKING</div>
     </div>
 </div>

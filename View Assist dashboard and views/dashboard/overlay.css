@@ -150,12 +150,14 @@ div#flashing_bar #processing {
 
 /* kitt bar */
 :host {
-  --kitt-line-height: 2vh;
-  --kitt-bar-width: 25%;
-  --kitt-color-listening: rgb(49, 186, 250);
-  --kitt-color-listening-bg: rgb(0, 78, 129);
-  --kitt-color-processing: rgb(193, 49, 250);
-  --kitt-color-processing-bg: rgb(77, 0, 129);
+  --kitt-bar-width: 42%;
+  --kitt-highlight-blur: 90px;
+  --kitt-color-listening: rgb(72, 201, 255);
+  --kitt-color-listening-bg: rgb(5, 27, 45);
+  --kitt-color-processing: rgb(255, 210, 64);
+  --kitt-color-processing-bg: rgb(255, 236, 163);
+  --kitt-text-size: clamp(3rem, 10vw, 8rem);
+  --kitt-text-letter-spacing: 0.18em;
 }
 
 @keyframes kitt-bar {
@@ -168,13 +170,20 @@ div#flashing_bar #processing {
 }
 
 #kitt_bar{
-    position: absolute;
-    width: 100%;
-    height: var(--kitt-line-height);
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
-    bottom: 0;
-    left: 0;
     z-index: 9999;
+}
+
+#kitt_bar .bar-line {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #kitt_bar .bar-line:after {
@@ -187,28 +196,66 @@ div#flashing_bar #processing {
 }
 
 #kitt_bar #listening.bar-line:after {
-    background: var(--kitt-color-listening-bg);
+    background:
+      radial-gradient(circle at center, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 48%),
+      var(--kitt-color-listening-bg);
 }
 
 #kitt_bar #processing.bar-line:after {
-    background: var(--kitt-color-processing-bg);
+    background:
+      radial-gradient(circle at center, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 48%),
+      var(--kitt-color-processing-bg);
 }
 
 #kitt_bar .highlight {
     position: absolute;
-    top: 0;
-    height: 100%;
+    top: -12%;
+    height: 124%;
     left: calc(var(--kitt-bar-width) / 2 * -1); /* hidden start */
     width: var(--kitt-bar-width);
     z-index: 1;
+    filter: blur(var(--kitt-highlight-blur));
+    opacity: 0.95;
 }
 
 #kitt_bar #listening-bar {
-  background: linear-gradient(90deg, transparent 0%, var(--kitt-color-listening) 40%, var(--kitt-color-listening) 60%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 16%, var(--kitt-color-listening) 44%, rgb(255, 255, 255) 50%, var(--kitt-color-listening) 56%, rgba(255, 255, 255, 0.15) 84%, transparent 100%);
   animation: kitt-bar 4s infinite ease-in-out alternate;
 }
 
 #kitt_bar #processing-bar {
-  background: linear-gradient(90deg, transparent 0%, var(--kitt-color-processing) 40%, var(--kitt-color-processing) 60%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 16%, var(--kitt-color-processing) 44%, rgb(255, 248, 196) 50%, var(--kitt-color-processing) 56%, rgba(255, 255, 255, 0.2) 84%, transparent 100%);
   animation: kitt-bar 2s infinite ease-in-out alternate;
+}
+
+#kitt_bar .state-label {
+    position: relative;
+    z-index: 2;
+    padding: 0 6vw;
+    font-family: Roboto, sans-serif;
+    font-size: var(--kitt-text-size);
+    font-weight: 900;
+    letter-spacing: var(--kitt-text-letter-spacing);
+    line-height: 0.95;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#kitt_bar #listening .state-label {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 24px rgba(0, 0, 0, 0.45);
+}
+
+#kitt_bar #processing .state-label {
+    color: rgb(0, 0, 0);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+@media (orientation: portrait) {
+    :host {
+        --kitt-bar-width: 58%;
+        --kitt-highlight-blur: 72px;
+        --kitt-text-size: clamp(2.8rem, 16vw, 7rem);
+        --kitt-text-letter-spacing: 0.12em;
+    }
 }
