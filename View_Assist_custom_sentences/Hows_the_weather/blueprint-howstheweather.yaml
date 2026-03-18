@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl, pl, ro]
+          languages: [de, en, es, fr, it, nl, pl, ro, sr, sr-Latn]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -186,6 +186,38 @@ action:
             snowy-rainy: "Este lapoviță"
             windy: "Este vânt"
             fog: "Este ceață"
+      sr:
+        responses:
+          temperature: Температура је {temperature} степени и {condition}
+        weather_states:
+          sunny: Сунчано
+          clear-night: Ведра ноћ
+          cloudy: Облачно
+          partlycloudy: Делимично облачно
+          rainy: Кишовито
+          pouring: Пљусак
+          lightning: Грмљавина
+          lightning-rainy: Грмљавина са кишом
+          snowy: Снежно
+          snowy-rainy: Снег и киша
+          windy: Ветровито
+          fog: Магловито
+      sr-Latn:
+        responses:
+          temperature: Temperatura je {temperature} stepeni i {condition}
+        weather_states:
+          sunny: Sunčano
+          clear-night: Vedra noć
+          cloudy: Oblačno
+          partlycloudy: Delimično oblačno
+          rainy: Kišovito
+          pouring: Pljusak
+          lightning: Grmljavina
+          lightning-rainy: Grmljavina sa kišom
+          snowy: Snežno
+          snowy-rainy: Sneg i kiša
+          windy: Vetrovito
+          fog: Maglovito                            
       conversation_response: >-
         {% set weather_state = states(weather_entity) %}
         {% set translated_condition = translations[language]['weather_states'].get(weather_state, weather_state) %}
