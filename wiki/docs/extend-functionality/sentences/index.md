@@ -12,7 +12,7 @@ We encourage everyone to share their creations so that others might enjoy what y
 | [Alarms Reminders & Timers](sentences/alarms-reminders-timers)  | Allows for an on demand call to create and list alarms, reminders and timers          | en, ca, de, es, fr, sr, sr-Latn |
 | [Broadcast](sentences/broadcast)                                | Broadcast messages to other View Assist Satellites                                    | en                              |
 | [Device Alerts](sentences/device-alerts)                        | Automation builder used to do something with a VA satellite when something happens    | en                              |
-| [Device Functions](sentences/device-functions)                  | Extend device functions for media control, modes and repeat speech                    | en, de, nl, pl                  |
+| [Device Functions](sentences/device-functions)                  | Extend device functions for media control, modes and repeat speech                    | en, de, nl, pl, sr, sr-Latn     |
 | [Get Sports Scores](sentences/get-sports-scores)                | Get sports scores from US major sports teams and custom definitions                   | en, de, es, fr, it, pl          |
 | [How\'s the Weather](sentences/hows-the-weather)                | Get current conditions and see the forecast on view enabled devices                   | en, de, es, fr, it, nl, pl, ro  |
 | [List Management](sentences/list-management)                    | Add, remove, show items from your shopping or to do list                              | en, de, es, fr, it, pl, ro      |

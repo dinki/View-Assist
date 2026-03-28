@@ -66,6 +66,7 @@ This blueprint will contain device specific functions. Current functions include
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.4.5 | Add Serbian translations                                                                 |
 | v 1.4.4 | Explicitly set path for setting view                                                     |
 | v 1.4.3 | Add Dutch translation                                                                    |
 | v 1.4.2 | Add Polish translation                                                                   |
