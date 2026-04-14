@@ -1,7 +1,7 @@
 blueprint:
   name: View Assist - Play Radio with Music Assistant
   description: Play radio stations from your Music Assistant server (View Assist
-    Play Radio with Music Assistant v 1.2.1)
+    Play Radio with Music Assistant v 1.3.0)
   domain: automation
   input:
     language:
@@ -13,18 +13,70 @@ blueprint:
           languages: [de, en, nl, pt, ro]
     command:
       name: Command
-      description: The phrase you want to start your station (example Big 102)
+      description: >-
+        The phrase used to start the station. Legacy automations can keep using a
+        fixed phrase such as "Big 102". To use spoken station aliases, include
+        {station_name}. Examples: Legacy: "play BBC One". Alias: "play radio
+        {station_name}".
+      default: "(start | play | listen) [to] radio [station] {station_name}"
+      selector:
+        text:
+          multiline: false
     announce:
       name: Announcement
-      description: The phrase you want to hear when you start your station (example Playing Big 102)
+      description: >-
+        The phrase you want to hear when you start your station. Use {station} if
+        you want to insert the resolved station name.
       default: ""
+      selector:
+        text:
+          multiline: false
     station:
       name: Station ID
-      description: The radio station to play.  This must be an exact match (example BIG 102.1 KYBG)
+      description: >-
+        Legacy fixed station to play. Existing automations can keep using this
+        exactly as before. This is only used when the command does not provide a
+        {station_name} slot.
+      default: ""
+      selector:
+        text:
+          multiline: false
     view_path:
       name: Dashboard Music view
-      description: The View Assist dashboard view to use for displaying music information (example /dashboard-viewassist/music)
+      description: >-
+        The View Assist dashboard view to use for displaying music information
+        (example /dashboard-viewassist/music)
       default: /view-assist/music
+      selector:
+        text:
+          multiline: false
+    station_aliases:
+      name: Station aliases
+      description: >-
+        Optional alias list for slot-based commands that include {station_name}.
+        Add one entry per spoken alias. Multiple aliases can point to the same
+        media_id.
+      default: []
+      selector:
+        object:
+          label_field: alias
+          multiple: true
+          fields:
+            alias:
+              label: Alias
+              required: true
+              selector:
+                text:
+            media_id:
+              label: Media ID
+              required: true
+              selector:
+                text:
+            station_name:
+              label: Station name
+              required: false
+              selector:
+                text:
 trigger:
   - platform: conversation
     command: !input command
@@ -41,34 +93,101 @@ action:
       station: !input station
       announce_input: !input announce
       language: !input language
+      station_aliases: !input station_aliases
+      spoken_station_raw: >-
+        {% set details = trigger.details if trigger.details is defined and trigger.details is mapping else {} %}
+        {% set slots = trigger.slots if trigger.slots is defined and trigger.slots is mapping else {} %}
+        {% set station_detail = details.get('station_name') if details is mapping else none %}
+        {{
+          station_detail.get('text')
+          if station_detail is mapping and station_detail.get('text') is not none
+          else slots.get('station_name', '')
+        }}
+      spoken_station: "{{ spoken_station_raw | string | trim }}"
+      uses_station_slot: "{{ spoken_station != '' }}"
+      resolved_alias_media_id: >-
+        {% set spoken = spoken_station | lower | trim %}
+        {% set ns = namespace(value='') %}
+        {% for item in station_aliases if item is mapping %}
+          {% set item_alias = item.alias | default('') | string | lower | trim %}
+          {% if spoken != '' and item_alias == spoken %}
+            {% set ns.value = item.media_id | default('') | string | trim %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.value }}
+      resolved_alias_station_name: >-
+        {% set spoken = spoken_station | lower | trim %}
+        {% set ns = namespace(value='') %}
+        {% for item in station_aliases if item is mapping %}
+          {% set item_alias = item.alias | default('') | string | lower | trim %}
+          {% if spoken != '' and item_alias == spoken %}
+            {% set ns.value = item.station_name | default(item.alias | default(spoken_station)) | string | trim %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.value }}
+      final_station_id: >-
+        {% set legacy_station = station | string | trim %}
+        {% if uses_station_slot %}
+          {{ resolved_alias_media_id }}
+        {% else %}
+          {{ legacy_station }}
+        {% endif %}
+      final_station_name: >-
+        {% set legacy_station = station | string | trim %}
+        {% if uses_station_slot %}
+          {{ resolved_alias_station_name if resolved_alias_station_name != '' else spoken_station }}
+        {% else %}
+          {{ legacy_station }}
+        {% endif %}
       translations:
         en:
           responses:
             playing_station: "Playing {station}"
+            station_not_found: "I couldn't find {station}. Please add it as an alias."
         de:
           responses:
             playing_station: "Spiele {station}"
+            station_not_found: "Ich konnte {station} nicht finden. Bitte lege den Sender als Alias an."
         nl:
           responses:
             playing_station: "{station} afspelen"
+            station_not_found: "Ik kon {station} niet vinden. Voeg het station als alias toe."
         pt:
           responses:
             playing_station: "Tocando {station}"
+            station_not_found: "Não encontrei {station}. Adicione a estação como alias."
         ro:
           responses:
             playing_station: "Redau {station}"
-      announce: "{{ announce_input if announce_input != '' else translations[language]['responses']['playing_station'].replace('{station}', station) }}"
+            station_not_found: "Nu am găsit {station}. Te rog adaugă postul ca alias."
+      announce: >-
+        {{
+          announce_input
+          if announce_input != ''
+          else translations[language]['responses']['playing_station'].replace('{station}', final_station_name)
+        }}
+      station_not_found_announce: >-
+        {{
+          translations[language]['responses']['station_not_found'].replace('{station}', spoken_station if spoken_station != '' else 'that station')
+        }}
   - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ uses_station_slot and final_station_id == '' }}"
+        sequence:
+          - stop: "No matching radio alias found"
       - conditions:
           - condition: trigger
             id:
               - playtunein
+          - condition: template
+            value_template: "{{ final_station_id != '' }}"
         sequence:
           - service: music_assistant.play_media
             target:
               entity_id: "{{ target_musicplayer_device }}"
             data:
-              media_id: "{{ station }}"
+              media_id: "{{ final_station_id }}"
           - if:
               - condition: template
                 value_template: "{{ target_use_announce is not false }}"
@@ -92,3 +211,4 @@ action:
             data:
               device: "{{ target_satellite_device }}"
               path: "{{ view_path }}"
+    default: []
