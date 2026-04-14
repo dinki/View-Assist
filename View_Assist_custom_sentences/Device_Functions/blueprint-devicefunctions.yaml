@@ -183,7 +183,7 @@ action:
             view_invalid: "Žao mi je. {view} nije važeći prikaz."
             volume_set: "Jačina zvuka je podešena na {level}"
             volume_adjusted: "Jačina zvuka je {direction}"
-            sound_restored: "Zvuk je vraćen"            
+            sound_restored: "Zvuk je vraćen"
   - choose:
       - conditions:
           - condition: trigger
