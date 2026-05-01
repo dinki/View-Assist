@@ -1,6 +1,6 @@
 blueprint:
-  name: View Assist - Locate a Person
-  description: Ask Assist to locate a person (View Assist locateaperson v 1.1.1)
+  name: View Assist - Locate a Person WIP
+  description: Ask Assist to locate a person (View Assist locateaperson v 2.0.0)
   domain: automation
   input:
     language:
@@ -9,7 +9,13 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, it, pl]
+          languages:
+            - de
+            - en
+            - it
+            - pl
+          no_sort: false
+          native_name: false
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -22,12 +28,28 @@ blueprint:
       name: Info View
       description: The View Assist dashboard view used for the info display
       default: /view-assist/info
-    defined_names:
-      name: Defined Names
-      description: >
-        Phonetic name followed by the Person's name as configured in HA.
-      default: >-
-        {"john": "jon", "simon": "simon"}
+    person_entries:
+      name: Person entries
+      description: Add one or more spoken names and map them to person entities.
+      default: ""
+      selector:
+        object:
+          multiple: true
+          label_field: alias
+          description_field: person_entity
+          fields:
+            alias:
+              label: Spoken name
+              required: true
+              selector:
+                text: {}
+            person_entity:
+              label: Person entity
+              required: true
+              selector:
+                entity:
+                  filter:
+                    - domain: person
     map_mode:
       name: Map Mode Theme
       description: This will change the map mode theme
@@ -38,6 +60,9 @@ blueprint:
           options:
             - dark
             - light
+          custom_value: false
+          sort: false
+          multiple: false
 
 trigger:
   platform: conversation
@@ -53,8 +78,22 @@ action:
       view_locate: !input view_locate
       view_info: !input view_info
       map_mode: !input map_mode
-      input_defined_names: !input defined_names
-      persons_name: "{{ input_defined_names | from_json }}"
+      person_entries_input: !input person_entries
+
+      persons_name: >
+        {% set ns = namespace(entries={}) %}
+        {% for item in (person_entries_input | default([])) %}
+          {% if item is mapping %}
+            {% set alias = item.alias | default('') | string | lower | trim %}
+            {% set pe = item.person_entity | default('') | string | trim %}
+            {% if alias != '' and pe != '' %}
+              {% set person_id = pe.split('.')[-1] %}
+              {% set ns.entries = ns.entries | combine({ alias: person_id }) %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.entries }}
+
       translations:
         en:
           responses:
@@ -62,80 +101,83 @@ action:
             person_location: "{person} is at {location}"
             person_undefined: "{person} hasn't been defined"
           last_update:
-            prefix: "Last updated"
-            now_label: "now"
-            minute_label: "minutes ago"
-            hour_label: "hours ago"
-            day_label: "days ago"
+            prefix: Last updated
+            now_label: now
+            minute_label: minutes ago
+            hour_label: hours ago
+            day_label: days ago
         it:
           responses:
             person_away: "{person} è fuori casa."
             person_location: "{person} è nella zona {location}"
             person_undefined: "{person} non è definita"
           last_update:
-            prefix: "Ultimo aggiornamento"
-            now_label: "ora"
-            minute_label: "minuti fa"
-            hour_label: "ore fa"
-            day_label: "giorni fa"
+            prefix: Ultimo aggiornamento
+            now_label: ora
+            minute_label: minuti fa
+            hour_label: ore fa
+            day_label: giorni fa
         de:
           responses:
             person_away: "{person} ist nicht zu Hause."
             person_location: "{person} ist bei {location}"
             person_undefined: "{person} ist nicht definiert"
           last_update:
-            prefix: "Zuletzt aktualisiert"
-            now_label: "jetzt"
-            minute_label: "Minuten zuvor"
-            hour_label: "Stunden zuvor"
-            day_label: "Tage zuvor"
+            prefix: Zuletzt aktualisiert
+            now_label: jetzt
+            minute_label: Minuten zuvor
+            hour_label: Stunden zuvor
+            day_label: Tage zuvor
         pl:
           responses:
             person_away: "{person} jest poza domem."
             person_location: "{person} jest w {location}"
             person_undefined: "{person} nie został zdefiniowany"
           last_update:
-            prefix: "Ostatnia aktualizacja"
-            now_label: "teraz"
-            minute_label: "minut temu"
-            hour_label: "godzin temu"
-            day_label: "dni temu"
+            prefix: Ostatnia aktualizacja
+            now_label: teraz
+            minute_label: minut temu
+            hour_label: godzin temu
+            day_label: dni temu
 
   - if:
       - condition: template
-        value_template: "{{ trigger.slots.person | lower in persons_name.keys() | map('lower') | list }}"
+        value_template: "{{ trigger.slots.person | lower in persons_name.keys() | list }}"
     then:
       - variables:
-          # Case-insensitive lookup of the HA person ID
-          target_person_id: >-
+          target_person_id: >
             {% set spoken = trigger.slots.person | lower %}
             {% set ns = namespace(found='') %}
             {% for k, v in persons_name.items() %}
-              {% if k | lower == spoken %}{% set ns.found = v %}{% endif %}
+              {% if k == spoken %}{% set ns.found = v %}{% endif %}
             {% endfor %}
             {{ ns.found }}
+
           person_source: "{{ 'person.' + target_person_id }}"
           tracker_source: "{{ state_attr(person_source, 'source') }}"
-          geocoded_source: >-
-            {% set geocoded = 'sensor.' + (tracker_source.split('.', 1)[1] if tracker_source else 'unknown') + '_geocoded_location' %}
+          geocoded_source: >
+            {% set geocoded = 'sensor.' + (tracker_source.split('.',1)[1] if tracker_source else 'unknown') + '_geocoded_location' %}
             {{ geocoded }}
-          location_source: |-
+
+          location_source: >
             {% if states(person_source) != 'not_home' %}
               {{ state_translated(person_source)|capitalize }}
-            {% elif states(geocoded_source) not in ['unknown', 'unavailable', 'None'] %}
+            {% elif states(geocoded_source) not in ['unknown','unavailable','None'] %}
               {{ states(geocoded_source) }}
             {% else %}
-              {{ 'Unknown Location' }}
+              Unknown Location
             {% endif %}
-          conversation_response: |-
+
+          conversation_response: >
             {% if states(person_source) == 'not_home' %}
-              {{ translations[language]['responses']['person_away'].replace("{person}", trigger.slots.person) }}
+              {{ translations[language]['responses']['person_away'].replace("{person}", trigger.slots.person | capitalize) }}
             {% else %}
               {{ translations[language]['responses']['person_location']
-                .replace("{person}", trigger.slots.person)
+                .replace("{person}", trigger.slots.person | capitalize)
                 .replace("{location}", state_translated(person_source)) }}
             {% endif %}
-          location_last_update_translated: |-
+
+          location_last_update_translated: >
             {% set last_changed = states[person_source].last_changed %}
             {% set now = now() %}
             {% set diff = (now - last_changed).total_seconds() %}
@@ -157,16 +199,22 @@ action:
           entity_id: "{{ target_satellite_device }}"
         data:
           last_said: "{{ conversation_response }}"
+
       - set_conversation_response: "{{ conversation_response }}"
+
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
-          locate_data: >-
-            {{ {'person': person_source, 'tracker': tracker_source, 'geocoded':
-            geocoded_source, 'location_text': location_source,
-            'location_last_change': location_last_update_translated, 'map_mode':
-            map_mode} }}
+          locate_data: >
+            {{ {
+              'person': person_source,
+              'tracker': tracker_source,
+              'geocoded': geocoded_source,
+              'location_text': location_source,
+              'location_last_change': location_last_update_translated,
+              'map_mode': map_mode
+            } }}
 
       - if:
           - condition: template
@@ -177,11 +225,13 @@ action:
               device: "{{ target_satellite_device }}"
               path: "{{ view_locate }}"
         else:
-          - stop: "Audio only device, navigation skipped"
+          - stop: Audio only device, navigation skipped
 
     else:
       - variables:
-          response_undefined: "{{ translations[language]['responses']['person_undefined'].replace('{person}', trigger.slots.person) }}"
+          response_undefined: >
+            {{ translations[language]['responses']['person_undefined'].replace('{person}', trigger.slots.person) }}
+
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
@@ -190,16 +240,18 @@ action:
           message: "{{ response_undefined }}"
           message_font_size: 6vw
           last_said: "{{ response_undefined }}"
+
       - action: view_assist.navigate
         data:
           device: "{{ target_satellite_device }}"
           path: "{{ view_info }}"
+
       - set_conversation_response: "{{ response_undefined }}"
+
       - action: view_assist.set_state
         target:
           entity_id: "{{ target_satellite_device }}"
         data:
           last_said: "{{ response_undefined }}"
 
-##
 mode: single
