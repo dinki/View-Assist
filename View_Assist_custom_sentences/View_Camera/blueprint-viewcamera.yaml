@@ -13,7 +13,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl]
+          languages: [de, en, pl, pt]
     command:
       name: Command Text
       description: |
@@ -128,6 +128,11 @@ action:
                 camera_not_found_show: "Kamera '{camera}' nie znaleziona. Wyświetlam skonfigurowane kamery."
                 camera_not_found_error: "Przepraszam, nie mogłem znaleźć kamery o nazwie '{camera}'. Dostępne kamery to: {available}."
                 camera_not_found_short: "Kamera '{camera}' nie znaleziona."
+            pt:
+              responses:
+                camera_not_found_show: "A câmera '{camera}' não pode ser encontrada. Exibindo câmeras configuradas."
+                camera_not_found_error: "Desculpe, não consegui encontrar uma câmera chamada '{camera}'. As câmeras disponíveis são: {available}."
+                camera_not_found_short: "Câmera '{camera}' não encontrada."
           timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
           camera_entities_list: >-
             {% set camera_list = cameras.keys() | list %}
@@ -211,4 +216,3 @@ action:
                       last_said: "{{ translations[language]['responses']['camera_not_found_short'].replace('{camera}', requested_camera) }}"
             default: []
 mode: single
-

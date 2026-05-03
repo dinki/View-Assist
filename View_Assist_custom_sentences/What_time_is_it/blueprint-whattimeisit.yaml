@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl, pl]
+          languages: [de, en, es, fr, it, nl, pl, pt]
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -174,6 +174,32 @@ action:
             oct: Październik
             nov: Listopad
             dec: Grudzień
+        pt:
+          responses:
+            time: "São {time}"
+            day_of_week: "Hoje é {day_of_week}"
+            date: "Hoje é {date}"
+          weekdays:
+            mon: Segunda-feira
+            tue: Terça-feira
+            wed: Quarta-feira
+            thu: Quinta-feira
+            fri: Sexta-feira
+            sat: Sábado
+            sun: Domingo
+          months:
+            jan: Janeiro
+            feb: Fevereiro
+            mar: Março
+            apr: Abril
+            may: Maio
+            jun: Junho
+            jul: Julho
+            aug: Agosto
+            sep: Setembro
+            oct: Outubro
+            nov: Novembro
+            dec: Dezembro
   - choose:
       - conditions:
           - condition: trigger

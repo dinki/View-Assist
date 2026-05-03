@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl]
+          languages: [de, en, pl, pt]
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
@@ -21,8 +21,8 @@ blueprint:
         entity:
           filter:
             - domain:
-              - group
-              - sensor
+                - group
+                - sensor
       default: "sensor.viewassist_satellites"
 trigger:
   - platform: conversation
@@ -63,6 +63,12 @@ action:
             title: "Konwersja"
             request_label: "Zapytanie"
             answer_label: "Odpowiedź"
+        pt:
+          responses:
+            result: "{response} equivale a {source}."
+            title: "Conversão"
+            request_label: "Pedido"
+            answer_label: "Resposta"
   - service: pyscript.viewassist_wolfram_short_answer
     data:
       query: "{{ trigger.sentence }}"

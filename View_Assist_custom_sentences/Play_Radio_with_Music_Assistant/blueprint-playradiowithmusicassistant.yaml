@@ -155,7 +155,7 @@ action:
         pt:
           responses:
             playing_station: "Tocando {station}"
-            station_not_found: "Não encontrei {station}. Adicione a estação como alias."
+            station_not_found: "Não encontrei {station}. Adicione esta estação como um nome alternativo."
         ro:
           responses:
             playing_station: "Redau {station}"

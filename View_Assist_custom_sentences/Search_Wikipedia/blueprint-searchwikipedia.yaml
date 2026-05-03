@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl]
+          languages: [de, en, pl, pt]
     command:
       name: Command
       description: The phrase you want to use to trigger searching Wikipedia
@@ -46,6 +46,10 @@ action:
           responses:
             view_title: "Wyszukiwanie Wikipedia"
             search_error: "Przepraszam, nie udało się znaleźć niczego na Wikipedii na ten temat"
+        pt:
+          responses:
+            view_title: "Pesquisa na Wikipedia"
+            search_error: "Desculpe, não consegui encontrar nada com esses termos na Wikipedia"
   - action: pyscript.search_wikipedia
     response_variable: wiki_response
     data:

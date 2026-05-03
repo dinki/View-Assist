@@ -16,6 +16,7 @@ blueprint:
             - fr
             - it
             - pl
+            - pt
           no_sort: false
           native_name: false
     trigger_phrases:
@@ -347,6 +348,19 @@ action:
             error: Przepraszam, nie mogłem znaleźć ostatnich ani nadchodzących meczów dla {team}.
             outcome_win: wygrał
             outcome_lose: przegrał
+        pt:
+          responses:
+            is_singular_true_post: "{team_name} jogou contra {opponent_name} e "
+            is_singular_false_post: O time {team_name} jogou contra {opponent_name} e
+            is_singular_true_pre: "{team_name} vai jogar contra {opponent_name} às {kickoff_in}"
+            is_singular_false_pre: O time {team_name} vai jogar contra {opponent_name} às {kickoff_in}
+            is_singular_true_in: "{team_name} está atualmente jogando contra {opponent_name}."
+            is_singular_false_in: O time {team_name} está atualmente jogando contra {opponent_name}.
+            is_singular_true_not_found: "{team} não tem jogos marcados para hoje"
+            is_singular_false_not_found: O time {team} não tem jogos marcados para hoje
+            error: Desculpe. Não consegui encontrar jogos recentes ou futuros para o time {team}
+            outcome_win: ganhou
+            outcome_lose: perdeu
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"
