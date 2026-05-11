@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl, pl, sr, sr-Latn]
+          languages: [de, en, nl, pl, pt, sr, sr-Latn]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -156,6 +156,20 @@ action:
             volume_set: "Głośność ustawiona na {level}"
             volume_adjusted: "Głośność została {direction}"
             sound_restored: "Dźwięk został przywrócony"
+        pt:
+          responses:
+            repeat: "Eu disse {last_said}"
+            repeat_remove: "Eu disse"
+            do_not_disturb_off: "O modo não perturbe foi desligado"
+            mode_success: "Ajustando modo para {mode}"
+            mode_failure_device: "Desculpe, {mode} não é um modo válido para este dispositivo"
+            mode_failure_unrecognized: "Desculpe,  {mode} não é um modo válido. Por favor, tente {{ modes }}."
+            info_playing: "Atualmente tocando {title} por {artist}"
+            view_switch: "Mudando visualização para {view}"
+            view_invalid: "Desculpe, {view} não é uma visualização válida"
+            volume_set: "Volume definido para {level}"
+            volume_adjusted: "O volume foi ajustado para {direction}"
+            sound_restored: "O som foi restaurado"
         sr:
           responses:
             repeat: "Рекао сам {last_said}"

@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, de, fr, es, pl, ro, it]
+          languages: [en, de, fr, es, pl, pt, ro, it]
     command_add1:
       name: Command Text Add 1
       description: First phrase for adding to the list
@@ -143,6 +143,16 @@ action:
             one_item: "Jest 1 niezaznaczona pozycja na {list_name}. To {items}"
             multiple_items: "Jest {count} pozycji na {list_name}. Są to {items}"
             multiple_items_limited: "Jest {count} pozycji na {list_name}. Pierwsze {max_items} to: {items}, i więcej."
+        pt:
+          responses:
+            added: "{item} foi adicionado à sua lista {list_name}"
+            already_in: "{item} já está na sua lista {list_name}"
+            removed: "{item} foi removido da sua lista {list_name}"
+            not_in: "{item} não está na lista {list_name}"
+            empty: "Não existem itens desmarcados na sua lista {list_name}"
+            one_item: "Existe 1 item desmarcado na sua lista {list_name}. O item é {items}"
+            multiple_items: "Existem {count} itens na sua lista {list_name}. Eles são {items}"
+            multiple_items_limited: "Existem {count} itens na sua lista {list_name}. Os primeiros {max_items} são: {items}, e mais."
         ro:
           responses:
             added: "{item} a fost adăugat în {list_name}"

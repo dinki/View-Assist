@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl]
+          languages: [de, en, pl, pt]
     travelfromhome:
       name: Travel from home
       description: The phrase used to get directions from home
@@ -107,6 +107,13 @@ action:
             hoursandminutes: "{hours} godzin i {minutes} minut"
             minutesonly: "{minutes} minut"
             viewtitle: "Czas podróży"
+        pt:
+          responses:
+            travelfromhome: "Levará em torno de {time} para dirigir até {destination}"
+            travelfromatob: "Levará em torno de {time} para de dirigir de {origin} até {destination}"
+            hoursandminutes: "{hours} horas e {minutes} minutos"
+            minutesonly: "{minutes} minutos"
+            viewtitle: "Tempo de Viagem"
   - choose:
       - conditions:
           - condition: trigger
