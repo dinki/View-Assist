@@ -11,7 +11,6 @@ The updated logic is designed to stay compatible with older automations while ma
 
 ### It is recommended to use the new version with aliases for new automations
 
-
 ## Requirements
 
 - Music Assistant server installed and integrated with Home Assistant
@@ -38,7 +37,7 @@ The blueprint now decides automatically which path to use:
 
 ### Legacy path
 
-If your command does **not** contain `{station_name}`, the blueprint uses the configured fixed station ID. 
+If your command does **not** contain `{station_name}`, the blueprint uses the configured fixed station ID.
 
 This keeps older automations working as before.
 
@@ -122,7 +121,6 @@ Find the station you want to use and copy the station ID exactly as shown in Mus
 
 ![image](https://github.com/user-attachments/assets/026e51e3-bd5c-440f-ba0e-e221a40e9f9a)
 
-
 ## Notes
 
 - Existing automations should continue to work as long as they keep using the original fixed-station style command
@@ -132,13 +130,15 @@ Find the station you want to use and copy the station ID exactly as shown in Mus
 
 ## Changelog
 
-| Version | Description |
-|--------:|-------------|
-| 1.3.0 | Added alias-based station matching, improved UI configuration, simplified logic, preserved legacy compatibility |
-| 1.2.1 | Add translations |
-| 1.2.0 | Various improvements |
-| 1.1.0 | Various improvements |
-| 1.0.3 | Bug fix plus add ability to have custom announcement |
-| 1.0.2 | Update to use conditional response |
-| 1.0.1 | Update to use `music_assistant` action |
-| 1.0.0 | Initial release |
+| Version | Description                                                                                                     |
+| ------- | --------------------------------------------------------------------------------------------------------------- |
+| 1.3.2   | Additional languages                                                                                            |
+| 1.3.0   | Various fixes                                                                                                   |
+| 1.3.0   | Added alias-based station matching, improved UI configuration, simplified logic, preserved legacy compatibility |
+| 1.2.1   | Add translations                                                                                                |
+| 1.2.0   | Various improvements                                                                                            |
+| 1.1.0   | Various improvements                                                                                            |
+| 1.0.3   | Bug fix plus add ability to have custom announcement                                                            |
+| 1.0.2   | Update to use conditional response                                                                              |
+| 1.0.1   | Update to use `music_assistant` action                                                                          |
+| 1.0.0   | Initial release                                                                                                 |

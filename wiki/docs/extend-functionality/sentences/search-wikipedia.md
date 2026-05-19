@@ -16,6 +16,7 @@ Special thanks to Scratt for his work on this automation
 
 | Version | Description              |
 | ------- | ------------------------ |
+| v 1.1.4 | Add more Translations    |
 | v 1.1.3 | Add Polish Translation   |
 | v 1.1.2 | Add German Translation   |
 | v 1.1.1 | Update title set order   |

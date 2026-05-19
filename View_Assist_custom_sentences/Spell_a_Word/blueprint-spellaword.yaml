@@ -24,8 +24,6 @@ blueprint:
       default: false
       selector:
         boolean:
-alias: View Assist - Spell a Word
-description: "Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable"
 trigger:
   - platform: conversation
     command:
