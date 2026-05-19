@@ -18,6 +18,12 @@ blueprint:
       name: Dashboard view
       description: The View Assist dashboard view to use for displaying text (example /dashboard-viewassist/info)
       default: "/view-assist/info"
+    slow:
+      name: Use Slower Spelling?
+      description: This option adds slightly more space between letters of the word in the response
+      default: false
+      selector:
+        boolean:
 alias: View Assist - Spell a Word
 description: "Ask Assist to spell a word and it spells the word letter-by-letter and displays the word on screen where applicable"
 trigger:
@@ -30,11 +36,12 @@ action:
       target_satellite_device: "{{ view_assist_entity(trigger.device_id) }}"
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
+      slow: !input slow
       language: !input language
       command_prompt: !input command_prompt
       view: !input view
       spaced_text: >-
-        {% set spaced_text = '...'.join(trigger.slots.word) %}
+        {% set spaced_text = '. '.join(trigger.slots.word) if slow else '...'.join(trigger.slots.word) %}
         {{ spaced_text }}
       translations:
         ca:
