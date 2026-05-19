@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Get Sports Scores
-  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.4.3)
+  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.4.4)
   domain: automation
   input:
     language:
@@ -10,6 +10,7 @@ blueprint:
       selector:
         language:
           languages:
+            - ca
             - de
             - en
             - es
@@ -242,6 +243,19 @@ action:
         ducks: ana
         clo: chi
       translations:
+        ca:
+          responses:
+            is_singular_true_post: "{team_name} va jugar contra {opponent_name} i"
+            is_singular_false_post: "El {team_name} va jugar contra el {opponent_name} i"
+            is_singular_true_pre: "{team_name} juga contra {opponent_name} {kickoff_in}"
+            is_singular_false_pre: "El {team_name} juga contra el {opponent_name} {kickoff_in}"
+            is_singular_true_in: "{team_name} està jugant contra {opponent_name}."
+            is_singular_false_in: "El {team_name} està jugant contra el {opponent_name}."
+            is_singular_true_not_found: "{team} no té partits al calendari d'avui"
+            is_singular_false_not_found: "El {team} no tenen partits al calendari d'avui"
+            error: "Ho sento. No he pogut trobar partits recents o pròxims per al {team}"
+            outcome_win: "ha guanyat"
+            outcome_lose: "ha perdut"
         en:
           responses:
             is_singular_true_post: "{team_name} played {opponent_name} and"

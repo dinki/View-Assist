@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.2)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.3)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl, pl, pt]
+          languages: [ca, de, en, es, fr, it, nl, pl, pt]
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -81,6 +81,32 @@ action:
             oct: October
             nov: November
             dec: December
+        ca:
+          responses:
+            time: "Són les {time}"
+            day_of_week: "Avui és {day_of_week}"
+            date: "Avui és {date}"
+          weekdays:
+            mon: Dilluns
+            tue: Dimarts
+            wed: Dimecres
+            thu: Dijous
+            fri: Divendres
+            sat: Dissabte
+            sun: Diumenge
+          months:
+            jan: Gener
+            feb: Febrer
+            mar: Març
+            apr: Abril
+            may: Maig
+            jun: Juny
+            jul: Juliol
+            aug: Agost
+            sep: Setembre
+            oct: Octubre
+            nov: Novembre
+            dec: Desembre
         de:
           responses:
             time: "Es ist {time}"

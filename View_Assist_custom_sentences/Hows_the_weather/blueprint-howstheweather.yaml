@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - How's the Weather?
   description:
     Ask "How's the Weather?" and ViewAssist will respond with the weather
-    and show the weather view (View Assist howstheweather v 1.0.2)
+    and show the weather view (View Assist howstheweather v 1.0.3)
   domain: automation
   input:
     language:
@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, es, fr, it, nl, pl, pt, ro, sr, sr-Latn]
+          languages: [ca, de, en, es, fr, it, nl, pl, pt, ro, sr, sr-Latn]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -42,6 +42,22 @@ action:
       language: !input language
       view: !input view
       translations:
+        ca:
+          responses:
+            temperature: "Fa {temperature} graus i {condition}"
+          weather_states:
+            sunny: "Assolellat"
+            clear-night: "Nit serena"
+            cloudy: "Ennuvolat"
+            partlycloudy: "Parcialment ennuvolat"
+            rainy: "Plujós"
+            pouring: "Pluja intensa"
+            lightning: "Tempesta elèctrica"
+            lightning-rainy: "Tempesta amb pluja"
+            snowy: "Nevat"
+            snowy-rainy: "Aiguaneu"
+            windy: "Ventós"
+            fog: "Boira"
         en:
           responses:
             temperature: "It's {temperature} degrees and {condition}"

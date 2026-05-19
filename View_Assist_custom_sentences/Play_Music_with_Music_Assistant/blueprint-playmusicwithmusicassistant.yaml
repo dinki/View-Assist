@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.6)
+    Assistant v 1.2.7)
   domain: automation
   input:
     ma_instance:
@@ -25,8 +25,10 @@ blueprint:
       selector:
         language:
           languages:
+            - ca
             - de
             - en
+            - es
             - nl
             - pl
             - pt
@@ -82,6 +84,15 @@ actions:
       ma_instance: !input ma_instance
       language: !input language
       translations:
+        ca:
+          responses:
+            playartist_found: "Reproduint música de {artist}"
+            playartist_not_found: "No he pogut trobar música per a {search_artist}"
+            playlist_found: "Reproduint la llista de reproducció {playlist}"
+            playlist_not_found: "Ho sento, no s'ha pogut trobar cap llista anomenada {search_playlist}"
+            playsong_found: "Reproduint {song} de {artist}"
+            playsong_not_found: "Ho sento, no s'ha trobat {song} de {artist}"
+            playsong_queue: "Afegint a la cua {song} de {artist}"
         en:
           responses:
             playartist_found: Playing {artist} music
@@ -108,6 +119,15 @@ actions:
               Entschuldigung, ich konnte den Song {song} von {artist}
               nicht finden
             playsong_queue: Füge {song} von {artist} zur Warteschlange hinzu
+        es:
+          responses:
+            playartist_found: "Reproduciendo música de {artist}"
+            playartist_not_found: "No he podido encontrar música para {search_artist}"
+            playlist_found: "Reproduciendo la lista de reproducción {playlist}"
+            playlist_not_found: "Lo siento, no se ha podido encontrar ninguna lista llamada {search_playlist}"
+            playsong_found: "Reproduciendo {song} de {artist}"
+            playsong_not_found: "Lo siento, no se ha encontrado {song} de {artist}"
+            playsong_queue: "Añadiendo a la cola {song} de {artist}"
         nl:
           responses:
             playartist_found: Muziek van {artist} afspelen

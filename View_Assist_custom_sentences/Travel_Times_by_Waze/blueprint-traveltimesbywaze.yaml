@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Travel Times by Waze
-  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.2)
+  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.3)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl, pt]
+          languages: [ca, de, en, es, pl, pt]
     travelfromhome:
       name: Travel from home
       description: The phrase used to get directions from home
@@ -86,13 +86,13 @@ action:
           {{trigger.slots.destination}}
         {%endif%}
       translations:
-        en:
+        ca:
           responses:
-            travelfromhome: "It will take about {time} to drive to {destination}"
-            travelfromatob: "It will take about {time} to drive from {origin} to {destination}"
-            hoursandminutes: "{hours} hours and {minutes} minutes"
-            minutesonly: "{minutes} minutes"
-            viewtitle: "Travel Time"
+            travelfromhome: "El trajecte en cotxe fins a {destination} dura aproximadament {time}"
+            travelfromatob: "El trajecte en cotxe de {origin} a {destination} dura aproximadament {time}"
+            hoursandminutes: "{hours} hores i {minutes} minuts"
+            minutesonly: "{minutes} minuts"
+            viewtitle: "Temps de viatge"
         de:
           responses:
             travelfromhome: "Es dauert etwa {time}, um nach {destination} zu fahren"
@@ -100,6 +100,20 @@ action:
             hoursandminutes: "{hours} Stunden und {minutes} Minuten"
             minutesonly: "{minutes} Minuten"
             viewtitle: "Reisezeit"
+        en:
+          responses:
+            travelfromhome: "It will take about {time} to drive to {destination}"
+            travelfromatob: "It will take about {time} to drive from {origin} to {destination}"
+            hoursandminutes: "{hours} hours and {minutes} minutes"
+            minutesonly: "{minutes} minutes"
+            viewtitle: "Travel Time"
+        es:
+          responses:
+            travelfromhome: "Se tarda aproximadamente {time} en coche hasta {destination}"
+            travelfromatob: "Se tarda aproximadamente {time} en coche de {origin} a {destination}"
+            hoursandminutes: "{hours} horas y {minutes} minutos"
+            minutesonly: "{minutes} minutos"
+            viewtitle: "Tiempo de viaje"
         pl:
           responses:
             travelfromhome: "Dojazd do {destination} zajmie około {time}"
