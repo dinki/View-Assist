@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Locate a Person
-  description: Ask Assist to locate a person (View Assist locateaperson v 1.1.2)
+  description: Ask Assist to locate a person (View Assist locateaperson v 1.1.3)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, it, pl, pt]
+          languages: [ca, de, en, es, fr, it, pl, pt]
     command_prompt:
       name: Command Text
       description: The phrase you want to use to trigger the automation
@@ -56,6 +56,17 @@ action:
       input_defined_names: !input defined_names
       persons_name: "{{ input_defined_names | from_json }}"
       translations:
+        ca:
+          responses:
+            person_away: "{person} està fora."
+            person_location: "{person} es troba a {location}"
+            person_undefined: "{person} no s'ha definit"
+          last_update:
+            prefix: "Darrera actualització"
+            now_label: "ara"
+            minute_label: "fa minuts"
+            hour_label: "fa hores"
+            day_label: "fa dies"
         en:
           responses:
             person_away: "{person} is away."
@@ -67,6 +78,28 @@ action:
             minute_label: "minutes ago"
             hour_label: "hours ago"
             day_label: "days ago"
+        es:
+          responses:
+            person_away: "{person} está ausente."
+            person_location: "{person} está en {location}"
+            person_undefined: "{person} no ha sido definido"
+          last_update:
+            prefix: "Última actualización"
+            now_label: "ahora"
+            minute_label: "hace minutos"
+            hour_label: "hace horas"
+            day_label: "hace días"
+        fr:
+          responses:
+            person_away: "{person} est absent."
+            person_location: "{person} se trouve à {location}"
+            person_undefined: "{person} n'a pas été référencé"
+          last_update:
+            prefix: "Dernière mise à jour"
+            now_label: "maintenant"
+            minute_label: "minutes"
+            hour_label: "heures"
+            day_label: "jours"
         it:
           responses:
             person_away: "{person} è fuori casa."
