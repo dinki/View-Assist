@@ -1,7 +1,7 @@
 blueprint:
   name: View Assist - Play Radio with Music Assistant
   description: Play radio stations from your Music Assistant server (View Assist
-    Play Radio with Music Assistant v 1.3.0)
+    Play Radio with Music Assistant v 1.3.2)
   domain: automation
   input:
     language:
@@ -10,7 +10,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl, pt, ro]
+          languages: [ca, de, en, es, nl, pt, ro]
     command:
       name: Command
       description: >-
@@ -140,10 +140,18 @@ action:
           {{ legacy_station }}
         {% endif %}
       translations:
+        ca:
+          responses:
+            playing_station: "Reproduint {station}"
+            station_not_found: "No he pogut trobar {station}. Si us plau, afegeix-la com a àlies."
         en:
           responses:
             playing_station: "Playing {station}"
             station_not_found: "I couldn't find {station}. Please add it as an alias."
+        es:
+          responses:
+            playing_station: "Reproduciendo {station}"
+            station_not_found: "No he podido encontrar {station}. Por favor, añádela como alias."
         de:
           responses:
             playing_station: "Spiele {station}"
@@ -155,7 +163,7 @@ action:
         pt:
           responses:
             playing_station: "Tocando {station}"
-            station_not_found: "Não encontrei {station}. Adicione a estação como alias."
+            station_not_found: "Não encontrei {station}. Adicione esta estação como um nome alternativo."
         ro:
           responses:
             playing_station: "Redau {station}"

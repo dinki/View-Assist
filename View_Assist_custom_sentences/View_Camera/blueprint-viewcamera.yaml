@@ -2,9 +2,9 @@
 blueprint:
   name: View Assist - View Camera
   description: |
-    Ask View Assist to show your camera streams. 
+    Ask View Assist to show your camera streams.
     Supports showing individual cameras or all cameras at once.
-    You can use multiple names for the same camera entity. (v 2.0.1)
+    You can use multiple names for the same camera entity. (v 2.0.2)
   domain: automation
   input:
     language:
@@ -13,7 +13,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl]
+          languages: [ca, de, en, es, pl, pt]
     command:
       name: Command Text
       description: |
@@ -113,11 +113,21 @@ action:
           language: !input language
           requested_camera: "{{ trigger.slots.camera | default('') | lower }}"
           translations:
+            ca:
+              responses:
+                camera_not_found_show: "No s'ha trobat la càmera '{camera}'. Es mostren les càmeres configurades."
+                camera_not_found_error: "Ho sento, no he pogut trobar una càmera anomenada '{camera}'. Les càmeres disponibles són: {available}."
+                camera_not_found_short: "Càmera '{camera}' no trobada."
             en:
               responses:
                 camera_not_found_show: "Camera '{camera}' not found. Showing configured cameras."
                 camera_not_found_error: "Sorry, I couldn't find a camera named '{camera}'. Available cameras are: {available}."
                 camera_not_found_short: "Camera '{camera}' not found."
+            es:
+              responses:
+                camera_not_found_show: "Cámara '{camera}' no encontrada. Mostrando las cámaras configuradas."
+                camera_not_found_error: "Lo siento, no he podido encontrar una cámara llamada '{camera}'. Las cámaras disponibles son: {available}."
+                camera_not_found_short: "Cámara '{camera}' no encontrada."
             de:
               responses:
                 camera_not_found_show: "Kamera '{camera}' nicht gefunden. Zeige konfigurierte Kameras."
@@ -128,6 +138,11 @@ action:
                 camera_not_found_show: "Kamera '{camera}' nie znaleziona. Wyświetlam skonfigurowane kamery."
                 camera_not_found_error: "Przepraszam, nie mogłem znaleźć kamery o nazwie '{camera}'. Dostępne kamery to: {available}."
                 camera_not_found_short: "Kamera '{camera}' nie znaleziona."
+            pt:
+              responses:
+                camera_not_found_show: "A câmera '{camera}' não pode ser encontrada. Exibindo câmeras configuradas."
+                camera_not_found_error: "Desculpe, não consegui encontrar uma câmera chamada '{camera}'. As câmeras disponíveis são: {available}."
+                camera_not_found_short: "Câmera '{camera}' não encontrada."
           timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
           camera_entities_list: >-
             {% set camera_list = cameras.keys() | list %}
@@ -211,4 +226,3 @@ action:
                       last_said: "{{ translations[language]['responses']['camera_not_found_short'].replace('{camera}', requested_camera) }}"
             default: []
 mode: single
-

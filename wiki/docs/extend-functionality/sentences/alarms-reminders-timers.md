@@ -40,6 +40,7 @@ Use your wakeword and say things like:
 
 | Version | Description                        |
 | ------- | ---------------------------------- |
+| v 1.3.1 | Add lots of translations           |
 | v 1.3.0 | Major update to most functions     |
 | v 1.2.2 | Update title set order             |
 | v 1.2.1 | Update title set order             |

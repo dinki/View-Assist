@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Thermostat Control
-  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.3)
+  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.5)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl, pl]
+          languages: [ca, de, en, es, nl, pl, pt]
     increasetemperature:
       name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
@@ -62,13 +62,13 @@ action:
       view: !input view
       amount: "{{ trigger.slots.amount }}"
       translations:
-        en:
+        ca:
           responses:
-            tstat_raise: "Thermostat temperature raised {amount} degree"
-            tstat_lower: "Thermostat temperature lowered {amount} degree"
-            tstat_set: "Thermostat temperature set to {amount} degrees"
-            tstat_show: "Showing thermostat"
-            tstat_display_error: "Sorry.  This device cannot display the thermostat"
+            tstat_raise: "La temperatura del termòstat ha pujat {amount} grau"
+            tstat_lower: "La temperatura del termòstat ha baixat {amount} grau"
+            tstat_set: "La temperatura del termòstat s'ha establert a {amount} graus"
+            tstat_show: "Mostrant el termòstat"
+            tstat_display_error: "Ho sento. Aquest dispositiu no pot mostrar el termòstat"
         de:
           responses:
             tstat_raise: "Thermostattemperatur um {amount} Grad erhöht"
@@ -76,6 +76,20 @@ action:
             tstat_set: "Thermostattemperatur auf {amount} Grad eingestellt"
             tstat_show: "Thermostat wird angezeigt"
             tstat_display_error: "Entschuldigung. Dieses Gerät kann das Thermostat nicht anzeigen"
+        en:
+          responses:
+            tstat_raise: "Thermostat temperature raised {amount} degree"
+            tstat_lower: "Thermostat temperature lowered {amount} degree"
+            tstat_set: "Thermostat temperature set to {amount} degrees"
+            tstat_show: "Showing thermostat"
+            tstat_display_error: "Sorry.  This device cannot display the thermostat"
+        es:
+          responses:
+            tstat_raise: "La temperatura del termostato ha subido {amount} grado"
+            tstat_lower: "La temperatura del termostato ha bajado {amount} grado"
+            tstat_set: "La temperatura del termostato se ha establecido en {amount} grados"
+            tstat_show: "Mostrando el termostato"
+            tstat_display_error: "Lo siento. Este dispositivo no puede mostrar el termostato"
         nl:
           responses:
             tstat_raise: "Thermostaat temperatuur verhoogd met {amount} graad"
@@ -90,6 +104,13 @@ action:
             tstat_set: "Temperatura termostatu ustawiona na {amount} stopni"
             tstat_show: "Wyświetlam termostat"
             tstat_display_error: "Przepraszam. To urządzenie nie może wyświetlić termostatu"
+        pt:
+          responses:
+            tstat_raise: "A temperatura do termostato foi aumentada em {amount} graus"
+            tstat_lower: "A temperatura do termostato foi diminuída em {amount} graus"
+            tstat_set: "Temperatura do termostato ajustada para {amount} graus"
+            tstat_show: "Exibindo termostato"
+            tstat_display_error: "Desculpe. Este dispositivo não pode exibir o termostato"
   - action: view_assist.set_state
     target:
       entity_id: "{{ target_satellite_device }}"

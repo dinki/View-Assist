@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Device Functions
   description:
     Various device functions for the View Assist Satellites (View Assist
-    devicefunctions v 1.4.5)
+    devicefunctions v 1.4.6)
   domain: automation
   input:
     language:
@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl, pl, sr, sr-Latn]
+          languages: [ca, de, en, es, nl, pl, pt, sr, sr-Latn]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -105,6 +105,29 @@ action:
       views: !input views
       last_said: "{{ state_attr(target_satellite_device, 'last_said') | default('', true) }}"
       translations:
+        ca:
+          responses:
+            repeat: "He dit {last_said}"
+            repeat_remove: "He dit"
+            do_not_disturb_off: "El mode no molestar està desactivat"
+            mode_success: "Canviant el mode a {mode}"
+            mode_failure_device: "Ho sento. {mode} no és un mode vàlid per a aquest dispositiu"
+            mode_failure_unrecognized: "Ho sento. {mode} no és un mode vàlid. Si us plau, prova {{ modes }}"
+            info_playing: "Això és {title} de {artist}"
+            view_switch: "Canviant la vista a mode {view}"
+            view_invalid: "Ho sento. {view} no és una vista vàlida"
+            volume_set: "El volum s'ha ajustat a {level}"
+            volume_adjusted: "El volum s'ha {direction}"
+            sound_restored: "El so s'ha restaurat"
+        de:
+          responses:
+            repeat: "Ich sagte {last_said}"
+            repeat_remove: "Ich sagte"
+            do_not_disturb_off: "Der Bitte nicht stören Modus ist jetzt aus"
+            mode_success: "Setze Modus auf {mode}"
+            mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
+            mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
+            info_playing: "Es läuft {title} von {artist}"
         en:
           responses:
             repeat: "I said {last_said}"
@@ -119,15 +142,20 @@ action:
             volume_set: "The volume was set to {level}"
             volume_adjusted: "The volume has been turned {direction}"
             sound_restored: "Sound has been restored"
-        de:
+        es:
           responses:
-            repeat: "Ich sagte {last_said}"
-            repeat_remove: "Ich sagte"
-            do_not_disturb_off: "Der Bitte nicht stören Modus ist jetzt aus"
-            mode_success: "Setze Modus auf {mode}"
-            mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
-            mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
-            info_playing: "Es läuft {title} von {artist}"
+            repeat: "He dicho {last_said}"
+            repeat_remove: "He dicho"
+            do_not_disturb_off: "El modo no molestar está desactivado"
+            mode_success: "Cambiando el modo a {mode}"
+            mode_failure_device: "Lo siento. {mode} no es un modo válido para este dispositivo"
+            mode_failure_unrecognized: "Lo siento. {mode} no es un modo válido. Por favor, prueba {{ modes }}"
+            info_playing: "Esto es {title} de {artist}"
+            view_switch: "Cambiando la vista a modo {view}"
+            view_invalid: "Lo siento. {view} no es una vista válida"
+            volume_set: "El volumen se ha ajustado a {level}"
+            volume_adjusted: "El volumen ha sido {direction}"
+            sound_restored: "El sonido se ha restaurado"
         nl:
           responses:
             repeat: "Ik zei {last_said}"
@@ -156,6 +184,20 @@ action:
             volume_set: "Głośność ustawiona na {level}"
             volume_adjusted: "Głośność została {direction}"
             sound_restored: "Dźwięk został przywrócony"
+        pt:
+          responses:
+            repeat: "Eu disse {last_said}"
+            repeat_remove: "Eu disse"
+            do_not_disturb_off: "O modo não perturbe foi desligado"
+            mode_success: "Ajustando modo para {mode}"
+            mode_failure_device: "Desculpe, {mode} não é um modo válido para este dispositivo"
+            mode_failure_unrecognized: "Desculpe,  {mode} não é um modo válido. Por favor, tente {{ modes }}."
+            info_playing: "Atualmente tocando {title} por {artist}"
+            view_switch: "Mudando visualização para {view}"
+            view_invalid: "Desculpe, {view} não é uma visualização válida"
+            volume_set: "Volume definido para {level}"
+            volume_adjusted: "O volume foi ajustado para {direction}"
+            sound_restored: "O som foi restaurado"
         sr:
           responses:
             repeat: "Рекао сам {last_said}"
