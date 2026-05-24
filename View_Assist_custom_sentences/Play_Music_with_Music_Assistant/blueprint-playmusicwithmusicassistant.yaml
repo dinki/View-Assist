@@ -84,6 +84,17 @@ actions:
       ma_instance: !input ma_instance
       language: !input language
       translations:
+        it:
+          responses:
+            playartist_found: Riproduco dei brani di {artist}
+            playartist_not_found: Non sono riuscito a trovare brani di {search_artist}
+            playlist_found: Riproduco la playlist {playlist}
+            playlist_not_found: >-
+              Mi dispiace, non ho trovato alcuna playlist chiamata
+              {search_playlist}
+            playsong_found: Riproduco {song} di {artist}
+            playsong_not_found: Mi dispiace, non ho trovato {song} di {artist}
+            playsong_queue: Metto in coda {song} di {artist}
         ca:
           responses:
             playartist_found: "Reproduint música de {artist}"
@@ -366,7 +377,7 @@ actions:
                         then:
                           - variables:
                               conversation_response: >-
-                                {{ translations[language]['responses']['playsong_found'].replace("{artist}", found_track.tracks[0].artists[0].name).replace("{song}", found_track.tracks[0].name) }}
+                                {{ translations[language]['responses']['playsong_queue'].replace("{artist}", found_track.tracks[0].artists[0].name).replace("{song}", found_track.tracks[0].name) }}
                           - set_conversation_response: "{{ conversation_response }}"
                           - action: view_assist.set_state
                             target:
