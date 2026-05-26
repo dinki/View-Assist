@@ -14,21 +14,25 @@ Adjustments may be needed based on your specific usage and preferences.
 
 - en: `(play the artist {artist} | play some {artist} [music] |play [some] [music | songs] by {artist})`
 - de: `(Spiele den Künstler {artist} | Spiele etwas {artist} [Musik] | Spiele [etwas] [Musik | Lieder] von {artist})`
+- it: `( metti | riproduci ) (musica | della musica | qualcosa | un brano | dei brani ) (di | dei) {artist}`
 
 ### Play Playlist Command
 
 - en: `start [the] {playlist} playlist`
 - de: `Spiele [die] Playlist {playlist}`
+- it: `(metti | riproduci) la playlist {playlist}`
 
 ### Play Song Command
 
 - en: `play {song} by {artist}`
 - de: `Spiele [den Song|den Titel] {song} von {artist}`
+- it: `( metti | riproduci ) [ il brano ] {song} ( di | dei ) {artist}`
 
 ### Queue Song Command
 
 - en: `(queue | cue | Q) {song} by {artist}`
 - de: `Setze [den Song|den Titel] {song} von {artist} [in|auf] die Warteschlange`
+- it: `(aggiungi) [il brano] {song} (di | dei) {artist}`
 
 ## Changelog
 
