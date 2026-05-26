@@ -1,9 +1,11 @@
 blueprint:
   name: View Assist - Play Music with Music Assistant
   description:
-    Use various methods to play individual songs, add to queue, play artist
-    and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.7)
+    Use various methods to play individual songs, artists, albums, and playlists
+    or to add songs to your queue using your Music Assistant server. Be careful
+    to choose commands that are not ambiguous (e.g. "Play {artist}" and "Play
+    {album}" will cause issues)
+    (View Assist Play Music with Music Assistant v 1.3.0)
   domain: automation
   input:
     ma_instance:
@@ -53,6 +55,10 @@ blueprint:
       name: Queue Song Command
       description: The command to trigger the queue song action
       default: (queue | cue | Q) {song} by {artist}
+    play_album_command:
+      name: Play Album Command
+      description: The command to trigger the play album action
+      default: album play {album} [by {artist}]
 alias: View Assist - Play Music with Music Assistant
 description: Play music using music assistant
 trigger:
@@ -68,6 +74,9 @@ trigger:
   - trigger: conversation
     command: !input queue_song_command
     id: cuesong
+  - trigger: conversation
+    command: !input play_album_command
+    id: playalbum
 conditions: []
 actions:
   - variables:
@@ -104,6 +113,10 @@ actions:
             playsong_found: Playing {song} by {artist}
             playsong_not_found: Sorry {song} by {artist} was not found
             playsong_queue: Queuing {song} by {artist}
+            playalbum_with_artist_found: Playing album {album} by {artist}
+            playalbum_with_artist_not_found: Sorry album {album} by {artist} was not found
+            playalbum_no_artist_found: Playing album {album}
+            playalbum_no_artist_not_found: Sorry album {album} was not found
         de:
           responses:
             playartist_found: Spiele Musik von {artist}
@@ -314,6 +327,90 @@ actions:
       - conditions:
           - condition: trigger
             id:
+              - playalbum
+        sequence:
+          - action: music_assistant.search
+            data:
+              limit: 1
+              config_entry_id: "{{ ma_instance }}"
+              media_type:
+                - album
+              name: "{{ trigger.slots.album  }}"
+
+              artist: "{{ trigger.slots.artist | trim }}"
+            response_variable: found_album
+          - alias: Did we find an album?
+            if:
+              - condition: template
+                value_template: "{{found_album['albums'] | count>0}}"
+                alias: We found an album!
+            then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: "{{ target_satellite_device }}"
+                data:
+                  mode: music
+                  title: ""
+                  message_font_size: 5vw
+              - action: view_assist.navigate
+                data:
+                  device: "{{ target_satellite_device }}"
+                  path: "{{ view_path }}"
+              - action: music_assistant.play_media
+                target:
+                  entity_id: "{{ target_musicplayer_device }}"
+                data:
+                  media_type: album
+                  enqueue: replace
+                  media_id: "{{ found_album.albums.0.uri }}"
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:
+                  - variables:
+                      conversation_response: >-
+                        {{
+                          (translations[language]['responses']['playalbum_with_artist_found']
+                            .replace('{album}', found_album.albums.0.name)
+                            .replace('{artist}', found_album.albums.0.artists.0.name))
+                          if (trigger.slots.artist | trim != '')
+                          else (translations[language]['responses']['playalbum_no_artist_found']
+                            .replace('{album}', found_album.albums.0.name))
+                        }}
+                  - set_conversation_response: "{{ conversation_response }}"
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      last_said: "{{ conversation_response }}"
+                else:
+                  - set_conversation_response: ""
+            else:
+              - if:
+                  - condition: template
+                    value_template: "{{ target_use_announce is not false }}"
+                then:
+                  - variables:
+                      conversation_response: >-
+                        {{
+                          (translations[language]['responses']['playalbum_with_artist_not_found']
+                            .replace('{album}', trigger.slots.album)
+                            .replace('{artist}', trigger.slots.artist))
+                          if (trigger.slots.artist | trim != '')
+                          else (translations[language]['responses']['playalbum_no_artist_not_found']
+                            .replace('{album}', trigger.slots.album))
+                        }}
+                  - set_conversation_response: "{{ conversation_response }}"
+                  - action: view_assist.set_state
+                    target:
+                      entity_id: "{{ target_satellite_device }}"
+                    data:
+                      last_said: "{{ conversation_response }}"
+                else:
+                  - set_conversation_response: ""
+      - conditions:
+          - condition: trigger
+            id:
               - playsong
               - cuesong
         sequence:
@@ -421,3 +518,6 @@ actions:
                       last_said: "{{ conversation_response }}"
                 else:
                   - set_conversation_response: ""
+
+
+
