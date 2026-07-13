@@ -47,13 +47,17 @@ This blueprint will contain device specific functions. Current functions include
 - de: `[Setze | Schalte] [die] Lautstärke [auf] {level}`
 - it: `[metti | imposta] [il] volume (a | al) {level}`
 
-### Adjust Volume Command
+### Volume Up Command
 
-- en: `turn {up_down} [the] volume`
-- de: `Schalte [die] Lautstärke {up_down}`
-- it: `{up_down} il volume`
+- en: `turn up [the] volume`
+- de: `Schalte [die] Lautstärke lauter`
+- it: `(alza | aumenta) il volume`
 
-_Note: the blueprint compares the `{up_down}` slot against the literal English words `up`/`down`, so translated direction words (e.g. Italian "alza"/"abbassa") are captured but not recognized yet._
+### Volume Down Command
+
+- en: `turn down [the] volume`
+- de: `Schalte [die] Lautstärke leiser`
+- it: `(abbassa | diminuisci) il volume`
 
 ### Mute Volume Command
 
@@ -77,6 +81,7 @@ _Note: the blueprint compares the `{up_down}` slot against the literal English w
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.5.0 | Split Adjust Volume into Volume Up/Down commands so translated phrases work; fix missing German response strings |
 | v 1.4.7 | Add Italian translation                                                                  |
 | v 1.4.6 | Added translations                                                                       |
 | v 1.4.5 | Add Serbian translations                                                                 |

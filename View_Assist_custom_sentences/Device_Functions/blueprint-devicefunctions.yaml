@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Device Functions
   description:
     Various device functions for the View Assist Satellites (View Assist
-    devicefunctions v 1.4.7)
+    devicefunctions v 1.5.0)
   domain: automation
   input:
     language:
@@ -34,10 +34,14 @@ blueprint:
       name: Set Volume Command
       description: The command to use to set volume level directly
       default: "[set | turn] [the] volume [to] {level}"
-    adjust_volume:
-      name: Adjust Volume Command
-      description: The command to use to set volume level by step
-      default: turn {up_down} [the] volume
+    volume_up_command:
+      name: Volume Up Command
+      description: The command to use to raise volume by one step
+      default: turn up [the] volume
+    volume_down_command:
+      name: Volume Down Command
+      description: The command to use to lower volume by one step
+      default: turn down [the] volume
     mute_volume:
       name: Mute Volume Command
       description: The command to use to mute audio
@@ -79,8 +83,11 @@ trigger:
     command: !input set_volume
     id: set_volume
   - trigger: conversation
-    command: !input adjust_volume
-    id: adjust_volume
+    command: !input volume_up_command
+    id: volume_up
+  - trigger: conversation
+    command: !input volume_down_command
+    id: volume_down
   - trigger: conversation
     command: !input mute_volume
     id: mute_volume
@@ -117,7 +124,8 @@ action:
             view_switch: "Canviant la vista a mode {view}"
             view_invalid: "Ho sento. {view} no és una vista vàlida"
             volume_set: "El volum s'ha ajustat a {level}"
-            volume_adjusted: "El volum s'ha {direction}"
+            volume_raised: "El volum s'ha apujat"
+            volume_lowered: "El volum s'ha abaixat"
             sound_restored: "El so s'ha restaurat"
         de:
           responses:
@@ -128,6 +136,12 @@ action:
             mode_failure_device: "Entschuldige. aber {mode} ist kein gültiger Modus für dieses Gerät"
             mode_failure_unrecognized: "Entschuldige, aber {mode} ist kein gültiger Modus. Bitte versuche es mit {{ modes }}."
             info_playing: "Es läuft {title} von {artist}"
+            view_switch: "Wechsle zur Ansicht {view}"
+            view_invalid: "Entschuldige. {view} ist keine gültige Ansicht."
+            volume_set: "Die Lautstärke wurde auf {level} gesetzt"
+            volume_raised: "Die Lautstärke wurde lauter gestellt"
+            volume_lowered: "Die Lautstärke wurde leiser gestellt"
+            sound_restored: "Der Ton wurde wiederhergestellt"
         en:
           responses:
             repeat: "I said {last_said}"
@@ -140,7 +154,8 @@ action:
             view_switch: "Switching view to {view} view"
             view_invalid: "Sorry. {view} is not a valid view."
             volume_set: "The volume was set to {level}"
-            volume_adjusted: "The volume has been turned {direction}"
+            volume_raised: "The volume has been turned up"
+            volume_lowered: "The volume has been turned down"
             sound_restored: "Sound has been restored"
         es:
           responses:
@@ -154,7 +169,8 @@ action:
             view_switch: "Cambiando la vista a modo {view}"
             view_invalid: "Lo siento. {view} no es una vista válida"
             volume_set: "El volumen se ha ajustado a {level}"
-            volume_adjusted: "El volumen ha sido {direction}"
+            volume_raised: "El volumen ha subido"
+            volume_lowered: "El volumen ha bajado"
             sound_restored: "El sonido se ha restaurado"
         it:
           responses:
@@ -168,7 +184,8 @@ action:
             view_switch: "Passo alla vista {view}"
             view_invalid: "Mi dispiace, {view} non è una vista valida."
             volume_set: "Volume impostato a {level}"
-            volume_adjusted: "Il volume è stato {direction}"
+            volume_raised: "Ho alzato il volume"
+            volume_lowered: "Ho abbassato il volume"
             sound_restored: "Audio riattivato"
         nl:
           responses:
@@ -179,11 +196,12 @@ action:
             mode_failure_device: "Sorry. {mode} is geen geldige modus voor dit apparaat"
             mode_failure_unrecognized: "Sorry. {mode} is geen geldige modus. Probeer {{ modes }}."
             info_playing: "Dit is {title} van {artist}"
-            view_switch: "Wechsle zur Ansicht {view}"
-            view_invalid: "Entschuldige. {view} ist keine gültige Ansicht."
-            volume_set: "Die Lautstärke wurde auf {level} gesetzt"
-            volume_adjusted: "Die Lautstärke wurde {direction} gestellt"
-            sound_restored: "Der Ton wurde wiederhergestellt"
+            view_switch: "Overschakelen naar weergave {view}"
+            view_invalid: "Sorry. {view} is geen geldige weergave."
+            volume_set: "Het volume is ingesteld op {level}"
+            volume_raised: "Het volume is verhoogd"
+            volume_lowered: "Het volume is verlaagd"
+            sound_restored: "Het geluid is hersteld"
         pl:
           responses:
             repeat: "Powiedziałem {last_said}"
@@ -196,7 +214,8 @@ action:
             view_switch: "Przełączam widok na {view}"
             view_invalid: "Przepraszam. {view} nie jest prawidłowym widokiem."
             volume_set: "Głośność ustawiona na {level}"
-            volume_adjusted: "Głośność została {direction}"
+            volume_raised: "Głośność została zwiększona"
+            volume_lowered: "Głośność została zmniejszona"
             sound_restored: "Dźwięk został przywrócony"
         pt:
           responses:
@@ -210,7 +229,8 @@ action:
             view_switch: "Mudando visualização para {view}"
             view_invalid: "Desculpe, {view} não é uma visualização válida"
             volume_set: "Volume definido para {level}"
-            volume_adjusted: "O volume foi ajustado para {direction}"
+            volume_raised: "O volume foi aumentado"
+            volume_lowered: "O volume foi diminuído"
             sound_restored: "O som foi restaurado"
         sr:
           responses:
@@ -224,7 +244,8 @@ action:
             view_switch: "Приказујем приказ {view}"
             view_invalid: "Жао ми је. {view} није важећи приказ."
             volume_set: "Јачина звука је подешена на {level}"
-            volume_adjusted: "Јачина звука је {direction}"
+            volume_raised: "Јачина звука је појачана"
+            volume_lowered: "Јачина звука је смањена"
             sound_restored: "Звук је враћен"
         sr-Latn:
           responses:
@@ -238,7 +259,8 @@ action:
             view_switch: "Prikazujem prikaz {view}"
             view_invalid: "Žao mi je. {view} nije važeći prikaz."
             volume_set: "Jačina zvuka je podešena na {level}"
-            volume_adjusted: "Jačina zvuka je {direction}"
+            volume_raised: "Jačina zvuka je pojačana"
+            volume_lowered: "Jačina zvuka je smanjena"
             sound_restored: "Zvuk je vraćen"
   - choose:
       - conditions:
@@ -374,14 +396,21 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - adjust_volume
+              - volume_up
         sequence:
-          - service:
-              '{% if trigger.slots.up_down == "down" %} media_player.volume_down {% endif %}
-              {% if trigger.slots.up_down == "up" %} media_player.volume_up {% endif %}'
+          - service: media_player.volume_up
             target:
               entity_id: "{{ target_mediaplayer_device }}"
-          - set_conversation_response: "{{ translations[language]['responses']['volume_adjusted'].replace('{direction}', trigger.slots.up_down) }}"
+          - set_conversation_response: "{{ translations[language]['responses']['volume_raised'] }}"
+      - conditions:
+          - condition: trigger
+            id:
+              - volume_down
+        sequence:
+          - service: media_player.volume_down
+            target:
+              entity_id: "{{ target_mediaplayer_device }}"
+          - set_conversation_response: "{{ translations[language]['responses']['volume_lowered'] }}"
       - conditions:
           - condition: trigger
             id:
