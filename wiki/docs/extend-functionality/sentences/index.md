@@ -9,25 +9,25 @@ We encourage everyone to share their creations so that others might enjoy what y
 
 | Automations                                                     | Description                                                                           | Languages                                           |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| [Alarms Reminders & Timers](sentences/alarms-reminders-timers)  | Allows for an on demand call to create and list alarms, reminders and timers          | en, ca, de, es, fr, pt, sr, sr-Latn                 |
+| [Alarms Reminders & Timers](sentences/alarms-reminders-timers)  | Allows for an on demand call to create and list alarms, reminders and timers          | en, ca, de, es, fr, it, pt, sr, sr-Latn             |
 | [Broadcast](sentences/broadcast)                                | Broadcast messages to other View Assist Satellites                                    | Universal                                           |
 | [Device Alerts](sentences/device-alerts)                        | Automation builder used to do something with a VA satellite when something happens    | Universal                                           |
-| [Device Functions](sentences/device-functions)                  | Extend device functions for media control, modes and repeat speech                    | en, ca, de, es, nl, pl, pt, sr, sr-Latn             |
+| [Device Functions](sentences/device-functions)                  | Extend device functions for media control, modes and repeat speech                    | en, ca, de, es, it, nl, pl, pt, sr, sr-Latn         |
 | [Get Sports Scores](sentences/get-sports-scores)                | Get sports scores from US major sports teams and custom definitions                   | en, ca, de, es, fr, it, pl, pt                      |
 | [How\'s the Weather](sentences/hows-the-weather)                | Get current conditions and see the forecast on view enabled devices                   | en, ca, de, es, fr, it, nl, pl, pt, ro, sr, sr-Latn |
 | [List Management](sentences/list-management)                    | Add, remove, show items from your shopping or to do list                              | en, ca, de, es, fr, it, pl, ro                      |
 | [Locate a Person](sentences/locate-a-person)                    | Ask for the location of a family member and see it displayed on a map                 | en, ca, de, es, it, pl                              |
-| [Play Music with Music Assistant](sentences/play-music-with-ma) | Play your music media using Music Assistant                                           | en, ca, de, es,fr, nl, pl, pt, ro                   |
-| [Play Radio with Music Assistant](sentences/play-radio-with-ma) | Play TuneIn radio using Music Assistant                                               | en, ca, de, es, nl, pt, ro                          |
-| [Search Wikipedia](sentences/search-wikipedia)                  | Search Wikipedia using voice and receive a response and image on view enabled devices | en, ca, de, es, pl                                  |
+| [Play Music with Music Assistant](sentences/play-music-with-ma) | Play your music media using Music Assistant                                           | en, ca, de, es, it, nl, pl, pt, ro                  |
+| [Play Radio with Music Assistant](sentences/play-radio-with-ma) | Play TuneIn radio using Music Assistant                                               | en, ca, de, es, it, nl, pt, ro                      |
+| [Search Wikipedia](sentences/search-wikipedia)                  | Search Wikipedia using voice and receive a response and image on view enabled devices | en, ca, de, es, it, pl, pt                          |
 | [Show Webpage](sentences/show-webpage)                          | Show your favorite website on your view enabled device                                | en                                                  |
 | [Sound Machine](sentences/sound-machine)                        | Enables the user to play ambient sounds for relaxation or noise cancelation           | en                                                  |
 | [Spell a Word](sentences/spell-a-word)                          | Ask View Assist to spell a word and get a response back with the spelling             | en, ca, de, es, fr, it, pl                          |
 | [Thank You](sentences/thank-you)                                | Show your gratitude and receive a kind reply                                          | en                                                  |
-| [Thermostat Control](sentences/thermostat-control)              | Control the temperature of your thermostat by voice                                   | en, ca, de, es, nl, pl                              |
-| [Travel Times by Waze](sentences/travel-times-by-waze)          | Get realtime travel times using Waze                                                  | en, ca, de, es                                      |
+| [Thermostat Control](sentences/thermostat-control)              | Control the temperature of your thermostat by voice                                   | en, ca, de, es, it, nl, pl, pt                      |
+| [Travel Times by Waze](sentences/travel-times-by-waze)          | Get realtime travel times using Waze                                                  | en, ca, de, es, it, pl, pt                          |
 | [View Calendar](sentences/view-calendar)                        | Show your calendar events by requesting by voice                                      | en, pl                                              |
-| [View Camera](sentences/view-camera)                            | Use voice to show your security cameras                                               | en, ca, de, es, pl, pt                              |
-| [What time is it](sentences/what-time-is-it)                    | Get time and date by voice                                                            | en, ca, de, es, fr, it, nl, pl                      |
+| [View Camera](sentences/view-camera)                            | Use voice to show your security cameras                                               | en, ca, de, es, it, pl, pt                          |
+| [What time is it](sentences/what-time-is-it)                    | Get time and date by voice                                                            | en, ca, de, es, fr, it, nl, pl, pt                  |
 
 We are always looking for additional translations. Can you help?

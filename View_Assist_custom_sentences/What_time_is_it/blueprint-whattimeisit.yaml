@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.3)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.4)
   domain: automation
   input:
     language:
@@ -168,7 +168,28 @@ action:
           responses:
             time: "Sono le {time}"
             day_of_week: "Oggi è {day_of_week}"
-            date: "Oggi è {date}"
+            date: "Oggi è {day_of_week} {day_of_month} {month} {year}"
+          weekdays:
+            mon: Lunedì
+            tue: Martedì
+            wed: Mercoledì
+            thu: Giovedì
+            fri: Venerdì
+            sat: Sabato
+            sun: Domenica
+          months:
+            jan: Gennaio
+            feb: Febbraio
+            mar: Marzo
+            apr: Aprile
+            may: Maggio
+            jun: Giugno
+            jul: Luglio
+            aug: Agosto
+            sep: Settembre
+            oct: Ottobre
+            nov: Novembre
+            dec: Dicembre
         nl:
           responses:
             time: "Het is {time}"

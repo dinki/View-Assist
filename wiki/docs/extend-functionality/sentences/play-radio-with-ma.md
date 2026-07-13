@@ -82,11 +82,13 @@ You can continue using a legacy fixed command, or switch to the new alias-based 
 
 - en: `play Big 102.1`
 - de: `Spiele Big 102.1`
+- it: `metti Big 102.1`
 
 #### Alias-based example
 
 - en: `(start | play | listen) [to] radio [station] {station_name}`
 - de: `[den] (starte | spiele) radio [sender] {station_name} [hören]`
+- it: `(metti | accendi | avvia) [la] radio {station_name}`
 
 If you want to use aliases, your command must include `{station_name}`.
 
@@ -132,6 +134,7 @@ Find the station you want to use and copy the station ID exactly as shown in Mus
 
 | Version | Description                                                                                                     |
 | ------- | --------------------------------------------------------------------------------------------------------------- |
+| 1.3.3   | Add Italian translation                                                                                         |
 | 1.3.2   | Additional languages                                                                                            |
 | 1.3.0   | Various fixes                                                                                                   |
 | 1.3.0   | Added alias-based station matching, improved UI configuration, simplified logic, preserved legacy compatibility |

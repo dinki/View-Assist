@@ -38,6 +38,7 @@ Adjustments may be needed based on your specific usage and preferences.
 
 | Version | Description                                                                                  |
 | ------- | -------------------------------------------------------------------------------------------- |
+| v 1.2.8 | Add Italian translation                                                                      |
 | v 1.2.6 | Return found artist and track instead of what was requested                                  |
 | v 1.2.5 | Add option to allow for blank artist in play song option                                     |
 | v 1.2.4 | Add Dutch translation                                                                        |
