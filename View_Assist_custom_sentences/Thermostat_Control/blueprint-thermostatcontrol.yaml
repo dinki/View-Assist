@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Thermostat Control
-  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.6)
+  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.7)
   domain: automation
   input:
     language:
@@ -60,7 +60,92 @@ action:
       language: !input language
       thermostat: !input thermostat
       view: !input view
-      amount: "{{ trigger.slots.amount }}"
+      amount_words_it:
+        un: 1
+        uno: 1
+        una: 1
+        due: 2
+        tre: 3
+        quattro: 4
+        cinque: 5
+        sei: 6
+        sette: 7
+        otto: 8
+        nove: 9
+        dieci: 10
+      amount_number: >-
+        {% set raw = trigger.slots.amount | default('') | string | lower | trim -%}
+        {% set normalized = amount_words_it.get(raw, raw | replace(',', '.')) if language == 'it' else raw | replace(',', '.') -%}
+        {{ normalized | float(default=none) }}
+      degree_word: "{{ 'grado' if amount_number == 1 else 'gradi' }}"
+      amount_display: >-
+        {{ amount_number | int
+           if amount_number is number and amount_number == amount_number | int
+           else amount_number }}
+      temperature_command: "{{ trigger.id in ['increasetemperature', 'decreasetemperature', 'settemperature'] }}"
+      thermostat_mode: "{{ states(thermostat) }}"
+      minimum_temperature: "{{ state_attr(thermostat, 'min_temp') | float(default=none) }}"
+      maximum_temperature: "{{ state_attr(thermostat, 'max_temp') | float(default=none) }}"
+      current_target: "{{ state_attr(thermostat, 'temperature') | float(default=none) }}"
+      current_target_low: "{{ state_attr(thermostat, 'target_temp_low') | float(default=none) }}"
+      current_target_high: "{{ state_attr(thermostat, 'target_temp_high') | float(default=none) }}"
+      requested_target: >-
+        {% if amount_number is not number -%}
+          {{ none }}
+        {%- elif trigger.id == 'settemperature' -%}
+          {{ amount_number }}
+        {%- elif thermostat_mode in ['heat', 'cool'] and current_target is number -%}
+          {{ current_target + amount_number if trigger.id == 'increasetemperature' else current_target - amount_number }}
+        {%- else -%}
+          {{ none }}
+        {%- endif %}
+      requested_target_low: >-
+        {% if amount_number is number and thermostat_mode == 'heat_cool' and current_target_low is number -%}
+          {{ current_target_low + amount_number if trigger.id == 'increasetemperature' else current_target_low - amount_number }}
+        {%- else -%}
+          {{ none }}
+        {%- endif %}
+      requested_target_high: >-
+        {% if amount_number is number and thermostat_mode == 'heat_cool' and current_target_high is number -%}
+          {{ current_target_high + amount_number if trigger.id == 'increasetemperature' else current_target_high - amount_number }}
+        {%- else -%}
+          {{ none }}
+        {%- endif %}
+      amount_is_valid: "{{ amount_number is number }}"
+      delta_is_valid: "{{ trigger.id == 'settemperature' or (amount_number is number and amount_number > 0) }}"
+      mode_is_supported: >-
+        {{ not temperature_command
+           or (trigger.id == 'settemperature' and thermostat_mode in ['heat', 'cool'])
+           or (trigger.id in ['increasetemperature', 'decreasetemperature'] and thermostat_mode in ['heat', 'cool', 'heat_cool']) }}
+      range_is_valid: >-
+        {% if not temperature_command -%}
+          {{ true }}
+        {%- elif thermostat_mode == 'heat_cool' -%}
+          {{ requested_target_low is number and requested_target_high is number
+             and minimum_temperature is number and maximum_temperature is number
+             and minimum_temperature <= requested_target_low <= maximum_temperature
+             and minimum_temperature <= requested_target_high <= maximum_temperature }}
+        {%- else -%}
+          {{ requested_target is number
+             and minimum_temperature is number and maximum_temperature is number
+             and minimum_temperature <= requested_target <= maximum_temperature }}
+        {%- endif %}
+      validation_response_key: >-
+        {% if not temperature_command -%}
+          {{ '' }}
+        {%- elif not amount_is_valid -%}
+          tstat_amount_error
+        {%- elif not delta_is_valid -%}
+          tstat_range_error
+        {%- elif thermostat_mode == 'off' -%}
+          tstat_off
+        {%- elif not mode_is_supported -%}
+          tstat_mode_error
+        {%- elif not range_is_valid -%}
+          tstat_range_error
+        {%- else -%}
+          {{ '' }}
+        {%- endif %}
       translations:
         ca:
           responses:
@@ -69,6 +154,10 @@ action:
             tstat_set: "La temperatura del termòstat s'ha establert a {amount} graus"
             tstat_show: "Mostrant el termòstat"
             tstat_display_error: "Ho sento. Aquest dispositiu no pot mostrar el termòstat"
+            tstat_amount_error: "No he entès el valor de la temperatura."
+            tstat_off: "El termòstat està apagat."
+            tstat_mode_error: "L'ajust de la temperatura no està disponible."
+            tstat_range_error: "La temperatura sol·licitada no està permesa."
         de:
           responses:
             tstat_raise: "Thermostattemperatur um {amount} Grad erhöht"
@@ -76,6 +165,10 @@ action:
             tstat_set: "Thermostattemperatur auf {amount} Grad eingestellt"
             tstat_show: "Thermostat wird angezeigt"
             tstat_display_error: "Entschuldigung. Dieses Gerät kann das Thermostat nicht anzeigen"
+            tstat_amount_error: "Ich habe den Temperaturwert nicht verstanden."
+            tstat_off: "Der Thermostat ist ausgeschaltet."
+            tstat_mode_error: "Die Temperatureinstellung ist nicht verfügbar."
+            tstat_range_error: "Die angeforderte Temperatur ist nicht zulässig."
         en:
           responses:
             tstat_raise: "Thermostat temperature raised {amount} degree"
@@ -83,6 +176,10 @@ action:
             tstat_set: "Thermostat temperature set to {amount} degrees"
             tstat_show: "Showing thermostat"
             tstat_display_error: "Sorry.  This device cannot display the thermostat"
+            tstat_amount_error: "Sorry. I did not understand the temperature value."
+            tstat_off: "The thermostat is off."
+            tstat_mode_error: "Temperature adjustment is not available."
+            tstat_range_error: "The requested temperature is not allowed."
         es:
           responses:
             tstat_raise: "La temperatura del termostato ha subido {amount} grado"
@@ -90,13 +187,21 @@ action:
             tstat_set: "La temperatura del termostato se ha establecido en {amount} grados"
             tstat_show: "Mostrando el termostato"
             tstat_display_error: "Lo siento. Este dispositivo no puede mostrar el termostato"
+            tstat_amount_error: "No he entendido el valor de la temperatura."
+            tstat_off: "El termostato está apagado."
+            tstat_mode_error: "El ajuste de temperatura no está disponible."
+            tstat_range_error: "La temperatura solicitada no está permitida."
         it:
           responses:
-            tstat_raise: "Ho alzato la temperatura del termostato di {amount} gradi"
-            tstat_lower: "Ho abbassato la temperatura del termostato di {amount} gradi"
-            tstat_set: "Ho impostato il termostato a {amount} gradi"
-            tstat_show: "Mostro il termostato"
-            tstat_display_error: "Mi dispiace, questo dispositivo non può mostrare il termostato"
+            tstat_raise: "Temperatura del termostato aumentata di {amount} {degree}"
+            tstat_lower: "Temperatura del termostato abbassata di {amount} {degree}"
+            tstat_set: "Temperatura del termostato impostata a {amount} {degree}"
+            tstat_show: "Ecco il termostato"
+            tstat_display_error: "Mi dispiace. Questo dispositivo non può visualizzare il termostato."
+            tstat_amount_error: "Non ho capito il valore della temperatura."
+            tstat_off: "Il termostato è spento."
+            tstat_mode_error: "La regolazione della temperatura non è disponibile."
+            tstat_range_error: "La temperatura richiesta non è consentita."
         nl:
           responses:
             tstat_raise: "Thermostaat temperatuur verhoogd met {amount} graad"
@@ -104,6 +209,10 @@ action:
             tstat_set: "Thermostaat temperatuur ingesteld op {amount} graden"
             tstat_show: "Thermostaat wordt weergegeven"
             tstat_display_error: "Sorry. Dit apparaat kan de thermostaat niet weergeven"
+            tstat_amount_error: "Ik heb de temperatuurwaarde niet begrepen."
+            tstat_off: "De thermostaat is uitgeschakeld."
+            tstat_mode_error: "Temperatuurregeling is niet beschikbaar."
+            tstat_range_error: "De gevraagde temperatuur is niet toegestaan."
         pl:
           responses:
             tstat_raise: "Temperatura termostatu podniesiona o {amount} stopień"
@@ -111,6 +220,10 @@ action:
             tstat_set: "Temperatura termostatu ustawiona na {amount} stopni"
             tstat_show: "Wyświetlam termostat"
             tstat_display_error: "Przepraszam. To urządzenie nie może wyświetlić termostatu"
+            tstat_amount_error: "Nie rozumiem wartości temperatury."
+            tstat_off: "Termostat jest wyłączony."
+            tstat_mode_error: "Regulacja temperatury jest niedostępna."
+            tstat_range_error: "Żądana temperatura jest poza dozwolonym zakresem."
         pt:
           responses:
             tstat_raise: "A temperatura do termostato foi aumentada em {amount} graus"
@@ -118,61 +231,67 @@ action:
             tstat_set: "Temperatura do termostato ajustada para {amount} graus"
             tstat_show: "Exibindo termostato"
             tstat_display_error: "Desculpe. Este dispositivo não pode exibir o termostato"
+            tstat_amount_error: "Não entendi o valor da temperatura."
+            tstat_off: "O termostato está desligado."
+            tstat_mode_error: "O ajuste de temperatura não está disponível."
+            tstat_range_error: "A temperatura solicitada não é permitida."
   - action: view_assist.set_state
     target:
       entity_id: "{{ target_satellite_device }}"
     data:
       climate: "{{ thermostat }}"
+  - if:
+      - condition: template
+        value_template: "{{ validation_response_key | length > 0 }}"
+    then:
+      - variables:
+          conversation_response: >-
+            {{ translations[language]['responses'].get(
+               validation_response_key,
+               translations['en']['responses'][validation_response_key]) }}
+      - set_conversation_response: "{{ conversation_response }}"
+      - action: view_assist.set_state
+        target:
+          entity_id: "{{ target_satellite_device }}"
+        data:
+          last_said: "{{ conversation_response }}"
+      - if:
+          - condition: template
+            value_template: "{{ target_satellite_device_type != 'audio_only' }}"
+        then:
+          - action: view_assist.navigate
+            data:
+              device: "{{ target_satellite_device }}"
+              path: "{{ view }}"
+      - stop: Thermostat request rejected safely
   - choose:
       - conditions:
           - condition: trigger
             id:
               - increasetemperature
         sequence:
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'cool' %}
-                  true
-                  {% endif %}
-            then:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ thermostat_mode == 'heat_cool' }}"
+                sequence:
+                  - action: climate.set_temperature
+                    data:
+                      target_temp_high: "{{ requested_target_high }}"
+                      target_temp_low: "{{ requested_target_low }}"
+                    target:
+                      entity_id: "{{ thermostat }}"
+            default:
               - action: climate.set_temperature
                 data:
-                  temperature: >-
-                    {{ state_attr(thermostat,'temperature')+ amount }}
-                target:
-                  entity_id: "{{ thermostat }}"
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'heat' %}
-                  true
-                  {% endif %}
-            then:
-              - action: climate.set_temperature
-                data:
-                  temperature: >-
-                    {{ state_attr(thermostat,'temperature') + amount }}
-                target:
-                  entity_id: "{{ thermostat }}"
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'heat_cool' %}
-                  true
-                  {% endif %}
-            then:
-              - action: climate.set_temperature
-                data:
-                  target_temp_high: >-
-                    {{ state_attr(thermostat,'target_temp_high') + amount }}
-                  target_temp_low: >-
-                    {{ state_attr(thermostat,'target_temp_low') + amount }}
+                  temperature: "{{ requested_target }}"
                 target:
                   entity_id: "{{ thermostat }}"
           - variables:
               conversation_response: >-
-                {{ translations[language]['responses']['tstat_raise'].replace("{amount}", amount | string) }}
+                {{ translations[language]['responses']['tstat_raise']
+                   .replace("{amount}", amount_display | string)
+                   .replace("{degree}", degree_word) }}
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -192,50 +311,28 @@ action:
             id:
               - decreasetemperature
         sequence:
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'cool' %}
-                  true
-                  {% endif %}
-            then:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ thermostat_mode == 'heat_cool' }}"
+                sequence:
+                  - action: climate.set_temperature
+                    data:
+                      target_temp_high: "{{ requested_target_high }}"
+                      target_temp_low: "{{ requested_target_low }}"
+                    target:
+                      entity_id: "{{ thermostat }}"
+            default:
               - action: climate.set_temperature
                 data:
-                  temperature: >-
-                    {{ state_attr(thermostat,'temperature') - amount }}
-                target:
-                  entity_id: "{{ thermostat }}"
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'heat' %}
-                  true
-                  {% endif %}
-            then:
-              - action: climate.set_temperature
-                data:
-                  temperature: >-
-                    {{ state_attr(thermostat,'temperature') - amount }}
-                target:
-                  entity_id: "{{ thermostat }}"
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'heat_cool' %}
-                  true
-                  {% endif %}
-            then:
-              - action: climate.set_temperature
-                data:
-                  target_temp_high: >-
-                    {{ state_attr(thermostat,'target_temp_high') - amount }}
-                  target_temp_low: >-
-                    {{ state_attr(thermostat,'target_temp_low') - amount }}
+                  temperature: "{{ requested_target }}"
                 target:
                   entity_id: "{{ thermostat }}"
           - variables:
               conversation_response: >-
-                {{ translations[language]['responses']['tstat_lower'].replace("{amount}", amount | string) }}
+                {{ translations[language]['responses']['tstat_lower']
+                   .replace("{amount}", amount_display | string)
+                   .replace("{degree}", degree_word) }}
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
@@ -255,33 +352,16 @@ action:
             id:
               - settemperature
         sequence:
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'cool' %}
-                  true
-                  {% endif %}
-            then:
-              - action: climate.set_temperature
-                data:
-                  temperature: "{{ amount }}"
-                target:
-                  entity_id: "{{ thermostat }}"
-          - if:
-              - condition: template
-                value_template: >-
-                  {% if states(thermostat) == 'heat' %}
-                  true
-                  {% endif %}
-            then:
-              - action: climate.set_temperature
-                data:
-                  temperature: "{{ amount }}"
-                target:
-                  entity_id: "{{ thermostat }}"
+          - action: climate.set_temperature
+            data:
+              temperature: "{{ requested_target }}"
+            target:
+              entity_id: "{{ thermostat }}"
           - variables:
               conversation_response: >-
-                {{ translations[language]['responses']['tstat_set'].replace("{amount}", amount | string) }}
+                {{ translations[language]['responses']['tstat_set']
+                   .replace("{amount}", amount_display | string)
+                   .replace("{degree}", degree_word) }}
           - set_conversation_response: "{{ conversation_response }}"
           - action: view_assist.set_state
             target:
