@@ -1,136 +1,169 @@
 blueprint:
   name: View Assist Custom Prompt Responses
-  description: >
-    Play a random customizable TTS greeting when a satellite enters listening mode.
-    Automatically mutes/unmutes the satellite microphone with configurable delay.
-    Supports multiple satellites, optional overrides for mute/media_player,
-    customizable responses and TTS service URL.
-    This blueprint works with the [View Assist integration](https://github.com/dinki/view_assist_integration)  
-    and is RECOMMENDED to be used together with the  
-    [View Assist Companion App](https://github.com/msp1974/ViewAssist_Companion_App).  
+  description: "Play a random customizable TTS greeting when a satellite enters listening
+    mode, using the tts.speak service with a selectable TTS engine and voice/language.
+    Automatically mutes the satellite microphone, waits for the END of audio playback
+    (plus a configurable safety delay) before re-enabling it, to avoid the satellite
+    hearing itself. Supports multiple satellites and optional overrides for
+    mute switch / media player entities. This blueprint works with the
+    [View Assist integration](https://github.com/dinki/view_assist_integration)
+    and is RECOMMENDED to be used together with the
+    [View Assist Companion App](https://github.com/msp1974/ViewAssist_Companion_App).\n"
   domain: automation
-
   input:
     satellites:
       name: Assist Satellites
       description: Select one or more assist_satellite entities to monitor
       selector:
         entity:
-          domain: assist_satellite
+          domain:
+          - assist_satellite
           multiple: true
-
+          reorder: false
     custom_responses:
       name: Custom Responses
-      description: >
-        List of possible random responses (edit for your language).  
-        Example: ["How can I help you?", "Yes, I'm listening", "How can I assist you?"]
-      default: ["How can I help you?", "Yes, I'm listening", "How can I assist you?"]
-      selector:
-        object: {}
+      description: 'List of possible random responses (edit for your language).   Example:
+        ["How can I help you?", "Yes, I''m listening", "How can I assist you?"]
 
-    tts_url_template:
-      name: TTS URL Template
-      description: >
-        Template for TTS media source URL.  
-        Example (Edge TTS, English voice):
-        media-source://tts/edge_tts?message={{ custom_responses | random }}&language=en-US-ChristopherNeural
-      default: >
-        media-source://tts/edge_tts?message={{ custom_responses | random }}&language=en-US-ChristopherNeural
+        '
+      default:
+      - How can I help you?
+      - Yes, I'm listening
+      - How can I assist you?
       selector:
-        text: {}
+        object:
+          multiple: false
+    tts_entity:
+      name: TTS Engine
+      description: 'Select the same TTS engine configured for Text-to-Speech in your
+        Assist pipeline (Settings > Voice assistants > your pipeline).
 
+        '
+      selector:
+        entity:
+          domain:
+          - tts
+          multiple: false
+    tts_language:
+      name: TTS Voice / Language
+      description: 'Copy the exact voice/language set for this engine in your Assist
+        pipeline. E.g. en-US-ChristopherNeural (Edge TTS), en-US (Google Cloud),
+        en (Google Translate).
+
+        '
+      default: en-US-ChristopherNeural
+      selector:
+        text:
+          multiple: false
+          multiline: false
     mute_switch_overrides:
       name: Mute Switch Overrides
-      description: >
-        Optional overrides for mute switches per satellite.  
-        Example: {"assist_satellite.vaca_lenovo_hua0al2p": "switch.custom_mute_entity"}
+      description: 'Optional overrides for mute switches per satellite.   Example:
+        {"assist_satellite.vaca_lenovo_hua0al2p": "switch.custom_mute_entity"}
+
+        '
       default: {}
       selector:
-        object: {}
-
+        object:
+          multiple: false
     media_player_overrides:
       name: Media Player Overrides
-      description: >
-        Optional overrides for media players per satellite.  
-        Example: {"assist_satellite.vaca_lenovo_hua0al2p": "media_player.custom_player"}
+      description: 'Optional overrides for media players per satellite.   Example:
+        {"assist_satellite.vaca_lenovo_hua0al2p": "media_player.custom_player"}
+
+        '
       default: {}
       selector:
-        object: {}
-
+        object:
+          multiple: false
     mute_active_state:
       name: Microphone Active State
-      description: >
-        Select the switch state that corresponds to "microphone active".  
-        If checked, ON = active; if unchecked, OFF = active.
+      description: 'Select the switch state that corresponds to "microphone active".   If
+        checked, ON = active; if unchecked, OFF = active.
+
+        '
       default: false
       selector:
         boolean: {}
+    playback_timeout:
+      name: Playback Wait Timeout (seconds)
+      description: 'Maximum time to wait for the media player to finish playing the
+        greeting before giving up and continuing (5–30 seconds).
 
-    reenable_delay:
-      name: Microphone Reactivation Delay (seconds)
-      description: >
-        Time to wait after greeting before re-enabling microphone (0–5 seconds).
-      default: 2
+        '
+      default: 10
       selector:
         number:
-          min: 0
-          max: 5
-          step: 1
+          min: 5.0
+          max: 30.0
+          step: 1.0
           unit_of_measurement: s
+          mode: slider
+    reenable_delay:
+      name: Extra Safety Delay (seconds)
+      description: 'Extra time to wait AFTER the greeting finished playing, before
+        re-enabling the microphone (0–5 seconds).
 
+        '
+      default: 1
+      selector:
+        number:
+          min: 0.0
+          max: 5.0
+          step: 0.5
+          unit_of_measurement: s
+          mode: slider
+  source_url: https://github.com/relust/View-Assist-ro-support/blob/main/Avatar_Prompt_Responses/blueprint-custom_prompt_responses.yaml
 variables:
   custom_responses: !input custom_responses
-  tts_url_template: !input tts_url_template
+  tts_language: !input tts_language
   mute_switch_overrides: !input mute_switch_overrides
   media_player_overrides: !input media_player_overrides
   mute_active_state: !input mute_active_state
+  playback_timeout: !input playback_timeout
   reenable_delay: !input reenable_delay
-
 trigger:
-  - platform: state
-    entity_id: !input satellites
-    to: listening
-
+- platform: state
+  entity_id: !input satellites
+  to: listening
 condition: []
-
 action:
-  - variables:
-      trigger_entity: "{{ trigger.entity_id }}"
-      sat_name: "{{ trigger_entity.split('.')[1] }}"
-      mute_switch: >-
-        {{
-          mute_switch_overrides.get(trigger_entity) if trigger_entity in mute_switch_overrides
-          else "switch." + sat_name + "_mute"
-        }}
-      media_player: >-
-        {{
-          media_player_overrides.get(trigger_entity) if trigger_entity in media_player_overrides
-          else "media_player." + sat_name + "_media_player"
-        }}
-      mute_on: "{{ 'off' if mute_active_state else 'on' }}"
-      mute_off: "{{ 'on' if mute_active_state else 'off' }}"
-
-  # Mute microphone
-  - service: "switch.turn_{{ mute_on }}"
-    target:
-      entity_id: "{{ mute_switch }}"
-
-  # Play TTS
-  - service: media_player.play_media
-    target:
-      entity_id: "{{ media_player }}"
-    data:
-      media_content_id: "{{ tts_url_template }}"
-      media_content_type: provider
-      announce: true
-
-  # Wait and reactivate the microphone
-  - delay:
-      seconds: "{{ reenable_delay }}"
-
-  - service: "switch.turn_{{ mute_off }}"
-    target:
-      entity_id: "{{ mute_switch }}"
-
+- variables:
+    trigger_entity: '{{ trigger.entity_id }}'
+    sat_name: '{{ trigger_entity.split(''.'')[1] }}'
+    mute_switch: "{{\n  mute_switch_overrides.get(trigger_entity) if trigger_entity
+      in mute_switch_overrides\n  else \"switch.\" + sat_name + \"_mute\"\n}}"
+    media_player: "{{\n  media_player_overrides.get(trigger_entity) if trigger_entity
+      in media_player_overrides\n  else \"media_player.\" + sat_name + \"_media_player\"\n}}"
+    mute_on: '{{ ''off'' if mute_active_state else ''on'' }}'
+    mute_off: '{{ ''on'' if mute_active_state else ''off'' }}'
+# 1. Mute the microphone immediately
+- action: switch.turn_{{ mute_on }}
+  target:
+    entity_id: '{{ mute_switch }}'
+# 2. Speak a random response via the selected TTS engine
+- action: tts.speak
+  target:
+    entity_id: !input tts_entity
+  data:
+    cache: true
+    media_player_entity_id: '{{ media_player }}'
+    message: '{{ custom_responses | random }}'
+    language: '{{ tts_language }}'
+# 3. Give the player a moment to start, then wait until playback finishes
+- delay:
+    seconds: 1
+- wait_for_trigger:
+  - platform: template
+    value_template: '{{ states(media_player) in [''idle'', ''off'', ''paused''] }}'
+  timeout:
+    seconds: '{{ playback_timeout }}'
+# 4. Extra safety delay before re-opening the microphone
+- delay:
+    seconds: '{{ reenable_delay }}'
+# 5. Re-enable the microphone
+- action: switch.turn_{{ mute_off }}
+  target:
+    entity_id: '{{ mute_switch }}'
 mode: restart
 max_exceeded: silent
