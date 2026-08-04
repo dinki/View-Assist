@@ -60,24 +60,119 @@ action:
       language: !input language
       thermostat: !input thermostat
       view: !input view
-      amount_words_it:
-        un: 1
-        uno: 1
-        una: 1
-        due: 2
-        tre: 3
-        quattro: 4
-        cinque: 5
-        sei: 6
-        sette: 7
-        otto: 8
-        nove: 9
-        dieci: 10
+      translations:
+        ca:
+          responses:
+            tstat_raise: "La temperatura del termòstat ha pujat {amount} grau"
+            tstat_lower: "La temperatura del termòstat ha baixat {amount} grau"
+            tstat_set: "La temperatura del termòstat s'ha establert a {amount} graus"
+            tstat_show: "Mostrant el termòstat"
+            tstat_display_error: "Ho sento. Aquest dispositiu no pot mostrar el termòstat"
+            tstat_amount_error: "No he entès el valor de la temperatura."
+            tstat_off: "El termòstat està apagat."
+            tstat_mode_error: "L'ajust de la temperatura no està disponible."
+            tstat_range_error: "La temperatura sol·licitada no està permesa."
+        de:
+          responses:
+            tstat_raise: "Thermostattemperatur um {amount} Grad erhöht"
+            tstat_lower: "Thermostattemperatur um {amount} Grad gesenkt"
+            tstat_set: "Thermostattemperatur auf {amount} Grad eingestellt"
+            tstat_show: "Thermostat wird angezeigt"
+            tstat_display_error: "Entschuldigung. Dieses Gerät kann das Thermostat nicht anzeigen"
+            tstat_amount_error: "Ich habe den Temperaturwert nicht verstanden."
+            tstat_off: "Der Thermostat ist ausgeschaltet."
+            tstat_mode_error: "Die Temperatureinstellung ist nicht verfügbar."
+            tstat_range_error: "Die angeforderte Temperatur ist nicht zulässig."
+        en:
+          responses:
+            tstat_raise: "Thermostat temperature raised {amount} degree"
+            tstat_lower: "Thermostat temperature lowered {amount} degree"
+            tstat_set: "Thermostat temperature set to {amount} degrees"
+            tstat_show: "Showing thermostat"
+            tstat_display_error: "Sorry.  This device cannot display the thermostat"
+            tstat_amount_error: "Sorry. I did not understand the temperature value."
+            tstat_off: "The thermostat is off."
+            tstat_mode_error: "Temperature adjustment is not available."
+            tstat_range_error: "The requested temperature is not allowed."
+        es:
+          responses:
+            tstat_raise: "La temperatura del termostato ha subido {amount} grado"
+            tstat_lower: "La temperatura del termostato ha bajado {amount} grado"
+            tstat_set: "La temperatura del termostato se ha establecido en {amount} grados"
+            tstat_show: "Mostrando el termostato"
+            tstat_display_error: "Lo siento. Este dispositivo no puede mostrar el termostato"
+            tstat_amount_error: "No he entendido el valor de la temperatura."
+            tstat_off: "El termostato está apagado."
+            tstat_mode_error: "El ajuste de temperatura no está disponible."
+            tstat_range_error: "La temperatura solicitada no está permitida."
+        it:
+          amount_words:
+            un: 1
+            uno: 1
+            una: 1
+            due: 2
+            tre: 3
+            quattro: 4
+            cinque: 5
+            sei: 6
+            sette: 7
+            otto: 8
+            nove: 9
+            dieci: 10
+          degree_words:
+            singular: grado
+            plural: gradi
+          responses:
+            tstat_raise: "Temperatura del termostato aumentata di {amount} {degree}"
+            tstat_lower: "Temperatura del termostato abbassata di {amount} {degree}"
+            tstat_set: "Temperatura del termostato impostata a {amount} {degree}"
+            tstat_show: "Ecco il termostato"
+            tstat_display_error: "Mi dispiace. Questo dispositivo non può visualizzare il termostato."
+            tstat_amount_error: "Non ho capito il valore della temperatura."
+            tstat_off: "Il termostato è spento."
+            tstat_mode_error: "La regolazione della temperatura non è disponibile."
+            tstat_range_error: "La temperatura richiesta non è consentita."
+        nl:
+          responses:
+            tstat_raise: "Thermostaat temperatuur verhoogd met {amount} graad"
+            tstat_lower: "Thermostaat temperatuur verlaagd met {amount} graad"
+            tstat_set: "Thermostaat temperatuur ingesteld op {amount} graden"
+            tstat_show: "Thermostaat wordt weergegeven"
+            tstat_display_error: "Sorry. Dit apparaat kan de thermostaat niet weergeven"
+            tstat_amount_error: "Ik heb de temperatuurwaarde niet begrepen."
+            tstat_off: "De thermostaat is uitgeschakeld."
+            tstat_mode_error: "Temperatuurregeling is niet beschikbaar."
+            tstat_range_error: "De gevraagde temperatuur is niet toegestaan."
+        pl:
+          responses:
+            tstat_raise: "Temperatura termostatu podniesiona o {amount} stopień"
+            tstat_lower: "Temperatura termostatu obniżona o {amount} stopień"
+            tstat_set: "Temperatura termostatu ustawiona na {amount} stopni"
+            tstat_show: "Wyświetlam termostat"
+            tstat_display_error: "Przepraszam. To urządzenie nie może wyświetlić termostatu"
+            tstat_amount_error: "Nie rozumiem wartości temperatury."
+            tstat_off: "Termostat jest wyłączony."
+            tstat_mode_error: "Regulacja temperatury jest niedostępna."
+            tstat_range_error: "Żądana temperatura jest poza dozwolonym zakresem."
+        pt:
+          responses:
+            tstat_raise: "A temperatura do termostato foi aumentada em {amount} graus"
+            tstat_lower: "A temperatura do termostato foi diminuída em {amount} graus"
+            tstat_set: "Temperatura do termostato ajustada para {amount} graus"
+            tstat_show: "Exibindo termostato"
+            tstat_display_error: "Desculpe. Este dispositivo não pode exibir o termostato"
+            tstat_amount_error: "Não entendi o valor da temperatura."
+            tstat_off: "O termostato está desligado."
+            tstat_mode_error: "O ajuste de temperatura não está disponível."
+            tstat_range_error: "A temperatura solicitada não é permitida."
       amount_number: >-
         {% set raw = trigger.slots.amount | default('') | string | lower | trim -%}
-        {% set normalized = amount_words_it.get(raw, raw | replace(',', '.')) if language == 'it' else raw | replace(',', '.') -%}
+        {% set amount_words = translations[language].get('amount_words', {}) -%}
+        {% set normalized = amount_words.get(raw, raw | replace(',', '.')) -%}
         {{ normalized | float(default=none) }}
-      degree_word: "{{ 'grado' if amount_number == 1 else 'gradi' }}"
+      degree_word: >-
+        {% set degree_words = translations[language].get('degree_words', {}) -%}
+        {{ degree_words.get('singular' if amount_number == 1 else 'plural', '') }}
       amount_display: >-
         {{ amount_number | int
            if amount_number is number and amount_number == amount_number | int
@@ -146,95 +241,6 @@ action:
         {%- else -%}
           {{ '' }}
         {%- endif %}
-      translations:
-        ca:
-          responses:
-            tstat_raise: "La temperatura del termòstat ha pujat {amount} grau"
-            tstat_lower: "La temperatura del termòstat ha baixat {amount} grau"
-            tstat_set: "La temperatura del termòstat s'ha establert a {amount} graus"
-            tstat_show: "Mostrant el termòstat"
-            tstat_display_error: "Ho sento. Aquest dispositiu no pot mostrar el termòstat"
-            tstat_amount_error: "No he entès el valor de la temperatura."
-            tstat_off: "El termòstat està apagat."
-            tstat_mode_error: "L'ajust de la temperatura no està disponible."
-            tstat_range_error: "La temperatura sol·licitada no està permesa."
-        de:
-          responses:
-            tstat_raise: "Thermostattemperatur um {amount} Grad erhöht"
-            tstat_lower: "Thermostattemperatur um {amount} Grad gesenkt"
-            tstat_set: "Thermostattemperatur auf {amount} Grad eingestellt"
-            tstat_show: "Thermostat wird angezeigt"
-            tstat_display_error: "Entschuldigung. Dieses Gerät kann das Thermostat nicht anzeigen"
-            tstat_amount_error: "Ich habe den Temperaturwert nicht verstanden."
-            tstat_off: "Der Thermostat ist ausgeschaltet."
-            tstat_mode_error: "Die Temperatureinstellung ist nicht verfügbar."
-            tstat_range_error: "Die angeforderte Temperatur ist nicht zulässig."
-        en:
-          responses:
-            tstat_raise: "Thermostat temperature raised {amount} degree"
-            tstat_lower: "Thermostat temperature lowered {amount} degree"
-            tstat_set: "Thermostat temperature set to {amount} degrees"
-            tstat_show: "Showing thermostat"
-            tstat_display_error: "Sorry.  This device cannot display the thermostat"
-            tstat_amount_error: "Sorry. I did not understand the temperature value."
-            tstat_off: "The thermostat is off."
-            tstat_mode_error: "Temperature adjustment is not available."
-            tstat_range_error: "The requested temperature is not allowed."
-        es:
-          responses:
-            tstat_raise: "La temperatura del termostato ha subido {amount} grado"
-            tstat_lower: "La temperatura del termostato ha bajado {amount} grado"
-            tstat_set: "La temperatura del termostato se ha establecido en {amount} grados"
-            tstat_show: "Mostrando el termostato"
-            tstat_display_error: "Lo siento. Este dispositivo no puede mostrar el termostato"
-            tstat_amount_error: "No he entendido el valor de la temperatura."
-            tstat_off: "El termostato está apagado."
-            tstat_mode_error: "El ajuste de temperatura no está disponible."
-            tstat_range_error: "La temperatura solicitada no está permitida."
-        it:
-          responses:
-            tstat_raise: "Temperatura del termostato aumentata di {amount} {degree}"
-            tstat_lower: "Temperatura del termostato abbassata di {amount} {degree}"
-            tstat_set: "Temperatura del termostato impostata a {amount} {degree}"
-            tstat_show: "Ecco il termostato"
-            tstat_display_error: "Mi dispiace. Questo dispositivo non può visualizzare il termostato."
-            tstat_amount_error: "Non ho capito il valore della temperatura."
-            tstat_off: "Il termostato è spento."
-            tstat_mode_error: "La regolazione della temperatura non è disponibile."
-            tstat_range_error: "La temperatura richiesta non è consentita."
-        nl:
-          responses:
-            tstat_raise: "Thermostaat temperatuur verhoogd met {amount} graad"
-            tstat_lower: "Thermostaat temperatuur verlaagd met {amount} graad"
-            tstat_set: "Thermostaat temperatuur ingesteld op {amount} graden"
-            tstat_show: "Thermostaat wordt weergegeven"
-            tstat_display_error: "Sorry. Dit apparaat kan de thermostaat niet weergeven"
-            tstat_amount_error: "Ik heb de temperatuurwaarde niet begrepen."
-            tstat_off: "De thermostaat is uitgeschakeld."
-            tstat_mode_error: "Temperatuurregeling is niet beschikbaar."
-            tstat_range_error: "De gevraagde temperatuur is niet toegestaan."
-        pl:
-          responses:
-            tstat_raise: "Temperatura termostatu podniesiona o {amount} stopień"
-            tstat_lower: "Temperatura termostatu obniżona o {amount} stopień"
-            tstat_set: "Temperatura termostatu ustawiona na {amount} stopni"
-            tstat_show: "Wyświetlam termostat"
-            tstat_display_error: "Przepraszam. To urządzenie nie może wyświetlić termostatu"
-            tstat_amount_error: "Nie rozumiem wartości temperatury."
-            tstat_off: "Termostat jest wyłączony."
-            tstat_mode_error: "Regulacja temperatury jest niedostępna."
-            tstat_range_error: "Żądana temperatura jest poza dozwolonym zakresem."
-        pt:
-          responses:
-            tstat_raise: "A temperatura do termostato foi aumentada em {amount} graus"
-            tstat_lower: "A temperatura do termostato foi diminuída em {amount} graus"
-            tstat_set: "Temperatura do termostato ajustada para {amount} graus"
-            tstat_show: "Exibindo termostato"
-            tstat_display_error: "Desculpe. Este dispositivo não pode exibir o termostato"
-            tstat_amount_error: "Não entendi o valor da temperatura."
-            tstat_off: "O termostato está desligado."
-            tstat_mode_error: "O ajuste de temperatura não está disponível."
-            tstat_range_error: "A temperatura solicitada não é permitida."
   - action: view_assist.set_state
     target:
       entity_id: "{{ target_satellite_device }}"
