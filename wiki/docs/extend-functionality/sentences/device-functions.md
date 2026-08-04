@@ -43,19 +43,23 @@ This blueprint will contain device specific functions. Current functions include
 
 ### Set Volume Command
 
-- en: `[set | turn] [the] volume [to] {level}`
-- de: `[Setze | Schalte] [die] Lautstärke [auf] {level}`
+- en: `[set | turn] [the] volume to {level}`
+- de: `[Setze | Schalte] [die] Lautstärke auf {level}`
 - it: `[metti | imposta] [il] volume (a | al) {level}`
+
+The word before `{level}` (`to`, `auf`, `a | al`) is required on purpose: `{level}` is a
+wildcard, so making it optional lets this command swallow the step phrases below and
+capture a direction word as the volume level.
 
 ### Volume Up Command
 
-- en: `turn up [the] volume`
+- en: `(turn up [the] volume | turn [the] volume up)`
 - de: `Schalte [die] Lautstärke lauter`
 - it: `(alza | aumenta) il volume`
 
 ### Volume Down Command
 
-- en: `turn down [the] volume`
+- en: `(turn down [the] volume | turn [the] volume down)`
 - de: `Schalte [die] Lautstärke leiser`
 - it: `(abbassa | diminuisci) il volume`
 
@@ -81,6 +85,7 @@ This blueprint will contain device specific functions. Current functions include
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.5.1 | Stop Set Volume from swallowing "turn the volume up/down"; ignore non-numeric levels instead of aborting the run |
 | v 1.5.0 | Split Adjust Volume into Volume Up/Down commands so translated phrases work; fix missing German response strings |
 | v 1.4.7 | Add Italian translation                                                                  |
 | v 1.4.6 | Added translations                                                                       |

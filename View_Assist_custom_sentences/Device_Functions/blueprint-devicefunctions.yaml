@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Device Functions
   description:
     Various device functions for the View Assist Satellites (View Assist
-    devicefunctions v 1.5.0)
+    devicefunctions v 1.5.1)
   domain: automation
   input:
     language:
@@ -33,15 +33,15 @@ blueprint:
     set_volume:
       name: Set Volume Command
       description: The command to use to set volume level directly
-      default: "[set | turn] [the] volume [to] {level}"
+      default: "[set | turn] [the] volume to {level}"
     volume_up_command:
       name: Volume Up Command
       description: The command to use to raise volume by one step
-      default: turn up [the] volume
+      default: "(turn up [the] volume | turn [the] volume up)"
     volume_down_command:
       name: Volume Down Command
       description: The command to use to lower volume by one step
-      default: turn down [the] volume
+      default: "(turn down [the] volume | turn [the] volume down)"
     mute_volume:
       name: Mute Volume Command
       description: The command to use to mute audio
@@ -380,15 +380,19 @@ action:
             id:
               - set_volume
         sequence:
+          - variables:
+              requested_volume: >-
+                {% set level = trigger.slots.level | string | trim %}
+                {% if level.endswith('%') %}
+                {{ (level | replace('%', '') | int(-1))/100 }}
+                {% else %}
+                {{ (level | int(-1))/10 }}
+                {% endif %}
+          - condition: template
+            value_template: "{{ requested_volume | float(-1) >= 0 and requested_volume | float(-1) <= 1 }}"
           - action: media_player.volume_set
             data:
-              volume_level: '{% if trigger.id == "set_volume" %}
-                {% if trigger.slots.level.endswith(''%'') %}
-                {{ (trigger.slots.level |replace(''%'','' '') | int)/100 }}
-                {% else %}
-                {{ (trigger.slots.level | int)/10 }}
-                {% endif %}
-                {% endif %}'
+              volume_level: "{{ requested_volume | float }}"
             target:
               entity_id: "{{ target_mediaplayer_device }}"
           - set_conversation_response: "{{ translations[language]['responses']['volume_set'].replace('{level}', trigger.slots.level) }}"
