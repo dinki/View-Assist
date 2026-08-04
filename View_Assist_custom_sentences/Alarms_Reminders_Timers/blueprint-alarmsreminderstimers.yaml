@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.2)
+    v 1.3.3)
   domain: automation
   input:
     spokenlanguage:
@@ -207,9 +207,20 @@ trigger:
 condition: []
 action:
   - variables:
-      target_satellite_device:
-        "{{ view_assist_entity(trigger.device_id) if trigger.platform
-        == 'conversation' else trigger.event.data.entity_id }}"
+      target_satellite_device: >-
+        {% if trigger.platform == 'conversation' %}
+          {{ view_assist_entity(trigger.device_id) }}
+        {% else %}
+          {% set event_data = trigger.event.data if trigger.event is defined else {} %}
+          {% set service_data = event_data.get('service_data', {}) %}
+          {% if service_data.get('device_id') %}
+            {{ view_assist_entity(service_data.get('device_id')) }}
+          {% elif event_data.get('entity_id') %}
+            {{ event_data.get('entity_id') }}
+          {% else %}
+            {{ '' }}
+          {% endif %}
+        {% endif %}
       target_mediaplayer_device: "{{ state_attr(target_satellite_device, 'mediaplayer_device')}}"
       target_satellite_device_type: "{{ state_attr(target_satellite_device, 'type')}}"
       spokenlanguage: !input spokenlanguage
