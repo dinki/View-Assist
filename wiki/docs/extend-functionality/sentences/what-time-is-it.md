@@ -10,6 +10,7 @@ User asks for the time or the date and receives response and screen switches to 
 
 | Version | Description                  |
 | ------- | ---------------------------- |
+| v 1.0.5 | Add French and Dutch weekdays and months |
 | v 1.0.4 | Complete Italian translation |
 | v 1.0.3 | Add translations             |
 | v 1.0.2 | Add Polish translation       |
