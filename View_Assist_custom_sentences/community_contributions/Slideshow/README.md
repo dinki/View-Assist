@@ -2,6 +2,9 @@
 
 This package provides a clean, full-screen **Slideshow view** for View Assist, complete with interactive tap-to-pause controls, photo details overlay, quick menu button integration, and two reusable Home Assistant blueprints.
 
+> [!NOTE]
+> This view and its companion automations were specifically designed to work seamlessly with the [**Album Slideshow**](https://github.com/eyalgal/album_slideshow) custom integration (available via HACS). However, it is designed with flexibility in mind and can work with any other Home Assistant camera source or slideshow integration.
+
 ---
 
 ## Features
@@ -22,6 +25,14 @@ This package provides a clean, full-screen **Slideshow view** for View Assist, c
 2. `blueprint-sync_album_slideshow_background.yaml`: Automation blueprint for syncing Album Slideshow camera images to View Assist satellite backgrounds.
 3. View definition: `View Assist dashboard and views/views/slideshow/slideshow.yaml`
 4. Dashboard template: `slideshow` button card template in `dashboard.yaml`
+
+---
+
+## Prerequisites
+
+- [View Assist](https://github.com/dinki/View-Assist) integration and dashboard.
+- [Album Slideshow](https://github.com/eyalgal/album_slideshow) (recommended, available via HACS) or any camera entity providing photo streams.
+- Touchscreen or gesture event entity (e.g. from openHASP, ESPHome, or Android touchscreen).
 
 ---
 

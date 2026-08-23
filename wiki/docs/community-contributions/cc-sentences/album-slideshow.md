@@ -8,6 +8,10 @@ This contribution provides two blueprints for integrating album slideshows with 
 1. **Slideshow Gesture Controls**: Configurable single-finger swipe gestures for switching into the Slideshow view, cycling to the next photo, returning to the Home/Clock view, and displaying photo capture metadata badges. Pausing the slideshow activates hold mode to keep the photo displayed until unpaused.
 2. **Sync Album Slideshow Background**: Automatically synchronizes the View Assist satellite's background attribute whenever an Album Slideshow camera changes images.
 
+:::info[Album Slideshow Compatibility]
+These blueprints and the companion Slideshow view were designed to work with the [**Album Slideshow**](https://github.com/eyalgal/album_slideshow) custom integration (available via HACS). However, they are compatible with other Home Assistant camera sources and slideshow integrations.
+:::
+
 ---
 
 ## Blueprints Included
@@ -31,7 +35,7 @@ This contribution provides two blueprints for integrating album slideshows with 
 ## Prerequisites
 
 - [View Assist](https://github.com/dinki/View-Assist) integration and dashboard.
-- [Album Slideshow](https://github.com/dinki/View-Assist) or compatible image stream integration.
+- [Album Slideshow](https://github.com/eyalgal/album_slideshow) (recommended, available via HACS) or compatible image stream integration.
 - Touchscreen / gesture event entity (e.g. from openHASP, ESPHome, or Android touchscreen).
 
 ---

@@ -2,7 +2,11 @@
 title: Slideshow View
 ---
 
-The **Slideshow** view provides a full-screen image display designed for photo stream and album integrations (such as Album Slideshow). It features interactive tap-to-pause/resume controls, an on-demand photo metadata badge, and quick menu bar integration.
+The **Slideshow** view provides a full-screen image display designed for photo stream and album integrations. It features interactive tap-to-pause/resume controls, an on-demand photo metadata badge, and quick menu bar integration.
+
+:::info[Album Slideshow Compatibility]
+This view and its associated automations were specifically designed to pair with the [**Album Slideshow**](https://github.com/eyalgal/album_slideshow) custom integration (available via HACS). However, it is also compatible with other Home Assistant camera source slideshows.
+:::
 
 ---
 
@@ -19,7 +23,7 @@ The **Slideshow** view provides a full-screen image display designed for photo s
 ## Prerequisites
 
 - View Assist integration and dashboard.
-- An album slideshow source (such as the Album Slideshow integration or a camera entity providing image streams).
+- [Album Slideshow](https://github.com/eyalgal/album_slideshow) (recommended, available via HACS) or any camera entity providing image streams.
 
 ---
 
