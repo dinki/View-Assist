@@ -37,7 +37,7 @@ This package provides a clean, full-screen **Slideshow view** for View Assist, c
 
 - [View Assist](https://github.com/dinki/View-Assist) integration and dashboard.
 - [Album Slideshow](https://github.com/eyalgal/album_slideshow) (recommended, available via HACS) or any camera entity providing photo streams.
-- Touchscreen or gesture event entity (e.g. from openHASP, ESPHome, or Android touchscreen).
+- Touchscreen or gesture event entity (e.g. VACA, openHASP, ESPHome, or Android touchscreen).
 
 ---
 

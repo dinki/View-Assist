@@ -42,7 +42,7 @@ These blueprints and the companion Slideshow view were designed to work with the
 
 - [View Assist](https://github.com/dinki/View-Assist) integration and dashboard.
 - [Album Slideshow](https://github.com/eyalgal/album_slideshow) (recommended, available via HACS) or compatible image stream integration.
-- Touchscreen / gesture event entity (e.g. from openHASP, ESPHome, or Android touchscreen).
+- Touchscreen / gesture event entity (e.g. VACA, openHASP, ESPHome, or Android touchscreen).
 
 ---
 
