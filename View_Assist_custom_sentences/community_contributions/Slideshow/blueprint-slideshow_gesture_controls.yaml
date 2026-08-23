@@ -16,7 +16,7 @@ blueprint:
           domain: sensor
     gesture_entity:
       name: Gesture Event Entity
-      description: The event entity reporting swipe gesture events for this device (e.g. VACA gesture event like event.vaca_living_room_gesture, openHASP, ESPHome, or Android touchscreen).
+      description: The event entity reporting swipe gesture events for this device (e.g. VACA, openHASP, ESPHome, or Android touchscreen).
       selector:
         entity:
           domain: event
