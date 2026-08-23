@@ -1,8 +1,11 @@
 type: custom:button-card
 template:
   - variable_template
+  - status_icons_content
   - responsive_base
-  - body_template
+show_state: false
+show_icon: false
+show_name: false
 variables:
   slideshowcardversion: 1.0.0
   var_background: >-
@@ -51,21 +54,30 @@ variables:
         const match = bg.match(/camera\.([a-zA-Z0-9_]+)/);
         const switchEntity = match ? `switch.${match[1]}_pause_slideshow` : "switch.album_slideshow_pause_slideshow";
         if (switchEntity in hass.states) return switchEntity;
+        const keys = Object.keys(hass.states).filter(k => k.startsWith('switch.') && k.endsWith('_pause_slideshow'));
+        if (keys.length > 0) return keys[0];
         return "";
       } catch {
         return "";
       }
     ]]]
 tap_action:
+  action: >-
+    [[[ return variables.var_pause_switch ? "call-service" : "none"; ]]]
+  service: switch.toggle
+  service_data:
+    entity_id: "[[[ return variables.var_pause_switch; ]]]"
+double_tap_action:
+  action: >-
+    [[[ return variables.var_pause_switch ? "call-service" : "none"; ]]]
+  service: switch.turn_off
+  service_data:
+    entity_id: "[[[ return variables.var_pause_switch; ]]]"
+hold_action:
   action: call-service
   service: switch.toggle
   service_data:
-    entity_id: "[[[ return variables.var_pause_switch || variables.var_assistsat_entity; ]]]"
-double_tap_action:
-  action: call-service
-  service: switch.turn_off
-  service_data:
-    entity_id: "[[[ return variables.var_pause_switch || variables.var_assistsat_entity; ]]]"
+    entity_id: "[[[ try { return variables.var_mic_switch; } catch { return ''; } ]]]"
 styles:
   grid:
     - grid-template-areas: |
