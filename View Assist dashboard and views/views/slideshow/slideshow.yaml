@@ -77,19 +77,6 @@ styles:
       - z-index: 2
       - display: >-
           [[[ return variables.var_show_details ? "block" : "none"; ]]]
-    pause_indicator:
-      - position: absolute
-      - top: 2vh
-      - right: 2vw
-      - z-index: 2
-      - display: >-
-          [[[
-            try {
-              return hass.states[variables.var_assistsat_entity]?.attributes?.mode === "hold" ? "block" : "none";
-            } catch {
-              return "none";
-            }
-          ]]]
 custom_fields:
   title: ""
   message: ""
@@ -120,28 +107,3 @@ custom_fields:
           - width: 1.8vw
         grid:
           - grid-template-areas: "\"i n\""
-  pause_indicator:
-    card:
-      type: custom:button-card
-      icon: mdi:pause
-      show_name: false
-      tap_action:
-        action: call-service
-        service: view_assist.set_state
-        service_data:
-          entity_id: "[[[ return variables.var_assistsat_entity; ]]]"
-          mode: normal
-      styles:
-        card:
-          - background-color: rgba(0, 0, 0, 0.5)
-          - backdrop-filter: blur(8px)
-          - (-webkit-backdrop-filter): blur(8px)
-          - border-radius: 50%
-          - width: 3.2rem
-          - height: 3.2rem
-          - padding: 0px
-          - border: 1px solid rgba(255, 255, 255, 0.25)
-        icon:
-          - color: "#ffffff"
-          - width: 1.8rem
-          - height: 1.8rem

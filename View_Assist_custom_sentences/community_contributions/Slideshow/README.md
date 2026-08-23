@@ -1,6 +1,6 @@
 # View Assist Slideshow & Gesture Controls
 
-This package provides a clean, full-screen **Slideshow view** for View Assist, complete with interactive tap-to-pause controls, photo details overlay, quick menu button integration, and two reusable Home Assistant blueprints.
+This package provides a clean, full-screen **Slideshow view** for View Assist, complete with interactive hold/resume controls, photo details overlay, quick menu button integration, and two reusable Home Assistant blueprints.
 
 > [!NOTE]
 > This view and its companion automations were specifically designed to work seamlessly with the [**Album Slideshow**](https://github.com/eyalgal/album_slideshow) custom integration (available via HACS). However, it is designed with flexibility in mind and can work with any other Home Assistant camera source or slideshow integration.
@@ -10,11 +10,10 @@ This package provides a clean, full-screen **Slideshow view** for View Assist, c
 ## Features
 
 - 🖼️ **Fullscreen Photo View**: Displays active slideshow pictures using the satellite's background attribute with no obstructing elements.
-- ⏯️ **Tap-to-Pause / Resume**: Single tap on the screen toggles pause/play on the slideshow.
-- ⏸️ **Discreet Pause Badge**: When paused, a semi-transparent pause icon appears in the top-right corner.
+- 🖐️ **Native Hold / Resume**: Single tap sets `mode: hold` to freeze the current photo indefinitely; double tap or tapping the native Hold icon returns to `mode: normal` to resume cycling.
 - 📅 **Photo Details Overlay**: Swipe up or trigger to reveal a floating frosted-glass badge showing the photo capture date and location for a customizable duration.
 - 👈 **Gesture Controls**: Configurable single-finger swipe gestures for entering the slideshow, advancing to next slide, returning home, and showing photo details.
-- ⏱️ **Default View Timeout & Pause Suspension**: Utilizes View Assist's default view timeout when cycling; pausing the slideshow activates hold mode to keep the photo on screen indefinitely until unpaused.
+- ⏱️ **Default View Timeout & Hold Suspension**: Utilizes View Assist's default view timeout when cycling; holding the view suspends the timeout until released.
 - 🔄 **Background Sync**: Keeps satellite backgrounds in sync with the current image from any Album Slideshow camera.
 
 ---
@@ -24,7 +23,7 @@ This package provides a clean, full-screen **Slideshow view** for View Assist, c
 ### 1. Slideshow Gesture Controls
 [![Import Slideshow Gesture Controls to Home Assistant](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FSlideshow%2Fblueprint-slideshow_gesture_controls.yaml)
 
-- Automation blueprint for configurable swipe gestures and pause-aware view timeout.
+- Automation blueprint for configurable swipe gestures and hold-mode synchronization.
 
 ### 2. Sync Album Slideshow Background
 [![Import Sync Album Slideshow Background to Home Assistant](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FSlideshow%2Fblueprint-sync_album_slideshow_background.yaml)
