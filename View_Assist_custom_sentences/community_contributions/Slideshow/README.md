@@ -19,12 +19,17 @@ This package provides a clean, full-screen **Slideshow view** for View Assist, c
 
 ---
 
-## Files Included
+## Blueprints Included
 
-1. `blueprint-slideshow_gesture_controls.yaml`: Automation blueprint for configurable swipe gestures and pause-aware view timeout.
-2. `blueprint-sync_album_slideshow_background.yaml`: Automation blueprint for syncing Album Slideshow camera images to View Assist satellite backgrounds.
-3. View definition: `View Assist dashboard and views/views/slideshow/slideshow.yaml`
-4. Dashboard template: `slideshow` button card template in `dashboard.yaml`
+### 1. Slideshow Gesture Controls
+[![Import Slideshow Gesture Controls to Home Assistant](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FSlideshow%2Fblueprint-slideshow_gesture_controls.yaml)
+
+- Automation blueprint for configurable swipe gestures and pause-aware view timeout.
+
+### 2. Sync Album Slideshow Background
+[![Import Sync Album Slideshow Background to Home Assistant](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinki%2FView-Assist%2Fmain%2FView_Assist_custom_sentences%2Fcommunity_contributions%2FSlideshow%2Fblueprint-sync_album_slideshow_background.yaml)
+
+- Automation blueprint for syncing Album Slideshow camera images to View Assist satellite backgrounds.
 
 ---
 
@@ -54,5 +59,4 @@ data:
 ```
 
 ### 3. Import Blueprints
-- **Sync Album Slideshow Background**: Import `blueprint-sync_album_slideshow_background.yaml` and select your Album Slideshow camera and target View Assist devices.
-- **Slideshow Gesture Controls**: Import `blueprint-slideshow_gesture_controls.yaml` and select your View Assist satellite sensor, gesture event entity, next slide button, and pause switch.
+Click either of the **Import to Home Assistant** badges above, or import manually from the repository paths.
