@@ -3,7 +3,7 @@ template:
   - variable_template
   - body_template
 variables:
-  clockaltcardversion: 1.0.0
+  clockaltcardversion: 1.1.0
   var_background: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.background} catch {
@@ -37,6 +37,12 @@ custom_fields:
       cards:
         - type: custom:button-card
           name: "[[[ return variables.var_current_time ]]]"
+          tap_action:
+            action: call-service
+            service: view_assist.navigate
+            service_data:
+              device: "[[[ return variables.var_assistsat_entity ]]]"
+              path: "[[[ return `${variables.var_dashboard}/clock` ]]]"
           styles:
             name:
               - font-size: 1000%
