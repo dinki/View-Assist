@@ -11,14 +11,14 @@ This package provides a clean, full-screen **Slideshow view** for View Assist, c
 - ⏸️ **Discreet Pause Badge**: When paused, a semi-transparent pause icon appears in the top-right corner.
 - 📅 **Photo Details Overlay**: Swipe up or trigger to reveal a floating frosted-glass badge showing the photo capture date and location for a customizable duration.
 - 👈 **Gesture Controls**: Configurable single-finger swipe gestures for entering the slideshow, advancing to next slide, returning home, and showing photo details.
-- ⏱️ **Smart Inactivity Timeout**: Automatically returns to the home/clock view after a configured duration when unpaused; pauses indefinitely when paused.
+- ⏱️ **Default View Timeout & Pause Suspension**: Utilizes View Assist's default view timeout when cycling; pausing the slideshow activates hold mode to keep the photo on screen indefinitely until unpaused.
 - 🔄 **Background Sync**: Keeps satellite backgrounds in sync with the current image from any Album Slideshow camera.
 
 ---
 
 ## Files Included
 
-1. `blueprint-slideshow_gesture_controls.yaml`: Automation blueprint for configurable swipe gestures and smart inactivity timeout.
+1. `blueprint-slideshow_gesture_controls.yaml`: Automation blueprint for configurable swipe gestures and pause-aware view timeout.
 2. `blueprint-sync_album_slideshow_background.yaml`: Automation blueprint for syncing Album Slideshow camera images to View Assist satellite backgrounds.
 3. View definition: `View Assist dashboard and views/views/slideshow/slideshow.yaml`
 4. Dashboard template: `slideshow` button card template in `dashboard.yaml`

@@ -2,8 +2,9 @@ blueprint:
   name: View Assist - Slideshow Gesture Controls
   description: >-
     Handles configurable swipe gestures for the View Assist Slideshow view:
-    swiping on Clock/ClockAlt navigates to the Slideshow, swiping on the Slideshow advances photos,
-    returns home, or displays photo details, with optional smart inactivity timeout (View Assist Slideshow Gestures v 1.0.0).
+    swiping on Clock/ClockAlt navigates to the Slideshow using the default view timeout,
+    swiping on the Slideshow advances photos, returns home, or displays photo details.
+    When paused, hold mode is activated to suspend the view timeout until unpaused (View Assist Slideshow Gestures v 1.0.0).
   domain: automation
   input:
     satellite_device:
@@ -27,7 +28,7 @@ blueprint:
           domain: button
     pause_switch:
       name: Pause Slideshow Switch Entity (Optional)
-      description: The switch entity that controls pause state. If provided, pausing the slideshow will suspend the inactivity timeout.
+      description: The switch entity that controls pause state. Pausing the slideshow will activate hold mode to prevent the view timeout from resetting the screen.
       default: ""
       selector:
         entity:
@@ -66,22 +67,6 @@ blueprint:
           max: 60
           step: 1
           unit_of_measurement: "s"
-    inactivity_timeout_enabled:
-      name: Enable Inactivity Timeout
-      description: When enabled, the view will automatically return to Home after a period of inactivity if unpaused.
-      default: true
-      selector:
-        boolean: {}
-    inactivity_timeout_minutes:
-      name: Inactivity Timeout Duration
-      description: Minutes of inactivity before returning to Home screen (when unpaused).
-      default: 5
-      selector:
-        number:
-          min: 1
-          max: 60
-          step: 1
-          unit_of_measurement: "min"
 
 mode: restart
 
@@ -91,15 +76,8 @@ trigger:
     attribute: event_type
     id: gesture
   - platform: state
-    entity_id: !input satellite_device
-    attribute: current_path
-    to: "/view-assist/slideshow"
-    id: enter_slideshow
-  - platform: state
-    entity_id: !input satellite_device
-    attribute: view
-    to: "slideshow"
-    id: enter_slideshow_view
+    entity_id: !input pause_switch
+    id: pause_state_changed
 
 action:
   - variables:
@@ -112,16 +90,14 @@ action:
       g_return_home: !input gesture_return_home
       g_show_details: !input gesture_show_details
       badge_duration: !input details_duration
-      enable_timeout: !input inactivity_timeout_enabled
-      timeout_mins: !input inactivity_timeout_minutes
       current_event: "{{ state_attr(gesture_ent, 'event_type') }}"
       current_p: "{{ state_attr(sat_entity, 'current_path') | default('', true) }}"
       current_v: "{{ state_attr(sat_entity, 'view') | default('', true) }}"
       is_slideshow: "{{ current_p == '/view-assist/slideshow' or current_v == 'slideshow' }}"
       is_clock: "{{ current_p in ['/view-assist/clock', '/view-assist/clockalt', '/view-assist/clock_small'] or current_v in ['clock', 'clockalt', 'clock_small'] }}"
-      is_paused: "{{ sw_pause != '' and is_state(sw_pause, 'on') }}"
 
   - choose:
+      # Gesture: Advance to Next Slide
       - conditions:
           - condition: trigger
             id: gesture
@@ -132,6 +108,7 @@ action:
             target:
               entity_id: !input next_slide_button
 
+      # Gesture: Clock to Slideshow (uses default view timeout)
       - conditions:
           - condition: trigger
             id: gesture
@@ -142,8 +119,8 @@ action:
             data:
               device: !input satellite_device
               path: "/view-assist/slideshow"
-              revert_timeout: 0
 
+      # Gesture: Return Home
       - conditions:
           - condition: trigger
             id: gesture
@@ -155,6 +132,7 @@ action:
               device: !input satellite_device
               path: home
 
+      # Gesture: Show Photo Details Badge
       - conditions:
           - condition: trigger
             id: gesture
@@ -174,21 +152,26 @@ action:
             data:
               show_details: false
 
-  # Smart Inactivity Timeout Handler
-  - if:
-      - condition: template
-        value_template: "{{ enable_timeout and is_slideshow and not is_paused }}"
-    then:
-      - delay:
-          minutes: "{{ timeout_mins }}"
-      - if:
+      # Pause Switch Changed: Sync hold mode with pause state to suspend/resume default timeout
+      - conditions:
+          - condition: trigger
+            id: pause_state_changed
           - condition: template
-            value_template: >-
-              {{ (state_attr(sat_entity, 'current_path') == '/view-assist/slideshow' or
-                  state_attr(sat_entity, 'view') == 'slideshow') and
-                 (sw_pause == '' or not is_state(sw_pause, 'on')) }}
-        then:
-          - action: view_assist.navigate
-            data:
-              device: !input satellite_device
-              path: home
+            value_template: "{{ is_slideshow and sw_pause != '' }}"
+        sequence:
+          - if:
+              - condition: state
+                entity_id: !input pause_switch
+                state: "on"
+            then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: !input satellite_device
+                data:
+                  mode: hold
+            else:
+              - action: view_assist.set_state
+                target:
+                  entity_id: !input satellite_device
+                data:
+                  mode: normal
