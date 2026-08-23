@@ -86,11 +86,62 @@ styles:
         "assist assist"
     - grid-template-rows: min-content 1fr min-content
     - grid-template-columns: 1fr 1fr
+    - row-gap: 0.5rem
   card:
+    - min-height: |-
+        [[[
+          try {
+            const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+            if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+              return 'calc(100vh - var(--header-height))';
+            }
+            return '100vh';
+          } catch {
+            return '100vh';
+          }
+        ]]]
+    - max-height: |-
+        [[[
+          try {
+            const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+            if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+              return 'calc(100vh - var(--header-height))';
+            }
+            return '100vh';
+          } catch {
+            return '100vh';
+          }
+        ]]]
+    - height: |-
+        [[[
+          try {
+            const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
+            if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
+              return 'calc(100vh - var(--header-height))';
+            }
+            return '100vh';
+          } catch {
+            return '100vh';
+          }
+        ]]]
+    - aspect-ratio: |-
+        [[[
+          if (!window.viewAssistResponsive) return "16 / 9";
+
+          return window.viewAssistResponsive.orientation === "portrait" ? "9 / 16" : "16 / 9";
+        ]]]
     - background: >-
         [[[ return `center / cover no-repeat url(${variables.var_background})` ]]]
     - background-size: cover
     - background-color: black
+    - border-radius: 0px
+    - overflow: hidden
+    - color: white
+    - font-family: |-
+        [[[
+          return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
+        ]]]
+    - font-weight: 300
     - position: relative
   custom_fields:
     title:
