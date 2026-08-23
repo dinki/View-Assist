@@ -4,7 +4,7 @@ blueprint:
     Handles configurable swipe gestures for the View Assist Slideshow view:
     swiping on Clock/ClockAlt navigates to the Slideshow using the default view timeout,
     swiping on the Slideshow advances photos, returns home, or displays photo details.
-    When paused, hold mode is activated to suspend the view timeout until unpaused (View Assist Slideshow Gestures v 1.0.0).
+    Standard hold mode (tapping the screen) pauses the slideshow and suspends the view timeout until unheld (View Assist Slideshow Gestures v 1.0.0).
   domain: automation
   input:
     satellite_device:
@@ -28,7 +28,7 @@ blueprint:
           domain: button
     pause_switch:
       name: Pause Slideshow Switch Entity (Optional)
-      description: The switch entity that controls pause state. Pausing the slideshow will activate hold mode to prevent the view timeout from resetting the screen.
+      description: The switch entity that controls pause state on your slideshow camera. Synchronizes with satellite hold mode.
       default: ""
       selector:
         entity:
@@ -76,8 +76,12 @@ trigger:
     attribute: event_type
     id: gesture
   - platform: state
+    entity_id: !input satellite_device
+    attribute: mode
+    id: satellite_mode_changed
+  - platform: state
     entity_id: !input pause_switch
-    id: pause_state_changed
+    id: pause_switch_changed
 
 action:
   - variables:
@@ -152,12 +156,31 @@ action:
             data:
               show_details: false
 
-      # Pause Switch Changed: Sync hold mode with pause state to suspend/resume default timeout
+      # Sync: Satellite Mode -> Pause Switch
       - conditions:
           - condition: trigger
-            id: pause_state_changed
+            id: satellite_mode_changed
           - condition: template
-            value_template: "{{ is_slideshow and sw_pause != '' }}"
+            value_template: "{{ sw_pause != '' and is_slideshow }}"
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ state_attr(sat_entity, 'mode') == 'hold' }}"
+            then:
+              - action: switch.turn_on
+                target:
+                  entity_id: !input pause_switch
+            else:
+              - action: switch.turn_off
+                target:
+                  entity_id: !input pause_switch
+
+      # Sync: Pause Switch -> Satellite Mode
+      - conditions:
+          - condition: trigger
+            id: pause_switch_changed
+          - condition: template
+            value_template: "{{ sw_pause != '' and is_slideshow }}"
         sequence:
           - if:
               - condition: state

@@ -1,11 +1,8 @@
 type: custom:button-card
 template:
   - variable_template
-  - status_icons_content
   - responsive_base
-show_state: false
-show_icon: false
-show_name: false
+  - body_template
 variables:
   slideshowcardversion: 1.0.0
   var_background: >-
@@ -47,37 +44,6 @@ variables:
         return "";
       }
     ]]]
-  var_pause_switch: >-
-    [[[
-      try {
-        const bg = hass.states[variables.var_assistsat_entity]?.attributes?.background || "";
-        const match = bg.match(/camera\.([a-zA-Z0-9_]+)/);
-        const switchEntity = match ? `switch.${match[1]}_pause_slideshow` : "switch.album_slideshow_pause_slideshow";
-        if (switchEntity in hass.states) return switchEntity;
-        const keys = Object.keys(hass.states).filter(k => k.startsWith('switch.') && k.endsWith('_pause_slideshow'));
-        if (keys.length > 0) return keys[0];
-        return "";
-      } catch {
-        return "";
-      }
-    ]]]
-tap_action:
-  action: >-
-    [[[ return variables.var_pause_switch ? "call-service" : "none"; ]]]
-  service: switch.toggle
-  service_data:
-    entity_id: "[[[ return variables.var_pause_switch; ]]]"
-double_tap_action:
-  action: >-
-    [[[ return variables.var_pause_switch ? "call-service" : "none"; ]]]
-  service: switch.turn_off
-  service_data:
-    entity_id: "[[[ return variables.var_pause_switch; ]]]"
-hold_action:
-  action: call-service
-  service: switch.toggle
-  service_data:
-    entity_id: "[[[ try { return variables.var_mic_switch; } catch { return ''; } ]]]"
 styles:
   grid:
     - grid-template-areas: |
@@ -86,62 +52,11 @@ styles:
         "assist assist"
     - grid-template-rows: min-content 1fr min-content
     - grid-template-columns: 1fr 1fr
-    - row-gap: 0.5rem
   card:
-    - min-height: |-
-        [[[
-          try {
-            const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
-            if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
-              return 'calc(100vh - var(--header-height))';
-            }
-            return '100vh';
-          } catch {
-            return '100vh';
-          }
-        ]]]
-    - max-height: |-
-        [[[
-          try {
-            const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
-            if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
-              return 'calc(100vh - var(--header-height))';
-            }
-            return '100vh';
-          } catch {
-            return '100vh';
-          }
-        ]]]
-    - height: |-
-        [[[
-          try {
-            const screenMode = hass.states[variables.var_assistsat_entity]?.attributes?.screen_mode;
-            if (screenMode === 'no_hide' || screenMode === 'hide_sidebar') {
-              return 'calc(100vh - var(--header-height))';
-            }
-            return '100vh';
-          } catch {
-            return '100vh';
-          }
-        ]]]
-    - aspect-ratio: |-
-        [[[
-          if (!window.viewAssistResponsive) return "16 / 9";
-
-          return window.viewAssistResponsive.orientation === "portrait" ? "9 / 16" : "16 / 9";
-        ]]]
     - background: >-
         [[[ return `center / cover no-repeat url(${variables.var_background})` ]]]
     - background-size: cover
     - background-color: black
-    - border-radius: 0px
-    - overflow: hidden
-    - color: white
-    - font-family: |-
-        [[[
-          return `"${variables.var_assistsat_entity_font_style}", sans-serif`;
-        ]]]
-    - font-weight: 300
     - position: relative
   custom_fields:
     title:
@@ -169,10 +84,11 @@ styles:
       - z-index: 2
       - display: >-
           [[[
-            if (variables.var_pause_switch && hass.states[variables.var_pause_switch]) {
-              return hass.states[variables.var_pause_switch].state === "on" ? "block" : "none";
+            try {
+              return hass.states[variables.var_assistsat_entity]?.attributes?.mode === "hold" ? "block" : "none";
+            } catch {
+              return "none";
             }
-            return "none";
           ]]]
 custom_fields:
   title: ""
@@ -211,9 +127,10 @@ custom_fields:
       show_name: false
       tap_action:
         action: call-service
-        service: switch.turn_off
+        service: view_assist.set_state
         service_data:
-          entity_id: "[[[ return variables.var_pause_switch; ]]]"
+          entity_id: "[[[ return variables.var_assistsat_entity; ]]]"
+          mode: normal
       styles:
         card:
           - background-color: rgba(0, 0, 0, 0.5)
