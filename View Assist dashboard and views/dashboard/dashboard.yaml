@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.5.0
+      dashboardversion: 1.5.1
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -104,14 +104,16 @@ button_card_templates:
         [[[
           try
           {
-            return states[variables.var_assistsat_entity].attributes.enable_view_transitions || false;
+            const s = hass?.states?.[variables.var_assistsat_entity] || (typeof states !== 'undefined' ? states?.[variables.var_assistsat_entity] : null);
+            return s?.attributes?.enable_view_transitions || false;
           } catch { return  false}
         ]]]
       var_assistsat_entity_view_transition_time: |
         [[[
           try
           {
-            const t = states[variables.var_assistsat_entity].attributes.view_transition_time;
+            const s = hass?.states?.[variables.var_assistsat_entity] || (typeof states !== 'undefined' ? states?.[variables.var_assistsat_entity] : null);
+            const t = s?.attributes?.view_transition_time;
             return (t !== undefined && t !== null && !isNaN(t)) ? parseFloat(t) : 0.5;
           } catch { return  0.5}
         ]]]
@@ -270,9 +272,11 @@ button_card_templates:
     extra_styles: |-
       [[[
         try {
-          const transitionsEnabled = states[variables.var_assistsat_entity]?.attributes?.enable_view_transitions;
+          const entityId = variables?.var_assistsat_entity || localStorage.getItem("view_assist_sensor");
+          const stateObj = hass?.states?.[entityId] || (typeof states !== 'undefined' ? states?.[entityId] : null);
+          const transitionsEnabled = stateObj?.attributes?.enable_view_transitions ?? variables?.var_assistsat_entity_enable_view_transitions;
           if (transitionsEnabled === true || transitionsEnabled === "true") {
-            const rawTime = states[variables.var_assistsat_entity]?.attributes?.view_transition_time;
+            const rawTime = stateObj?.attributes?.view_transition_time ?? variables?.var_assistsat_entity_view_transition_time;
             const duration = (rawTime !== undefined && rawTime !== null && !isNaN(rawTime)) ? parseFloat(rawTime) : 0.5;
             const fadeOutDuration = Math.round((duration / 2) * 100) / 100;
             return `
@@ -302,7 +306,7 @@ button_card_templates:
             `;
           }
           return "";
-        } catch {
+        } catch (e) {
           return "";
         }
       ]]]
