@@ -15,7 +15,6 @@ This view and its associated automations were specifically designed to pair with
 - **Clean Fullscreen Presentation**: Displays the current image from the View Assist satellite's background attribute with no obstructing elements.
 - **Native Hold / Resume**: Single tap on screen engages `mode: hold` to freeze the view indefinitely; double tap or tapping the native Hold icon returns to `mode: normal`.
 - **Photo Metadata Overlay**: Swiping up (or setting `show_details: true`) shows an elegant frosted-glass overlay with the capture date and location.
-- **Menu Bar Icon**: Includes a dashboard button-card template (`slideshow` / `mdi:image-multiple`) for instant navigation from the quick menu.
 
 ---
 
@@ -28,16 +27,8 @@ This view and its associated automations were specifically designed to pair with
 
 ## Installation
 
-1. Add the view to your View Assist dashboard (path: `slideshow`):
+Add the view to your View Assist dashboard (path: `slideshow`):
    - [Slideshow View Raw Code](https://raw.githubusercontent.com/dinki/View-Assist/main/View%20Assist%20dashboard%20and%20views/views/slideshow/slideshow.yaml)
-2. (Optional) Add the Slideshow icon to your View Assist device menu:
-   ```yaml
-   action: view_assist.add_status_item
-   data:
-     entity_id: sensor.your_view_assist_device
-     status_item: slideshow
-     menu: true
-   ```
 
 ---
 
