@@ -43,6 +43,7 @@ The dashboard options control different aspects of the View Assist display
   - **Menu Items** - List of status icons that are hidden in a toggleable menu
   - **Menu Timeout** - Time in seconds before menu automatically closes (0 to disable timeout)   
 - **Use 24 Hour Time** - Sets clock display to 24 hour time when enabled
+- **Enable View Transitions** - Enables smooth CSS fade transitions between views and UI state changes. Default is disabled (off) for optimal performance on low-power devices.
 - **Show/Hide Header and Side bars** - Show or hide the header and sidebar
 
         

@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.4.0
+      dashboardversion: 1.5.0
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -98,6 +98,13 @@ button_card_templates:
           try
           {
             return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
+          } catch { return  false}
+        ]]]
+      var_assistsat_entity_enable_view_transitions: |
+        [[[
+          try
+          {
+            return states[variables.var_assistsat_entity].attributes.enable_view_transitions || false;
           } catch { return  false}
         ]]]
       var_title: |-
@@ -252,6 +259,42 @@ button_card_templates:
       - variable_template
       - status_icons_content
       - responsive_base
+    extra_styles: |-
+      [[[
+        try {
+          const transitionsEnabled = states[variables.var_assistsat_entity]?.attributes?.enable_view_transitions;
+          if (transitionsEnabled === true || transitionsEnabled === "true") {
+            return `
+              @keyframes vaFadeInUI {
+                0% {
+                  opacity: 0;
+                }
+                100% {
+                  opacity: 1;
+                }
+              }
+              @keyframes vaFadeOutUI {
+                0% {
+                  opacity: 1;
+                }
+                100% {
+                  opacity: 0;
+                }
+              }
+              #container {
+                animation: vaFadeInUI 0.3s ease-out forwards;
+                will-change: opacity;
+              }
+              .va-fade-out #container {
+                animation: vaFadeOutUI 0.15s ease-in forwards !important;
+              }
+            `;
+          }
+          return "";
+        } catch {
+          return "";
+        }
+      ]]]
     show_state: false
     show_icon: false
     show_name: false
