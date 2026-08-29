@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  clockcardversion: 1.5.1
+  clockcardversion: 1.6.0
   var_background: >-
     [[[ try {if (hass.states[variables.var_assistsat_entity] && 
     hass.states[variables.var_assistsat_entity].attributes.mode === "night")
@@ -45,6 +45,7 @@ styles:
     title:
       - display: grid
       - color: "[[[ return variables.var_font_color_night ]]]"
+      - transition: color 0.5s ease-in-out
     time:
       - display: grid
       - justify-self: center
@@ -67,6 +68,7 @@ styles:
       - color: "[[[ return variables.var_font_color ]]]"
       - padding-top: 0
       - margin-top: 0
+      - transition: opacity 0.5s ease-in-out, color 0.5s ease-in-out
     date:
       - display: grid
       - justify-self: center
@@ -82,6 +84,7 @@ styles:
           ]]]
       - width: max-content
       - color: "[[[ return variables.var_font_color_night ]]]"
+      - transition: opacity 0.5s ease-in-out, color 0.5s ease-in-out
     night:
       - position: absolute
       - top: 0
