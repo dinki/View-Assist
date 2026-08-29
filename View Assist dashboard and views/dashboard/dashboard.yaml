@@ -107,6 +107,14 @@ button_card_templates:
             return states[variables.var_assistsat_entity].attributes.enable_view_transitions || false;
           } catch { return  false}
         ]]]
+      var_assistsat_entity_view_transition_time: |
+        [[[
+          try
+          {
+            const t = states[variables.var_assistsat_entity].attributes.view_transition_time;
+            return (t !== undefined && t !== null && !isNaN(t)) ? parseFloat(t) : 0.5;
+          } catch { return  0.5}
+        ]]]
       var_title: |-
         [[[
           try
@@ -264,6 +272,9 @@ button_card_templates:
         try {
           const transitionsEnabled = states[variables.var_assistsat_entity]?.attributes?.enable_view_transitions;
           if (transitionsEnabled === true || transitionsEnabled === "true") {
+            const rawTime = states[variables.var_assistsat_entity]?.attributes?.view_transition_time;
+            const duration = (rawTime !== undefined && rawTime !== null && !isNaN(rawTime)) ? parseFloat(rawTime) : 0.5;
+            const fadeOutDuration = Math.round((duration / 2) * 100) / 100;
             return `
               @keyframes vaFadeInUI {
                 0% {
@@ -282,11 +293,11 @@ button_card_templates:
                 }
               }
               #container {
-                animation: vaFadeInUI 0.3s ease-out forwards;
+                animation: vaFadeInUI ${duration}s ease-out forwards;
                 will-change: opacity;
               }
               .va-fade-out #container {
-                animation: vaFadeOutUI 0.15s ease-in forwards !important;
+                animation: vaFadeOutUI ${fadeOutDuration}s ease-in forwards !important;
               }
             `;
           }
