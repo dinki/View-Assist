@@ -16,4 +16,5 @@ Views are automatically installed courtesy of the View Assist integration
 
 | Version | Description     |
 | ------- | --------------- |
+| v 2.1.1 | Fixes stream cropping |
 | v 1.0.0 | Initial release |
