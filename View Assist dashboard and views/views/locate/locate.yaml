@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  locatecardversion: 1.0.0
+  locatecardversion: 1.0.1
 template:
   - variable_template
   - body_template
