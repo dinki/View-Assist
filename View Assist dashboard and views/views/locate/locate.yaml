@@ -133,13 +133,13 @@ custom_fields:
       show_name: false
       tap_action:
         action: call-service
-        service: python_script.set_state
+        service: view_assist.set_state
         service_data:
           entity_id: '[[[ return variables.var_assistsat_entity ]]]'
           mode: hold
       double_tap_action:
         action: call-service
-        service: python_script.set_state
+        service: view_assist.set_state
         service_data:
           entity_id: '[[[ return variables.var_assistsat_entity ]]]'
           mode: normal
