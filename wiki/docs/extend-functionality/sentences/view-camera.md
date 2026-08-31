@@ -22,6 +22,7 @@ Nothing additional
 
 | Version | Description                |
 | ------- | -------------------------- |
+| v 2.0.4 | Add Dutch translation      |
 | v 2.0.3 | Add Italian translation    |
 | v 2.0.2 | Add translations           |
 | v 2.0.1 | Update title set order     |
