@@ -1,0 +1,200 @@
+blueprint:
+  name: View Assist - Slideshow Gesture Controls
+  description: >-
+    Handles configurable swipe gestures for the View Assist Slideshow view:
+    swiping on Clock/ClockAlt navigates to the Slideshow using the default view timeout,
+    swiping on the Slideshow advances photos, returns home, or displays photo details.
+    Standard hold mode (tapping the screen) pauses the slideshow and suspends the view timeout until unheld (View Assist Slideshow Gestures v 1.0.0).
+  domain: automation
+  input:
+    satellite_device:
+      name: View Assist Satellite Sensor
+      description: The View Assist satellite sensor entity representing this display device.
+      selector:
+        entity:
+          integration: view_assist
+          domain: sensor
+    gesture_entity:
+      name: Gesture Event Entity
+      description: The event entity reporting swipe gesture events for this device (e.g. VACA, openHASP, ESPHome, or Android touchscreen).
+      selector:
+        entity:
+          domain: event
+    next_slide_button:
+      name: Next Slide Button Entity
+      description: The button entity to press to advance to the next slide in your slideshow.
+      selector:
+        entity:
+          domain: button
+    pause_switch:
+      name: Pause Slideshow Switch Entity (Optional)
+      description: The switch entity that controls pause state on your slideshow camera. Synchronizes with satellite hold mode.
+      default: ""
+      selector:
+        entity:
+          domain: switch
+    gesture_clock_to_slideshow:
+      name: Gesture - Clock to Slideshow
+      description: The gesture event string to transition from Clock/ClockAlt into Slideshow.
+      default: "left_1"
+      selector:
+        text: {}
+    gesture_next_slide:
+      name: Gesture - Next Slide
+      description: The gesture event string on Slideshow view to advance to the next photo.
+      default: "left_1"
+      selector:
+        text: {}
+    gesture_return_home:
+      name: Gesture - Return Home
+      description: The gesture event string on Slideshow view to exit and return to the home screen.
+      default: "right_1"
+      selector:
+        text: {}
+    gesture_show_details:
+      name: Gesture - Show Photo Details
+      description: The gesture event string on Slideshow view to temporarily show date and location overlay.
+      default: "up_1"
+      selector:
+        text: {}
+    details_duration:
+      name: Photo Details Display Duration
+      description: How many seconds the photo details overlay stays visible after being triggered.
+      default: 6
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          unit_of_measurement: "s"
+
+mode: restart
+
+trigger:
+  - platform: state
+    entity_id: !input gesture_entity
+    attribute: event_type
+    id: gesture
+  - platform: state
+    entity_id: !input satellite_device
+    attribute: mode
+    id: satellite_mode_changed
+  - platform: state
+    entity_id: !input pause_switch
+    id: pause_switch_changed
+
+action:
+  - variables:
+      sat_entity: !input satellite_device
+      gesture_ent: !input gesture_entity
+      btn_next: !input next_slide_button
+      sw_pause: !input pause_switch
+      g_clock_to_slideshow: !input gesture_clock_to_slideshow
+      g_next_slide: !input gesture_next_slide
+      g_return_home: !input gesture_return_home
+      g_show_details: !input gesture_show_details
+      badge_duration: !input details_duration
+      current_event: "{{ state_attr(gesture_ent, 'event_type') }}"
+      current_p: "{{ state_attr(sat_entity, 'current_path') | default('', true) }}"
+      current_v: "{{ state_attr(sat_entity, 'view') | default('', true) }}"
+      is_slideshow: "{{ current_p == '/view-assist/slideshow' or current_v == 'slideshow' }}"
+      is_clock: "{{ current_p in ['/view-assist/clock', '/view-assist/clockalt', '/view-assist/clock_small'] or current_v in ['clock', 'clockalt', 'clock_small'] }}"
+
+  - choose:
+      # Gesture: Advance to Next Slide
+      - conditions:
+          - condition: trigger
+            id: gesture
+          - condition: template
+            value_template: "{{ is_slideshow and current_event == g_next_slide }}"
+        sequence:
+          - action: button.press
+            target:
+              entity_id: !input next_slide_button
+
+      # Gesture: Clock to Slideshow (uses default view timeout)
+      - conditions:
+          - condition: trigger
+            id: gesture
+          - condition: template
+            value_template: "{{ is_clock and current_event == g_clock_to_slideshow }}"
+        sequence:
+          - action: view_assist.navigate
+            data:
+              device: !input satellite_device
+              path: "/view-assist/slideshow"
+
+      # Gesture: Return Home
+      - conditions:
+          - condition: trigger
+            id: gesture
+          - condition: template
+            value_template: "{{ is_slideshow and current_event == g_return_home }}"
+        sequence:
+          - action: view_assist.navigate
+            data:
+              device: !input satellite_device
+              path: home
+
+      # Gesture: Show Photo Details Badge
+      - conditions:
+          - condition: trigger
+            id: gesture
+          - condition: template
+            value_template: "{{ is_slideshow and current_event == g_show_details }}"
+        sequence:
+          - action: view_assist.set_state
+            target:
+              entity_id: !input satellite_device
+            data:
+              show_details: true
+          - delay:
+              seconds: "{{ badge_duration }}"
+          - action: view_assist.set_state
+            target:
+              entity_id: !input satellite_device
+            data:
+              show_details: false
+
+      # Sync: Satellite Mode -> Pause Switch
+      - conditions:
+          - condition: trigger
+            id: satellite_mode_changed
+          - condition: template
+            value_template: "{{ sw_pause != '' and is_slideshow }}"
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ state_attr(sat_entity, 'mode') == 'hold' }}"
+            then:
+              - action: switch.turn_on
+                target:
+                  entity_id: !input pause_switch
+            else:
+              - action: switch.turn_off
+                target:
+                  entity_id: !input pause_switch
+
+      # Sync: Pause Switch -> Satellite Mode
+      - conditions:
+          - condition: trigger
+            id: pause_switch_changed
+          - condition: template
+            value_template: "{{ sw_pause != '' and is_slideshow }}"
+        sequence:
+          - if:
+              - condition: state
+                entity_id: !input pause_switch
+                state: "on"
+            then:
+              - action: view_assist.set_state
+                target:
+                  entity_id: !input satellite_device
+                data:
+                  mode: hold
+            else:
+              - action: view_assist.set_state
+                target:
+                  entity_id: !input satellite_device
+                data:
+                  mode: normal

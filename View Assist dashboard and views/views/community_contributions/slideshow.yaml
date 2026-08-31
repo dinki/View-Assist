@@ -1,0 +1,109 @@
+type: custom:button-card
+template:
+  - variable_template
+  - responsive_base
+  - body_template
+variables:
+  slideshowcardversion: 1.0.0
+  var_background: >-
+    [[[ try {if (hass.states[variables.var_assistsat_entity] &&
+    hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+    return ""; else return hass.states[variables.var_assistsat_entity] ?
+    hass.states[variables.var_assistsat_entity].attributes.background : ""}
+    catch {return ""}]]]
+  var_show_details: >-
+    [[[ try {return hass.states[variables.var_assistsat_entity].attributes.show_details === true;} catch {return false;} ]]]
+  var_photo_date: >-
+    [[[
+      try {
+        const bg = hass.states[variables.var_assistsat_entity]?.attributes?.background || "";
+        const match = bg.match(/camera\.([a-zA-Z0-9_]+)/);
+        const camEntity = match ? `camera.${match[1]}` : "camera.album_slideshow";
+        const camState = hass.states[camEntity];
+        if (camState && camState.attributes) {
+          const dt = camState.attributes.captured_at_primary || (Array.isArray(camState.attributes.captured_at) ? camState.attributes.captured_at[0] : camState.attributes.captured_at);
+          if (dt) {
+            const d = new Date(dt);
+            return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+          }
+        }
+        return "";
+      } catch {
+        return "";
+      }
+    ]]]
+  var_photo_location: >-
+    [[[
+      try {
+        const bg = hass.states[variables.var_assistsat_entity]?.attributes?.background || "";
+        const match = bg.match(/camera\.([a-zA-Z0-9_]+)/);
+        const camEntity = match ? `camera.${match[1]}` : "camera.album_slideshow";
+        const camState = hass.states[camEntity];
+        return camState?.attributes?.location || "";
+      } catch {
+        return "";
+      }
+    ]]]
+styles:
+  grid:
+    - grid-template-areas: |
+        "title status"
+        "details details"
+        "assist assist"
+    - grid-template-rows: min-content 1fr min-content
+    - grid-template-columns: 1fr 1fr
+  card:
+    - background: >-
+        [[[ return `center / cover no-repeat url(${variables.var_background})` ]]]
+    - background-size: cover
+    - background-color: black
+    - position: relative
+  custom_fields:
+    title:
+      - display: none
+    status:
+      - position: absolute
+      - justify-self: end
+      - align-self: end
+      - justify-content: right
+      - top: 0vh
+      - right: 0vw
+      - z-index: 2
+    details:
+      - position: absolute
+      - bottom: 3vh
+      - justify-self: center
+      - align-self: end
+      - z-index: 2
+      - display: >-
+          [[[ return variables.var_show_details ? "block" : "none"; ]]]
+custom_fields:
+  title: ""
+  message: ""
+  details:
+    card:
+      type: custom:button-card
+      show_name: true
+      show_icon: true
+      icon: mdi:calendar-blank-outline
+      name: >-
+        [[[ return variables.var_photo_location ? `${variables.var_photo_date} • ${variables.var_photo_location}` : variables.var_photo_date; ]]]
+      styles:
+        card:
+          - background-color: rgba(0, 0, 0, 0.65)
+          - backdrop-filter: blur(12px)
+          - (-webkit-backdrop-filter): blur(12px)
+          - border-radius: 24px
+          - padding: 8px 20px
+          - border: 1px solid rgba(255, 255, 255, 0.2)
+          - box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37)
+        name:
+          - font-size: 1.8vw
+          - font-weight: 500
+          - color: "#ffffff"
+          - padding-left: 8px
+        icon:
+          - color: "#ffffff"
+          - width: 1.8vw
+        grid:
+          - grid-template-areas: "\"i n\""

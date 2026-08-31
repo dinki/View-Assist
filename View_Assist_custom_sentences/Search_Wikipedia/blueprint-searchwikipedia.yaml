@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Search Wikipedia
-  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.4)
+  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.5)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, pl, pt]
+          languages: [ca, de, en, es, it, pl, pt]
     command:
       name: Command
       description: The phrase you want to use to trigger searching Wikipedia
@@ -50,6 +50,10 @@ action:
           responses:
             view_title: "Búsqueda en Wikipedia"
             search_error: "Lo siento, no he podido encontrar nada en Wikipedia para eso"
+        it:
+          responses:
+            view_title: "Ricerca su Wikipedia"
+            search_error: "Mi dispiace, non ho trovato niente su Wikipedia"
         pl:
           responses:
             view_title: "Wyszukiwanie Wikipedia"

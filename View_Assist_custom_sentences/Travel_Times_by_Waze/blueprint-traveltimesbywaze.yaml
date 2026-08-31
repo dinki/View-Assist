@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Travel Times by Waze
-  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.3)
+  description: Get travel time estimates from Waze  (View Assist traveltimesbywaze v 1.0.4)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, pl, pt]
+          languages: [ca, de, en, es, it, pl, pt]
     travelfromhome:
       name: Travel from home
       description: The phrase used to get directions from home
@@ -114,6 +114,13 @@ action:
             hoursandminutes: "{hours} horas y {minutes} minutos"
             minutesonly: "{minutes} minutos"
             viewtitle: "Tiempo de viaje"
+        it:
+          responses:
+            travelfromhome: "Ci vorranno circa {time} per arrivare a {destination}"
+            travelfromatob: "Ci vorranno circa {time} per andare da {origin} a {destination}"
+            hoursandminutes: "{hours} ore e {minutes} minuti"
+            minutesonly: "{minutes} minuti"
+            viewtitle: "Tempo di viaggio"
         pl:
           responses:
             travelfromhome: "Dojazd do {destination} zajmie około {time}"

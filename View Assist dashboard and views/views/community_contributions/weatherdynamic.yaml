@@ -1,160 +1,459 @@
-type: custom:button-card
-variables:
-  background: |
-    [[[ 
-      const weather = states['yourweatherentitiesdaily'].state;
-      const backgrounds = {
-        "clear-night": "/local/viewassist/backgrounds/weather/clear-night.jpg",
-        "cloudy": "/local/viewassist/backgrounds/weather/cloudy.jpg",
-        "fog": "/local/viewassist/backgrounds/weather/fog.jpg",
-        "hail": "/local/viewassist/backgrounds/weather/hail.jpg",
-        "lightning": "/local/viewassist/backgrounds/weather/lightning.jpg",
-        "lightning-rainy": "/local/viewassist/backgrounds/weather/lightning-rainy.jpg",
-        "partlycloudy": "/local/viewassist/backgrounds/weather/partly-cloudy.jpg",
-        "pouring": "/local/viewassist/backgrounds/weather/heavy-rain.jpg",
-        "rainy": "/local/viewassist/backgrounds/weather/rain.jpg",
-        "snowy": "/local/viewassist/backgrounds/weather/snow.jpg",
-        "snowy-rainy": "/local/viewassist/backgrounds/weather/snow-rain.jpg",
-        "sunny": "/local/viewassist/backgrounds/weather/sunny.jpg",
-        "windy": "/local/viewassist/backgrounds/weather/windy.jpg",
-        "windy-variant": "/local/viewassist/backgrounds/weather/windy-variant.jpg",
-        "exceptional": "/local/viewassist/backgrounds/weather/extreme.jpg"
-      };
-      return backgrounds[weather] || "/local/viewassist/backgrounds/weather/default.jpg";
-    ]]]
-  var_forecast_entity: yourweatherentitie daily
-  var_forecast_type: daily
-  weathercardversion: 1.0.3
-template:
-  - variable_template
-  - body_template
-styles:
-  grid:
-    - grid-template-areas: |
-        "title status"  
-        "message message"
-        "assist assist"        
-    - grid-template-rows: min-content max-content min-content
-    - grid-template-columns: 1fr 1fr
-  card:
-    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
-    - border-width: 0px
-    - border-radius: 0px
-  custom_fields:
-    message:
-      - position: relative
-      - height: 100vdh
-      - text-align: start
-      - text-wrap: wrap
-      - justify-content: center
-      - align-self: center
-      - padding: "-10%"
-custom_fields:
-  title:
-    card:
-      type: custom:button-card
-      icon: mdi:weather-windy
-      name: >
-        [[[ return
-        `${states['your.sensor.weather.windspeed']?.state ||
-        'N/A'} Bft`; ]]]
-      tap_action:
-        action: navigate
-        navigation_path: clock
-      hold_action:
-        action: navigate
-        navigation_path: whatyouwant
-      styles:
-        card:
-          - background-color: transparent
-          - border-width: 0px
+type: panel
+title: Weather
+path: weather
+
+cards:
+  - type: custom:button-card
+
+    variables:
+      ### Change `weather.forecast_home` to match your forecast entity.
+      background: |
+        [[[
+          const condition = states['weather.forecast_home']?.state;
+
+          const backgrounds = {
+            "clear-night": "/local/viewassist/backgrounds/weather/clear-night.jpg",
+            "cloudy": "/local/viewassist/backgrounds/weather/cloudy.jpg",
+            "fog": "/local/viewassist/backgrounds/weather/fog.jpg",
+            "hail": "/local/viewassist/backgrounds/weather/hail.jpg",
+            "lightning": "/local/viewassist/backgrounds/weather/lightning.jpg",
+            "lightning-rainy": "/local/viewassist/backgrounds/weather/lightning-rainy.jpg",
+            "partlycloudy": "/local/viewassist/backgrounds/weather/partly-cloudy.jpg",
+            "pouring": "/local/viewassist/backgrounds/weather/heavy-rain.jpg",
+            "rainy": "/local/viewassist/backgrounds/weather/rain.jpg",
+            "snowy": "/local/viewassist/backgrounds/weather/snow.jpg",
+            "snowy-rainy": "/local/viewassist/backgrounds/weather/snow-rain.jpg",
+            "sunny": "/local/viewassist/backgrounds/weather/sunny.jpg",
+            "windy": "/local/viewassist/backgrounds/weather/windy.jpg",
+            "windy-variant": "/local/viewassist/backgrounds/weather/windy-variant.jpg",
+            "exceptional": "/local/viewassist/backgrounds/weather/extreme.jpg"
+          };
+
+          return backgrounds[condition] ||
+            "/local/viewassist/backgrounds/weather/default.jpg";
+        ]]]
+
+      ### Change `weather.forecast_home` to match your forecast entity.
+      var_forecast_entity: weather.forecast_home
+
+      ### Choose either `daily` or `hourly`, depending on what your weather
+      ### integration supports. Leave only one line uncommented.
+      var_forecast_type: daily
+      # var_forecast_type: hourly
+
+      ### This version matches upstream to prevent the View Assist repair task
+      ### from flagging it. Future upstream updates may overwrite this
+      ### customised YAML.
+      weathercardversion: 1.1.1
+
+    template:
+      - variable_template
+      - body_template
+
+    styles:
+      card:
+        - background: >-
+            [[[ return `center / cover no-repeat
+            url("${variables.background}")`; ]]]
+        - border-width: 0
+        - border-radius: 0
+        - padding: 2vh 2vw
+        - box-sizing: border-box
+        - overflow: hidden
+
+      grid:
+        - grid-template-areas: |
+            "title status"
+            "message message"
+            "assist assist"
+        - grid-template-rows: min-content minmax(0, 1fr) min-content
+        - grid-template-columns: minmax(0, 1fr) min-content
+        - row-gap: 1.5vh
+        - column-gap: 1vw
+        - height: 100%
+
+      custom_fields:
+        title:
+          - position: relative !important
+          - top: auto !important
+          - right: auto !important
+          - bottom: auto !important
+          - left: auto !important
+          - align-self: start
+          - justify-self: start
+          - width: max-content
+          - margin-top: 0 !important
+          - margin-left: 0 !important
+          - margin-right: 0
+          - margin-bottom: 0
+          - padding: 0
+          - font-size: initial
+          - z-index: 2
+
+        message:
+          - position: relative
+          - display: block
+          - align-self: stretch
+          - justify-self: stretch
+          - justify-content: flex-start !important
+          - align-items: stretch !important
           - width: 100%
-          - padding: 0px
-          - color: black
-          - text-shadow: 1px 1px white
-        grid:
-          - grid-template-areas: "\"i n\""
-          - grid-template-columns: min-content min-content
-        name:
-          - font-size: 6vh
-          - color: white
-          - text-shadow: 2px 2px black
-        icon:
-          - width: 12vh
-          - color: white
-  card: ""
-  message:
-    card:
-      type: weather-forecast
-      entity: "[[[ return variables.var_forecast_entity ]]]"
-      forecast_type: "[[[ return variables.var_forecast_type ]]]"
-      card_mod:
-        style:
-          .: |
-            ha-card { background:  transparent}
-            ha-card.type-weather-forecast {
-              justify-content: start !important;
-            }
-            ha-card.type-weather-forecast>div.content {
-              div {
-                padding-right: 10px;
+          - height: 100%
+          - min-width: 0
+          - min-height: 0
+          - margin: 0
+          - padding: 0
+          - overflow: hidden
+
+    custom_fields:
+      title:
+        card:
+          type: custom:button-card
+          icon: mdi:weather-windy
+
+          ### Change `weather.forecast_home` to match your forecast entity.
+          ### If you have a separate wind-speed entity, adapt the template
+          ### below to use it instead.
+          name: |
+            [[[
+              const weather = states['weather.forecast_home'];
+              const speed = weather?.attributes?.wind_speed;
+              const unit = weather?.attributes?.wind_speed_unit || '';
+
+              if (speed === undefined || speed === null) {
+                return 'N/A';
               }
-            }
-            ha-card.type-weather-forecast>div.content {
-              display: flex;​
-            }
-          ha-card.type-weather-forecast>div.content: |
-            svg {
-              width: 15vw !important;
-              height: 15vh !important;
-              flex: unset !important;
-              text-shadow: 1px 1px white
-            }
-          ha-card.type-weather-forecast>div.forecast: |
-            div {
-              padding-top: 2vh;
-              font-size: 6vh;
-              color: #0f0f0f;
-              text-shadow: 1px 1px white
-              justify-content: space-evenly !important;
-            }
-          ha-card.type-weather-forecast>div.content>div.info:
-            .: |
-              div.name-state {
-                display: flex;
-                flex-direction: column;
-                text-shadow: 1px 1px white
-              }
-            div.name-state:
+
+              return `${speed} ${unit}`.trim();
+            ]]]
+
+          tap_action:
+            action: navigate
+            navigation_path: clock
+
+          styles:
+            card:
+              - background: rgba(0, 0, 0, 0.50)
+              - border-width: 0
+              - border-radius: 1.5vh
+              - box-shadow: none
+              - width: max-content
+              - margin: 0
+              - padding: 1vh 1.4vw
+              - box-sizing: border-box
+
+            grid:
+              - grid-template-areas: '"i n"'
+              - grid-template-columns: min-content min-content
+              - column-gap: 0.9vw
+              - align-items: center
+
+            name:
+              - color: white
+              - font-size: 5vh
+              - font-weight: 600
+              - line-height: 1
+              - white-space: nowrap
+              - text-shadow: 1px 1px 3px black
+
+            icon:
+              - width: 7vh
+              - height: 7vh
+              - color: white
+              - filter: drop-shadow(1px 1px 3px black)
+
+      card: ""
+
+      message:
+        card:
+          type: weather-forecast
+          entity: "[[[ return variables.var_forecast_entity; ]]]"
+          forecast_type: "[[[ return variables.var_forecast_type; ]]]"
+
+          ### Keep this at 5 to preserve the equal five-column layout in
+          ### both daily and hourly modes.
+          forecast_slots: 5
+
+          card_mod:
+            style:
               .: |
-                div.state {
-                  font-size: 10vh !important;
-                  color: #0f0f0f
-                  text-shadow: 1px 1px white
-                   }
-                div.name {
-                  display: none;
-                  max-height: 0px !important;
-                  text-shadow: 1px 1px white
+                ha-card,
+                ha-card.type-weather-forecast {
+                  display: block !important;
+
+                  width: 100%;
+                  height: 100%;
+                  min-height: 0;
+                  margin: 0;
+                  padding: 1vh 1.4vw;
+                  box-sizing: border-box;
+                  overflow: hidden;
+
+                  background: rgba(0, 0, 0, 0.50);
+                  border: 0;
+                  border-radius: 1.5vh;
+                  box-shadow: none;
+                  color: white;
                 }
-            div.temp-attribute: |
-              .temp {
-                font-size: 8vh !important;
-                padding-bottom: 0px;
-                text-shadow: 1px 1px white
-              }
-              .attribute {
-                font-size: 5vh !important;
-                color:  #0f0f0f !important;
-                text-shadow: 1px 1px white
-              }  
-              .temp span {
-                font-size: 7vh !important;
-                margin-left: -1vh;
-              }
-              .templow {
-                padding-top: 0px;
-                color: #0f0f0f !important;
-                text-shadow: 1px 1px white
-                text-align: right;
-              }
+
+                ha-card > div.content,
+                ha-card.type-weather-forecast > div.content {
+                  display: flex !important;
+                  flex-wrap: nowrap !important;
+                  align-items: center !important;
+                  justify-content: flex-start !important;
+
+                  width: 100%;
+                  height: auto !important;
+                  min-height: 0 !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  box-sizing: border-box;
+                }
+
+                ha-card > div.content > div.info,
+                ha-card.type-weather-forecast > div.content > div.info {
+                  display: flex !important;
+                  flex-direction: row !important;
+                  align-items: center !important;
+                  justify-content: space-between !important;
+
+                  flex: 1 1 auto !important;
+                  width: 100% !important;
+                  min-width: 0 !important;
+
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  text-align: left !important;
+                }
+
+                ha-card > div.content > div.info > div.name-state,
+                ha-card.type-weather-forecast > div.content > div.info >
+                div.name-state {
+                  flex: 1 1 auto !important;
+                  min-width: 0 !important;
+                }
+
+                ha-card > div.content > div.info > div.temp-attribute,
+                ha-card.type-weather-forecast > div.content > div.info >
+                div.temp-attribute {
+                  display: flex !important;
+                  flex-direction: column !important;
+                  align-items: flex-end !important;
+                  justify-content: center !important;
+
+                  flex: 0 0 auto !important;
+                  margin: 0 0 0 auto !important;
+                  margin-inline-start: auto !important;
+                  margin-inline-end: 0 !important;
+                  padding: 0 !important;
+
+                  text-align: right !important;
+                }
+
+                /*
+                 * Use the same five equal-width columns for daily and hourly
+                 * forecasts. Home Assistant wraps tall hourly forecasts inside
+                 * forecast-day and forecast-day-content elements, so those
+                 * wrappers are flattened with display: contents.
+                 */
+                ha-card > div.forecast,
+                ha-card.type-weather-forecast > div.forecast {
+                  display: grid !important;
+                  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+                  align-items: start !important;
+                  justify-content: stretch !important;
+                  column-gap: 0 !important;
+
+                  width: 100%;
+                  max-width: 100% !important;
+                  height: auto !important;
+                  min-height: 0 !important;
+                  margin: 0 !important;
+                  padding: 1.5vh 0 0 !important;
+                  box-sizing: border-box;
+
+                  overflow: hidden !important;
+                  mask-image: none !important;
+                  -webkit-mask-image: none !important;
+                }
+
+                ha-card > div.forecast > div.forecast-day,
+                ha-card.type-weather-forecast >
+                div.forecast > div.forecast-day,
+                ha-card > div.forecast div.forecast-day-content,
+                ha-card.type-weather-forecast >
+                div.forecast div.forecast-day-content {
+                  display: contents !important;
+                }
+
+                ha-card > div.forecast div.forecast-item,
+                ha-card.type-weather-forecast >
+                div.forecast div.forecast-item {
+                  flex: none !important;
+                  width: 100% !important;
+                  min-width: 0 !important;
+                  max-width: none !important;
+                  margin: 0 !important;
+                  padding: 0.8vh 0.5vw 0 !important;
+                  box-sizing: border-box;
+                }
+
+              ha-card.type-weather-forecast > div.content: |
+                svg {
+                  width: 9vh !important;
+                  height: 9vh !important;
+                  flex: none !important;
+                  margin: 0 !important;
+                  filter: drop-shadow(1px 1px 3px black);
+                }
+
+              ha-card.type-weather-forecast > div.forecast: |
+                :host {
+                  display: grid !important;
+                  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  overflow: hidden !important;
+                  mask-image: none !important;
+                  -webkit-mask-image: none !important;
+                }
+
+                .forecast-day,
+                .forecast-day-content {
+                  display: contents !important;
+                }
+
+                .forecast-item {
+                  flex: none !important;
+                  width: 100% !important;
+                  min-width: 0 !important;
+                  max-width: none !important;
+                  margin: 0 !important;
+                  padding: 0.8vh 0.5vw 0 !important;
+                  box-sizing: border-box;
+
+                  font-size: 3.6vh;
+                  line-height: 1.15;
+                  color: rgba(255, 255, 255, 0.96) !important;
+                  text-shadow: 1px 1px 3px black;
+                  opacity: 1 !important;
+                }
+
+                .forecast-item * {
+                  color: rgba(255, 255, 255, 0.96) !important;
+                  opacity: 1 !important;
+                  text-shadow: 1px 1px 3px black;
+                }
+
+              ha-card.type-weather-forecast > div.content > div.info:
+                .: |
+                  div.name-state {
+                    display: flex !important;
+                    flex-direction: column;
+                    align-items: flex-start !important;
+                    justify-content: center !important;
+
+                    flex: 1 1 auto !important;
+                    min-width: 0 !important;
+
+                    margin: 0 !important;
+                    padding: 0 1.5vw 0 0 !important;
+                    text-align: left !important;
+                    color: white;
+                  }
+
+                  div.temp-attribute {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: flex-end !important;
+                    justify-content: center !important;
+
+                    flex: 0 0 auto !important;
+                    margin: 0 0 0 auto !important;
+                    padding: 0 !important;
+
+                    text-align: right !important;
+                  }
+
+                div.name-state:
+                  .: |
+                    div.state {
+                      margin: 0 !important;
+                      padding: 0 !important;
+                      font-size: 6vh !important;
+                      line-height: 1 !important;
+                      text-align: left !important;
+                      color: white !important;
+                      opacity: 1 !important;
+                      text-shadow: 1px 1px 3px black;
+                    }
+
+                    div.name {
+                      margin: 0 !important;
+                      padding: 0 !important;
+                      color: rgba(255, 255, 255, 0.94) !important;
+                      opacity: 1 !important;
+                      text-align: left !important;
+                      text-shadow: 1px 1px 3px black;
+                    }
+
+                div.temp-attribute: |
+                  :host {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: flex-end !important;
+                    justify-content: center !important;
+
+                    margin-left: auto !important;
+                    margin-inline-start: auto !important;
+                    margin-inline-end: 0 !important;
+                    padding: 0 !important;
+
+                    text-align: right !important;
+                    opacity: 1 !important;
+                  }
+
+                  .temp {
+                    width: 100% !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+
+                    font-size: 6vh !important;
+                    line-height: 1 !important;
+                    color: white !important;
+                    opacity: 1 !important;
+                    text-align: right !important;
+                    white-space: nowrap;
+                    text-shadow: 1px 1px 3px black;
+                  }
+
+                  .attribute {
+                    width: 100% !important;
+                    margin: 0.6vh 0 0 !important;
+                    padding: 0 !important;
+
+                    font-size: 3.2vh !important;
+                    line-height: 1.1 !important;
+                    color: rgba(255, 255, 255, 0.96) !important;
+                    opacity: 1 !important;
+                    text-align: right !important;
+                    white-space: nowrap;
+                    text-shadow: 1px 1px 3px black;
+                  }
+
+                  .temp span {
+                    margin-left: -0.4vh;
+                    font-size: 5vh !important;
+                    color: white !important;
+                    opacity: 1 !important;
+                  }
+
+                  .templow {
+                    width: 100% !important;
+                    padding-top: 0 !important;
+                    color: rgba(255, 255, 255, 0.94) !important;
+                    opacity: 1 !important;
+                    text-align: right !important;
+                    text-shadow: 1px 1px 3px black;
+                  }

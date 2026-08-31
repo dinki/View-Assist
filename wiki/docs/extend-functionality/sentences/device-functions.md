@@ -21,51 +21,73 @@ This blueprint will contain device specific functions. Current functions include
 
 - en: `(what did you say  | [please] say that again [please] | [please] repeat that [please])`
 - de: `(Was hast du gesagt  | [Bitte] sag das noch einmal [bitte] | [Bitte] wiederhole das [bitte])`
+- it: `(cosa hai detto | puoi ripetere | ripeti [per favore])`
 
 ### Mode Command
 
 - en: `(set mode [to] {mode} | turn on {mode} mode | set [to] {mode} mode)`
 - de: `(setze den Modus [auf] {mode} | schalte {mode} Modus ein | setze [auf] {mode} Modus)`
+- it: `(metti | attiva | imposta) [la] modalità {mode}`
 
 ### View Command
 
 - en: `(set view [to] {view} | change [to] {view} view | set [to] {view} view)`
 - de: `(setze [die] Ansicht [auf] {view} | wechsle [zu] {view} Ansicht | setze [auf] {view} Ansicht | Zeige [der|die|das] {view})`
+- it: `(vai alla vista {view} | mostra [la vista] {view} | metti la vista {view})`
 
 ### Do Not Disturb Command
 
 - en: `(set do not disturb [mode] [to] off | turn off do not disturb [mode] | end do not disturb [mode] | cancel do not disturb [mode])`
 - de: `(setze den Nicht stören [Modus] [auf] aus | schalte den Nicht stören [Modus] aus | beende den Nicht stören [Modus] | abbreche den Nicht stören [Modus])`
+- it: `(togli | disattiva | spegni) [la modalità] non disturbare`
 
 ### Set Volume Command
 
-- en: `[set | turn] [the] volume [to] {level}`
-- de: `[Setze | Schalte] [die] Lautstärke [auf] {level}`
+- en: `[set | turn] [the] volume to {level}`
+- de: `[Setze | Schalte] [die] Lautstärke auf {level}`
+- it: `[metti | imposta] [il] volume (a | al) {level}`
 
-### Adjust Volume Command
+The word before `{level}` (`to`, `auf`, `a | al`) is required on purpose: `{level}` is a
+wildcard, so making it optional lets this command swallow the step phrases below and
+capture a direction word as the volume level.
 
-- en: `turn {up_down} [the] volume`
-- de: `Schalte [die] Lautstärke {up_down}`
+### Volume Up Command
+
+- en: `(turn up [the] volume | turn [the] volume up)`
+- de: `Schalte [die] Lautstärke lauter`
+- it: `(alza | aumenta) il volume`
+
+### Volume Down Command
+
+- en: `(turn down [the] volume | turn [the] volume down)`
+- de: `Schalte [die] Lautstärke leiser`
+- it: `(abbassa | diminuisci) il volume`
 
 ### Mute Volume Command
 
 - en: `mute [the] [volume]`
 - de: `Schalte [die] Lautstärke stumm`
+- it: `(metti muto | muto | zitto | silenzio)`
 
 ### Unmute Volume Command
 
 - en: `unmute [the] [volume]`
 - de: `Schalte [die] Lautstärke [wieder] an`
+- it: `(togli il muto | riattiva l'audio | rimetti l'audio)`
 
 ### Stop Music Command
 
 - en: `stop [the] music`
 - de: `Stoppe [die] Musik`
+- it: `((ferma | stoppa | spegni) la musica | basta musica)`
 
 ## Changelog
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.5.1 | Stop Set Volume from swallowing "turn the volume up/down"; ignore non-numeric levels instead of aborting the run |
+| v 1.5.0 | Split Adjust Volume into Volume Up/Down commands so translated phrases work; fix missing German response strings |
+| v 1.4.7 | Add Italian translation                                                                  |
 | v 1.4.6 | Added translations                                                                       |
 | v 1.4.5 | Add Serbian translations                                                                 |
 | v 1.4.4 | Explicitly set path for setting view                                                     |

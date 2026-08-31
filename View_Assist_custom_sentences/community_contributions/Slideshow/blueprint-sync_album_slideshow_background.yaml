@@ -1,0 +1,33 @@
+blueprint:
+  name: View Assist - Sync Album Slideshow to View Assist Background
+  description: >-
+    Automatically updates the background attribute of one or more View Assist satellites with the active image
+    from an Album Slideshow camera entity whenever the image changes (View Assist Album Slideshow Background Sync v 1.0.0).
+  domain: automation
+  input:
+    slideshow_camera:
+      name: Album Slideshow Camera Entity
+      description: The Album Slideshow camera entity that provides the photo stream.
+      selector:
+        entity:
+          domain: camera
+    target_satellites:
+      name: View Assist Satellite Devices
+      description: One or more View Assist satellite sensors whose background attributes should be synchronized.
+      selector:
+        target:
+          entity:
+            integration: view_assist
+            domain: sensor
+
+mode: restart
+
+trigger:
+  - platform: state
+    entity_id: !input slideshow_camera
+
+action:
+  - action: view_assist.set_state
+    target: !input target_satellites
+    data:
+      background: "{{ state_attr(trigger.entity_id, 'entity_picture') }}"

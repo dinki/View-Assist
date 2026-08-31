@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.3)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.5)
   domain: automation
   input:
     language:
@@ -163,17 +163,80 @@ action:
           responses:
             time: "Il est {time}"
             day_of_week: "Aujourd'hui, c'est {day_of_week}"
-            date: "Aujourd'hui, c'est {date}"
+            date: "Aujourd'hui, c'est {day_of_week} {day_of_month} {month} {year}"
+          weekdays:
+            mon: lundi
+            tue: mardi
+            wed: mercredi
+            thu: jeudi
+            fri: vendredi
+            sat: samedi
+            sun: dimanche
+          months:
+            jan: janvier
+            feb: février
+            mar: mars
+            apr: avril
+            may: mai
+            jun: juin
+            jul: juillet
+            aug: août
+            sep: septembre
+            oct: octobre
+            nov: novembre
+            dec: décembre
         it:
           responses:
             time: "Sono le {time}"
             day_of_week: "Oggi è {day_of_week}"
-            date: "Oggi è {date}"
+            date: "Oggi è {day_of_week} {day_of_month} {month} {year}"
+          weekdays:
+            mon: Lunedì
+            tue: Martedì
+            wed: Mercoledì
+            thu: Giovedì
+            fri: Venerdì
+            sat: Sabato
+            sun: Domenica
+          months:
+            jan: Gennaio
+            feb: Febbraio
+            mar: Marzo
+            apr: Aprile
+            may: Maggio
+            jun: Giugno
+            jul: Luglio
+            aug: Agosto
+            sep: Settembre
+            oct: Ottobre
+            nov: Novembre
+            dec: Dicembre
         nl:
           responses:
             time: "Het is {time}"
             day_of_week: "Vandaag is {day_of_week}"
-            date: "Vandaag is {date}"
+            date: "Vandaag is {day_of_week} {day_of_month} {month} {year}"
+          weekdays:
+            mon: maandag
+            tue: dinsdag
+            wed: woensdag
+            thu: donderdag
+            fri: vrijdag
+            sat: zaterdag
+            sun: zondag
+          months:
+            jan: januari
+            feb: februari
+            mar: maart
+            apr: april
+            may: mei
+            jun: juni
+            jul: juli
+            aug: augustus
+            sep: september
+            oct: oktober
+            nov: november
+            dec: december
         pl:
           responses:
             time: "Jest {time}"

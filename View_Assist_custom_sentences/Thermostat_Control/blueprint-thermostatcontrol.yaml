@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Thermostat Control
-  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.5)
+  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.6)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, nl, pl, pt]
+          languages: [ca, de, en, es, it, nl, pl, pt]
     increasetemperature:
       name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
@@ -90,6 +90,13 @@ action:
             tstat_set: "La temperatura del termostato se ha establecido en {amount} grados"
             tstat_show: "Mostrando el termostato"
             tstat_display_error: "Lo siento. Este dispositivo no puede mostrar el termostato"
+        it:
+          responses:
+            tstat_raise: "Ho alzato la temperatura del termostato di {amount} gradi"
+            tstat_lower: "Ho abbassato la temperatura del termostato di {amount} gradi"
+            tstat_set: "Ho impostato il termostato a {amount} gradi"
+            tstat_show: "Mostro il termostato"
+            tstat_display_error: "Mi dispiace, questo dispositivo non può mostrare il termostato"
         nl:
           responses:
             tstat_raise: "Thermostaat temperatuur verhoogd met {amount} graad"
