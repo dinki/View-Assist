@@ -18,4 +18,5 @@ This blueprint allows you to measurements from one unit to another using Wolfram
 
 | Version | Description     |
 | ------- | --------------- |
+| v 1.0.1 | Add Dutch translation |
 | v 1.0.0 | Initial release |
