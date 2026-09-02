@@ -43,7 +43,11 @@ custom_fields:
       card_mod:
         style:
           .: |
-            ha-card { background: #059bf9}
+            ha-card {
+              background: transparent !important;
+              border: none !important;
+              box-shadow: none !important;
+            }
             ha-card.type-weather-forecast {
               justify-content: start !important;
             }
@@ -53,7 +57,7 @@ custom_fields:
               }
             }
             ha-card.type-weather-forecast>div.content {
-              display: flex;​
+              display: flex;
             }
           ha-card.type-weather-forecast>div.content: |
             svg {
