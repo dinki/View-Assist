@@ -21,6 +21,7 @@ Control your thermostat device using voice. User can say 'Raise temperature 2 de
 
 | Version | Description              |
 | ------- | ------------------------ |
+| v 1.1.7 | Harden temperature validation and Italian responses |
 | v 1.1.6 | Add Italian translation  |
 | v 1.1.5 | Add translations         |
 | v 1.1.4 | Misc improvements        |

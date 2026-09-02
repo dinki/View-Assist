@@ -92,6 +92,7 @@ trigger_phrases:
 
 | Version | Description                                                                                   |
 | ------- | --------------------------------------------------------------------------------------------- |
+| v 1.4.5 | Add Dutch translation                                                                         |
 | v 1.4.4 | Add more languages                                                                            |
 | v 1.4.3 | Add Polish translation                                                                        |
 | v 1.4.2 | Fix issue with college sports conference_id type (Team Tracker v0.14.13 or greater required ) |

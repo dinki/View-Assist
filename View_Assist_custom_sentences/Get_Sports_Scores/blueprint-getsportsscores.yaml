@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Get Sports Scores
-  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.4.4)
+  description: Get sports scores for your favorite teams (View Assist getsportsscores v 1.4.5)
   domain: automation
   input:
     language:
@@ -16,6 +16,7 @@ blueprint:
             - es
             - fr
             - it
+            - nl
             - pl
             - pt
           no_sort: false
@@ -349,6 +350,19 @@ action:
               {team}.
             outcome_win: a gagné
             outcome_lose: a perdu
+        nl:
+          responses:
+            is_singular_true_post: "{team_name} speelde tegen {opponent_name} en"
+            is_singular_false_post: De {team_name} speelde tegen {opponent_name} en
+            is_singular_true_pre: "{team_name} speelt tegen {opponent_name} {kickoff_in}"
+            is_singular_false_pre: De {team_name} speelde tegen {opponent_name} {kickoff_in}
+            is_singular_true_in: "{team_name} speelt momenteel tegen {opponent_name}."
+            is_singular_false_in: De {team_name} speelt momenteel tegen {opponent_name}.
+            is_singular_true_not_found: "{team} speelt niet vandaag"
+            is_singular_false_not_found: The {team} speelt niet vandaag
+            error: Sorry. Ik kon geen recente of komende data vinden voor {team}
+            outcome_win: gewonnen
+            outcome_lose: verloren             
         pl:
           responses:
             is_singular_true_post: "{team_name} grał z {opponent_name} i"

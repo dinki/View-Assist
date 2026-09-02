@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Conversions
-  description: Convert from one unit of measurement to another (View Assist Community Contributions - Conversions v 1.0.0)
+  description: Convert from one unit of measurement to another (View Assist Community Contributions - Conversions v 1.0.1)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, pl, pt]
+          languages: [de, en, nl, pl, pt]
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
@@ -57,6 +57,12 @@ action:
             title: "Umrechnung"
             request_label: "Anfrage"
             answer_label: "Antwort"
+        nl:
+          responses:
+            result: "{response} is gelijk aan {source}."
+            title: "Conversie"
+            request_label: "Vraag"
+            answer_label: "Antwoord"             
         pl:
           responses:
             result: "{response} jest równowartością {source}."
