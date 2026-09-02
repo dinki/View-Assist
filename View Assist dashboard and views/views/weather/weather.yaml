@@ -7,7 +7,8 @@ variables:
       return `${weather_entity}`
     ]]]    
   var_forecast_type: daily
-  weathercardversion: 1.1.0
+  weathercardversion: 1.1.1
+  var_custom_background: true
 template:
   - variable_template
   - body_template

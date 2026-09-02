@@ -3,7 +3,8 @@ template:
   - variable_template
   - body_template
 variables:
-  clockaltcardversion: 1.1.0
+  clockaltcardversion: 1.1.1
+  var_custom_background: false
   var_background: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.background} catch {

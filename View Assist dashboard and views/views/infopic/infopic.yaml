@@ -1,7 +1,8 @@
 type: custom:button-card
 variables:
   background: /view_assist/dashboard/infobackground.png
-  infopiccardversion: 1.0.0
+  infopiccardversion: 1.0.1
+  var_custom_background: true
 template:
   - variable_template
   - body_template
