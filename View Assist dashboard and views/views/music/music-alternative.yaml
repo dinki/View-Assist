@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  musiccardalternativeversion: 1.2.0
+  musiccardalternativeversion: 1.2.1
+  var_custom_background: true
   var_musicplayer_device: |-
     [[[
       var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;

@@ -3,7 +3,8 @@ template:
   - variable_template
   - body_template
 variables:
-  clockaltcardversion: 1.1.0
+  clockaltcardversion: 1.1.1
+  var_custom_background: false
   var_enable_movement: true
   var_stop_position:
     top: 50%

@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  alertcardversion: 1.0.0
+  alertcardversion: 1.0.1
+  var_custom_background: true
   var_icon: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.alert_data['icon']}

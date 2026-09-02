@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  calendarcardversion: 1.0.0
+  calendarcardversion: 1.0.1
+  var_custom_background: false
   var_list: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.calendar_list} catch

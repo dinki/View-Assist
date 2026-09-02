@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.5.1
+      dashboardversion: 1.6.0
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -117,6 +117,7 @@ button_card_templates:
             return (t !== undefined && t !== null && !isNaN(t)) ? parseFloat(t) : 0.5;
           } catch { return  0.5}
         ]]]
+      var_custom_background: false
       var_title: |-
         [[[
           try
@@ -279,31 +280,70 @@ button_card_templates:
             const rawTime = stateObj?.attributes?.view_transition_time ?? variables?.var_assistsat_entity_view_transition_time;
             const duration = (rawTime !== undefined && rawTime !== null && !isNaN(rawTime)) ? parseFloat(rawTime) : 0.5;
             const fadeOutDuration = Math.round((duration / 2) * 100) / 100;
-            return `
-              @keyframes vaFadeInUI {
-                0% {
-                  opacity: 0;
+
+            const isCustomBackground = Boolean(
+              variables?.var_custom_background === true ||
+              (variables?.background && variables.background !== stateObj?.attributes?.background)
+            );
+
+            const prevWasCustom = window.viewAssistPrevWasCustom ?? false;
+            window.viewAssistPrevWasCustom = isCustomBackground;
+
+            const fadeFromBlack = isCustomBackground || prevWasCustom;
+
+            if (fadeFromBlack) {
+              return `
+                @keyframes vaFadeInCard {
+                  0% {
+                    opacity: 0;
+                  }
+                  100% {
+                    opacity: 1;
+                  }
                 }
-                100% {
-                  opacity: 1;
+                @keyframes vaFadeOutCard {
+                  0% {
+                    opacity: 1;
+                  }
+                  100% {
+                    opacity: 0;
+                  }
                 }
-              }
-              @keyframes vaFadeOutUI {
-                0% {
-                  opacity: 1;
+                #card {
+                  animation: vaFadeInCard ${duration}s ease-out forwards;
+                  will-change: opacity;
                 }
-                100% {
-                  opacity: 0;
+                .va-fade-out #card {
+                  animation: vaFadeOutCard ${fadeOutDuration}s ease-in forwards !important;
                 }
-              }
-              #container {
-                animation: vaFadeInUI ${duration}s ease-out forwards;
-                will-change: opacity;
-              }
-              .va-fade-out #container {
-                animation: vaFadeOutUI ${fadeOutDuration}s ease-in forwards !important;
-              }
-            `;
+              `;
+            } else {
+              return `
+                @keyframes vaFadeInUI {
+                  0% {
+                    opacity: 0;
+                  }
+                  100% {
+                    opacity: 1;
+                  }
+                }
+                @keyframes vaFadeOutUI {
+                  0% {
+                    opacity: 1;
+                  }
+                  100% {
+                    opacity: 0;
+                  }
+                }
+                #container {
+                  animation: vaFadeInUI ${duration}s ease-out forwards;
+                  will-change: opacity;
+                }
+                .va-fade-out #container {
+                  animation: vaFadeOutUI ${fadeOutDuration}s ease-in forwards !important;
+                }
+              `;
+            }
           }
           return "";
         } catch (e) {
