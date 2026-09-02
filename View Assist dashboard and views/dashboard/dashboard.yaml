@@ -278,8 +278,9 @@ button_card_templates:
           const transitionsEnabled = stateObj?.attributes?.enable_view_transitions ?? variables?.var_assistsat_entity_enable_view_transitions;
           if (transitionsEnabled === true || transitionsEnabled === "true") {
             const rawTime = stateObj?.attributes?.view_transition_time ?? variables?.var_assistsat_entity_view_transition_time;
-            const duration = (rawTime !== undefined && rawTime !== null && !isNaN(rawTime)) ? parseFloat(rawTime) : 0.5;
-            const fadeOutDuration = Math.round((duration / 2) * 100) / 100;
+            const totalDuration = (rawTime !== undefined && rawTime !== null && !isNaN(rawTime)) ? parseFloat(rawTime) : 0.5;
+            const fadeInDuration = Math.round((totalDuration / 2) * 100) / 100;
+            const fadeOutDuration = Math.round((totalDuration / 2) * 100) / 100;
 
             const isCustomBackground = Boolean(
               variables?.var_custom_background === true ||
@@ -310,7 +311,7 @@ button_card_templates:
                   }
                 }
                 #card {
-                  animation: vaFadeInCard ${duration}s ease-out forwards;
+                  animation: vaFadeInCard ${fadeInDuration}s ease-out forwards;
                   will-change: opacity;
                 }
                 :host(.va-fade-out) #card, #card.va-fade-out, .va-fade-out #card {
@@ -336,7 +337,7 @@ button_card_templates:
                   }
                 }
                 #container {
-                  animation: vaFadeInUI ${duration}s ease-out forwards;
+                  animation: vaFadeInUI ${fadeInDuration}s ease-out forwards;
                   will-change: opacity;
                 }
                 :host(.va-fade-out) #container, #container.va-fade-out, .va-fade-out #container {
