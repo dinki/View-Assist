@@ -287,8 +287,10 @@ button_card_templates:
               (variables?.background && variables.background !== stateObj?.attributes?.background)
             );
 
-            const prevWasCustom = window.viewAssistPrevWasCustom ?? false;
-            window.viewAssistPrevWasCustom = isCustomBackground;
+            let prevWasCustom = false;
+            try {
+              prevWasCustom = window.viewAssistPrevWasCustom === true || sessionStorage.getItem("va_prev_was_custom") === "true";
+            } catch (e) {}
 
             const fadeFromBlack = isCustomBackground || prevWasCustom;
 
