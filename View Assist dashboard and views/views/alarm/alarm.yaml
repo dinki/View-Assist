@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  alarmcardversion: 1.1.0
+  alarmcardversion: 1.1.1
+  var_custom_background: false
   var_background: >-
     [[[ try {if (variables.var_assistsat_entity &&
     hass.states[variables.var_assistsat_entity].attributes.mode === "night")

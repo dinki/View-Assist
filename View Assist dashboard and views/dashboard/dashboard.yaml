@@ -1,7 +1,7 @@
 button_card_templates:
   variable_template:
     variables:
-      dashboardversion: 1.4.0
+      dashboardversion: 1.6.0
       var_assistsat_entity: |-
         [[[
           return localStorage.getItem("view_assist_sensor")
@@ -100,6 +100,24 @@ button_card_templates:
             return states[variables.var_assistsat_entity].attributes.use_24_hour_time;
           } catch { return  false}
         ]]]
+      var_assistsat_entity_enable_view_transitions: |
+        [[[
+          try
+          {
+            const s = hass?.states?.[variables.var_assistsat_entity] || (typeof states !== 'undefined' ? states?.[variables.var_assistsat_entity] : null);
+            return s?.attributes?.enable_view_transitions || false;
+          } catch { return  false}
+        ]]]
+      var_assistsat_entity_view_transition_time: |
+        [[[
+          try
+          {
+            const s = hass?.states?.[variables.var_assistsat_entity] || (typeof states !== 'undefined' ? states?.[variables.var_assistsat_entity] : null);
+            const t = s?.attributes?.view_transition_time;
+            return (t !== undefined && t !== null && !isNaN(t)) ? parseFloat(t) : 0.5;
+          } catch { return  0.5}
+        ]]]
+      var_custom_background: false
       var_title: |-
         [[[
           try
@@ -252,6 +270,100 @@ button_card_templates:
       - variable_template
       - status_icons_content
       - responsive_base
+    extra_styles: |-
+      [[[
+        try {
+          const entityId = variables?.var_assistsat_entity || localStorage.getItem("view_assist_sensor");
+          const stateObj = hass?.states?.[entityId] || (typeof states !== 'undefined' ? states?.[entityId] : null);
+          const transitionsEnabled = stateObj?.attributes?.enable_view_transitions ?? variables?.var_assistsat_entity_enable_view_transitions;
+          if (transitionsEnabled === true || transitionsEnabled === "true") {
+            const rawTime = stateObj?.attributes?.view_transition_time ?? variables?.var_assistsat_entity_view_transition_time;
+            const totalDuration = (rawTime !== undefined && rawTime !== null && !isNaN(rawTime)) ? parseFloat(rawTime) : 0.5;
+            const fadeInDuration = Math.round((totalDuration / 2) * 100) / 100;
+            const fadeOutDuration = Math.round((totalDuration / 2) * 100) / 100;
+
+            const isCustomBackground = Boolean(
+              variables?.var_custom_background === true ||
+              (variables?.background && variables.background !== stateObj?.attributes?.background)
+            );
+
+            let prevWasCustom = false;
+            try {
+              prevWasCustom = window.viewAssistPrevWasCustom === true || sessionStorage.getItem("va_prev_was_custom") === "true";
+            } catch (e) {}
+
+            const fadeFromBlack = isCustomBackground || prevWasCustom;
+
+            if (fadeFromBlack) {
+              return `
+                @keyframes vaFadeInCard {
+                  0% {
+                    opacity: 0;
+                  }
+                  100% {
+                    opacity: 1;
+                  }
+                }
+                @keyframes vaFadeOutCard {
+                  0% {
+                    opacity: 1;
+                  }
+                  100% {
+                    opacity: 0;
+                  }
+                }
+                #card {
+                  animation: vaFadeInCard ${fadeInDuration}s ease-out forwards;
+                  will-change: opacity;
+                }
+                :host(.va-fade-out) #card, #card.va-fade-out, :host(.va-fade-out-card) #card, #card.va-fade-out-card {
+                  animation: vaFadeOutCard ${fadeOutDuration}s ease-in forwards !important;
+                }
+              `;
+            } else {
+              return `
+                @keyframes vaFadeInUI {
+                  0% {
+                    opacity: 0;
+                  }
+                  100% {
+                    opacity: 1;
+                  }
+                }
+                @keyframes vaFadeOutUI {
+                  0% {
+                    opacity: 1;
+                  }
+                  100% {
+                    opacity: 0;
+                  }
+                }
+                @keyframes vaFadeOutCard {
+                  0% {
+                    opacity: 1;
+                  }
+                  100% {
+                    opacity: 0;
+                  }
+                }
+                #container {
+                  animation: vaFadeInUI ${fadeInDuration}s ease-out forwards;
+                  will-change: opacity;
+                }
+                :host(.va-fade-out-ui) #container, #container.va-fade-out-ui {
+                  animation: vaFadeOutUI ${fadeOutDuration}s ease-in forwards !important;
+                }
+                :host(.va-fade-out) #card, #card.va-fade-out, :host(.va-fade-out-card) #card, #card.va-fade-out-card {
+                  animation: vaFadeOutCard ${fadeOutDuration}s ease-in forwards !important;
+                }
+              `;
+            }
+          }
+          return "";
+        } catch (e) {
+          return "";
+        }
+      ]]]
     show_state: false
     show_icon: false
     show_name: false

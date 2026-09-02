@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  thermostatcardversion: 1.0.2
+  thermostatcardversion: 1.0.3
+  var_custom_background: true
   var_climate_device: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.climate} catch {

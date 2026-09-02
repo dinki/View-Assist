@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  listcardversion: 1.0.2
+  listcardversion: 1.0.3
+  var_custom_background: true
   var_list: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.list} catch {

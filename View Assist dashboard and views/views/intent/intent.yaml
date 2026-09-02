@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  intentcardversion: 1.0.1
+  intentcardversion: 1.0.2
+  var_custom_background: true
 template:
   - variable_template
   - body_template
