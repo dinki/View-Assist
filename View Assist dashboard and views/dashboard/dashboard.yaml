@@ -314,7 +314,7 @@ button_card_templates:
                   animation: vaFadeInCard ${fadeInDuration}s ease-out forwards;
                   will-change: opacity;
                 }
-                :host(.va-fade-out) #card, #card.va-fade-out {
+                :host(.va-fade-out) #card, #card.va-fade-out, :host(.va-fade-out-card) #card, #card.va-fade-out-card {
                   animation: vaFadeOutCard ${fadeOutDuration}s ease-in forwards !important;
                 }
               `;
@@ -336,12 +336,23 @@ button_card_templates:
                     opacity: 0;
                   }
                 }
+                @keyframes vaFadeOutCard {
+                  0% {
+                    opacity: 1;
+                  }
+                  100% {
+                    opacity: 0;
+                  }
+                }
                 #container {
                   animation: vaFadeInUI ${fadeInDuration}s ease-out forwards;
                   will-change: opacity;
                 }
-                :host(.va-fade-out) #container, #container.va-fade-out {
+                :host(.va-fade-out-ui) #container, #container.va-fade-out-ui {
                   animation: vaFadeOutUI ${fadeOutDuration}s ease-in forwards !important;
+                }
+                :host(.va-fade-out) #card, #card.va-fade-out, :host(.va-fade-out-card) #card, #card.va-fade-out-card {
+                  animation: vaFadeOutCard ${fadeOutDuration}s ease-in forwards !important;
                 }
               `;
             }
