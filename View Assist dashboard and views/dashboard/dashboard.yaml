@@ -314,7 +314,7 @@ button_card_templates:
                   animation: vaFadeInCard ${fadeInDuration}s ease-out forwards;
                   will-change: opacity;
                 }
-                :host(.va-fade-out) #card, #card.va-fade-out, .va-fade-out #card {
+                :host(.va-fade-out) #card, #card.va-fade-out {
                   animation: vaFadeOutCard ${fadeOutDuration}s ease-in forwards !important;
                 }
               `;
@@ -340,7 +340,7 @@ button_card_templates:
                   animation: vaFadeInUI ${fadeInDuration}s ease-out forwards;
                   will-change: opacity;
                 }
-                :host(.va-fade-out) #container, #container.va-fade-out, .va-fade-out #container {
+                :host(.va-fade-out) #container, #container.va-fade-out {
                   animation: vaFadeOutUI ${fadeOutDuration}s ease-in forwards !important;
                 }
               `;
