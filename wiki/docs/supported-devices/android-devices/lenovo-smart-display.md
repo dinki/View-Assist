@@ -3,6 +3,8 @@ title: Lenovo Smart Display
 sidebar_position: 2
 ---
 
+ ⚠️ **Warning:** We have become aware that a problem exists updating WebView as described in the linked guide.  An alternative method for updating will need to be found for this device to work with View Assist ⚠️
+
 There are three Lenovo Smart Displays, all of which are ~similar to the Lenovo Thinksmart View.
 - The Lenovo Smart Display 7" (CD-17302F);
 - The Lenovo Smart Display 8" (SD-8501F); and
