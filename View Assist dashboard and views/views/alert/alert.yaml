@@ -4,7 +4,7 @@ variables:
   var_icon: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.alert_data['icon']}
-    catch { return  "mdi:cancel"}]]]  
+    catch { return  "mdi:cancel"}]]]
   var_header: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.alert_data['header']}
@@ -16,20 +16,23 @@ variables:
   var_line2: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.alert_data['line2']}
-    catch { return  "Check your settings"}]]]        
+    catch { return  "Check your settings"}]]]
+  var_background: >-
+    [[[ try {return hass.states[variables.var_assistsat_entity].attributes.alert_data['background'] || "#059bf1"}
+    catch { return "#059bf1"}]]]
 template:
   - variable_template
   - body_template
 styles:
   grid:
     - grid-template-areas: |
-        "title status"  
+        "title status"
         "alert alert"
-        "assist assist"       
+        "assist assist"
     - grid-template-columns: 1.5fr 1.5fr
     - grid-template-rows: min-content max-content
   card:
-    - background-color: "#059bf1"
+    - background-color: "[[[ return variables.var_background ]]]"
     - background-size: cover
   custom_fields:
     title:
@@ -62,7 +65,7 @@ custom_fields:
       styles:
         grid:
           - grid-template-areas: |
-              "icon header" 
+              "icon header"
               "icon line1"
               "icon line2"
           - grid-template-columns: .5fr 1fr
@@ -72,7 +75,7 @@ custom_fields:
           - align-items: center
           - padding: 2%
           - border-radius: 1vw
-          - background-color: "#059bf1"
+          - background-color: "[[[ return variables.var_background ]]]"
           - background-size: cover
           - border: none
         custom_fields:
