@@ -21,7 +21,7 @@ Unlock and install custom recovery Echo Show 5 Gen 2:
 https://xdaforums.com/t/unlock-root-twrp-unbrick-amazon-echo-show-5-2nd-gen-2021-cronos.4772596/
 
 Install Android ROM Echo Show 5 Gen 2:
-https://xdaforums.com/t/rom-unofficial-11-checkers-lineageos-18-1-for-the-amazon-echo-show-5-2019.4763475/
+https://xdaforums.com/t/rom-unofficial-11-cronos-lineageos-18-1-for-the-amazon-echo-show-5-2021.4772598/
 
 Install ADB for Windows:
 https://www.xda-developers.com/install-adb-windows-macos-linux/
