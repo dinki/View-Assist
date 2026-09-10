@@ -14,6 +14,7 @@ Allows user to ask for the spelling of a word or phrase and Assist will spell th
 
 | Version | Description                     |
 | ------- | ------------------------------- |
+| v 1.0.5 | Add Dutch translation           |
 | v 1.0.4 | Add translations and slow spell |
 | v 1.0.3 | Add Polish translation          |
 | v 1.0.2 | Add German translation          |

@@ -112,6 +112,8 @@ command_show2: >-
 
 | Version | Description                                                                               |
 | ------- | ----------------------------------------------------------------------------------------- |
+| v 1.3.7 | Add Dutch translation                                                                     |
+| v 1.3.6 | Misc updates                                                                              |
 | v 1.3.5 | Add more translations                                                                     |
 | v 1.3.4 | Add Italian translation                                                                   |
 | v 1.3.3 | Add Polish translation                                                                    |

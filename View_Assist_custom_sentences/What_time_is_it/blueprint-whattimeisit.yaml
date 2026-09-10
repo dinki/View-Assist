@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - What time is it
-  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.5)
+  description: Ask Assist for time, date and day of the week and receive response (View Assist whattimeisit v 1.0.6)
   domain: automation
   input:
     language:
@@ -217,26 +217,26 @@ action:
             day_of_week: "Vandaag is {day_of_week}"
             date: "Vandaag is {day_of_week} {day_of_month} {month} {year}"
           weekdays:
-            mon: maandag
-            tue: dinsdag
-            wed: woensdag
-            thu: donderdag
-            fri: vrijdag
-            sat: zaterdag
-            sun: zondag
+            mon: Maandag
+            tue: Dinsdag
+            wed: Woensdag
+            thu: Donderdag
+            fri: Vrijdag
+            sat: Zaterdag
+            sun: Zondag
           months:
-            jan: januari
-            feb: februari
-            mar: maart
-            apr: april
-            may: mei
-            jun: juni
-            jul: juli
-            aug: augustus
-            sep: september
-            oct: oktober
-            nov: november
-            dec: december
+            jan: Januari
+            feb: Februari
+            mar: Maart
+            apr: April
+            may: Mei
+            jun: Juni
+            jul: Juli
+            aug: Augustus
+            sep: September
+            oct: October
+            nov: November
+            dec: December 
         pl:
           responses:
             time: "Jest {time}"

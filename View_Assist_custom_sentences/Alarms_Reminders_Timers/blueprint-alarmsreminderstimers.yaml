@@ -2,7 +2,7 @@ blueprint:
   name: View Assist - Alarms Reminders Timers
   description:
     Ask Assist to set an alarm, reminder, or timer  (View Assist alarmsreminderstimers
-    v 1.3.2)
+    v 1.3.3)
   domain: automation
   input:
     spokenlanguage:
@@ -18,6 +18,7 @@ blueprint:
             - es
             - fr
             - it
+            - nl
             - pt
             - sr
             - sr-Latn
@@ -295,6 +296,17 @@ action:
             named_timer_not_found: "Non ho trovato quel timer"
             timer_not_found: "Non ho trovato {timer_info}"
             time_left: "Restano {time_left} sul tuo {timer_info}"
+        nl:
+          responses:
+            no_active_timers: "Er zijn geen actieve timers."
+            one_active_timer: "Er is één actieve timer:"
+            multiple_active_timers: "Er zijn {count} actieve timers:"
+            final_timer: "en {timer_expiry_speak}"
+            no_display: "Dit device heeft geen scherm om timers op weer te geven"
+            timer_cancel: "Je {timer_info} is verwijderd"
+            named_timer_not_found: "Die timer is niet gevonden"
+            timer_not_found: "De {timer_info} kon niet gevonden worden"
+            time_left: "Er is nog {time_left} over op {timer_info}"            
         pt:
           responses:
             no_active_timers: "Não existem timers ativos."
