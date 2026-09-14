@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
-  advancedcameracardversion: 1.1.1
+  advancedcameracardversion: 1.1.2
+  var_custom_background: false
   var_url_params: |-
     [[[
       let queryString = '';

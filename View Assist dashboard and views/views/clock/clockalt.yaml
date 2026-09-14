@@ -3,7 +3,8 @@ template:
   - variable_template
   - body_template
 variables:
-  clockaltcardversion: 1.0.0
+  clockaltcardversion: 1.1.1
+  var_custom_background: false
   var_background: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.background} catch {
@@ -29,6 +30,7 @@ styles:
       - width: max-content
       - position: absolute
       - top: 65%
+      - transition: opacity 0.5s ease-in-out
 custom_fields:
   title: ""
   clock:
@@ -41,6 +43,15 @@ custom_fields:
             name:
               - font-size: 1000%
               - text-shadow: 2px 2px black
+              - color: >-
+                  [[[ try { if (hass.states[variables.var_assistsat_entity] &&
+                  hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+                  return "red"; else return "white"; } catch { return "white"; } ]]]
+              - opacity: >-
+                  [[[ try { if (hass.states[variables.var_assistsat_entity] &&
+                  hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+                  return "35%"; else return "100%"; } catch { return "100%"; } ]]]
+              - transition: opacity 0.5s ease-in-out, color 0.5s ease-in-out
             card:
               - background-color: transparent
               - border-width: 0px
@@ -63,6 +74,16 @@ custom_fields:
             name:
               - font-size: 400%
               - text-shadow: 2px 2px black
+              - color: >-
+                  [[[ try { if (hass.states[variables.var_assistsat_entity] &&
+                  hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+                  return "transparent"; else return "white"; } catch { return "white"; } ]]]
+              - transition: color 0.5s ease-in-out
             icon:
               - width: 80%
               - filter: drop-shadow(2px 2px black)
+              - color: >-
+                  [[[ try { if (hass.states[variables.var_assistsat_entity] &&
+                  hass.states[variables.var_assistsat_entity].attributes.mode === "night")
+                  return "transparent"; else return "white"; } catch { return "white"; } ]]]
+              - transition: color 0.5s ease-in-out

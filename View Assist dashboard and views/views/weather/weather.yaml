@@ -7,7 +7,8 @@ variables:
       return `${weather_entity}`
     ]]]    
   var_forecast_type: daily
-  weathercardversion: 1.1.0
+  weathercardversion: 1.1.1
+  var_custom_background: true
 template:
   - variable_template
   - body_template
@@ -42,7 +43,11 @@ custom_fields:
       card_mod:
         style:
           .: |
-            ha-card { background: #059bf9}
+            ha-card {
+              background: transparent !important;
+              border: none !important;
+              box-shadow: none !important;
+            }
             ha-card.type-weather-forecast {
               justify-content: start !important;
             }
@@ -52,7 +57,7 @@ custom_fields:
               }
             }
             ha-card.type-weather-forecast>div.content {
-              display: flex;​
+              display: flex;
             }
           ha-card.type-weather-forecast>div.content: |
             svg {
