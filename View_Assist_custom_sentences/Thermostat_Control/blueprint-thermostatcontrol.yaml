@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pl, pt]
+          languages: [ca, de, en, es, it, nl, pl, pt, sv]
     increasetemperature:
       name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
@@ -165,6 +165,17 @@ action:
             tstat_off: "O termostato está desligado."
             tstat_mode_error: "O ajuste de temperatura não está disponível."
             tstat_range_error: "A temperatura solicitada não é permitida."
+        sv:
+          responses:
+            tstat_raise: "Temperaturen höjdes {amount} grad"
+            tstat_lower: "Temperaturen sänktes {amount} grad"
+            tstat_set: "Temperaturen sattes till {amount} grader"
+            tstat_show: "Visar termostaten"
+            tstat_display_error: "Förlåt. Den här enheten kan inte visa termostaten"
+            tstat_amount_error: "Förlåt. Jag förstod inte temperaturvärdet."
+            tstat_off: "Termostaten är avstängd."
+            tstat_mode_error: "Temperaturjustering är inte tillgänglig."
+            tstat_range_error: "Den begärda temperaturen är inte tillåten."
       amount_number: >-
         {% set raw = trigger.slots.amount | default('') | string | lower | trim -%}
         {% set amount_words = translations[language].get('amount_words', {}) -%}
