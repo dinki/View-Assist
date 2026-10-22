@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Thermostat Control
-  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.7)
+  description: Control thermostat temperature  (View Assist thermostatcontrol v 1.1.8)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pl, pt]
+          languages: [ca, de, en, es, it, nl, pl, pt, uk]
     increasetemperature:
       name: Increase Temperature
       description: The phrase used to increase the current thermostat temperature set point
@@ -165,6 +165,34 @@ action:
             tstat_off: "O termostato está desligado."
             tstat_mode_error: "O ajuste de temperatura não está disponível."
             tstat_range_error: "A temperatura solicitada não é permitida."
+        uk:
+          amount_words:
+            один: 1
+            одна: 1
+            одну: 1
+            два: 2
+            дві: 2
+            три: 3
+            чотири: 4
+            "п'ять": 5
+            шість: 6
+            сім: 7
+            вісім: 8
+            "дев'ять": 9
+            десять: 10
+          degree_words:
+            singular: градус
+            plural: градуси
+          responses:
+            tstat_raise: "Температуру термостата підвищено на {amount} {degree}"
+            tstat_lower: "Температуру термостата знижено на {amount} {degree}"
+            tstat_set: "Температуру термостата встановлено на {amount} градусів"
+            tstat_show: "Показую термостат"
+            tstat_display_error: "Вибачте, цей пристрій не може відобразити термостат."
+            tstat_amount_error: "Вибачте, не вдалося розпізнати значення температури."
+            tstat_off: "Термостат вимкнено."
+            tstat_mode_error: "Регулювання температури недоступне в поточному режимі."
+            tstat_range_error: "Вказана температура виходить за допустимі межі."
       amount_number: >-
         {% set raw = trigger.slots.amount | default('') | string | lower | trim -%}
         {% set amount_words = translations[language].get('amount_words', {}) -%}
