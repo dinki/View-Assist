@@ -1,23 +1,22 @@
 type: custom:button-card
 variables:
-  listcardversion: 1.0.2
+  listcardversion: 1.1.0
   var_list: >-
-    [[[ try {return
-    hass.states[variables.var_assistsat_entity].attributes.list} catch {
-    return  "todo.shopping_list"}]]]
+    [[[ try {return hass.states[variables.var_assistsat_entity].attributes.list}
+    catch { return  "todo.shopping_list"}]]]
   background: /view_assist/dashboard/infobackground.png
 template:
   - variable_template
   - body_template
 styles:
   card:
-    - background: '[[[ return `center / cover no-repeat url(${variables.background})` ]]]'
+    - background: "[[[ return `center / cover no-repeat url(${variables.background})` ]]]"
     - background-size: cover
 custom_fields:
   message:
     card:
       type: todo-list
-      entity: '[[[ return variables.var_list ]]]'
+      entity: "[[[ return variables.var_list ]]]"
       card_mod:
         style:
           .: |
@@ -40,6 +39,26 @@ custom_fields:
               color: white;
               font-size: 3vw;
               line-height: 1.6;
+
+              /* Checkbox colors (older HA / MDC checkbox) */
+              --mdc-checkbox-unchecked-color: white;
+              --mdc-checkbox-checked-color: white;
+              --mdc-checkbox-ink-color: #1c1c1c;
+              --mdc-checkbox-disabled-color: white;
+              --mdc-theme-secondary: white;
+              --mdc-ripple-color: white;
+
+              /* Checkbox colors (newer HA / Material Web checkbox) */
+              --md-checkbox-outline-color: white;
+              --md-checkbox-hover-outline-color: white;
+              --md-checkbox-focus-outline-color: white;
+              --md-checkbox-pressed-outline-color: white;
+              --md-checkbox-selected-container-color: white;
+              --md-checkbox-selected-icon-color: #1c1c1c;
+              --md-sys-color-on-surface: white;
+              --md-sys-color-on-surface-variant: white;
+              --md-sys-color-primary: white;
+              --md-sys-color-on-primary: #1c1c1c;
             }
 
             ha-card.type-todo-list div.header,
@@ -48,3 +67,10 @@ custom_fields:
             ha-check-list-item.editRow.completed {
               display: none;
             }
+          ha-check-list-item:
+            $: |
+              ha-checkbox,
+              mwc-checkbox,
+              md-checkbox {
+                filter: brightness(0) invert(1);
+              }
