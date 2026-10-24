@@ -1,5 +1,6 @@
 type: custom:button-card
 variables:
+  weathercardversion: 1.2.0
   var_weather_entity: |-
     [[[
       var assistbid = localStorage.getItem("view_assist_sensor") ?? variables.default_satellite;
@@ -7,7 +8,7 @@ variables:
       return `${weather_entity}`
     ]]]    
   var_forecast_type: daily
-  weathercardversion: 1.1.0
+ 
 template:
   - variable_template
   - body_template
@@ -17,42 +18,127 @@ styles:
         "title status"  
         "message message"
         "assist assist"        
-    - grid-template-rows: min-content max-content min-content
+    - grid-template-rows: min-content 1fr min-content
     - grid-template-columns: 1fr 1fr
   card:
-    - background-color: "#059bf1"
+    - background-color: '#059bf1'
     - border-width: 0px
     - border-radius: 0px
   custom_fields:
     message:
-      - position: relative
-      - height: 100vdh
+      - position: absolute
+      - top: 50%
+      - left: 0
+      - width: 100%
+      - transform: translateY(-50%)
       - text-align: start
       - text-wrap: wrap
       - justify-content: center
-      - align-self: center
-      - padding: "-10%"
+      - padding: 0
 custom_fields:
-  title: ""
+  title: ''
   message:
     card:
       type: weather-forecast
-      entity: "[[[ return variables.var_weather_entity ]]]"
-      forecast_type: "[[[ return variables.var_forecast_type ]]]"
+      entity: '[[[ return variables.var_weather_entity ]]]'
+      forecast_type: '[[[ return variables.var_forecast_type ]]]'
       card_mod:
         style:
-          .: |
+          .: >
             ha-card { background: #059bf9}
+
             ha-card.type-weather-forecast {
               justify-content: start !important;
             }
+
             ha-card.type-weather-forecast>div.content {
-              div {
-                padding-right: 10px;
-              }
+              display: flex;
+              align-items: stretch !important;
             }
-            ha-card.type-weather-forecast>div.content {
-              display: flex;​
+
+            ha-card.type-weather-forecast>div.content div {
+              padding-right: 1vw;
+            }
+
+
+            /* ---- Condition text (Partly cloudy), centered vertically to the
+            icon ---- */
+
+            ha-card.type-weather-forecast .info {
+              align-self: stretch !important;
+              align-items: stretch !important;
+              flex-grow: 1 !important;
+              justify-content: space-between !important;
+            }
+
+            ha-card.type-weather-forecast .name-state {
+              display: flex !important;
+              flex-direction: column !important;
+              justify-content: center !important;
+              align-self: center !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+
+            ha-card.type-weather-forecast .name-state .name {
+              display: none !important;
+            }
+
+            ha-card.type-weather-forecast .name-state .state,
+
+            ha-card.type-weather-forecast .state {
+              font-size: 8vh !important;
+              line-height: 1.1 !important;
+              white-space: nowrap !important;
+              color: white !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+
+
+            /* ---- Current temp + high/low, right-justified ---- */
+
+            ha-card.type-weather-forecast .temp-attribute {
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: flex-end !important;
+              align-self: flex-start !important;
+              text-align: right !important;
+              margin-left: auto !important;
+              margin-right: 0 !important;
+              padding: 0 !important;
+            }
+
+            ha-card.type-weather-forecast .temp-attribute .temp {
+              display: flex !important;
+              flex-direction: row !important;
+              align-items: baseline !important;
+              justify-content: flex-end !important;
+              font-size: 8vh !important;
+              line-height: 1 !important;
+              text-align: right !important;
+              position: relative !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+
+            ha-card.type-weather-forecast .temp-attribute .temp span {
+              position: static !important;
+              display: inline-block !important;
+              font-size: 8vh !important;
+              line-height: 1 !important;
+              vertical-align: baseline !important;
+              margin: 0 !important;
+              margin-left: 0 !important;
+              padding: 0 !important;
+              letter-spacing: 0 !important;
+            }
+
+            ha-card.type-weather-forecast .temp-attribute .attribute {
+              font-size: 5vh !important;
+              text-align: right !important;
+              margin: 0 !important;
+              padding: 0 !important;
             }
           ha-card.type-weather-forecast>div.content: |
             svg {
@@ -67,34 +153,25 @@ custom_fields:
               color: white !important;
               justify-content: space-evenly !important;
             }
-          ha-card.type-weather-forecast>div.content>div.info:
-            .: |
-              div.name-state {
-                display: flex;
-                flex-direction: column;
-              }
-            div.name-state:
-              .: |
-                div.state {
-                  font-size: 10vh !important;
-                }
-                div.name {
-                  display: none;
-                  max-height: 0px !important;
-                }
-            div.temp-attribute: |
-              .temp {
-                font-size: 8vh !important;
-                padding-bottom: 0px;
-              }
-              .attribute {
-                font-size: 5vh !important;
-              }  
-              .temp span {
-                font-size: 7vh !important;
-                margin-left: -1vh;
-              }
-              .templow {
-                padding-top: 0px;
-                text-align: right;
-              }
+            /* Day labels (Fri, Sat, ...) */
+            div > div:first-child,
+            .weekday {
+              font-size: 4vh !important;
+              line-height: 1.3 !important;
+              color: white !important;
+            }
+            /* High temperatures: must come AFTER the day label rule */
+            .temp,
+            div.temp,
+            div:has(> .temp),
+            div:has(> .temp) *,
+            .temp * {
+              font-size: 6vh !important;
+              line-height: 1.2 !important;
+              color: white !important;
+            }
+            /* Low temperatures */
+            .templow {
+              font-size: 6vh !important;
+              transform: translateX(5.5vh);
+            }
