@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  thermostatcardversion: 1.0.2
+  thermostatcardversion: 1.1.0
   var_climate_device: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.climate} catch {
@@ -12,18 +12,21 @@ styles:
   card:
     - background-color: "#1c1c1c"
     - background-size: cover
+    - overflow: hidden
   custom_fields:
     message:
       - font-size: "[[[ return variables.var_font_size ]]]"
       - position: absolute
-      - padding: 10px
-      - border-radius: 10px
-      - width: 95%
-      - text-align: start
-      - text-wrap: wrap
+      - top: 0
+      - left: 0
+      - width: 100%
+      - height: 100%
+      - container-type: size
+      - display: flex
+      - align-items: center
       - justify-content: center
-      - align-self: center
-      - padding: 2%
+      - overflow: visible
+      - padding: 0
 custom_fields:
   title: ""
   message:
@@ -34,14 +37,74 @@ custom_fields:
       card_mod:
         style:
           .: |
-            .content {
-              transform: scale(1.8);
+            :host {
+              display: block;
+              width: 100%;
+              height: 100%;
+              overflow: visible !important;
             }
-          ha-icon-button:
-            $:
-              mwc-icon-button:
-                $:
-                  button: |
-                    mwc-ripple {
-                      display: none;
-                    }
+            ha-card {
+              background: transparent !important;
+              box-shadow: none !important;
+              border: none !important;
+              width: 100% !important;
+              height: 100% !important;
+              padding: 0 !important;
+              overflow: visible !important;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .container {
+              overflow: visible !important;
+              width: 100%;
+              height: 100%;
+              padding: 0 !important;
+              align-items: center;
+              justify-content: center;
+            }
+            .title,
+            .more-info {
+              display: none !important;
+            }
+            ha-state-control-climate-temperature {
+              width: min(80cqh, 95cqw) !important;
+              max-width: none !important;
+              max-height: 100cqh !important;
+            }
+          ha-state-control-climate-temperature:
+            $: |
+              .container {
+                max-width: none !important;
+                max-height: none !important;
+              }
+              .label {
+                font-size: 4.5cqh !important;
+                line-height: 1.2 !important;
+              }
+              .secondary,
+              .secondary * {
+                font-size: 4.5cqh !important;
+                --mdc-icon-size: 4.5cqh;
+              }
+              ha-big-number {
+                font-size: 14cqh !important;
+                line-height: 1.1 !important;
+                --ha-big-number-font-size: 14cqh;
+              }
+              .buttons ha-outlined-icon-button,
+              ha-outlined-icon-button {
+                --ha-icon-button-size: 9cqh;
+                --md-icon-button-icon-size: 5cqh;
+                width: 9cqh;
+                height: 9cqh;
+              }
+            ha-big-number:
+              $: |
+                .value, .unit, .big-number {
+                  font-size: 14cqh !important;
+                  line-height: 1.1 !important;
+                }
+                .unit {
+                  font-size: 5cqh !important;
+                }
