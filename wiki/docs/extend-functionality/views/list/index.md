@@ -16,5 +16,6 @@ Views are automatically installed courtesy of the View Assist integration
 
 | Version | Description                          |
 | ------- | ------------------------------------ |
+| v 1.1.0 | Fix checkbox color to white |
 | v 1.0.1 | Move list variable out of dictionary |
 | v 1.0.0 | Initial release                      |
