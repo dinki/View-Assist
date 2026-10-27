@@ -16,6 +16,7 @@ Views are automatically installed courtesy of the View Assist integration
 
 | Version | Description     |
 | ------- | --------------- |
+| v 1.1.1 | Increase thermostat display size for better visibility |
 | v 1.0.2 | Update position |
 | v 1.0.1 | Minor fixes     |
 | v 1.0.0 | Initial release |
