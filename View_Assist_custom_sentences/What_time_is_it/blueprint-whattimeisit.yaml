@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, fr, it, nl, pl, pt]
+          languages: [ca, de, en, es, fr, it, nl, pl, pt, sv]
     command_prompt_time:
       name: Command Prompt Time
       description: The phrase you want to use to trigger the request for time
@@ -289,6 +289,32 @@ action:
             oct: Outubro
             nov: Novembro
             dec: Dezembro
+        sv:
+          responses:
+            time: "Klockan är {time}"
+            day_of_week: "Idag är det {day_of_week}"
+            date: "Idag är det {day_of_week} den {day_of_month} {month} {year}"
+          weekdays:
+            mon: Måndag
+            tue: Tisdag
+            wed: Onsdag
+            thu: Torsdag
+            fri: Fredag
+            sat: Lördag
+            sun: Söndag
+          months:
+            jan: Januari
+            feb: Februari
+            mar: Mars
+            apr: April
+            may: Maj
+            jun: Juni
+            jul: Juli
+            aug: Augusti
+            sep: September
+            oct: Oktober
+            nov: November
+            dec: December
   - choose:
       - conditions:
           - condition: trigger
