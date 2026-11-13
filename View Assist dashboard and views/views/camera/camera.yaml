@@ -1,205 +1,40 @@
 type: custom:button-card
 variables:
-  cameracardversion: 2.1.1
-  var_url_params: |-
+  camerascardversion: 2.2.0
+  var_cameras_attribute: cameras
+  var_cameras: |-
     [[[
-      let queryString = '';
-      const vaEntity = hass.states[variables.var_assistsat_entity];
-
-      if (vaEntity?.attributes?.current_path) {
-        const currentPath = vaEntity.attributes.current_path;
-        queryString = currentPath.includes('?') ? currentPath.split('?')[1] : '';
-      }
-
-      if (!queryString && window.location.search) {
-        queryString = window.location.search.substring(1);
-      }
-
-      return new URLSearchParams(queryString);
-    ]]]
-  var_camera: |-
-    [[[
-      const urlParams = variables.var_url_params;
-      const urlCamera = urlParams.get('camera');
-      const showAll = urlParams.get('show');
-
-      if (showAll === 'all' || showAll === 'configured') {
-        return "";
-      }
-
-      if (urlCamera) {
-        return urlCamera;
-      }
-
-      const availableCameras = [];
-      const cameraKeys = Object.keys(hass.states).filter(id => id.startsWith('camera.'));
-
-      for (let i = 0; i < cameraKeys.length; i++) {
-        const entityId = cameraKeys[i];
-        const state = hass.states[entityId].state;
-        if (state !== 'unavailable' && state !== 'unknown') {
-          availableCameras.push(entityId);
-        }
-      }
-
-      if (availableCameras.length === 1) {
-        return availableCameras[0];
-      }
-
-      return "";
-    ]]]
-  var_all_cameras: |-
-    [[[
-      const formatCameraName = (entityId) => {
-        return entityId.replace('camera.', '').replace(/_/g, ' ');
-      };
-
-      const isCameraAvailable = (state) => {
-        return state !== 'unavailable' && state !== 'unknown';
-      };
-
-      const urlParams = variables.var_url_params;
-      const showType = urlParams.get('show');
-      const configuredCameras = urlParams.get('cameras');
-      
-      if (showType === 'configured' && configuredCameras) {
-        const cameras = [];
-        const cameraEntityList = decodeURIComponent(configuredCameras).split(',');
-        
-        for (let i = 0; i < cameraEntityList.length; i++) {
-          const entityId = cameraEntityList[i].trim();
-          const entity = hass.states[entityId];
-          if (entity && isCameraAvailable(entity.state)) {
-            cameras.push({
-              entity_id: entityId,
-              name: entity.attributes.friendly_name || formatCameraName(entityId)
-            });
-          }
-        }
-        return cameras;
-      }
-
-      const viewAssistEntity = variables.var_assistsat_entity;
-
-      if (viewAssistEntity && hass.states[viewAssistEntity]) {
-        const cameraList = hass.states[viewAssistEntity].attributes.camera_list;
-
-        if (Array.isArray(cameraList)) {
-          const cameras = [];
-
-          for (let i = 0; i < cameraList.length; i++) {
-            const entityId = cameraList[i];
-            const entity = hass.states[entityId];
-            if (entity && isCameraAvailable(entity.state)) {
-              cameras.push({
-                entity_id: entityId,
-                name: entity.attributes.friendly_name || formatCameraName(entityId)
-              });
-            }
-          }
-
-          if (cameras.length > 0) {
-            return cameras;
-          }
-        }
-      }
-
-      const cameras = [];
-      const cameraKeys = Object.keys(hass.states).filter(id => id.startsWith('camera.'));
-
-      for (let i = 0; i < cameraKeys.length; i++) {
-        const entityId = cameraKeys[i];
+      const isAvailable = (entityId) => {
         const entity = hass.states[entityId];
-        if (isCameraAvailable(entity.state)) {
-          cameras.push({
-            entity_id: entityId,
-            name: entity.attributes.friendly_name || formatCameraName(entityId)
-          });
-        }
-      }
-
-      cameras.sort((a, b) => a.name.localeCompare(b.name));
-      return cameras;
-    ]]]
-  var_responsive_columns: |-
-    [[[
-      return window.viewAssistResponsive?.orientation === "portrait" ? 1 : 2;
-    ]]]
-  var_timeout_seconds: |-
-    [[[
-      const timeout = variables.var_url_params.get('timeout');
-      return timeout ? parseInt(timeout, 10) : 0;
-    ]]]
-  var_setup_camera_hold_mode: |-
-    [[[
-      const cleanup = () => {
-        if (window.vaCameraHoldTimeout) {
-          clearTimeout(window.vaCameraHoldTimeout);
-        }
-        window.vaCameraHoldTimeout = null;
-        window.vaCameraHoldModeSet = false;
-        window.vaCameraPageKey = null;
-        window.vaCameraTimeoutStart = null;
-        window.vaCameraStoredPreviousMode = null;
-        window.vaCameraRevertMode = null;
+        return entity && entity.state !== 'unavailable' && entity.state !== 'unknown';
       };
 
-      if (variables.var_current_view !== 'camera' || !variables.var_assistsat_entity) {
-        cleanup();
-        return '';
+      let value;
+      try {
+        value = states[variables.var_assistsat_entity].attributes[variables.var_cameras_attribute];
+      } catch {
+        value = undefined;
       }
 
-      const currentPageKey = `${window.location.pathname}${window.location.search}`;
+      let requested = [];
+      if (Array.isArray(value)) {
+        requested = value;
+      } else if (typeof value === 'string') {
+        requested = value.replace(/[\[\]'"]/g, '').split(',');
+      }
+      requested = requested.map(id => String(id).trim()).filter(id => id.startsWith('camera.'));
 
-      if (window.vaCameraPageKey === currentPageKey && window.vaCameraHoldTimeout) {
-        return '';
+      if (requested.length > 0) {
+        return requested;
       }
 
-      window.vaCameraPageKey = currentPageKey;
-      const entityId = variables.var_assistsat_entity;
-      const vaEntity = hass.states[entityId];
-
-      const currentMode = vaEntity?.attributes?.mode || 'normal';
-      const previousMode = currentMode === 'hold' ? 'normal' : currentMode;
-      window.vaCameraStoredPreviousMode = previousMode;
-
-      hass.callService('view_assist', 'set_state', {
-        entity_id: entityId,
-        mode: 'hold'
-      });
-      window.vaCameraHoldModeSet = true;
-
-      if (window.vaCameraHoldTimeout) {
-        clearTimeout(window.vaCameraHoldTimeout);
-        window.vaCameraHoldTimeout = null;
-      }
-
-      const timeoutSeconds = variables.var_timeout_seconds;
-      if (timeoutSeconds > 0) {
-        window.vaCameraTimeoutStart = Date.now();
-
-        window.vaCameraRevertMode = function() {
-          try {
-            let hassInstance = typeof hass !== 'undefined' ? hass : 
-                              document.querySelector('home-assistant')?.hass;
-
-            if (hassInstance) {
-              hassInstance.callService('view_assist', 'set_state', {
-                entity_id: entityId,
-                mode: window.vaCameraStoredPreviousMode || 'normal'
-              });
-            }
-          } catch (error) {
-            console.warn('View Assist camera mode revert failed:', error);
-          } finally {
-            cleanup();
-          }
-        };
-
-        window.vaCameraHoldTimeout = setTimeout(window.vaCameraRevertMode, timeoutSeconds * 1000);
-      }
-
-      return '';
+      return Object.keys(hass.states)
+        .filter(id => id.startsWith('camera.') && isAvailable(id))
+        .sort((a, b) => {
+          const nameA = hass.states[a].attributes.friendly_name || a;
+          const nameB = hass.states[b].attributes.friendly_name || b;
+          return nameA.localeCompare(nameB);
+        });
     ]]]
 template:
   - variable_template
@@ -207,61 +42,46 @@ template:
   - body_template
 styles:
   grid:
-    - grid-template-areas: |-
-        [[[
-          return variables.var_camera ? 
-            `"status status"  
-             "camera camera"
-             "camera camera"` :
-            `"status status"
-             "camera_select camera_select"
-             "camera_select camera_select"`;
-        ]]]
+    - grid-template-areas: |
+        "status status"
+        "camera camera"
     - grid-template-columns: 1fr 1fr
-    - grid-template-rows: min-content 1fr 1fr
+    - grid-template-rows: min-content 1fr
   card:
-    - background: >-
-        [[[ return `center / cover no-repeat
-        url(${variables.background})` ]]]
-    - background-size: cover
+    - background-color: "#000000"
     - border-radius: 0px
-    - font-family: >-
-        [[[ return `'${variables.var_assistsat_entity_font_style}',
-        sans-serif`; ]]]
+    - overflow: hidden
   custom_fields:
     camera:
-      - display: '[[[ return variables.var_camera ? ''block'' : ''none'' ]]]'
-      - height: 100%
-      - width: 100%
-    camera_select:
-      - display: '[[[ return variables.var_camera ? ''none'' : ''block'' ]]]'
-      - margin: 0.125rem
-      - overflow-y: auto
-      - max-height: 100vh
-    back_button:
-      - display: '[[[ return variables.var_camera ? ''block'' : ''none'' ]]]'
       - position: absolute
-      - left: 1rem
-      - top: 1rem
-      - z-index: 1
+      - top: 0
+      - left: 0
+      - width: 100%
+      - height: 100%
+      - z-index: 0
+    back_button:
+      - position: absolute
+      - left: .41rem
+      - top: .41rem
+      - z-index: 2
 custom_fields:
-  _hold_mode_init: '[[[ return variables.var_setup_camera_hold_mode ]]]'
+  title: ""
   back_button:
     card:
       type: custom:button-card
-      icon: mdi:arrow-left
+      icon: mdi:arrow-left-bold
       show_name: false
       styles:
         card:
           - background: rgba(0,0,0,0.6)
           - border-radius: 50%
-          - width: 3rem
-          - height: 3rem
+          - width: 2.75rem
+          - height: 2.75rem
           - padding: 0
         icon:
           - color: white
-          - width: 1.75rem
-          - height: 1.75rem
+          - width: 1.5rem
+          - height: 1.5rem
       grid:
         - grid-template-areas: i
         - justify-items: center
@@ -270,67 +90,30 @@ custom_fields:
         action: call-service
         service: view_assist.navigate
         service_data:
-          device: '[[[ return variables.var_assistsat_entity ]]]'
-          path: '[[[ return `${variables.var_dashboard}/camera` ]]]'
+          device: "[[[ return variables.var_assistsat_entity ]]]"
+          path: home
   camera:
+    force_recreate: true
     card:
-      type: picture-entity
-      entity: '[[[ return variables.var_camera ]]]'
-      camera_view: live
-      fit_mode: contain
-      show_name: false
-      show_state: false
-      tap_action:
-        action: more-info
-  camera_select:
-    card:
-      type: grid
-      columns: '[[[ return variables.var_responsive_columns ]]]'
-      square: false
-      cards: |-
+      type: custom:advanced-camera-card
+      cameras: |-
         [[[
-          const cameras = variables.var_all_cameras;
-          if (!Array.isArray(cameras) || cameras.length === 0) {
-            return [{
-              type: "markdown",
-              content: "No cameras available",
-              card_mod: {
-                style: `
-                  ha-card {
-                    background: rgba(0,0,0,0.6);
-                    color: white;
-                    padding: 2rem;
-                    border-radius: 0.5rem;
-                    text-align: center;
-                  }
-                `
-              }
-            }];
-          }
-
-          const timeoutParam = variables.var_timeout_seconds > 0 ? `&timeout=${variables.var_timeout_seconds}` : '';
-
-          return cameras.map(camera => ({
-            type: "picture-entity",
-            entity: camera.entity_id,
-            name: camera.name,
-            show_state: false,
-            show_name: true,
-            camera_view: "auto",
-            tap_action: {
-              action: "call-service",
-              service: "view_assist.navigate",
-              service_data: {
-                device: variables.var_assistsat_entity,
-                path: `${variables.var_dashboard}/camera?camera=${camera.entity_id}${timeoutParam}`
-              }
-            },
-            card_mod: {
-              style: `
-                ha-card {
-                  border-radius: 0.5rem;
-                }
-              `
+          return variables.var_cameras.map(entityId => ({
+            camera_entity: entityId,
+            dimensions: {
+              aspect_ratio: '16:9',
+              layout: { fit: 'cover' },
+              grid: { width_factor: 1 }
             }
           }));
         ]]]
+      live:
+        display:
+          grid_columns: |-
+            [[[
+              return Math.min(4, Math.max(1, Math.ceil(Math.sqrt(variables.var_cameras.length))));
+            ]]]
+          grid_max_columns: 4
+          mode: grid
+          grid_selected_width_factor: 1
+          grid_selected_position: default
