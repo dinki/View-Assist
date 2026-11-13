@@ -11,7 +11,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pl, pt, sr, sr-Latn]
+          languages: [ca, de, en, es, it, nl, pl, pt, sr, sr-Latn, sv]
     repeat_command:
       name: Repeat Command
       description: The phrase you want to use to trigger repeating last spoken response
@@ -262,6 +262,21 @@ action:
             volume_raised: "Jačina zvuka je pojačana"
             volume_lowered: "Jačina zvuka je smanjena"
             sound_restored: "Zvuk je vraćen"
+        sv:
+          responses:
+            repeat: "Jag sa {last_said}"
+            repeat_remove: "Jag sa"
+            do_not_disturb_off: "Stör ej-läge är nu avstängt"
+            mode_success: "Ändrar läge till {mode}"
+            mode_failure_device: "Förlåt. {mode} är inte ett giltigt läge för den här enheten"
+            mode_failure_unrecognized: "Förlåt. {mode} är inte ett giltigt läge. Prova {{ modes }}."
+            info_playing: "Det här är {title} av {artist}"
+            view_switch: "Byter vy till {view}"
+            view_invalid: "Förlåt. {view} är inte en giltig vy."
+            volume_set: "Volymen sattes till {level}"
+            volume_raised: "Volymen har höjts"
+            volume_lowered: "Volymen har sänkts"
+            sound_restored: "Ljudet har återställts"
   - choose:
       - conditions:
           - condition: trigger

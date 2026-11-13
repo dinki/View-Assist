@@ -12,7 +12,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pl, pt]
+          languages: [ca, de, en, es, it, nl, pl, pt, sv]
     command:
       name: Command Text
       description: |
@@ -152,6 +152,11 @@ action:
                 camera_not_found_show: "A câmera '{camera}' não pode ser encontrada. Exibindo câmeras configuradas."
                 camera_not_found_error: "Desculpe, não consegui encontrar uma câmera chamada '{camera}'. As câmeras disponíveis são: {available}."
                 camera_not_found_short: "Câmera '{camera}' não encontrada."
+            sv:
+              responses:
+                camera_not_found_show: "Kameran '{camera}' hittades inte. Visar konfigurerade kameror."
+                camera_not_found_error: "Förlåt, jag kunde inte hitta en kamera med namnet '{camera}'. Tillgängliga kameror är: {available}."
+                camera_not_found_short: "Kameran '{camera}' hittades inte."
           timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
           camera_entities_list: >-
             {% set camera_list = cameras.keys() | list %}

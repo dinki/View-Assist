@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [en, ca, de, fr, es, nl, pl, pt, ro, it]
+          languages: [en, ca, de, fr, es, nl, pl, pt, ro, it, sv]
     command_add1:
       name: Command Text Add 1
       description: First phrase for adding to the list
@@ -193,6 +193,16 @@ action:
             one_item: "Hai un elemento {list_name}. è {items}"
             multiple_items: "Hai {count} elementi nella {list_name}. Sono {items}"
             multiple_items_limited: "Hai {count} elementi nella tua{list_name}. I primi {max_items} sono: {items}, e altri."
+        sv:
+          responses:
+            added: "{item} har lagts till i din {list_name}"
+            already_in: "{item} finns redan i din {list_name}"
+            removed: "{item} har tagits bort från {list_name}"
+            not_in: "{item} finns inte i {list_name}"
+            empty: "Det finns inga oavklarade saker i din {list_name}"
+            one_item: "Det finns 1 oavklarad sak i din {list_name}. Det är {items}"
+            multiple_items: "Det finns {count} saker i din {list_name}. De är {items}"
+            multiple_items_limited: "Det finns {count} saker i din {list_name}. De första {max_items} är: {items}, och fler."
   - choose:
       - conditions:
           - condition: trigger
