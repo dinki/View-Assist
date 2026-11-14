@@ -85,6 +85,7 @@ capture a direction word as the volume level.
 
 | Version | Description                                                                              |
 | ------- | ---------------------------------------------------------------------------------------- |
+| v 1.5.2 | Add Ukrainian translation                                                                |
 | v 1.5.1 | Stop Set Volume from swallowing "turn the volume up/down"; ignore non-numeric levels instead of aborting the run |
 | v 1.5.0 | Split Adjust Volume into Volume Up/Down commands so translated phrases work; fix missing German response strings |
 | v 1.4.7 | Add Italian translation                                                                  |

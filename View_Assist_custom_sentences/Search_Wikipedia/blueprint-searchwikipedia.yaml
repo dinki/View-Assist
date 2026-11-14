@@ -1,6 +1,6 @@
 blueprint:
   name: View Assist - Search Wikipedia
-  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.6)
+  description: Search for a search term using Wikipedia (View Assist wikisearch v 1.1.7)
   domain: automation
   input:
     language:
@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pl, pt]
+          languages: [ca, de, en, es, it, nl, pl, pt, uk]
     command:
       name: Command
       description: The phrase you want to use to trigger searching Wikipedia
@@ -66,6 +66,10 @@ action:
           responses:
             view_title: "Pesquisa na Wikipedia"
             search_error: "Desculpe, não consegui encontrar nada com esses termos na Wikipedia"
+        uk:
+          responses:
+            view_title: "Пошук у Вікіпедії"
+            search_error: "Вибачте, мені не вдалося нічого знайти у Вікіпедії за цим запитом"
   - action: pyscript.search_wikipedia
     response_variable: wiki_response
     data:

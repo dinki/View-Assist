@@ -22,6 +22,7 @@ Nothing additional
 
 | Version | Description                |
 | ------- | -------------------------- |
+| v 2.0.5 | Add Ukrainian translation  |
 | v 2.0.4 | Add Dutch translation      |
 | v 2.0.3 | Add Italian translation    |
 | v 2.0.2 | Add translations           |

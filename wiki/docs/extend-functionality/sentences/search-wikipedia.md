@@ -16,6 +16,7 @@ Special thanks to Scratt for his work on this automation
 
 | Version | Description              |
 | ------- | ------------------------ |
+| v 1.1.7 | Add Ukrainian translation |
 | v 1.1.6 | Add Dutch translation    |
 | v 1.1.5 | Add Italian translation  |
 | v 1.1.4 | Add more Translations    |
