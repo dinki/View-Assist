@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  clockcardversion: 1.6.0
+  clockcardversion: 1.8.0
   var_clock_style: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.clock_style ||
