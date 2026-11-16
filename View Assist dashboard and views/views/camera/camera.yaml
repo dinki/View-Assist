@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  camerascardversion: 2.2.0
+  camerascardversion: 2.4.0
   var_cameras_attribute: cameras
   var_cameras: |-
     [[[
