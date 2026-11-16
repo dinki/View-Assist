@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  cameracardversion: 2.1.1
+  cameracardversion: 2.3.0
   var_url_params: |-
     [[[
       let queryString = '';
