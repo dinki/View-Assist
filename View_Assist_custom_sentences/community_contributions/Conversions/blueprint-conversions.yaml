@@ -9,7 +9,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [de, en, nl, pl, pt]
+          languages: [de, en, nl, pl, pt, sv]
     view:
       name: View
       description: The View Assist dashboard view to use for text information display
@@ -75,6 +75,12 @@ action:
             title: "Conversão"
             request_label: "Pedido"
             answer_label: "Resposta"
+        sv:
+          responses:
+            result: "{response} är lika med {source}."
+            title: "Omvandling"
+            request_label: "Förfrågan"
+            answer_label: "Svar"
   - service: pyscript.viewassist_wolfram_short_answer
     data:
       query: "{{ trigger.sentence }}"

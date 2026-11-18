@@ -34,6 +34,7 @@ blueprint:
             - pl
             - pt
             - ro
+            - sv
           no_sort: false
           native_name: false
     play_artist_command:
@@ -191,6 +192,15 @@ actions:
             playsong_found: Redau {song} de {artist}
             playsong_not_found: Îmi pare rău, {song} de {artist} nu a fost găsit
             playsong_queue: Adaug în coadă {song} de {artist}
+        sv:
+          responses:
+            playartist_found: "Spelar musik av {artist}"
+            playartist_not_found: "Jag kunde inte hitta någon musik av {search_artist}"
+            playlist_found: "Spelar spellistan {playlist}"
+            playlist_not_found: "Förlåt, ingen spellista med namnet {search_playlist} hittades"
+            playsong_found: "Spelar {song} av {artist}"
+            playsong_not_found: "Förlåt, {song} av {artist} hittades inte"
+            playsong_queue: "Lägger till {song} av {artist} i kön"
   - choose:
       - conditions:
           - condition: trigger

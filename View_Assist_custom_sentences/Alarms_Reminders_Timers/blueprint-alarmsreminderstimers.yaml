@@ -22,6 +22,7 @@ blueprint:
             - pt
             - sr
             - sr-Latn
+            - sv
           native_name: false
           no_sort: false
     alarmsound_path:
@@ -340,6 +341,17 @@ action:
             named_timer_not_found: "Taj tajmer nije pronađen"
             timer_not_found: "{timer_info} nije pronađen"
             time_left: "Imate {time_left} na vašem {timer_info}"
+        sv:
+          responses:
+            no_active_timers: "Det finns inga aktiva timers."
+            one_active_timer: "Det finns en aktiv timer:"
+            multiple_active_timers: "Det finns {count} aktiva timers:"
+            final_timer: "och {timer_expiry_speak}"
+            no_display: "Den här enheten har ingen skärm för att visa timers"
+            timer_cancel: "Din {timer_info} har avbrutits"
+            named_timer_not_found: "Den timern kunde inte hittas"
+            timer_not_found: "{timer_info} kunde inte hittas"
+            time_left: "Det är {time_left} kvar på din {timer_info}"
   - choose:
       - conditions:
           - condition: trigger

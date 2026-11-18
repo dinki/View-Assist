@@ -19,6 +19,7 @@ blueprint:
             - nl
             - pl
             - pt
+            - sv
           no_sort: false
           native_name: false
     trigger_phrases:
@@ -389,6 +390,19 @@ action:
             error: Desculpe. Não consegui encontrar jogos recentes ou futuros para o time {team}
             outcome_win: ganhou
             outcome_lose: perdeu
+        sv:
+          responses:
+            is_singular_true_post: "{team_name} spelade mot {opponent_name} och"
+            is_singular_false_post: "{team_name} spelade mot {opponent_name} och"
+            is_singular_true_pre: "{team_name} spelar mot {opponent_name} {kickoff_in}"
+            is_singular_false_pre: "{team_name} spelar mot {opponent_name} {kickoff_in}"
+            is_singular_true_in: "{team_name} spelar just nu mot {opponent_name}."
+            is_singular_false_in: "{team_name} spelar just nu mot {opponent_name}."
+            is_singular_true_not_found: "{team} har inga matcher på dagens schema"
+            is_singular_false_not_found: "{team} har inga matcher på dagens schema"
+            error: "Förlåt. Jag kunde inte hitta några nya eller kommande matcher för {team}"
+            outcome_win: vann
+            outcome_lose: förlorade
   - if:
       - condition: template
         value_template: "{{ (trigger.slots.team)|lower in mlb_teams }}"

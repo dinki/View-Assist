@@ -10,7 +10,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pt, ro]
+          languages: [ca, de, en, es, it, nl, pt, ro, sv]
     command:
       name: Command
       description: >-
@@ -172,6 +172,10 @@ action:
           responses:
             playing_station: "Redau {station}"
             station_not_found: "Nu am găsit {station}. Te rog adaugă postul ca alias."
+        sv:
+          responses:
+            playing_station: "Spelar {station}"
+            station_not_found: "Jag kunde inte hitta {station}. Lägg till det som ett alias."
       announce: >-
         {{
           announce_input
