@@ -3,7 +3,7 @@ blueprint:
   description:
     Use various methods to play individual songs, add to queue, play artist
     and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.8)
+    Assistant v 1.2.9)
   domain: automation
   input:
     ma_instance:
@@ -34,6 +34,7 @@ blueprint:
             - pl
             - pt
             - ro
+            - uk
           no_sort: false
           native_name: false
     play_artist_command:
@@ -191,6 +192,15 @@ actions:
             playsong_found: Redau {song} de {artist}
             playsong_not_found: Îmi pare rău, {song} de {artist} nu a fost găsit
             playsong_queue: Adaug în coadă {song} de {artist}
+        uk:
+          responses:
+            playartist_found: "Вмикаю музику {artist}"
+            playartist_not_found: "Вибачте, не вдалося знайти музику виконавця {search_artist}"
+            playlist_found: "Вмикаю плейлист {playlist}"
+            playlist_not_found: "Вибачте, плейлист із назвою {search_playlist} не знайдено"
+            playsong_found: "Вмикаю {song} — {artist}"
+            playsong_not_found: "Вибачте, пісню {song} виконавця {artist} не знайдено"
+            playsong_queue: "Додаю до черги {song} — {artist}"
   - choose:
       - conditions:
           - condition: trigger

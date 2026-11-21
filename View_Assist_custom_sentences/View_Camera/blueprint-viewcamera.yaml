@@ -3,7 +3,7 @@ blueprint:
   description: |
     Ask View Assist to show your camera streams.
     Supports showing individual cameras or all cameras at once.
-    You can use multiple names for the same camera entity. (v 2.0.4)
+    You can use multiple names for the same camera entity. (v 2.0.5)
   domain: automation
   input:
     language:
@@ -12,7 +12,7 @@ blueprint:
       default: en
       selector:
         language:
-          languages: [ca, de, en, es, it, nl, pl, pt]
+          languages: [ca, de, en, es, it, nl, pl, pt, uk]
     command:
       name: Command Text
       description: |
@@ -152,6 +152,11 @@ action:
                 camera_not_found_show: "A câmera '{camera}' não pode ser encontrada. Exibindo câmeras configuradas."
                 camera_not_found_error: "Desculpe, não consegui encontrar uma câmera chamada '{camera}'. As câmeras disponíveis são: {available}."
                 camera_not_found_short: "Câmera '{camera}' não encontrada."
+            uk:
+              responses:
+                camera_not_found_show: "Камеру «{camera}» не знайдено. Показую налаштовані камери."
+                camera_not_found_error: "Вибачте, не вдалося знайти камеру з назвою «{camera}». Доступні камери: {available}."
+                camera_not_found_short: "Камеру «{camera}» не знайдено."
           timeout_param: "{{ '&timeout=' + (hold_timeout | string) if hold_timeout > 0 else '' }}"
           camera_entities_list: >-
             {% set camera_list = cameras.keys() | list %}

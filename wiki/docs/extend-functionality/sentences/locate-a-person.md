@@ -25,9 +25,10 @@ All credit goes to @JimmyJamesBob and @colin715 for their collaboration on this 
 
 ## Changelog
 
-| Version | Description              |
-| ------- | ------------------------ |
-| v 1.1.4 | Add Dutch translation    |
+| Version | Description               |
+| ------- | ------------------------- |
+| v 1.1.5 | Add Ukrainian translation |
+| v 1.1.4 | Add Dutch translation     |
 | v 1.1.3 | Add more translations    |
 | v 1.1.2 | Add more translations    |
 | v 1.1.1 | Add Polish translation   |
