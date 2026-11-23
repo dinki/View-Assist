@@ -1,6 +1,6 @@
 type: custom:button-card
 variables:
-  sportsversion: 1.1.0
+  sportsversion: 1.1.1
   var_teamtracker_device: >-
     [[[ try {return
     hass.states[variables.var_assistsat_entity].attributes.team_tracker} catch {
@@ -14,7 +14,7 @@ styles:
     - background-size: cover
   custom_fields:
     message:
-      - font-size: "[[[ return variables.var_font_size ]]]"
+      - font-size: 4vw
       - align-self: center
       - justify-self: center
       - width: 100%
