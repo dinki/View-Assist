@@ -16,6 +16,7 @@ Views are automatically installed courtesy of the View Assist integration
 
 | Version | Description                                   |
 | ------- | --------------------------------------------- |
+| v 1.3.1 | Set fixed font size                           |
 | v 1.3.0 | Added german, spanish and french translations |
 | v 1.2.0 | Added italien translation                     |
 | v 1.0.0 | Initial release                               |
